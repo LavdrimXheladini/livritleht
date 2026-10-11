@@ -5,7 +5,8 @@
     "back": "Kthehu",
     "loading": "Duke u ngarkuar…",
     "errorGeneric": "Diçka shkoi keq. Ju lutemi provoni përsëri.",
-    "signOut": "Dil"
+    "signOut": "Dil",
+    "backToTop": "Kthehu në krye"
   },
   "auth": {
     "title": "Hyr",
@@ -57,7 +58,9 @@
     "ferizaj": "Ferizaji",
     "podgorica": "Podgorica",
     "mokotow": "Mokotów",
-    "wola": "Wola"
+    "wola": "Wola",
+    "dardania": "Dardania",
+    "velania": "Velania"
   },
   "vehicles": {
     "SMALL": {
@@ -116,7 +119,8 @@
       "soonText": "Regjistrohu në listën e pritjes dhe do të të njoftojmë me email kur transportuesit pranë teje të jenë në Ranktrip.",
       "soonLink": "Regjistrohu në listë →",
       "from": "nga",
-      "domestic": "Vendore",
+      "local": "Brenda qytetit",
+      "domestic": "Brenda vendit",
       "crossBorder": "Ndërkufitare",
       "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} orë",
       "addressPlaceholder": "Rruga, numri, qyteti",
@@ -124,7 +128,8 @@
       "noResults": "Nuk u gjet adresa. Provo rrugën dhe qytetin.",
       "searchError": "Kërkimi i adresave nuk funksionon tani. Provo përsëri pas pak.",
       "samePlace": "Marrja dhe dorëzimi janë i njëjti vend.",
-      "routeError": "Nuk mundëm ta llogarisim këtë rrugë. Provo një adresë tjetër."
+      "routeError": "Nuk mundëm ta llogarisim këtë rrugë. Provo një adresë tjetër.",
+      "withinCity": "Brenda qytetit · {{city}}"
     },
     "map": {
       "status": "Në rrugë",
@@ -198,7 +203,8 @@
       "chart": "Çmim shembull sipas distancës për çdo lloj automjeti",
       "classes": "Lloji i automjetit",
       "corridors": "Rrugë të njohura",
-      "hint": "Prek një korridor për ta ngarkuar te kalkulatori më sipër. Tarifa shembull; distancat e gjata kushtojnë më pak për km."
+      "hint": "Prek një korridor për ta ngarkuar te kalkulatori më sipër. Tarifa shembull; distancat e gjata kushtojnë më pak për km.",
+      "localCorridor": "{{city}}: {{from}} → {{to}}"
     },
     "movers": {
       "title": "Ndërtuar për\ntransportues të pavarur.",

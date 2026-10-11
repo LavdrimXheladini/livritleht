@@ -31,6 +31,18 @@ export const DEMO_CITIES = [
 ] as const;
 export type DemoCityId = (typeof DEMO_CITIES)[number]['id'];
 
+/** Demo neighbourhoods for moves within one city (local corridor pills). Names via i18n `places.<id>`. */
+export const DEMO_DISTRICTS = [
+  { id: 'dardania', city: 'prishtina', countryCode: 'XK', lat: 42.6518, lon: 21.1537 },
+  { id: 'velania', city: 'prishtina', countryCode: 'XK', lat: 42.6567, lon: 21.1796 },
+  { id: 'mokotow', city: 'warsaw', countryCode: 'PL', lat: 52.1933, lon: 21.035 },
+  { id: 'wola', city: 'warsaw', countryCode: 'PL', lat: 52.2361, lon: 20.9836 },
+] as const satisfies readonly { id: string; city: DemoCityId; countryCode: string; lat: number; lon: number }[];
+export type DemoDistrictId = (typeof DEMO_DISTRICTS)[number]['id'];
+export type DemoPlaceId = DemoCityId | DemoDistrictId;
+
+export const isDemoDistrict = (id: DemoPlaceId): id is DemoDistrictId => DEMO_DISTRICTS.some((d) => d.id === id);
+
 /** Great-circle distance in metres. */
 export function haversineM(a: { lat: number; lon: number }, b: { lat: number; lon: number }): number {
   const r = Math.PI / 180;
@@ -44,4 +56,19 @@ export function haversineM(a: { lat: number; lon: number }, b: { lat: number; lo
 export function demoPlace(id: DemoCityId, name: string): Place {
   const c = DEMO_CITIES.find((x) => x.id === id)!;
   return { label: name, area: name, lat: c.lat, lon: c.lon, countryCode: c.countryCode };
+}
+
+/** A demo neighbourhood as a Place: `area` is the city, `district` the neighbourhood. */
+export function demoDistrict(id: DemoDistrictId, name: string, cityName: string): Place {
+  const d = DEMO_DISTRICTS.find((x) => x.id === id)!;
+  return { label: `${name}, ${cityName}`, area: cityName, district: name, lat: d.lat, lon: d.lon, countryCode: d.countryCode };
+}
+
+/** Any demo place by id, with names from i18n (`t('places.<id>')`). */
+export function demoPlaceById(id: DemoPlaceId, t: (key: `places.${DemoPlaceId}`) => string): Place {
+  if (isDemoDistrict(id)) {
+    const d = DEMO_DISTRICTS.find((x) => x.id === id)!;
+    return demoDistrict(id, t(`places.${id}`), t(`places.${d.city}`));
+  }
+  return demoPlace(id, t(`places.${id}`));
 }

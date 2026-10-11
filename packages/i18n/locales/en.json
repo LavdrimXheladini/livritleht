@@ -5,7 +5,8 @@
     "back": "Back",
     "loading": "Loading…",
     "errorGeneric": "Something went wrong. Please try again.",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "backToTop": "Back to top"
   },
   "auth": {
     "title": "Sign in",
@@ -57,7 +58,9 @@
     "ferizaj": "Ferizaj",
     "podgorica": "Podgorica",
     "mokotow": "Mokotów",
-    "wola": "Wola"
+    "wola": "Wola",
+    "dardania": "Dardania",
+    "velania": "Velania"
   },
   "vehicles": {
     "SMALL": {
@@ -116,6 +119,7 @@
       "soonText": "Join the waitlist and we'll email you when movers near you are on Ranktrip.",
       "soonLink": "Join the waitlist →",
       "from": "from",
+      "local": "Local",
       "domestic": "Domestic",
       "crossBorder": "Cross-border",
       "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} h",
@@ -124,7 +128,8 @@
       "noResults": "No address found. Try the street and city.",
       "searchError": "Address search is unavailable right now. Try again in a moment.",
       "samePlace": "Pickup and drop-off are the same place.",
-      "routeError": "We couldn't calculate this route. Try another address."
+      "routeError": "We couldn't calculate this route. Try another address.",
+      "withinCity": "Within {{city}}"
     },
     "map": {
       "status": "On the way",
@@ -198,7 +203,8 @@
       "chart": "Example price by distance for each vehicle class",
       "classes": "Vehicle class",
       "corridors": "Popular routes",
-      "hint": "Tap a corridor to load it into the price calculator above. Sample rates; long distances are cheaper per km."
+      "hint": "Tap a corridor to load it into the price calculator above. Sample rates; long distances are cheaper per km.",
+      "localCorridor": "{{city}}: {{from}} → {{to}}"
     },
     "movers": {
       "title": "Built for\nindependent movers.",

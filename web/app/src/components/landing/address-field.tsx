@@ -86,7 +86,7 @@ export function AddressField({
   }, [searching, query, locale, nearKey]);
 
   const choose = (s: GeoSuggestion) => {
-    const place: Place = { label: s.label, area: s.area, lat: s.lat, lon: s.lon, countryCode: s.countryCode };
+    const place: Place = { label: s.label, area: s.area, district: s.district, lat: s.lat, lon: s.lon, countryCode: s.countryCode };
     setText(place.label);
     setOpen(false);
     setResults([]);

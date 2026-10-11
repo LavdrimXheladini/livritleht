@@ -1,8 +1,8 @@
 // Client-safe types for the landing demo. Data is built on the server (landing-example.ts,
 // server-only; quote-action.ts) and passed to client components.
-import type { VehicleClass } from '@ranktrip/shared';
+import type { MoveScope, VehicleClass } from '@ranktrip/shared';
 
-import type { DemoCityId, LineCoords } from './geo/types';
+import type { DemoPlaceId, LineCoords } from './geo/types';
 
 /** [moverPriceCents, payoutCents] for crew 1, 2, 3 (index = crew − 1). */
 export type CrewPrices = readonly [readonly [number, number], readonly [number, number], readonly [number, number]];
@@ -11,6 +11,8 @@ export type CrewPrices = readonly [readonly [number, number], readonly [number, 
 export type SampleRoute = {
   km: number;
   crossBorder: boolean;
+  /** Within one city / short hop, between cities, or across a border. */
+  scope: MoveScope;
   /** Rounded driving + loading time in hours. */
   hours: number;
   takeRatePct: number;
@@ -21,5 +23,6 @@ export type SampleRoute = {
   estimated: boolean;
 };
 
-export type Corridor = { from: DemoCityId; to: DemoCityId };
+/** Example route; both ends in one city = a local move. */
+export type Corridor = { from: DemoPlaceId; to: DemoPlaceId };
 export type ExampleCurves = Record<VehicleClass, number[]>;

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { DarkPanel, LiveMapCard, VanIcon } from '@ranktrip/ui/web';
 
 import { alongLine, compassPoint } from '@/lib/geo/line';
+import { routeLabel, stopName } from '@/lib/route-label';
 import { cn } from '@/lib/utils';
 
 import { useLandingState } from './landing-state';
@@ -114,7 +115,7 @@ export function LiveMapDevice({ dashboardHref }: { dashboardHref?: string }) {
           <span className="absolute top-[80.7%] left-[11.6%] size-3.5 -translate-1/2 rounded-full border-3 border-night-700 bg-stone-50" />
           <div className="absolute top-[21%] left-[83.3%] flex -translate-x-1/2 -translate-y-full flex-col items-center gap-1">
             <span className="rounded-sm bg-stone-50 px-2.5 py-1.25 text-xs font-semibold whitespace-nowrap text-ink-900">
-              {tr('landing.map.dropoff', { place: dropoff.area })}
+              {tr('landing.map.dropoff', { place: stopName(dropoff, pickup) })}
             </span>
             <svg width="18" height="22" viewBox="0 0 18 22">
               <path d="M9 21s7-7 7-12A7 7 0 0 0 2 9c0 5 7 12 7 12Z" className="fill-stone-50" />
@@ -136,7 +137,7 @@ export function LiveMapDevice({ dashboardHref }: { dashboardHref?: string }) {
               geometry={sample.geometry}
               van={geo.point}
               done={geo.done}
-              dropoffLabel={tr('landing.map.dropoff', { place: dropoff.area })}
+              dropoffLabel={tr('landing.map.dropoff', { place: stopName(dropoff, pickup) })}
               onReady={() => setMapState('ready')}
               onFail={() => setMapState('failed')}
             />
@@ -149,7 +150,7 @@ export function LiveMapDevice({ dashboardHref }: { dashboardHref?: string }) {
           status={tr('landing.map.status')}
           subtitle={tr('landing.map.subtitle', { vehicle: tr(`vehicles.${cls}.name`) })}
           avatar="EM"
-          route={`${pickup.area} → ${dropoff.area}`}
+          route={routeLabel(pickup, dropoff, (city) => tr('landing.quote.withinCity', { city }))}
           progress={t}
           progressLabel={tr('landing.map.progress')}
           stats={[

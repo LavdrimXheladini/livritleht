@@ -5,7 +5,8 @@
     "back": "Wstecz",
     "loading": "Ładowanie…",
     "errorGeneric": "Coś poszło nie tak. Spróbuj ponownie.",
-    "signOut": "Wyloguj się"
+    "signOut": "Wyloguj się",
+    "backToTop": "Wróć na górę"
   },
   "auth": {
     "title": "Zaloguj się",
@@ -57,7 +58,9 @@
     "ferizaj": "Ferizaj",
     "podgorica": "Podgorica",
     "mokotow": "Mokotów",
-    "wola": "Wola"
+    "wola": "Wola",
+    "dardania": "Dardania",
+    "velania": "Velania"
   },
   "vehicles": {
     "SMALL": {
@@ -116,6 +119,7 @@
       "soonText": "Zapisz się na listę, a napiszemy do Ciebie, gdy przewoźnicy w Twojej okolicy pojawią się w Ranktrip.",
       "soonLink": "Zapisz się na listę →",
       "from": "od",
+      "local": "Lokalne",
       "domestic": "Krajowe",
       "crossBorder": "Międzynarodowe",
       "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} h",
@@ -124,7 +128,8 @@
       "noResults": "Nie znaleziono adresu. Wpisz ulicę i miasto.",
       "searchError": "Wyszukiwanie adresów jest teraz niedostępne. Spróbuj za chwilę.",
       "samePlace": "Odbiór i dostawa to to samo miejsce.",
-      "routeError": "Nie udało się wyznaczyć trasy. Spróbuj innego adresu."
+      "routeError": "Nie udało się wyznaczyć trasy. Spróbuj innego adresu.",
+      "withinCity": "W obrębie miasta · {{city}}"
     },
     "map": {
       "status": "W drodze",
@@ -198,7 +203,8 @@
       "chart": "Przykładowa cena w zależności od dystansu dla każdego rodzaju pojazdu",
       "classes": "Rodzaj pojazdu",
       "corridors": "Popularne trasy",
-      "hint": "Kliknij trasę, aby wczytać ją do kalkulatora powyżej. Przykładowe stawki; długie trasy są tańsze za km."
+      "hint": "Kliknij trasę, aby wczytać ją do kalkulatora powyżej. Przykładowe stawki; długie trasy są tańsze za km.",
+      "localCorridor": "{{city}}: {{from}} → {{to}}"
     },
     "movers": {
       "title": "Stworzone dla\nniezależnych przewoźników.",

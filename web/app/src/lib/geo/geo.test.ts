@@ -28,6 +28,15 @@ describe('formatPhotonFeature', () => {
     expect(s?.label).toBe('Prizren, Kosovo');
   });
 
+  it('keeps the neighbourhood, so moves within one city can show it', () => {
+    const s = formatPhotonFeature(
+      feature({ street: 'Puławska', housenumber: '10', district: 'Mokotów', city: 'Warszawa', country: 'Poland', countrycode: 'PL' }),
+    );
+    expect(s).toMatchObject({ label: 'Puławska 10, Mokotów, Warszawa, Poland', area: 'Warszawa', district: 'Mokotów' });
+    const d = formatPhotonFeature(feature({ name: 'Dardania', city: 'Prishtinë', country: 'Kosovo', countrycode: 'XK', type: 'district' }));
+    expect(d).toMatchObject({ label: 'Dardania, Prishtinë, Kosovo', area: 'Prishtinë', district: 'Dardania' });
+  });
+
   it('rejects results without a usable country code', () => {
     expect(formatPhotonFeature(feature({ name: 'Somewhere' }))).toBeNull();
   });

@@ -1,7 +1,7 @@
 import 'server-only';
 
 import type { Place, VehicleClass } from '@ranktrip/shared';
-import { VEHICLE_CLASSES } from '@ranktrip/shared';
+import { PLATFORM_TAKE_RATE_PCT, VEHICLE_CLASSES, moveScope } from '@ranktrip/shared';
 
 import { geoProvider } from './geo/provider';
 import { haversineM } from './geo/types';
@@ -23,8 +23,6 @@ const EXAMPLE_RATES: Record<VehicleClass, { baseCents: number; perKmCents: numbe
 const LONG_DISTANCE_KM = 150;
 const LONG_DISTANCE_FACTOR = 0.55;
 const HELPER_CENTS = 2500;
-/** Platform commission (COMPLIANCE §1 ALLOWED): 20% domestic, 15% cross-border. */
-const TAKE_RATE_PCT = { domestic: 20, crossBorder: 15 } as const;
 /** Loading + unloading added to driving time for the "≈ h" estimate. */
 const HANDLING_HOURS = 1;
 
@@ -47,7 +45,7 @@ export async function sampleQuote(pickup: Place, dropoff: Place): Promise<Sample
   const durationS = route?.durationS ?? (distanceM / 1000 / 70) * 3600;
   const km = Math.max(1, Math.round(distanceM / 1000));
   const crossBorder = pickup.countryCode !== dropoff.countryCode;
-  const takeRatePct = crossBorder ? TAKE_RATE_PCT.crossBorder : TAKE_RATE_PCT.domestic;
+  const takeRatePct = crossBorder ? PLATFORM_TAKE_RATE_PCT.crossBorder : PLATFORM_TAKE_RATE_PCT.domestic;
 
   const withPayout = (cls: VehicleClass, helpers: number) => {
     const price = examplePriceCents(cls, km, helpers);
@@ -60,6 +58,7 @@ export async function sampleQuote(pickup: Place, dropoff: Place): Promise<Sample
   return {
     km,
     crossBorder,
+    scope: moveScope(pickup, dropoff, km),
     hours: Math.max(1, Math.round(durationS / 3600 + HANDLING_HOURS)),
     takeRatePct,
     prices,
@@ -84,11 +83,13 @@ export function exampleCurves(): ExampleCurves {
   ) as ExampleCurves;
 }
 
-/** Popular corridors (design order); clicking one loads the city centres into the quote widget. */
+/** Popular routes; clicking one loads it into the quote widget. Local moves first, like most moves. */
 export const CORRIDORS: readonly Corridor[] = [
+  { from: 'dardania', to: 'velania' },
   { from: 'prishtina', to: 'prizren' },
   { from: 'prishtina', to: 'tirana' },
   { from: 'skopje', to: 'prishtina' },
+  { from: 'mokotow', to: 'wola' },
   { from: 'warsaw', to: 'krakow' },
   { from: 'munich', to: 'prishtina' },
   { from: 'zurich', to: 'prishtina' },

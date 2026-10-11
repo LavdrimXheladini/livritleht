@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { formatMoney, type Locale } from '@ranktrip/shared';
 import { Button, CheckIcon, Pill } from '@ranktrip/ui/web';
 
+import { routeLabel, stopName } from '@/lib/route-label';
+
 import { useLandingState } from './landing-state';
 
 /**
@@ -18,9 +20,8 @@ export function MoverPhone({ locale }: { locale: Locale }) {
   const { pickup, dropoff, cls, crew, route } = useLandingState();
   const [state, setState] = useState<'pending' | 'accepted' | 'declined'>('pending');
   const money = (c: number) => formatMoney(c, 'EUR', locale, { wholeUnits: true });
-  // Only the area (city / district) before the mover accepts — never the street (COMPLIANCE §9.1).
-  const from = pickup.area;
-  const to = dropoff.area;
+  // Only the city / neighbourhood before the mover accepts — never the street (COMPLIANCE §9.1).
+  const routeText = routeLabel(pickup, dropoff, (city) => t('landing.quote.withinCity', { city }));
   const [moverPriceCents, payoutCents] = route.prices[cls][crew - 1];
 
   return (
@@ -47,9 +48,7 @@ export function MoverPhone({ locale }: { locale: Locale }) {
                   </svg>
                 </div>
                 <div className="flex justify-between gap-2 text-sm">
-                  <span className="font-semibold">
-                    {from} → {to}
-                  </span>
+                  <span className="font-semibold">{routeText}</span>
                   <span className="shrink-0 text-sage-400">{route.km} km</span>
                 </div>
                 <div className="-mt-1.5 text-[11.5px] text-sage-400">{t('landing.movers.phone.district')}</div>
@@ -57,7 +56,7 @@ export function MoverPhone({ locale }: { locale: Locale }) {
                   <Pill tone="dark" shape="tag">{t(`vehicles.${cls}.name`)}</Pill>
                   <Pill tone="dark" shape="tag">{t(`landing.movers.phone.crew${crew}`)}</Pill>
                   <Pill tone="dark" shape="tag">
-                    {route.crossBorder ? t('landing.quote.crossBorder') : t('landing.quote.domestic')}
+                    {t(`landing.quote.${route.scope}`)}
                   </Pill>
                 </div>
                 <div className="flex items-end justify-between gap-3 border-t border-night-500 pt-3">
@@ -92,7 +91,7 @@ export function MoverPhone({ locale }: { locale: Locale }) {
                 </div>
                 <div className="text-sm leading-normal text-sage-400">
                   {state === 'accepted'
-                    ? t('landing.movers.phone.acceptedText', { place: from })
+                    ? t('landing.movers.phone.acceptedText', { place: stopName(pickup, dropoff) })
                     : t('landing.movers.phone.declinedText')}
                 </div>
               </div>

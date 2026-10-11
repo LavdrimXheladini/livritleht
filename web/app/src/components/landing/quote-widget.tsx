@@ -114,7 +114,7 @@ export function QuoteWidget({ locale }: { locale: Locale }) {
           <div className={cn('text-right transition-opacity', pending && 'opacity-60')} aria-live="polite">
             <div className="text-[12.5px] text-ink-600">
               {t('landing.quote.summary', {
-                kind: route.crossBorder ? t('landing.quote.crossBorder') : t('landing.quote.domestic'),
+                kind: t(`landing.quote.${route.scope}`),
                 km: formatNumber(route.km, locale),
                 hours: route.hours,
               })}

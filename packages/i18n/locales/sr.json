@@ -5,7 +5,8 @@
     "back": "Nazad",
     "loading": "Učitavanje…",
     "errorGeneric": "Nešto nije u redu. Pokušajte ponovo.",
-    "signOut": "Odjavi se"
+    "signOut": "Odjavi se",
+    "backToTop": "Nazad na vrh"
   },
   "auth": {
     "title": "Prijava",
@@ -57,7 +58,9 @@
     "ferizaj": "Uroševac",
     "podgorica": "Podgorica",
     "mokotow": "Mokotov",
-    "wola": "Vola"
+    "wola": "Vola",
+    "dardania": "Dardanija",
+    "velania": "Velanija"
   },
   "vehicles": {
     "SMALL": {
@@ -116,6 +119,7 @@
       "soonText": "Prijavite se na listu čekanja i javićemo vam se mejlom kada prevoznici u vašoj blizini budu na Ranktripu.",
       "soonLink": "Prijavi se na listu →",
       "from": "od",
+      "local": "Lokalno",
       "domestic": "Domaće",
       "crossBorder": "Međunarodno",
       "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} h",
@@ -124,7 +128,8 @@
       "noResults": "Adresa nije pronađena. Probajte ulicu i grad.",
       "searchError": "Pretraga adresa trenutno nije dostupna. Pokušajte ponovo za trenutak.",
       "samePlace": "Preuzimanje i dostava su isto mesto.",
-      "routeError": "Nismo uspeli da izračunamo ovu rutu. Probajte drugu adresu."
+      "routeError": "Nismo uspeli da izračunamo ovu rutu. Probajte drugu adresu.",
+      "withinCity": "Unutar grada · {{city}}"
     },
     "map": {
       "status": "Na putu",
@@ -198,7 +203,8 @@
       "chart": "Primer cene po razdaljini za svaku vrstu vozila",
       "classes": "Vrsta vozila",
       "corridors": "Popularne rute",
-      "hint": "Dodirnite koridor da ga učitate u kalkulator iznad. Primer tarifa; duže relacije su jeftinije po km."
+      "hint": "Dodirnite koridor da ga učitate u kalkulator iznad. Primer tarifa; duže relacije su jeftinije po km.",
+      "localCorridor": "{{city}}: {{from}} → {{to}}"
     },
     "movers": {
       "title": "Napravljeno za\nnezavisne prevoznike.",

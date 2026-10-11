@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { VEHICLE_CLASSES, formatMoney, formatNumber, type Locale, type VehicleClass } from '@ranktrip/shared';
 import { Card, ChipGroup } from '@ranktrip/ui/web';
 
-import { demoPlace } from '@/lib/geo/types';
+import { DEMO_DISTRICTS, demoPlaceById, isDemoDistrict } from '@/lib/geo/types';
 import type { Corridor, ExampleCurves } from '@/lib/landing-types';
 
 import { useLandingState } from './landing-state';
@@ -53,6 +53,13 @@ export function PricingChart({
     setKm(snap(route.km));
   }
   const keyOf = (c: Corridor) => `${c.from}>${c.to}`;
+  // "Prishtina: Dardania → Velania" for a move within one city, "Prishtina → Prizren" otherwise.
+  const corridorLabel = (c: Corridor) => {
+    const from = t(`places.${c.from}`);
+    const to = t(`places.${c.to}`);
+    const district = isDemoDistrict(c.from) ? DEMO_DISTRICTS.find((d) => d.id === c.from) : undefined;
+    return district ? t('landing.pricing.localCorridor', { city: t(`places.${district.city}`), from, to }) : `${from} → ${to}`;
+  };
 
   const at = (c: VehicleClass, d: number) => curves[c][Math.round(d / stepKm)] ?? 0;
   const priceCents = at(cls, km);
@@ -154,12 +161,9 @@ export function PricingChart({
           const c = corridors.find((x) => keyOf(x) === key);
           if (!c) return;
           setCorridor(key);
-          setPlaces(demoPlace(c.from, t(`places.${c.from}`)), demoPlace(c.to, t(`places.${c.to}`)));
+          setPlaces(demoPlaceById(c.from, t), demoPlaceById(c.to, t));
         }}
-        options={corridors.map((c) => ({
-          value: keyOf(c),
-          label: `${t(`places.${c.from}`)} → ${t(`places.${c.to}`)}`,
-        }))}
+        options={corridors.map((c) => ({ value: keyOf(c), label: corridorLabel(c) }))}
         className="mx-auto mt-7 max-w-[900px] justify-center"
       />
       <p className="mx-auto mt-3.5 mb-0 max-w-[640px] text-center text-xs text-ink-500">{t('landing.pricing.hint')}</p>

@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation';
 
 import { LOCALES, isLocale } from '@ranktrip/i18n';
 
+import { BackToTop } from '@/components/back-to-top';
 import { I18nProvider } from '@/components/i18n-provider';
+import { SmoothScroll } from '@/components/smooth-scroll';
 import { getT } from '@/lib/i18n';
 
 import './globals.css';
@@ -36,7 +38,11 @@ export default async function RootLayout({ children, params }: LayoutProps<'/[la
       className={`${archivo.variable} ${geist.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <I18nProvider locale={lang}>{children}</I18nProvider>
+        <I18nProvider locale={lang}>
+          {children}
+          <SmoothScroll />
+          <BackToTop />
+        </I18nProvider>
       </body>
     </html>
   );

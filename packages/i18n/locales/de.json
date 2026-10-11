@@ -5,7 +5,8 @@
     "back": "Zurück",
     "loading": "Wird geladen…",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-    "signOut": "Abmelden"
+    "signOut": "Abmelden",
+    "backToTop": "Nach oben"
   },
   "auth": {
     "title": "Anmelden",
@@ -57,7 +58,9 @@
     "ferizaj": "Ferizaj",
     "podgorica": "Podgorica",
     "mokotow": "Mokotów",
-    "wola": "Wola"
+    "wola": "Wola",
+    "dardania": "Dardania",
+    "velania": "Velania"
   },
   "vehicles": {
     "SMALL": {
@@ -116,6 +119,7 @@
       "soonText": "Trag dich in die Warteliste ein, und wir schreiben dir, sobald Umzugsunternehmen in deiner Nähe auf Ranktrip sind.",
       "soonLink": "Zur Warteliste →",
       "from": "ab",
+      "local": "Nahumzug",
       "domestic": "Inland",
       "crossBorder": "Grenzüberschreitend",
       "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} Std.",
@@ -124,7 +128,8 @@
       "noResults": "Keine Adresse gefunden. Versuch es mit Straße und Ort.",
       "searchError": "Die Adresssuche ist gerade nicht verfügbar. Versuch es gleich noch einmal.",
       "samePlace": "Abholung und Lieferung sind derselbe Ort.",
-      "routeError": "Diese Strecke konnten wir nicht berechnen. Versuch eine andere Adresse."
+      "routeError": "Diese Strecke konnten wir nicht berechnen. Versuch eine andere Adresse.",
+      "withinCity": "Innerhalb von {{city}}"
     },
     "map": {
       "status": "Unterwegs",
@@ -198,7 +203,8 @@
       "chart": "Beispielpreis nach Strecke für jede Fahrzeugklasse",
       "classes": "Fahrzeugklasse",
       "corridors": "Beliebte Strecken",
-      "hint": "Tippe auf einen Korridor, um ihn oben in den Preisrechner zu laden. Beispieltarife; lange Strecken sind pro km günstiger."
+      "hint": "Tippe auf einen Korridor, um ihn oben in den Preisrechner zu laden. Beispieltarife; lange Strecken sind pro km günstiger.",
+      "localCorridor": "{{city}}: {{from}} → {{to}}"
     },
     "movers": {
       "title": "Gemacht für\nunabhängige Umzugsunternehmen.",
