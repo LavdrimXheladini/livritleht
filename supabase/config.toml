@@ -396,6 +396,11 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# Prices for visitors who haven't signed in (like the landing page): no JWT required.
+# Mover data is read inside the function with the service role; the request never carries a price.
+[functions.quote]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

@@ -7,6 +7,8 @@ import { z } from 'zod';
 export const placeSchema = z.object({
   label: z.string().trim().min(1).max(200),
   area: z.string().trim().min(1).max(120),
+  /** Neighbourhood inside the city ("Dardania", "Mokotów") when known — shows moves within one city. */
+  district: z.string().trim().min(1).max(120).optional(),
   lat: z.number().min(-90).max(90),
   lon: z.number().min(-180).max(180),
   /** ISO 3166-1 alpha-2, plus XK for Kosovo. */

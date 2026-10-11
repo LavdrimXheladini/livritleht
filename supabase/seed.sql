@@ -1,7 +1,7 @@
 -- Local dev seed. Sign in with the test numbers from config.toml [auth.sms.test_otp]
 -- (code 123456) or any email via Mailpit at http://127.0.0.1:54324.
 --   +383 44 000 001 → customer      +48 500 000 001 → mover
--- Movers, vehicles and rate cards are added when those tables exist (build step 2).
+-- Sample movers, vehicles and rate cards come from migration 20261012091000_test_movers.sql (is_test).
 
 insert into auth.users (instance_id, id, aud, role, phone, phone_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 values

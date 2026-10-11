@@ -57,6 +57,28 @@ export function isLocale(value: string): value is Locale {
   return (LOCALES as readonly string[]).includes(value);
 }
 
+/** Currencies a rate card may use. Corridor (cross-border) jobs are always priced in EUR (COMPLIANCE §11). */
+export const CURRENCIES = ['EUR', 'PLN', 'CHF', 'ALL', 'MKD', 'RSD'] as const;
+export type Currency = (typeof CURRENCIES)[number];
+
+/** People loading and unloading, including the mover: 1 = mover only, 2 = mover + 1 helper, 3 = mover + 2 helpers. */
+export const CREW_SIZES = [1, 2, 3] as const;
+export type CrewSize = (typeof CREW_SIZES)[number];
+
+/** Platform commission on the mover's price, whole percent (COMPLIANCE §1 ALLOWED). */
+export const PLATFORM_TAKE_RATE_PCT = { domestic: 20, crossBorder: 15 } as const;
+
+/** Ranktrip's customer booking fee: a flat amount per currency, or a percent of the mover's price. */
+export type BookingFeeRule =
+  | { kind: 'flat'; amountByCurrency: Partial<Record<Currency, number>> }
+  | { kind: 'percent'; pct: number };
+
+/**
+ * The customer booking fee — always its own line next to the mover's price (COMPLIANCE §1 ALLOWED).
+ * Amount not decided yet (design/DECISIONS.md #6): `null` = shown as "to be announced", not charged.
+ */
+export const BOOKING_FEE_RULE: BookingFeeRule | null = null;
+
 /**
  * Display facts per vehicle class (COMPLIANCE §1.1 table). Categories only — never prices.
  * Names and "fits" text are translated in @ranktrip/i18n under `vehicles.<CLASS>`.
