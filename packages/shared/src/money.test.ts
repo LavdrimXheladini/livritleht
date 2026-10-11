@@ -19,6 +19,10 @@ describe('formatMoney', () => {
     expect(formatMoney(120000, 'EUR', 'en')).toBe('€1,200');
     expect(formatMoney(120000, 'EUR', 'de')).toBe(`1.200${NBSP}€`);
     expect(formatMoney(100000, 'PLN', 'pl')).toBe(`1000${NBSP}zł`); // Polish groups from 5 digits
+    // Letter symbols after the amount even in English; € stays in front.
+    expect(formatMoney(78100, 'PLN', 'en')).toBe(`781${NBSP}zł`);
+    expect(formatMoney(28000, 'CHF', 'en')).toBe(`280${NBSP}CHF`);
+    expect(formatMoney(440900, 'ALL', 'en')).toBe(`4,409${NBSP}L`);
     expect(formatMoney(1000000, 'PLN', 'pl')).toBe(`10${NBSP}000${NBSP}zł`);
   });
 

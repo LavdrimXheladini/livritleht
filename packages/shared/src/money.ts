@@ -73,5 +73,8 @@ export function formatMoney(
     amount = `${groupDigits(String(units), rules)}${rules.decimal}${rest}`;
   }
 
-  return rules.symbolFirst ? `${sign}${symbol}${amount}` : `${sign}${amount}${NBSP}${symbol}`;
+  // A sign-like symbol goes first where the language does that ("€162"); letters always go after the
+  // amount ("781 zł", "280 CHF", "4,409 L") — "zł781" reads wrong in any language.
+  const signLike = symbol.length === 1 && !/\p{L}/u.test(symbol);
+  return rules.symbolFirst && signLike ? `${sign}${symbol}${amount}` : `${sign}${amount}${NBSP}${symbol}`;
 }
