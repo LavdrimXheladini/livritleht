@@ -55,7 +55,9 @@
     "peja": "Peja",
     "gjakova": "Gjakova",
     "ferizaj": "Ferizaj",
-    "podgorica": "Podgorica"
+    "podgorica": "Podgorica",
+    "mokotow": "Mokotów",
+    "wola": "Wola"
   },
   "vehicles": {
     "SMALL": {
@@ -312,6 +314,135 @@
       "invalid": "Gib eine gültige E-Mail-Adresse ein.",
       "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
       "legal": "© {{year}} Ranktrip. Umzugsunternehmen sind unabhängige Betriebe."
+    }
+  },
+  "dashboard": {
+    "title": "Live-Umzüge",
+    "subtitle": "Jeder aktive Auftrag auf der Karte, in Echtzeit",
+    "play": "Abspielen",
+    "pause": "Pause",
+    "ops": "Betrieb · Ranktrip",
+    "note": "Simulierte Daten für die Demo: drei Beispielaufträge von Beispiel-Umzugsunternehmen. Routen und Entfernungen sind echt; die Preise nutzen dieselben Beispieltarife wie die Startseite. Bei einer echten Buchung legt jedes Umzugsunternehmen seinen eigenen Preis fest.",
+    "rail": {
+      "label": "Dashboard",
+      "home": "Zurück zur Website",
+      "map": "Live-Karte",
+      "bookings": "Buchungen",
+      "movers": "Umzugsunternehmen",
+      "payouts": "Auszahlungen",
+      "settings": "Einstellungen",
+      "soon": "bald verfügbar"
+    },
+    "stats": {
+      "label": "Überblick",
+      "live": "Live-Umzüge",
+      "online": "Umzugsunternehmen online",
+      "gmv": "Buchungswert heute",
+      "simulated": "Simulierte Daten"
+    },
+    "views": {
+      "label": "Ansicht",
+      "map": "Karte",
+      "load": "Ladung"
+    },
+    "status": {
+      "loading": "Beladen",
+      "onTheWay": "Unterwegs",
+      "atDropoff": "Am Ziel"
+    },
+    "job": {
+      "subtitle": "{{vehicle}} · {{company}}",
+      "route": "{{from}} → {{to}}",
+      "km": "km",
+      "progress": "Routenfortschritt",
+      "eta": "Ankunft {{time}}",
+      "left": "Noch {{km}} km",
+      "speed": "Tempo",
+      "kmh": "km/h",
+      "load": "Ladung",
+      "volume": "{{used}} / {{cap}} m³",
+      "crossBorder": "Grenzüberschreitend · {{pct}} % Provision",
+      "crossBorderCustoms": "Grenzüberschreitend · Zolldokumente nötig (außerhalb der EU) · {{pct}} % Provision",
+      "focus": "{{id}} anzeigen, {{from}} → {{to}}",
+      "min": "{{m}} Min.",
+      "hm": "{{h}} Std. {{m}} Min."
+    },
+    "map": {
+      "hint": "Klicke auf ein Fahrzeug, um es anzuzeigen",
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "heading": "Richtung {{dir}}",
+      "unavailable": "Die Karte konnte nicht geladen werden. Die Auftragsdetails unten werden weiter aktualisiert.",
+      "gestureWindows": "Strg + Scrollen zum Zoomen der Karte",
+      "gestureMac": "⌘ + Scrollen zum Zoomen der Karte",
+      "gestureMobile": "Mit zwei Fingern die Karte bewegen"
+    },
+    "jobs": {
+      "title": "Aktive Aufträge",
+      "count": "{{shown}} von {{total}}"
+    },
+    "items": {
+      "title": "Gegenstände ({{n}})",
+      "size": "Maße",
+      "volume": "Volumen",
+      "room": "Raum",
+      "mixed": "gemischt",
+      "fragileNote": "Zerbrechlich — einpacken und zuletzt laden."
+    },
+    "itemNames": {
+      "sofa": "Sofa, 3-Sitzer",
+      "wardrobe": "Kleiderschrank (zerlegt)",
+      "mattress": "Matratze 160",
+      "washingMachine": "Waschmaschine",
+      "mirror": "Spiegel",
+      "boxes": "Kartons",
+      "plants": "Pflanzen",
+      "tv": "TV 55\"",
+      "desk": "Schreibtisch",
+      "bicycle": "Fahrrad",
+      "suitcases": "Koffer",
+      "armchair": "Sessel",
+      "bookshelf": "Bücherregal",
+      "lamp": "Lampe"
+    },
+    "rooms": {
+      "living": "Wohnzimmer",
+      "bedroom": "Schlafzimmer",
+      "bathroom": "Bad",
+      "hall": "Flur",
+      "all": "Alle Räume",
+      "balcony": "Balkon",
+      "office": "Arbeitszimmer",
+      "garage": "Garage"
+    },
+    "actions": {
+      "call": "Umzugsunternehmen anrufen",
+      "callNote": "Demo: Bei einer echten Buchung ruft das die Umzugsfirma an.",
+      "share": "Live-Link teilen",
+      "copied": "Link kopiert ✓",
+      "shareNote": "Demo-Link kopiert. Echte Tracking-Links laufen ab, wenn der Auftrag endet."
+    },
+    "timeline": {
+      "label": "Auftragsfortschritt",
+      "booked": "Gebucht",
+      "cardSaved": "Karte gespeichert · Abbuchung nach dem Umzug",
+      "accepted": "Umzugsunternehmen hat angenommen",
+      "pickedUp": "Abgeholt",
+      "onTheWay": "Unterwegs",
+      "delivered": "Geliefert"
+    },
+    "load": {
+      "title": "Ladeplan · {{vehicle}}",
+      "subtitle": "Vom Umzugsunternehmen bei der Abholung geplant · {{volume}}",
+      "selected": "Ausgewählt",
+      "fragile": "Zerbrechlich",
+      "item": "Gegenstand",
+      "free": "Frei"
+    },
+    "companies": {
+      "a": "Example Moving Co.",
+      "b": "Sample Transport Co.",
+      "c": "Demo Relocations Co."
     }
   }
 }

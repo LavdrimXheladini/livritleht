@@ -42,7 +42,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
             <QuoteWidget locale={lang} />
           </section>
           <section id="live" aria-label={t('landing.nav.demo')} className="scroll-mt-5 px-3 pb-6 sm:px-6">
-            <LiveMapDevice />
+            <LiveMapDevice dashboardHref={`/${lang}/live`} />
           </section>
         </Sheet>
 

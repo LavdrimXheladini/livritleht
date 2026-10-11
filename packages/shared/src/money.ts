@@ -40,6 +40,14 @@ export function formatNumber(value: number, locale: Locale): string {
   return sign + groupDigits(String(Math.abs(Math.round(value))), rules);
 }
 
+/** Locale-aware number with one decimal, from an integer count of tenths (e.g. 53 → "5.3" / "5,3"). */
+export function formatTenths(tenths: number, locale: Locale): string {
+  if (!Number.isInteger(tenths)) throw new Error(`formatTenths expects an integer, got ${tenths}`);
+  const sign = tenths < 0 ? '-' : '';
+  const abs = Math.abs(tenths);
+  return `${sign}${groupDigits(String(Math.floor(abs / 10)), RULES[locale])}${RULES[locale].decimal}${abs % 10}`;
+}
+
 export function formatMoney(
   cents: number,
   currency: string,

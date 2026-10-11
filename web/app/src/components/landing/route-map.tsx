@@ -8,29 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { colors } from '@ranktrip/ui';
 
 import type { LineCoords } from '@/lib/geo/types';
-import { themeMapStyle, type StyleSpecification } from '@/lib/map/theme-style';
-
-// Free vector tiles (OpenStreetMap data via OpenFreeMap — no key). Attribution is shown on the map
-// as their licence requires. Swap for Google Maps once billing is set up.
-const STYLE_URL = 'https://tiles.openfreemap.org/styles/dark';
-/** MapLibre's worker, copied to public/ by scripts/dev-prep.mjs (the bundler doesn't emit it). */
-const WORKER_URL = '/vendor/maplibre-gl-worker.mjs';
-
-const VAN_SVG =
-  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>';
-
-const lineFeature = (coords: LineCoords) => ({
-  type: 'Feature' as const,
-  properties: {},
-  geometry: { type: 'LineString' as const, coordinates: coords },
-});
-
-function el(className: string, html = ''): HTMLDivElement {
-  const div = document.createElement('div');
-  div.className = className;
-  div.innerHTML = html;
-  return div;
-}
+import { lineCollection, loadMapLibre, markerElement as el, VAN_SVG } from '@/lib/map/load';
 
 /**
  * Live route map (decorative on the landing page: no pan/zoom). Loads MapLibre and the tiles only
@@ -73,20 +51,16 @@ export function RouteMap({
 
     const init = async () => {
       try {
-        const [{ Map, Marker, LngLatBounds, setWorkerUrl, getVersion }, style] = await Promise.all([
-          import('maplibre-gl'),
-          fetch(STYLE_URL).then((r) => {
-            if (!r.ok) throw new Error(`style ${r.status}`);
-            return r.json() as Promise<StyleSpecification>;
-          }),
-        ]);
+        const {
+          lib: { Map, Marker, LngLatBounds },
+          style,
+        } = await loadMapLibre();
         if (cancelled) return;
-        setWorkerUrl(`${WORKER_URL}?v=${getVersion()}`);
         const { geometry: g, van: v, dropoffLabel: label } = latest.current;
         const bounds = g.reduce((b, c) => b.extend(c), new LngLatBounds(g[0]!, g[0]!));
         const m = new Map({
           container: node,
-          style: themeMapStyle(style),
+          style,
           bounds,
           fitBoundsOptions: { padding: fitPadding(node) },
           interactive: false,
@@ -96,10 +70,8 @@ export function RouteMap({
 
         m.on('load', () => {
           if (cancelled) return;
-          const route = { type: 'FeatureCollection' as const, features: [lineFeature(latest.current.geometry)] };
-          const travelled = { type: 'FeatureCollection' as const, features: [lineFeature(latest.current.done)] };
-          m.addSource('route', { type: 'geojson', data: route });
-          m.addSource('done', { type: 'geojson', data: travelled });
+          m.addSource('route', { type: 'geojson', data: lineCollection(latest.current.geometry) });
+          m.addSource('done', { type: 'geojson', data: lineCollection(latest.current.done) });
           m.addLayer({
             id: 'route',
             type: 'line',
@@ -172,7 +144,7 @@ export function RouteMap({
   useEffect(() => {
     const m = map.current;
     if (!m || !loaded) return;
-    (m.getSource('route') as GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: [lineFeature(geometry)] });
+    (m.getSource('route') as GeoJSONSource | undefined)?.setData(lineCollection(geometry));
     markers.current?.pickup.setLngLat(geometry[0]!);
     markers.current?.dropoff.setLngLat(geometry[geometry.length - 1]!);
     const node = container.current;
@@ -192,7 +164,7 @@ export function RouteMap({
     const m = map.current;
     if (!m || !loaded) return;
     markers.current?.van.setLngLat(van);
-    (m.getSource('done') as GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: [lineFeature(done)] });
+    (m.getSource('done') as GeoJSONSource | undefined)?.setData(lineCollection(done));
   }, [van, done, loaded]);
 
   // Explicit size: maplibre-gl.css sets the container to position:relative, so inset-based sizing

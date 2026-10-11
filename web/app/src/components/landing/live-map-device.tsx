@@ -68,7 +68,7 @@ function useProgress(): number {
   return t;
 }
 
-/** Hero "live tracking" device. `dashboardHref` is omitted until the dashboard exists (redesign step 5). */
+/** Hero "live tracking" device; `dashboardHref` links to the full "Live moves" dashboard. */
 export function LiveMapDevice({ dashboardHref }: { dashboardHref?: string }) {
   const { t: tr } = useTranslation();
   // Mirrors the quote built above (addresses, road route, vehicle class).
@@ -88,7 +88,7 @@ export function LiveMapDevice({ dashboardHref }: { dashboardHref?: string }) {
   const showSketch = mapState !== 'ready';
 
   return (
-    <DarkPanel variant="frame" className="mx-auto max-w-[1300px]">
+    <DarkPanel variant="frame" className="@container relative mx-auto max-w-[1300px]">
       <div className="relative h-[clamp(420px,46vw,560px)] overflow-hidden rounded-card bg-night-700">
         {/* Stylised placeholder / fallback */}
         <div aria-hidden="true" className={cn('absolute inset-0 transition-opacity duration-700', !showSketch && 'opacity-0')}>
@@ -169,15 +169,17 @@ export function LiveMapDevice({ dashboardHref }: { dashboardHref?: string }) {
           </div>
         </div>
 
-        {/* Left part only: the map's licence attribution sits bottom-right. */}
-        <div className="pointer-events-none absolute right-28 bottom-4 left-5 flex flex-wrap justify-between gap-3 text-xs text-sage-400">
-          <span>{tr('landing.map.footer')}</span>
-          {dashboardHref ? (
-            <a href={dashboardHref} className="pointer-events-auto text-accent-300 no-underline hover:text-accent-200">
-              {tr('landing.map.dashboard')}
-            </a>
-          ) : null}
-        </div>
+      </div>
+
+      {/* Below the map on narrow screens (the map's licence credit wraps there); over the map's bottom
+          edge when wide, left of the credit (~360px, bottom-right). */}
+      <div className="flex flex-wrap justify-between gap-x-3 gap-y-1 px-2 pt-2.5 pb-1 text-xs text-sage-400 @3xl:pointer-events-none @3xl:absolute @3xl:right-100 @3xl:bottom-7 @3xl:left-8 @3xl:z-10 @3xl:p-0">
+        <span>{tr('landing.map.footer')}</span>
+        {dashboardHref ? (
+          <a href={dashboardHref} className="pointer-events-auto text-accent-300 no-underline hover:text-accent-200">
+            {tr('landing.map.dashboard')}
+          </a>
+        ) : null}
       </div>
     </DarkPanel>
   );

@@ -125,16 +125,18 @@
   }
 }
 
-/* MapLibre attribution (licence-required credit) in the night palette instead of the default white box. */
-.maplibregl-ctrl.maplibregl-ctrl-attrib {
+/* MapLibre attribution (licence-required credit) in the night palette instead of the default white box.
+   The `.maplibregl-map` prefix outranks maplibre-gl.css, which loads later with the map chunk and
+   would otherwise win the tie (its compact rule sets a solid white background). */
+.maplibregl-map .maplibregl-ctrl.maplibregl-ctrl-attrib {
   background: color-mix(in srgb, var(--color-night-900) 80%, transparent);
   color: var(--color-sage-400);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
 }
-.maplibregl-ctrl.maplibregl-ctrl-attrib a {
+.maplibregl-map .maplibregl-ctrl.maplibregl-ctrl-attrib a {
   color: var(--color-sage-300);
 }
-.maplibregl-ctrl.maplibregl-ctrl-attrib .maplibregl-ctrl-attrib-button {
+.maplibregl-map .maplibregl-ctrl.maplibregl-ctrl-attrib .maplibregl-ctrl-attrib-button {
   filter: invert(1);
 }

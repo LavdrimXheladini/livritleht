@@ -55,7 +55,9 @@
     "peja": "Peja",
     "gjakova": "Gjakova",
     "ferizaj": "Ferizaj",
-    "podgorica": "Podgorica"
+    "podgorica": "Podgorica",
+    "mokotow": "Mokotów",
+    "wola": "Wola"
   },
   "vehicles": {
     "SMALL": {
@@ -312,6 +314,135 @@
       "invalid": "Enter a valid email address.",
       "error": "Something went wrong. Please try again.",
       "legal": "© {{year}} Ranktrip. Movers are independent businesses."
+    }
+  },
+  "dashboard": {
+    "title": "Live moves",
+    "subtitle": "Every active job on the map, in real time",
+    "play": "Play",
+    "pause": "Pause",
+    "ops": "Ops · Ranktrip",
+    "note": "Simulated data for the demo: three sample jobs by sample movers. Routes and distances are real; prices use the same sample rates as the home page. On a real booking each mover sets their own price.",
+    "rail": {
+      "label": "Dashboard",
+      "home": "Back to website",
+      "map": "Live map",
+      "bookings": "Bookings",
+      "movers": "Movers",
+      "payouts": "Payouts",
+      "settings": "Settings",
+      "soon": "coming soon"
+    },
+    "stats": {
+      "label": "Overview",
+      "live": "Live moves",
+      "online": "Movers online",
+      "gmv": "Today's booking value",
+      "simulated": "Simulated data"
+    },
+    "views": {
+      "label": "View",
+      "map": "Map",
+      "load": "Van load"
+    },
+    "status": {
+      "loading": "Loading",
+      "onTheWay": "On the way",
+      "atDropoff": "At drop-off"
+    },
+    "job": {
+      "subtitle": "{{vehicle}} · {{company}}",
+      "route": "{{from}} → {{to}}",
+      "km": "km",
+      "progress": "Route progress",
+      "eta": "ETA {{time}}",
+      "left": "{{km}} km left",
+      "speed": "Speed",
+      "kmh": "km/h",
+      "load": "Van load",
+      "volume": "{{used}} / {{cap}} m³",
+      "crossBorder": "Cross-border · {{pct}}% commission",
+      "crossBorderCustoms": "Cross-border · customs documents needed (non-EU) · {{pct}}% commission",
+      "focus": "Focus {{id}}, {{from}} to {{to}}",
+      "min": "{{m}} min",
+      "hm": "{{h}} h {{m}} min"
+    },
+    "map": {
+      "hint": "Click a van to focus it",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "heading": "Heading {{dir}}",
+      "unavailable": "The map couldn't load. Job details below still update.",
+      "gestureWindows": "Use Ctrl + scroll to zoom the map",
+      "gestureMac": "Use ⌘ + scroll to zoom the map",
+      "gestureMobile": "Use two fingers to move the map"
+    },
+    "jobs": {
+      "title": "Active jobs",
+      "count": "{{shown}} of {{total}}"
+    },
+    "items": {
+      "title": "Items ({{n}})",
+      "size": "Size",
+      "volume": "Volume",
+      "room": "Room",
+      "mixed": "mixed",
+      "fragileNote": "Fragile — wrap and load last."
+    },
+    "itemNames": {
+      "sofa": "Sofa, 3-seat",
+      "wardrobe": "Wardrobe (flat-packed)",
+      "mattress": "Mattress 160",
+      "washingMachine": "Washing machine",
+      "mirror": "Mirror",
+      "boxes": "Boxes",
+      "plants": "Plants",
+      "tv": "TV 55\"",
+      "desk": "Desk",
+      "bicycle": "Bicycle",
+      "suitcases": "Suitcases",
+      "armchair": "Armchair",
+      "bookshelf": "Bookshelf",
+      "lamp": "Lamp"
+    },
+    "rooms": {
+      "living": "Living room",
+      "bedroom": "Bedroom",
+      "bathroom": "Bathroom",
+      "hall": "Hall",
+      "all": "All rooms",
+      "balcony": "Balcony",
+      "office": "Office",
+      "garage": "Garage"
+    },
+    "actions": {
+      "call": "Call mover",
+      "callNote": "Demo: on a real booking this calls the mover company.",
+      "share": "Share live link",
+      "copied": "Link copied ✓",
+      "shareNote": "Demo link copied. Real tracking links expire when the job ends."
+    },
+    "timeline": {
+      "label": "Job progress",
+      "booked": "Booked",
+      "cardSaved": "Card saved · charged after the move",
+      "accepted": "Mover accepted",
+      "pickedUp": "Picked up",
+      "onTheWay": "On the way",
+      "delivered": "Delivered"
+    },
+    "load": {
+      "title": "Van layout · {{vehicle}}",
+      "subtitle": "Planned by the mover at pickup · {{volume}}",
+      "selected": "Selected",
+      "fragile": "Fragile",
+      "item": "Item",
+      "free": "Free"
+    },
+    "companies": {
+      "a": "Example Moving Co.",
+      "b": "Sample Transport Co.",
+      "c": "Demo Relocations Co."
     }
   }
 }

@@ -55,7 +55,9 @@
     "peja": "Peja",
     "gjakova": "Gjakova",
     "ferizaj": "Ferizaji",
-    "podgorica": "Podgorica"
+    "podgorica": "Podgorica",
+    "mokotow": "Mokotów",
+    "wola": "Wola"
   },
   "vehicles": {
     "SMALL": {
@@ -312,6 +314,135 @@
       "invalid": "Shkruaj një adresë email të vlefshme.",
       "error": "Diçka shkoi keq. Provo përsëri.",
       "legal": "© {{year}} Ranktrip. Transportuesit janë biznese të pavarura."
+    }
+  },
+  "dashboard": {
+    "title": "Zhvendosjet live",
+    "subtitle": "Çdo punë aktive në hartë, në kohë reale",
+    "play": "Luaj",
+    "pause": "Pauzë",
+    "ops": "Operacionet · Ranktrip",
+    "note": "Të dhëna të simuluara për demonstrim: tri punë shembull nga transportues shembull. Rrugët dhe distancat janë reale; çmimet përdorin të njëjtat tarifa shembull si faqja kryesore. Në një rezervim real, çdo transportues vendos çmimin e vet.",
+    "rail": {
+      "label": "Paneli",
+      "home": "Kthehu te faqja",
+      "map": "Harta live",
+      "bookings": "Rezervimet",
+      "movers": "Transportuesit",
+      "payouts": "Pagesat",
+      "settings": "Cilësimet",
+      "soon": "së shpejti"
+    },
+    "stats": {
+      "label": "Përmbledhje",
+      "live": "Zhvendosje live",
+      "online": "Transportues online",
+      "gmv": "Vlera e rezervimeve sot",
+      "simulated": "Të dhëna të simuluara"
+    },
+    "views": {
+      "label": "Pamja",
+      "map": "Harta",
+      "load": "Ngarkesa"
+    },
+    "status": {
+      "loading": "Duke ngarkuar",
+      "onTheWay": "Në rrugë",
+      "atDropoff": "Te dorëzimi"
+    },
+    "job": {
+      "subtitle": "{{vehicle}} · {{company}}",
+      "route": "{{from}} → {{to}}",
+      "km": "km",
+      "progress": "Përparimi i rrugës",
+      "eta": "Mbërritja {{time}}",
+      "left": "Mbeten {{km}} km",
+      "speed": "Shpejtësia",
+      "kmh": "km/h",
+      "load": "Ngarkesa",
+      "volume": "{{used}} / {{cap}} m³",
+      "crossBorder": "Ndërkufitare · komision {{pct}}%",
+      "crossBorderCustoms": "Ndërkufitare · nevojiten dokumente doganore (jashtë BE-së) · komision {{pct}}%",
+      "focus": "Fokuso {{id}}, {{from}} deri {{to}}",
+      "min": "{{m}} min",
+      "hm": "{{h}} orë {{m}} min"
+    },
+    "map": {
+      "hint": "Kliko një furgon për ta fokusuar",
+      "zoomIn": "Zmadho",
+      "zoomOut": "Zvogëlo",
+      "heading": "Drejtimi {{dir}}",
+      "unavailable": "Harta nuk u ngarkua. Detajet e punës më poshtë përditësohen ende.",
+      "gestureWindows": "Përdor Ctrl + rrotullim për të zmadhuar hartën",
+      "gestureMac": "Përdor ⌘ + rrotullim për të zmadhuar hartën",
+      "gestureMobile": "Përdor dy gishta për të lëvizur hartën"
+    },
+    "jobs": {
+      "title": "Punët aktive",
+      "count": "{{shown}} nga {{total}}"
+    },
+    "items": {
+      "title": "Sendet ({{n}})",
+      "size": "Madhësia",
+      "volume": "Vëllimi",
+      "room": "Dhoma",
+      "mixed": "të ndryshme",
+      "fragileNote": "I brishtë — mbështille dhe ngarkoje i fundit."
+    },
+    "itemNames": {
+      "sofa": "Divan, 3 vende",
+      "wardrobe": "Gardërobë (e çmontuar)",
+      "mattress": "Dyshek 160",
+      "washingMachine": "Lavatriçe",
+      "mirror": "Pasqyrë",
+      "boxes": "Kuti",
+      "plants": "Bimë",
+      "tv": "TV 55\"",
+      "desk": "Tavolinë pune",
+      "bicycle": "Biçikletë",
+      "suitcases": "Valixhe",
+      "armchair": "Kolltuk",
+      "bookshelf": "Raft librash",
+      "lamp": "Llambë"
+    },
+    "rooms": {
+      "living": "Dhoma e ndenjes",
+      "bedroom": "Dhoma e gjumit",
+      "bathroom": "Banjo",
+      "hall": "Korridori",
+      "all": "Të gjitha dhomat",
+      "balcony": "Ballkoni",
+      "office": "Zyra",
+      "garage": "Garazhi"
+    },
+    "actions": {
+      "call": "Telefono transportuesin",
+      "callNote": "Demo: në një rezervim real kjo telefonon kompaninë e transportit.",
+      "share": "Ndaj lidhjen live",
+      "copied": "Lidhja u kopjua ✓",
+      "shareNote": "Lidhja e demos u kopjua. Lidhjet reale të ndjekjes skadojnë kur mbaron puna."
+    },
+    "timeline": {
+      "label": "Përparimi i punës",
+      "booked": "U rezervua",
+      "cardSaved": "Karta u ruajt · tarifohet pas zhvendosjes",
+      "accepted": "Transportuesi pranoi",
+      "pickedUp": "U mor",
+      "onTheWay": "Në rrugë",
+      "delivered": "U dorëzua"
+    },
+    "load": {
+      "title": "Vendosja në furgon · {{vehicle}}",
+      "subtitle": "Planifikuar nga transportuesi te marrja · {{volume}}",
+      "selected": "E zgjedhur",
+      "fragile": "E brishtë",
+      "item": "Send",
+      "free": "Bosh"
+    },
+    "companies": {
+      "a": "Example Moving Co.",
+      "b": "Sample Transport Co.",
+      "c": "Demo Relocations Co."
     }
   }
 }

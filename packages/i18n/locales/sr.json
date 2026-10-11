@@ -55,7 +55,9 @@
     "peja": "Peć",
     "gjakova": "Đakovica",
     "ferizaj": "Uroševac",
-    "podgorica": "Podgorica"
+    "podgorica": "Podgorica",
+    "mokotow": "Mokotov",
+    "wola": "Vola"
   },
   "vehicles": {
     "SMALL": {
@@ -312,6 +314,135 @@
       "invalid": "Unesite ispravnu email adresu.",
       "error": "Nešto nije u redu. Pokušajte ponovo.",
       "legal": "© {{year}} Ranktrip. Prevoznici su nezavisne firme."
+    }
+  },
+  "dashboard": {
+    "title": "Selidbe uživo",
+    "subtitle": "Svaki aktivni posao na mapi, u realnom vremenu",
+    "play": "Pokreni",
+    "pause": "Pauza",
+    "ops": "Operacije · Ranktrip",
+    "note": "Simulirani podaci za demo: tri primera poslova primera prevoznika. Rute i udaljenosti su stvarne; cene koriste iste primere tarifa kao početna stranica. Kod prave rezervacije svaki prevoznik određuje svoju cenu.",
+    "rail": {
+      "label": "Kontrolna tabla",
+      "home": "Nazad na sajt",
+      "map": "Mapa uživo",
+      "bookings": "Rezervacije",
+      "movers": "Prevoznici",
+      "payouts": "Isplate",
+      "settings": "Podešavanja",
+      "soon": "uskoro"
+    },
+    "stats": {
+      "label": "Pregled",
+      "live": "Selidbe uživo",
+      "online": "Prevoznici online",
+      "gmv": "Vrednost rezervacija danas",
+      "simulated": "Simulirani podaci"
+    },
+    "views": {
+      "label": "Prikaz",
+      "map": "Mapa",
+      "load": "Utovar"
+    },
+    "status": {
+      "loading": "Utovar",
+      "onTheWay": "Na putu",
+      "atDropoff": "Na odredištu"
+    },
+    "job": {
+      "subtitle": "{{vehicle}} · {{company}}",
+      "route": "{{from}} → {{to}}",
+      "km": "km",
+      "progress": "Napredak rute",
+      "eta": "Dolazak {{time}}",
+      "left": "Preostalo {{km}} km",
+      "speed": "Brzina",
+      "kmh": "km/h",
+      "load": "Utovar",
+      "volume": "{{used}} / {{cap}} m³",
+      "crossBorder": "Međunarodno · provizija {{pct}}%",
+      "crossBorderCustoms": "Međunarodno · potrebna carinska dokumentacija (van EU) · provizija {{pct}}%",
+      "focus": "Prikaži {{id}}, {{from}} → {{to}}",
+      "min": "{{m}} min",
+      "hm": "{{h}} h {{m}} min"
+    },
+    "map": {
+      "hint": "Kliknite na vozilo da ga prikažete",
+      "zoomIn": "Uvećaj",
+      "zoomOut": "Umanji",
+      "heading": "Smer {{dir}}",
+      "unavailable": "Mapa nije učitana. Detalji posla ispod se i dalje ažuriraju.",
+      "gestureWindows": "Koristite Ctrl + skrol za uvećanje mape",
+      "gestureMac": "Koristite ⌘ + skrol za uvećanje mape",
+      "gestureMobile": "Koristite dva prsta za pomeranje mape"
+    },
+    "jobs": {
+      "title": "Aktivni poslovi",
+      "count": "{{shown}} od {{total}}"
+    },
+    "items": {
+      "title": "Stvari ({{n}})",
+      "size": "Dimenzije",
+      "volume": "Zapremina",
+      "room": "Prostorija",
+      "mixed": "razno",
+      "fragileNote": "Lomljivo — umotajte i utovarite poslednje."
+    },
+    "itemNames": {
+      "sofa": "Sofa, trosed",
+      "wardrobe": "Orman (rastavljen)",
+      "mattress": "Dušek 160",
+      "washingMachine": "Veš mašina",
+      "mirror": "Ogledalo",
+      "boxes": "Kutije",
+      "plants": "Biljke",
+      "tv": "TV 55\"",
+      "desk": "Radni sto",
+      "bicycle": "Bicikl",
+      "suitcases": "Koferi",
+      "armchair": "Fotelja",
+      "bookshelf": "Polica za knjige",
+      "lamp": "Lampa"
+    },
+    "rooms": {
+      "living": "Dnevna soba",
+      "bedroom": "Spavaća soba",
+      "bathroom": "Kupatilo",
+      "hall": "Hodnik",
+      "all": "Sve prostorije",
+      "balcony": "Balkon",
+      "office": "Kancelarija",
+      "garage": "Garaža"
+    },
+    "actions": {
+      "call": "Pozovi prevoznika",
+      "callNote": "Demo: kod prave rezervacije ovo poziva prevozničku firmu.",
+      "share": "Podeli link uživo",
+      "copied": "Link kopiran ✓",
+      "shareNote": "Demo link je kopiran. Pravi linkovi za praćenje ističu kad se posao završi."
+    },
+    "timeline": {
+      "label": "Napredak posla",
+      "booked": "Rezervisano",
+      "cardSaved": "Kartica sačuvana · naplata posle selidbe",
+      "accepted": "Prevoznik prihvatio",
+      "pickedUp": "Preuzeto",
+      "onTheWay": "Na putu",
+      "delivered": "Dostavljeno"
+    },
+    "load": {
+      "title": "Raspored u vozilu · {{vehicle}}",
+      "subtitle": "Planirao prevoznik pri preuzimanju · {{volume}}",
+      "selected": "Izabrano",
+      "fragile": "Lomljivo",
+      "item": "Stvar",
+      "free": "Slobodno"
+    },
+    "companies": {
+      "a": "Example Moving Co.",
+      "b": "Sample Transport Co.",
+      "c": "Demo Relocations Co."
     }
   }
 }

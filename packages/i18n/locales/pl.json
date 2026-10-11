@@ -55,7 +55,9 @@
     "peja": "Peć",
     "gjakova": "Djakowica",
     "ferizaj": "Ferizaj",
-    "podgorica": "Podgorica"
+    "podgorica": "Podgorica",
+    "mokotow": "Mokotów",
+    "wola": "Wola"
   },
   "vehicles": {
     "SMALL": {
@@ -312,6 +314,135 @@
       "invalid": "Podaj prawidłowy adres e-mail.",
       "error": "Coś poszło nie tak. Spróbuj ponownie.",
       "legal": "© {{year}} Ranktrip. Przewoźnicy to niezależne firmy."
+    }
+  },
+  "dashboard": {
+    "title": "Przeprowadzki na żywo",
+    "subtitle": "Każde aktywne zlecenie na mapie, w czasie rzeczywistym",
+    "play": "Odtwórz",
+    "pause": "Pauza",
+    "ops": "Operacje · Ranktrip",
+    "note": "Dane symulowane na potrzeby demo: trzy przykładowe zlecenia przykładowych przewoźników. Trasy i odległości są prawdziwe; ceny według tych samych przykładowych stawek co na stronie głównej. Przy prawdziwej rezerwacji każdy przewoźnik ustala własną cenę.",
+    "rail": {
+      "label": "Panel",
+      "home": "Wróć do strony",
+      "map": "Mapa na żywo",
+      "bookings": "Rezerwacje",
+      "movers": "Przewoźnicy",
+      "payouts": "Wypłaty",
+      "settings": "Ustawienia",
+      "soon": "wkrótce"
+    },
+    "stats": {
+      "label": "Przegląd",
+      "live": "Przeprowadzki na żywo",
+      "online": "Przewoźnicy online",
+      "gmv": "Wartość rezerwacji dziś",
+      "simulated": "Dane symulowane"
+    },
+    "views": {
+      "label": "Widok",
+      "map": "Mapa",
+      "load": "Załadunek"
+    },
+    "status": {
+      "loading": "Załadunek",
+      "onTheWay": "W drodze",
+      "atDropoff": "Na miejscu"
+    },
+    "job": {
+      "subtitle": "{{vehicle}} · {{company}}",
+      "route": "{{from}} → {{to}}",
+      "km": "km",
+      "progress": "Postęp trasy",
+      "eta": "Przyjazd {{time}}",
+      "left": "Zostało {{km}} km",
+      "speed": "Prędkość",
+      "kmh": "km/h",
+      "load": "Załadunek",
+      "volume": "{{used}} / {{cap}} m³",
+      "crossBorder": "Międzynarodowe · prowizja {{pct}}%",
+      "crossBorderCustoms": "Międzynarodowe · wymagane dokumenty celne (poza UE) · prowizja {{pct}}%",
+      "focus": "Pokaż {{id}}, {{from}} → {{to}}",
+      "min": "{{m}} min",
+      "hm": "{{h}} godz. {{m}} min"
+    },
+    "map": {
+      "hint": "Kliknij pojazd, aby go pokazać",
+      "zoomIn": "Przybliż",
+      "zoomOut": "Oddal",
+      "heading": "Kierunek {{dir}}",
+      "unavailable": "Nie udało się załadować mapy. Szczegóły zlecenia poniżej nadal się aktualizują.",
+      "gestureWindows": "Użyj Ctrl + kółko, aby przybliżyć mapę",
+      "gestureMac": "Użyj ⌘ + kółko, aby przybliżyć mapę",
+      "gestureMobile": "Użyj dwóch palców, aby przesunąć mapę"
+    },
+    "jobs": {
+      "title": "Aktywne zlecenia",
+      "count": "{{shown}} z {{total}}"
+    },
+    "items": {
+      "title": "Rzeczy ({{n}})",
+      "size": "Wymiary",
+      "volume": "Objętość",
+      "room": "Pokój",
+      "mixed": "różne",
+      "fragileNote": "Delikatne — zapakuj i załaduj na końcu."
+    },
+    "itemNames": {
+      "sofa": "Sofa 3-osobowa",
+      "wardrobe": "Szafa (rozłożona)",
+      "mattress": "Materac 160",
+      "washingMachine": "Pralka",
+      "mirror": "Lustro",
+      "boxes": "Kartony",
+      "plants": "Rośliny",
+      "tv": "TV 55\"",
+      "desk": "Biurko",
+      "bicycle": "Rower",
+      "suitcases": "Walizki",
+      "armchair": "Fotel",
+      "bookshelf": "Regał na książki",
+      "lamp": "Lampa"
+    },
+    "rooms": {
+      "living": "Salon",
+      "bedroom": "Sypialnia",
+      "bathroom": "Łazienka",
+      "hall": "Przedpokój",
+      "all": "Wszystkie pokoje",
+      "balcony": "Balkon",
+      "office": "Gabinet",
+      "garage": "Garaż"
+    },
+    "actions": {
+      "call": "Zadzwoń do przewoźnika",
+      "callNote": "Demo: przy prawdziwej rezerwacji to połączenie z firmą przewozową.",
+      "share": "Udostępnij link na żywo",
+      "copied": "Link skopiowany ✓",
+      "shareNote": "Skopiowano link do demo. Prawdziwe linki śledzenia wygasają po zakończeniu zlecenia."
+    },
+    "timeline": {
+      "label": "Postęp zlecenia",
+      "booked": "Zarezerwowano",
+      "cardSaved": "Karta zapisana · obciążenie po przeprowadzce",
+      "accepted": "Przewoźnik przyjął",
+      "pickedUp": "Odebrano",
+      "onTheWay": "W drodze",
+      "delivered": "Dostarczono"
+    },
+    "load": {
+      "title": "Rozmieszczenie · {{vehicle}}",
+      "subtitle": "Zaplanowane przez przewoźnika przy odbiorze · {{volume}}",
+      "selected": "Wybrane",
+      "fragile": "Delikatne",
+      "item": "Rzecz",
+      "free": "Wolne"
+    },
+    "companies": {
+      "a": "Example Moving Co.",
+      "b": "Sample Transport Co.",
+      "c": "Demo Relocations Co."
     }
   }
 }

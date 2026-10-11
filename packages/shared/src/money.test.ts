@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatMoney, formatNumber } from './money';
+import { formatMoney, formatNumber, formatTenths } from './money';
 
 const NBSP = ' ';
 
@@ -45,5 +45,14 @@ describe('formatNumber', () => {
     expect(formatNumber(1200, 'sr')).toBe('1.200');
     expect(formatNumber(1200, 'pl')).toBe('1200');
     expect(formatNumber(82, 'de')).toBe('82');
+  });
+});
+
+describe('formatTenths', () => {
+  it('uses the language decimal separator', () => {
+    expect(formatTenths(53, 'en')).toBe('5.3');
+    expect(formatTenths(53, 'sq')).toBe('5,3');
+    expect(formatTenths(130, 'de')).toBe('13,0');
+    expect(formatTenths(4, 'pl')).toBe('0,4');
   });
 });

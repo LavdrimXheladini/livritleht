@@ -26,8 +26,38 @@ Done (2026-10-11):
 - Prototype copy restored where §12 allows ("Our diaspora corridors", "That's the whole
   calculation.", "per vehicle class", FAQ answers).
 
+- "Open full dashboard →" on the hero map links to the Live moves dashboard (below).
+
 Still open:
 - "Date to be announced" until launch dates are set (instead of "[LAUNCH DATE]").
 - Terms / Privacy footer links once those pages exist.
-- "Open full dashboard →" once the dashboard exists (redesign step 5).
 - Replace sample prices with real server quotes (pricing engine + `quote` function).
+
+## Live moves dashboard status
+
+Done (2026-10-11) — `/[lang]/live`, layout of `Tracking.dc.html` on **simulated data** (labelled
+"Simulated data", not indexed by search engines). Three sample jobs by sample movers; road routes and
+distances are real, prices use the landing's sample rates (decision #4), all built on the server
+(`lib/live-demo.ts`). Map, job card (speed / van-load gauges), Van load view, active jobs, items,
+Call / Share, timeline, Pause / Play.
+
+Changed from the prototype:
+
+| Prototype | Implemented | Rule |
+|---|---|---|
+| Person names ("Arben K.", "Driton M.") | Mover **company** names ("Example Moving Co.") | §4, §12, decision #3 |
+| "Medium van" (4 classes) | The 5 classes ("Van") | §1.1, decision #1 |
+| Timeline "Booked · Paid by card" | "Booked · Card saved · charged after the move" | §6 (charge at completion) |
+| "Mover assigned" | "Mover accepted" — movers accept jobs, they are not assigned | §2, §12 |
+| "Cross-border · customs docs checked · 15% fee" | "Cross-border · customs documents needed (non-EU) · 15% commission"; EU-only routes show no customs line | §11 |
+| "Today's GMV €[X]", "Movers online [N]" | "Today's booking value" and online count computed from the sample jobs | §14 placeholders |
+| "Map preview — Google Maps in the app" | Real map (MapLibre + OpenFreeMap), credit shown as the licence requires | decision #5 |
+| Status always "On the way" | Follows the job states: Loading (AT_PICKUP) → On the way (IN_TRANSIT) → At drop-off | CLAUDE.md §5 |
+| Rail: Bookings / Movers / Payouts / Settings | Shown but disabled ("coming soon") until those pages exist; rail is a top row on phones | — |
+| "Call mover" / "Share live link" | Demo notes: real calls go to the mover company; real tracking links expire when the job ends | §9.1 |
+
+Still open:
+- Real data: the customer view at `/t/[token]` (build order step 7) and the ops view under `/admin`
+  (step 9, admin login) replace the simulation.
+- Speed on the job card is display-only: with real data it must never feed ratings, ranking or
+  discipline of movers (§9.1).
