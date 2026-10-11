@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { quoteJobSchema, rateCardSchema } from './pricing';
+import { quoteJobSchema, quoteRequestSchema, rateCardSchema } from './pricing';
 
 const card = {
   currency: 'EUR',
@@ -49,6 +49,12 @@ describe('quoteJobSchema', () => {
     expect(quoteJobSchema.safeParse({ ...job, stops: [job.stops[0]] }).success).toBe(false);
     expect(quoteJobSchema.safeParse({ ...job, items: [{ key: 'piano', qty: 1 }] }).success).toBe(false);
     expect(quoteJobSchema.safeParse({ ...job, helpers: 4 }).success).toBe(false);
+  });
+
+  it('accepts a request without items (priced for a typical load)', () => {
+    const place = { label: 'A', area: 'A', lat: 42.66, lon: 21.16, countryCode: 'XK' };
+    const r = quoteRequestSchema.safeParse({ pickup: place, dropoff: { ...place, lat: 42.2 }, helpers: 2 });
+    expect(r.success).toBe(true);
   });
 
   it('only allows assembly for items that can be taken apart', () => {

@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { VEHICLE_CLASSES, VEHICLE_CLASS_INFO, formatMoney, formatNumber, type Locale } from '@ranktrip/shared';
+import { VEHICLE_CLASSES, VEHICLE_CLASS_INFO, formatMoney, formatNumber, type Currency, type Locale } from '@ranktrip/shared';
 import { Button, CrewPills, SwapIcon, VehicleClassTile, cardVariants } from '@ranktrip/ui/web';
 
 import { cn } from '@/lib/utils';
@@ -12,17 +12,20 @@ import { AddressField } from './address-field';
 import { useLandingState } from './landing-state';
 
 /**
- * Hero quote widget (design: Main.dc.html). Addresses come from address search; the server
- * returns the road distance and SAMPLE prices (design/DECISIONS.md #4) — nothing is priced in the
- * browser. Later the server `quote` function returns "from €X" per class from real movers, then a
- * specific mover + fixed total before payment (COMPLIANCE §1.1).
+ * Hero quote widget (design: Main.dc.html). Addresses come from address search; the server returns
+ * the road distance and, per class, the lowest mover's price ("from") and the number of offers —
+ * from movers' own rate cards for a typical load (design/DECISIONS.md #11), or labelled sample
+ * rates. Nothing is priced in the browser (COMPLIANCE §1.1). Booking (a specific mover + fixed
+ * total before payment) comes with the booking flow.
  */
 export function QuoteWidget({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
   const { pickup, dropoff, cls, crew, setPlaces, setCls, setCrew, route, pending, error } = useLandingState();
   const [submitted, setSubmitted] = useState(false);
-  const money = (cents: number) => formatMoney(cents, 'EUR', locale, { wholeUnits: true });
+  const money = (p: { moverPrice: number; currency: Currency }) => formatMoney(p.moverPrice, p.currency, locale, { wholeUnits: true });
   const crewIndex = crew - 1;
+  const selected = route.prices[cls][crewIndex];
+  const live = route.source === 'movers';
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -88,19 +91,24 @@ export function QuoteWidget({ locale }: { locale: Locale }) {
         )}
       >
         <legend className="sr-only">{t('landing.quote.classes')}</legend>
-        {VEHICLE_CLASSES.map((k) => (
-          <VehicleClassTile
-            key={k}
-            name={t(`vehicles.${k}.name`)}
-            capacity={VEHICLE_CLASS_INFO[k].capacity}
-            example={VEHICLE_CLASS_INFO[k].examples}
-            fits={t(`vehicles.${k}.fits`)}
-            pricePrefix={t('landing.quote.from')}
-            priceLabel={money(route.prices[k][crewIndex][0])}
-            selected={cls === k}
-            onClick={() => setCls(k)}
-          />
-        ))}
+        {VEHICLE_CLASSES.map((k) => {
+          const offer = route.prices[k][crewIndex];
+          return (
+            <VehicleClassTile
+              key={k}
+              name={t(`vehicles.${k}.name`)}
+              capacity={VEHICLE_CLASS_INFO[k].capacity}
+              example={VEHICLE_CLASS_INFO[k].examples}
+              fits={t(`vehicles.${k}.fits`)}
+              pricePrefix={t('landing.quote.from')}
+              priceLabel={offer ? money(offer) : undefined}
+              offersLabel={offer && live ? t('landing.quote.offers', { n: formatNumber(offer.offers, locale) }) : undefined}
+              unavailable={t('landing.quote.noMovers')}
+              selected={cls === k}
+              onClick={() => setCls(k)}
+            />
+          );
+        })}
       </fieldset>
 
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-stone-300 pt-4.5">
@@ -119,10 +127,14 @@ export function QuoteWidget({ locale }: { locale: Locale }) {
                 hours: route.hours,
               })}
             </div>
-            <div className="flex items-baseline justify-end gap-1.5">
-              <span className="text-[13px] text-ink-600">{t('landing.quote.from')}</span>
-              <span className="type-display text-[34px] leading-[1.1]">{money(route.prices[cls][crewIndex][0])}</span>
-            </div>
+            {selected ? (
+              <div className="flex items-baseline justify-end gap-1.5">
+                <span className="text-[13px] text-ink-600">{t('landing.quote.from')}</span>
+                <span className="type-display text-[34px] leading-[1.1]">{money(selected)}</span>
+              </div>
+            ) : (
+              <div className="max-w-[260px] pt-1 text-[13.5px] text-ink-700">{t('landing.quote.noMoversHere')}</div>
+            )}
           </div>
           <Button type="submit" size="lg">
             {t('landing.quote.seeMovers')}
@@ -147,7 +159,10 @@ export function QuoteWidget({ locale }: { locale: Locale }) {
         </div>
       ) : null}
 
-      <p className="m-0 text-xs text-ink-500">{t('landing.quote.note')}</p>
+      <p className="m-0 text-xs text-ink-500">
+        {live ? t('landing.quote.liveNote') : t('landing.quote.note')}
+        {live && route.testMovers ? ` ${t('landing.quote.testNote')}` : null}
+      </p>
     </form>
   );
 }

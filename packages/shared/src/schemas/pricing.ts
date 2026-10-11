@@ -84,14 +84,18 @@ export const quoteRequestSchema = z
     pickupStop: stopSchema.default({ floor: 0, hasLift: true }),
     dropoffStop: stopSchema.default({ floor: 0, hasLift: true }),
     helpers: crewSchema,
-    items: z.array(jobItemSchema).min(1).max(100),
+    /**
+     * The customer's items. Left out = a typical load for each vehicle class (TYPICAL_LOADS) — for
+     * "from" prices before the customer lists anything (landing page, design/DECISIONS.md #11).
+     */
+    items: z.array(jobItemSchema).min(1).max(100).optional(),
     /** Only this class; every class when left out (the vehicle-class screen). */
     vehicleClass: z.enum(VEHICLE_CLASSES).optional(),
   })
   .strict()
   .refine((r) => r.pickup.lat !== r.dropoff.lat || r.pickup.lon !== r.dropoff.lon, { message: 'same_place' })
   .superRefine((r, ctx) => {
-    r.items.forEach((it, i) => {
+    r.items?.forEach((it, i) => {
       if (it.assembly && !ITEM_CATALOGUE[it.key].assemblable) {
         ctx.addIssue({ code: 'custom', message: 'assembly_not_possible', path: ['items', i, 'assembly'] });
       }

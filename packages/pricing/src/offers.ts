@@ -43,7 +43,7 @@ export function rateCardFromRow(row: QuotableVehicleRow): RateCard {
 export type Offer = { vehicleId: string; companyId: string; companyName: string; quote: Quote };
 
 /** Lowest offer in one currency (a class can mix currencies, e.g. EUR and PLN movers). */
-export type FromPrice = { currency: Currency; moverPrice: number; bookingFee: number | null; total: number };
+export type FromPrice = { currency: Currency; moverPrice: number; moverPayout: number; bookingFee: number | null; total: number };
 
 export type ClassOffers = {
   vehicleClass: VehicleClass;
@@ -77,7 +77,13 @@ export function buildClassOffers(
   const from: FromPrice[] = [];
   for (const { quote } of offers) {
     if (from.some((f) => f.currency === quote.currency)) continue; // first per currency is the cheapest
-    from.push({ currency: quote.currency, moverPrice: quote.moverPrice, bookingFee: quote.bookingFee, total: quote.total });
+    from.push({
+      currency: quote.currency,
+      moverPrice: quote.moverPrice,
+      moverPayout: quote.moverPayout,
+      bookingFee: quote.bookingFee,
+      total: quote.total,
+    });
   }
 
   return { vehicleClass, count: offers.length, from, offers };

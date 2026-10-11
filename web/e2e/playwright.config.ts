@@ -20,8 +20,8 @@ export default defineConfig({
         url: baseURL,
         reuseExistingServer: false,
         timeout: 300_000,
-        // Offline, deterministic address search + routes (lib/geo/provider.ts) — tests never hit
-        // the free public geocoding / routing servers.
-        env: { GEO_PROVIDER: 'fixture' },
+        // Offline and deterministic: address search + routes from fixtures (lib/geo/provider.ts) and
+        // the labelled sample prices instead of the live quote function (lib/route-quote.ts).
+        env: { GEO_PROVIDER: 'fixture', QUOTE_SOURCE: 'sample' },
       },
 });

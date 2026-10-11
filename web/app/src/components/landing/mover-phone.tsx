@@ -19,10 +19,11 @@ export function MoverPhone({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
   const { pickup, dropoff, cls, crew, route } = useLandingState();
   const [state, setState] = useState<'pending' | 'accepted' | 'declined'>('pending');
-  const money = (c: number) => formatMoney(c, 'EUR', locale, { wholeUnits: true });
+  // The cheapest offer in the chosen class — the mover's own price and their payout (§12 "Payout").
+  const offer = route.prices[cls][crew - 1];
+  const money = (c: number | undefined) => (c === undefined ? '—' : formatMoney(c, offer?.currency ?? 'EUR', locale, { wholeUnits: true }));
   // Only the city / neighbourhood before the mover accepts — never the street (COMPLIANCE §9.1).
   const routeText = routeLabel(pickup, dropoff, (city) => t('landing.quote.withinCity', { city }));
-  const [moverPriceCents, payoutCents] = route.prices[cls][crew - 1];
 
   return (
     <div className="mx-auto w-full max-w-[360px] flex-[0_1_360px]">
@@ -62,10 +63,10 @@ export function MoverPhone({ locale }: { locale: Locale }) {
                 <div className="flex items-end justify-between gap-3 border-t border-night-500 pt-3">
                   <div>
                     <div className="text-[11.5px] text-sage-400">{t('landing.movers.phone.payout')}</div>
-                    <div className="type-display text-[30px] leading-tight text-accent-300">{money(payoutCents)}</div>
+                    <div className="type-display text-[30px] leading-tight text-accent-300">{money(offer?.payout)}</div>
                   </div>
                   <div className="text-right text-[11.5px] whitespace-pre-line text-sage-400">
-                    {t('landing.movers.phone.breakdown', { price: money(moverPriceCents), pct: route.takeRatePct })}
+                    {t('landing.movers.phone.breakdown', { price: money(offer?.moverPrice), pct: route.takeRatePct })}
                   </div>
                 </div>
               </div>

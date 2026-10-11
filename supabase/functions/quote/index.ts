@@ -1,6 +1,7 @@
 // `quote` — prices a job with every eligible mover's OWN rate card (CLAUDE.md §4, COMPLIANCE §1.1).
-//   POST { pickup, dropoff, pickupStop?, dropoffStop?, helpers, items, vehicleClass? }
-//   → { distanceKm, crossBorder, classes: [{ vehicleClass, count, from, offers }] }
+//   POST { pickup, dropoff, pickupStop?, dropoffStop?, helpers, items?, vehicleClass? }
+//   → { distanceKm, scope, crossBorder, typicalLoad, testMovers, classes: [{ vehicleClass, count, from, offers, crews }] }
+// Without items each class is priced for its typical load (the landing's "from" prices).
 // Public: visitors see prices before signing in. The client never sends a price — the request
 // schema rejects one. The logic lives in packages/pricing (unit-tested); this file only plugs in
 // the route lookup and the database. Run `pnpm functions:build` before serving or deploying.
@@ -54,7 +55,12 @@ Deno.serve(async (req) => {
     return json({ error: 'invalid_json' }, 400);
   }
   try {
-    const outcome = await quoteForRequest(body, { routeKm, quotableVehicles, bookingFee: BOOKING_FEE_RULE });
+    const outcome = await quoteForRequest(body, {
+      routeKm,
+      quotableVehicles,
+      bookingFee: BOOKING_FEE_RULE,
+      testMovers: INCLUDE_TEST_MOVERS,
+    });
     return outcome.ok ? json(outcome.response) : json({ error: outcome.error, issues: outcome.issues }, 400);
   } catch (e) {
     console.error('quote failed', e);

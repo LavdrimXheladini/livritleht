@@ -213,10 +213,10 @@ importers:
         version: 57.0.14(@babel/core@7.29.7)(@babel/runtime@7.29.10)(expo@57.0.27)(react-refresh@0.14.2)
       eslint:
         specifier: ^9.39.5
-        version: 9.39.5(jiti@2.7.0)
+        version: 9.39.5(jiti@1.21.7)
       eslint-config-expo:
         specifier: ~57.0.2
-        version: 57.0.2(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3)
+        version: 57.0.2(eslint@9.39.5(jiti@1.21.7))(typescript@6.0.3)
       tailwindcss:
         specifier: ^3.4.19
         version: 3.4.19(yaml@2.9.1)
@@ -352,10 +352,10 @@ importers:
         version: 57.0.14(@babel/core@7.29.7)(@babel/runtime@7.29.10)(expo@57.0.27)(react-refresh@0.14.2)
       eslint:
         specifier: ^9.39.5
-        version: 9.39.5(jiti@1.21.7)
+        version: 9.39.5(jiti@2.7.0)
       eslint-config-expo:
         specifier: ~57.0.2
-        version: 57.0.2(eslint@9.39.5(jiti@1.21.7))(typescript@6.0.3)
+        version: 57.0.2(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3)
       tailwindcss:
         specifier: ^3.4.19
         version: 3.4.19(yaml@2.9.1)
@@ -441,6 +441,9 @@ importers:
       '@ranktrip/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@ranktrip/pricing':
+        specifier: workspace:*
+        version: link:../../packages/pricing
       '@ranktrip/shared':
         specifier: workspace:*
         version: link:../../packages/shared

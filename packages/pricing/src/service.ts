@@ -2,17 +2,20 @@
 // The whole flow is unit-tested in Node; the Deno function only plugs in the real services.
 
 import {
+  CREW_SIZES,
+  TYPICAL_LOADS,
   VEHICLE_CLASSES,
   moveScope,
   quoteRequestSchema,
   type BookingFeeRule,
+  type CrewSize,
   type MoveScope,
   type Place,
   type QuoteJob,
   type VehicleClass,
 } from '@ranktrip/shared';
 
-import { buildClassOffers, type ClassOffers, type QuotableVehicleRow } from './offers';
+import { buildClassOffers, type ClassOffers, type FromPrice, type QuotableVehicleRow } from './offers';
 
 export type QuoteDeps = {
   /** Road distance in km from the routing service, or null when it is unavailable. */
@@ -20,7 +23,12 @@ export type QuoteDeps = {
   /** `public.quotable_vehicles` for one class (server only); the countries decide cabotage + cross-border rules. */
   quotableVehicles: (args: { pickup: Place; dropoff: Place; vehicleClass: VehicleClass }) => Promise<QuotableVehicleRow[]>;
   bookingFee: BookingFeeRule | null;
+  /** The answer includes test movers (development, design/DECISIONS.md #7) — the UI says so. */
+  testMovers: boolean;
 };
+
+/** Offers for the requested crew, plus the "from" price for every crew size (instant crew switch). */
+export type ClassQuote = ClassOffers & { crews: Record<CrewSize, { count: number; from: FromPrice[] }> };
 
 export type QuoteResponse = {
   /** Route distance the prices use, km (one decimal). */
@@ -32,7 +40,10 @@ export type QuoteResponse = {
   crossBorder: boolean;
   /** False while the booking fee amount is not decided (design/DECISIONS.md #6). */
   bookingFeeDecided: boolean;
-  classes: ClassOffers[];
+  /** No items were sent: each class was priced for its typical load (TYPICAL_LOADS). */
+  typicalLoad: boolean;
+  testMovers: boolean;
+  classes: ClassQuote[];
 };
 
 export type QuoteOutcome =
@@ -73,10 +84,16 @@ export async function quoteForRequest(body: unknown, deps: QuoteDeps): Promise<Q
         crossBorder,
         helpers: req.helpers,
         stops: [req.pickupStop, req.dropoffStop],
-        items: req.items,
+        items: req.items ?? [...TYPICAL_LOADS[vehicleClass]],
       };
       const rows = await deps.quotableVehicles({ pickup: req.pickup, dropoff: req.dropoff, vehicleClass });
-      return buildClassOffers(vehicleClass, job, rows, deps.bookingFee);
+      const crews = Object.fromEntries(
+        CREW_SIZES.map((helpers) => {
+          const { count, from } = buildClassOffers(vehicleClass, { ...job, helpers }, rows, deps.bookingFee);
+          return [helpers, { count, from }];
+        }),
+      ) as ClassQuote['crews'];
+      return { ...buildClassOffers(vehicleClass, job, rows, deps.bookingFee), crews };
     }),
   );
 
@@ -88,6 +105,8 @@ export async function quoteForRequest(body: unknown, deps: QuoteDeps): Promise<Q
       scope: moveScope(req.pickup, req.dropoff, distanceKm),
       crossBorder,
       bookingFeeDecided: deps.bookingFee !== null,
+      typicalLoad: req.items === undefined,
+      testMovers: deps.testMovers,
       classes: results,
     },
   };

@@ -16,18 +16,19 @@ import { Story } from '@/components/landing/story';
 import { WhySection } from '@/components/landing/why-section';
 import { getT } from '@/lib/i18n';
 import { demoPlace } from '@/lib/geo/types';
-import { CHART_MAX_KM, CHART_STEP_KM, CORRIDORS, exampleCurves, sampleQuote } from '@/lib/landing-example';
+import { CHART_MAX_KM, CHART_STEP_KM, CORRIDORS, exampleCurves } from '@/lib/landing-example';
+import { routeQuote } from '@/lib/route-quote';
 import { lines } from '@/lib/rich-text';
 
 export default async function HomePage({ params }: PageProps<'/[lang]'>) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const t = getT(lang);
-  // Starting quote (design default: Prishtina → Prizren). Sample prices + road route are computed
-  // on the server (design/DECISIONS.md #4); later address changes go through the quote action.
+  // Starting quote (design default: Prishtina → Prizren): live "from" prices from movers' own rate
+  // cards (or labelled sample rates) + the road route, on the server; later changes use the quote action.
   const pickup = demoPlace('prishtina', t('places.prishtina'));
   const dropoff = demoPlace('prizren', t('places.prizren'));
-  const initialRoute = await sampleQuote(pickup, dropoff);
+  const initialRoute = await routeQuote(pickup, dropoff);
 
   return (
     <LandingStateProvider initialPickup={pickup} initialDropoff={dropoff} initialRoute={initialRoute}>

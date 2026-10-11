@@ -44,6 +44,21 @@ test('the same job gets the same prices (no surge set by the platform, COMPLIANC
   expect(await ask()).toEqual(await ask());
 });
 
+test('without items, each class is priced for a typical load, with a "from" price per crew (landing page)', async ({ request }) => {
+  const res = await request.post(url, { headers: { apikey: key }, data: { pickup: prishtina, dropoff: prizren, helpers: 2 } });
+  expect(res.ok()).toBe(true);
+  const body = (await res.json()) as QuoteResponse & {
+    typicalLoad: boolean;
+    classes: (ClassOffers & { crews: Record<'1' | '2' | '3', { count: number; from: { moverPrice: number }[] }> })[];
+  };
+  expect(body.typicalLoad).toBe(true);
+  for (const c of body.classes) {
+    // The detailed offers are for crew 2; its summary must agree with them.
+    expect(c.crews['2'].count).toBe(c.count);
+    if (c.count) expect(c.crews['2'].from[0]!.moverPrice).toBe(c.from[0]!.moverPrice);
+  }
+});
+
 test('corridor jobs are offered in EUR only (COMPLIANCE §11)', async ({ request }) => {
   const res = await request.post(url, { headers: { apikey: key }, data: { pickup: munich, dropoff: prishtina, ...job } });
   const body = (await res.json()) as QuoteResponse;

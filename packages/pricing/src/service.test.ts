@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Place, VehicleClass } from '@ranktrip/shared';
 
 import type { QuotableVehicleRow } from './offers';
-import { estimateRoadKm, quoteForRequest, type QuoteDeps } from './service';
+import { estimateRoadKm, quoteForRequest, type QuoteDeps, type QuoteOutcome } from './service';
 
 const prishtina: Place = { label: 'Prishtina', area: 'Prishtina', lat: 42.6629, lon: 21.1655, countryCode: 'XK' };
 const prizren: Place = { label: 'Prizren', area: 'Prizren', lat: 42.2139, lon: 20.7397, countryCode: 'XK' };
@@ -32,6 +32,7 @@ function deps(over: Partial<QuoteDeps> = {}): QuoteDeps {
     routeKm: vi.fn(async () => 82.37),
     quotableVehicles: vi.fn(async ({ vehicleClass }: { vehicleClass: VehicleClass }) => (vehicleClass === 'VAN' ? [card('v1'), card('v2')] : [])),
     bookingFee: null,
+    testMovers: false,
     ...over,
   };
 }
@@ -105,6 +106,29 @@ describe('quote request', () => {
     const van = r.ok ? r.response.classes.find((c) => c.vehicleClass === 'VAN') : undefined;
     expect(r.ok && r.response.bookingFeeDecided).toBe(true);
     expect(van?.from[0]).toMatchObject({ bookingFee: 499, total: van!.from[0]!.moverPrice + 499 });
+  });
+});
+
+describe('prices before the customer lists items (landing page)', () => {
+  const { items: _items, ...noItems } = body;
+
+  it('uses a typical load for each class and says so', async () => {
+    const r = await quoteForRequest(noItems, deps({ testMovers: true }));
+    if (!r.ok) throw new Error('expected a quote');
+    expect(r.response).toMatchObject({ typicalLoad: true, testMovers: true });
+    const withItems = await quoteForRequest(body, deps());
+    const van = (x: QuoteOutcome) => (x.ok ? x.response.classes.find((c) => c.vehicleClass === 'VAN')!.from[0]!.moverPrice : 0);
+    expect(van(r)).not.toBe(van(withItems)); // sofa + 10 boxes + 2 chairs, not just the request's sofa
+  });
+
+  it('gives the "from" price for every crew size in one answer', async () => {
+    const r = await quoteForRequest(noItems, deps());
+    const van = r.ok ? r.response.classes.find((c) => c.vehicleClass === 'VAN')! : undefined;
+    expect(van?.crews[1].count).toBe(2);
+    expect(van?.crews[2].from[0]).toEqual(van?.from[0]); // the requested crew (2) matches its summary
+    expect(van!.crews[1].from[0]!.moverPrice).toBeLessThan(van!.crews[2].from[0]!.moverPrice);
+    expect(van?.crews[3]).toEqual({ count: 0, from: [] }); // these vans offer no crew of 3
+    expect(van!.crews[2].from[0]!.moverPayout).toBe(Math.round(van!.crews[2].from[0]!.moverPrice * 0.8));
   });
 });
 

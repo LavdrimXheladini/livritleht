@@ -13,6 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
     "@ranktrip/i18n": "workspace:*",
+    "@ranktrip/pricing": "workspace:*",
     "@ranktrip/shared": "workspace:*",
     "@ranktrip/ui": "workspace:*",
     "@supabase/ssr": "^0.12.7",

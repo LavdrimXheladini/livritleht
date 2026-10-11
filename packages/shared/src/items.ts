@@ -2,6 +2,8 @@
 // estimates only — every price comes from the mover's own rate card (COMPLIANCE §1).
 // Item names are translated in @ranktrip/i18n when the booking flow adds its item picker.
 
+import type { VehicleClass } from './constants';
+
 export type ItemSpec = {
   /** Minutes for one person to carry, load and unload one unit, without stairs. */
   handlingMin: number;
@@ -52,3 +54,71 @@ export const ITEM_CATALOGUE = {
 
 export type ItemKey = keyof typeof ITEM_CATALOGUE;
 export const ITEM_KEYS = Object.keys(ITEM_CATALOGUE) as [ItemKey, ...ItemKey[]];
+
+/**
+ * A typical load per vehicle class, for prices shown BEFORE the customer lists their items (the
+ * landing page's "from" prices, design/DECISIONS.md #11). A platform assumption for display only —
+ * the booking always prices the customer's own items. Volumes fit each class (COMPLIANCE §1.1 table).
+ */
+export const TYPICAL_LOADS: Record<VehicleClass, readonly { key: ItemKey; qty: number; assembly: boolean }[]> = {
+  // A few boxes and bags (~0.8 m³)
+  SMALL: [
+    { key: 'box', qty: 6, assembly: false },
+    { key: 'suitcase', qty: 2, assembly: false },
+  ],
+  // Sofa + 10 boxes (~3.4 m³)
+  VAN: [
+    { key: 'sofa3', qty: 1, assembly: false },
+    { key: 'box', qty: 10, assembly: false },
+    { key: 'chair', qty: 2, assembly: false },
+  ],
+  // Studio / 1-room flat (~9.4 m³)
+  LARGE_VAN: [
+    { key: 'bedDouble', qty: 1, assembly: false },
+    { key: 'mattressDouble', qty: 1, assembly: false },
+    { key: 'sofa2', qty: 1, assembly: false },
+    { key: 'wardrobe', qty: 1, assembly: false },
+    { key: 'fridge', qty: 1, assembly: false },
+    { key: 'washingMachine', qty: 1, assembly: false },
+    { key: 'diningTable', qty: 1, assembly: false },
+    { key: 'chair', qty: 2, assembly: false },
+    { key: 'box', qty: 15, assembly: false },
+  ],
+  // 2–3 room flat (~16.9 m³)
+  BOX: [
+    { key: 'bedDouble', qty: 1, assembly: false },
+    { key: 'mattressDouble', qty: 1, assembly: false },
+    { key: 'bedSingle', qty: 1, assembly: false },
+    { key: 'mattressSingle', qty: 1, assembly: false },
+    { key: 'sofa3', qty: 1, assembly: false },
+    { key: 'armchair', qty: 1, assembly: false },
+    { key: 'wardrobe', qty: 2, assembly: false },
+    { key: 'chestOfDrawers', qty: 1, assembly: false },
+    { key: 'fridge', qty: 1, assembly: false },
+    { key: 'washingMachine', qty: 1, assembly: false },
+    { key: 'diningTable', qty: 1, assembly: false },
+    { key: 'chair', qty: 4, assembly: false },
+    { key: 'desk', qty: 1, assembly: false },
+    { key: 'box', qty: 30, assembly: false },
+  ],
+  // House (~31 m³)
+  TRUCK: [
+    { key: 'bedDouble', qty: 2, assembly: false },
+    { key: 'mattressDouble', qty: 2, assembly: false },
+    { key: 'bedSingle', qty: 2, assembly: false },
+    { key: 'mattressSingle', qty: 2, assembly: false },
+    { key: 'sofa3', qty: 1, assembly: false },
+    { key: 'cornerSofa', qty: 1, assembly: false },
+    { key: 'armchair', qty: 2, assembly: false },
+    { key: 'wardrobe', qty: 3, assembly: false },
+    { key: 'chestOfDrawers', qty: 2, assembly: false },
+    { key: 'fridge', qty: 1, assembly: false },
+    { key: 'washingMachine', qty: 1, assembly: false },
+    { key: 'dishwasher', qty: 1, assembly: false },
+    { key: 'diningTable', qty: 1, assembly: false },
+    { key: 'chair', qty: 6, assembly: false },
+    { key: 'desk', qty: 2, assembly: false },
+    { key: 'bookshelf', qty: 2, assembly: false },
+    { key: 'box', qty: 50, assembly: false },
+  ],
+};
