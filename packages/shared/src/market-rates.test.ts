@@ -33,6 +33,15 @@ describe('market reference rates', () => {
     }
   });
 
+  it('make a bigger crew a little dearer in total, as the market does (time × rate)', () => {
+    for (const country of countries) {
+      const m = MARKET_RATES[country].van.perLaborMinute;
+      // A crew of 2 takes 60% of the time, a crew of 3 45% (CREW_TIME_PCT in packages/pricing).
+      expect(m[2]! * 0.6).toBeGreaterThan(m[1]);
+      expect(m[3]! * 0.45).toBeGreaterThan(m[1]);
+    }
+  });
+
   it('differ per country: a van crew of 2 costs more per hour in Zurich than in Prishtina', () => {
     expect(MARKET_RATES.CH.van.perLaborMinute[2]).toBeGreaterThan(MARKET_RATES.XK.van.perLaborMinute[2]!);
   });

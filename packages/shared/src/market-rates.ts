@@ -8,6 +8,8 @@ import type { RateCard } from './schemas/pricing';
 //
 // Research 2026-10 (public price lists and guides; rates vary a lot between firms, so these are
 // middle-of-the-range values for a van with a crew). Amounts in minor units of `currency`.
+// Crew rates follow the market: about 1.9× a single mover for a crew of 2 and 2.6× for 3 (Warsaw:
+// ~125 → ~234 → ~302 zł/h). A bigger crew finishes sooner but costs a little more in total.
 
 export type MarketRates = {
   country: string;
@@ -40,26 +42,26 @@ const card = (
 
 export const MARKET_RATES = {
   // Kosovo — classifieds: local truck jobs ~€30–60; lowest wages in the region (avg. gross €713, 2025).
-  // Crew of 1/2/3 ≈ €15/24/33 per hour.
-  XK: { country: 'XK', currency: 'EUR', van: card(2000, 50, [25, 40, 55], 3500, 200, 400, 600), basis: 'merrjep.com listings; KCC wage report 2025' },
+  // Crew of 1/2/3 ≈ €15/28/39 per hour.
+  XK: { country: 'XK', currency: 'EUR', van: card(2000, 50, [25, 47, 65], 3500, 200, 400, 600), basis: 'merrjep.com listings; KCC wage report 2025' },
   // Albania — van freight ~100 lek/km (listings); wages a little above Kosovo (avg. gross ~€860, 2025).
-  // Crew of 1/2/3 ≈ 1 600 / 2 600 / 3 600 lek per hour.
-  AL: { country: 'AL', currency: 'ALL', van: card(200000, 6000, [2700, 4300, 6000], 350000, 20000, 40000, 60000), basis: 'merrjep.al listings; INSTAT wages 2025' },
+  // Crew of 1/2/3 ≈ 1 600 / 3 100 / 4 200 lek per hour.
+  AL: { country: 'AL', currency: 'ALL', van: card(200000, 6000, [2700, 5100, 7000], 350000, 20000, 40000, 60000), basis: 'merrjep.al listings; INSTAT wages 2025' },
   // North Macedonia — van + driver 2 800–5 500 den per job, crew + van €30–54/h, ~30–50 den/km
-  // between towns. Crew of 1/2/3 ≈ 900 / 1 800 / 2 500 den per hour.
-  MK: { country: 'MK', currency: 'MKD', van: card(120000, 3500, [1500, 3000, 4200], 250000, 12000, 25000, 35000), basis: 'emajstor.mk 2026 guide; daibau.mk' },
+  // between towns. Crew of 1/2/3 ≈ 900 / 1 700 / 2 350 den per hour.
+  MK: { country: 'MK', currency: 'MKD', van: card(120000, 3500, [1500, 2850, 3900], 250000, 12000, 25000, 35000), basis: 'emajstor.mk 2026 guide; daibau.mk' },
   // Poland — Warsaw: bus + driver + 1 mover ~234–253 zł/h, +2 movers ~300 zł/h, 2–4 zł/km outside
-  // the city. Crew of 1/2/3 ≈ 120 / 240 / 300 zł per hour.
-  PL: { country: 'PL', currency: 'PLN', van: card(10000, 300, [200, 400, 500], 25000, 1500, 4000, 6000), basis: 'kb.pl Warsaw price list; goliat-przeprowadzki.pl' },
+  // the city. Crew of 1/2/3 ≈ 120 / 228 / 312 zł per hour.
+  PL: { country: 'PL', currency: 'PLN', van: card(10000, 300, [200, 380, 520], 25000, 1500, 4000, 6000), basis: 'kb.pl Warsaw price list; goliat-przeprowadzki.pl' },
   // Germany — professional helpers €25–50/h each, van with driver €0.60–1.20/km.
-  // Crew of 1/2/3 ≈ €40/80/115 per hour.
-  DE: { country: 'DE', currency: 'EUR', van: card(6000, 90, [67, 133, 192], 15000, 800, 1500, 2500), basis: 'my-hammer.de, anyhelpnow, kristall-umzuege.de' },
+  // Crew of 1/2/3 ≈ €40/76/104 per hour.
+  DE: { country: 'DE', currency: 'EUR', van: card(6000, 90, [67, 127, 174], 15000, 800, 1500, 2500), basis: 'my-hammer.de, anyhelpnow, kristall-umzuege.de' },
   // Austria — Vienna: 2 movers + truck €55–95/h, each extra mover ~€30/h.
-  // Crew of 1/2/3 ≈ €38/72/102 per hour.
-  AT: { country: 'AT', currency: 'EUR', van: card(5000, 85, [63, 120, 170], 13000, 700, 1400, 2200), basis: 'diemoebelpacker.at' },
+  // Crew of 1/2/3 ≈ €38/72/98 per hour.
+  AT: { country: 'AT', currency: 'EUR', van: card(5000, 85, [63, 120, 164], 13000, 700, 1400, 2200), basis: 'diemoebelpacker.at' },
   // Switzerland — Zurich: 2 movers + vehicle CHF 120–175/h, averages CHF 100–150/h.
-  // Crew of 1/2/3 ≈ CHF 75/140/195 per hour.
-  CH: { country: 'CH', currency: 'CHF', van: card(10000, 150, [125, 233, 325], 28000, 1500, 3000, 4500), basis: 'klassumzug.ch, steinerumzug.ch, mrclean.ch' },
+  // Crew of 1/2/3 ≈ CHF 75/143/195 per hour.
+  CH: { country: 'CH', currency: 'CHF', van: card(10000, 150, [125, 238, 325], 28000, 1500, 3000, 4500), basis: 'klassumzug.ch, steinerumzug.ch, mrclean.ch' },
 } as const satisfies Record<string, MarketRates>;
 
 export type MarketCountry = keyof typeof MARKET_RATES;
