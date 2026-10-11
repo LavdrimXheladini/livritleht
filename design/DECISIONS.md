@@ -11,6 +11,11 @@ these decisions apply:
 | 3 | Banned wording (§12) | Compliant wording, same look: crew **"Mover only"** (not "Driver"), **"Payout €X"** (not "You earn"), **company name** on the live map (not "Arben K."), booking fee **shown separately** (not "Price includes Ranktrip's fee"). |
 | 4 | Prices before the backend exists | Show **sample prices, clearly labelled** ("Sample rates for the demo — each mover sets their own price…"), computed on the server; replaced by real server quotes later. |
 | 5 | Addresses & map (2026-10-11) | Pickup / drop-off are **address search** (not city lists); the hero shows a **real map** with the real road route. Free OpenStreetMap services for now (no Google billing yet); switch to Google later without UI changes. |
+| 6 | Booking fee (2026-10-11) | Amount **not decided yet**. Built as a setting (`BOOKING_FEE_RULE` in `packages/shared`: flat per currency or % of the mover's price), always shown as its own line; while it is `null` the line reads "to be announced" and nothing is charged. |
+| 7 | Real prices, step 4 (2026-10-11) | Built in four parts, each reviewed: 4a pricing engine → 4b database tables + test movers → 4c `quote` function → 4d landing shows real "from €X". Development database = the **cloud project** (no Docker), with clearly marked test movers that are removed before launch. |
+| 8 | Three apps, mandatory (2026-10-12) | Like Lugg, the market leader: the platform is **always three apps** — the **website** (`web/app`: booking, service pages, tracking links, admin), the **customer app** (`mobile/customer`) and a separate **mover app** (`mobile/mover`). Every customer feature exists on the website and in the customer app; mover features live in the mover app. Open `ranktrip.code-workspace` in VS Code to see them as separate folders. |
+| 9 | Prices per country (2026-10-12) | Every country has its own price level and currency (EUR in Kosovo/Germany/Austria, lek, denar, złoty, franc). Researched reference rates live in `packages/shared/src/market-rates.ts` — information only (COMPLIANCE §1): they pre-fill a new mover's card, which the mover reviews and saves, and they price the test movers. Movers always set their own rates. |
+| 10 | Moves within one city (2026-10-12) | Local moves are first-class: same city, or ≤ 25 km in one country, shows as **Local**; neighbourhoods are shown instead of "Prishtina → Prishtina" ("Dardania → Velania"); popular routes include local ones. |
 
 ## Landing page status
 
@@ -32,6 +37,20 @@ Still open:
 - "Date to be announced" until launch dates are set (instead of "[LAUNCH DATE]").
 - Terms / Privacy footer links once those pages exist.
 - Replace sample prices with real server quotes (pricing engine + `quote` function).
+
+## Planned: services directory (owner request, 2026-10-12)
+
+A Lugg-style grid of use cases ("Move your home", "Furniture delivery", "Marketplace pickup", "Move a
+large item", …), built **in this platform**, not a separate one — Lugg itself is one platform: website
+with a page per service, customer app, separate mover app. Plan:
+- Website: the grid on the landing page + one page per service under `/[lang]/services/[slug]` (SEO,
+  5 languages). Each tile opens the booking with the job type / vehicle class / items pre-filled, so it
+  comes **after the booking flow** (build order step 4).
+- Customer app: the same list as the "What are you moving?" start screen.
+- Adapt to our markets: diaspora moves (DE/AT/CH ↔ Balkans) and cross-border as their own tiles;
+  marketplace pickups for the local sites (e.g. OLX, Merr, Facebook Marketplace).
+- Check before adding: junk removal (waste-transport permits), labour-only help without a vehicle (not
+  in the job model), donations (needs partners). Never "Uber for movers" or similar wording (COMPLIANCE §12).
 
 ## Live moves dashboard status
 
@@ -61,3 +80,10 @@ Still open:
   (step 9, admin login) replace the simulation.
 - Speed on the job card is display-only: with real data it must never feed ratings, ranking or
   discipline of movers (§9.1).
+
+## Real prices (step 4) — open items
+
+- **Cabotage rule (needs the lawyer's OK):** a job inside one country is offered only to movers registered in that country; a
+  cross-border job only to movers registered in the pickup or drop-off country (`quotable_vehicles`, COMPLIANCE-TODO §14).
+- The home page still shows sample rates until step 4d switches it to the live `quote` function.
+- Test movers are quoted only while the project secret `INCLUDE_TEST_MOVERS` is `true`; switch it off and delete them before launch.

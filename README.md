@@ -20,8 +20,9 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 | **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search, real map and route, sample prices, mover section, FAQ, waitlist; sign-in by email link |
 | **Customer app** (`mobile/customer`) | Expo app: sign-in screens and home (booking flow not built yet) |
 | **Mover app** (`mobile/mover`) | Expo app: sign-in screens and home (onboarding / jobs not built yet) |
-| **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, with row-level security |
-| **Not built yet** | Real pricing from movers, bookings, Stripe payments, live GPS, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
+| **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
+| **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first |
+| **Not built yet** | Website showing the real `quote` prices (still sample rates), bookings, Stripe payments, live GPS, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
 
 Prices on the landing page are **labelled sample rates** calculated on the server
 ([`design/DECISIONS.md`](design/DECISIONS.md)); real prices will come from each mover's own rate card.
@@ -36,9 +37,10 @@ Vitest, Playwright, pgTAP, Maestro. Full stack and the plan: [`CLAUDE.md`](CLAUD
 ```
 web/app        Next.js website            web/e2e        Playwright tests
 mobile/        customer + mover Expo apps, shared code (core), Maestro flows
-packages/      shared (types, schemas), i18n (translations), ui (design tokens + components)
+packages/      shared (types, schemas), pricing (engine), i18n (translations), ui (design tokens + components)
 supabase/      database migrations and tests
-scripts/       dev-prep.mjs (runs before every dev/build)
+scripts/       dev-prep.mjs (runs before every dev/build), test-db-cloud.mjs (database tests),
+               build-functions-shared.mjs (shares the pricing code with the edge functions)
 design/        design handoff and decisions
 ```
 
@@ -50,8 +52,9 @@ design/        design handoff and decisions
 - **pnpm 10** — `npm install -g pnpm@10.18.0`
 - **Git**
 
-Optional: **Expo Go** on your phone (to open the mobile apps), **Docker Desktop** + the
-[Supabase CLI](https://supabase.com/docs/guides/cli) (only for the database tests).
+Optional: **Expo Go** on your phone (to open the mobile apps), the
+[Supabase CLI](https://supabase.com/docs/guides/cli) logged in and linked to the project (database
+tests and migrations).
 
 ### 2. Get the code and install packages
 
@@ -61,6 +64,9 @@ cd livritleht
 git switch develop
 pnpm install
 ```
+
+In VS Code, open **`ranktrip.code-workspace`** (File → Open Workspace from File…): the three apps — website,
+customer app, mover app — show as separate folders, next to the shared code, database and tests.
 
 ### 3. Add the environment files
 
@@ -96,8 +102,24 @@ pnpm typecheck     # TypeScript (2 packages at a time)
 pnpm test          # unit tests (Vitest), incl. the banned-wording check on all translations
 pnpm --filter @ranktrip/e2e install-browsers   # once
 pnpm e2e           # Playwright against a production build on port 3100 (offline test data)
-pnpm test:db       # database tests — needs Docker + `supabase start`
+pnpm test:db:cloud # database tests on the linked cloud project — no Docker; everything is rolled back
+pnpm test:db       # the same tests on a local database (Docker + `supabase start`)
 ```
+
+API tests for the deployed `quote` function (skipped unless both variables are set):
+
+```bash
+QUOTE_API_URL=https://<project-ref>.supabase.co/functions/v1/quote QUOTE_API_KEY=<publishable key> pnpm e2e
+```
+
+## Server functions
+
+```bash
+pnpm functions:deploy   # copies the shared pricing code into supabase/functions, then deploys (no Docker)
+```
+
+The `quote` function quotes test movers only while the project secret `INCLUDE_TEST_MOVERS` is `true`
+(`supabase secrets set INCLUDE_TEST_MOVERS=false` before launch, and delete the test movers).
 
 ## Good to know
 

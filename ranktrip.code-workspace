@@ -1,0 +1,26 @@
+{
+  // Ranktrip in VS Code: the three apps (design/DECISIONS.md #8) as separate folders, then the code
+  // they share. Open with File → Open Workspace from File… → ranktrip.code-workspace.
+  "folders": [
+    { "name": "1 · Website (web/app)", "path": "web/app" },
+    { "name": "2 · Customer app (mobile/customer)", "path": "mobile/customer" },
+    { "name": "3 · Mover app (mobile/mover)", "path": "mobile/mover" },
+    { "name": "Shared · mobile code (mobile/core)", "path": "mobile/core" },
+    { "name": "Shared · packages (pricing, shared, i18n, ui)", "path": "packages" },
+    { "name": "Database + server functions (supabase)", "path": "supabase" },
+    { "name": "Tests · website (web/e2e)", "path": "web/e2e" },
+    { "name": "Ranktrip · docs, design, scripts", "path": "." }
+  ],
+  "settings": {
+    // The last folder is the whole repo: hide what already has its own folder above.
+    "files.exclude": {
+      "web/app": true,
+      "web/e2e": true,
+      "mobile/customer": true,
+      "mobile/mover": true,
+      "mobile/core": true,
+      "packages": true,
+      "supabase": true
+    }
+  }
+}
