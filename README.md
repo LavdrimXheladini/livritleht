@@ -17,15 +17,17 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 
 | Area | Status |
 |---|---|
-| **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search, real map and route, sample prices, mover section, FAQ, waitlist; sign-in by email link |
+| **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search (also within one city), real map and route, live "from" prices from movers' rate cards (test movers for now), mover section, FAQ, waitlist; live-moves dashboard demo; sign-in by email link |
 | **Customer app** (`mobile/customer`) | Expo app: sign-in screens and home (booking flow not built yet) |
 | **Mover app** (`mobile/mover`) | Expo app: sign-in screens and home (onboarding / jobs not built yet) |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
 | **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first |
-| **Not built yet** | Website showing the real `quote` prices (still sample rates), bookings, Stripe payments, live GPS, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
+| **Not built yet** | Booking a mover, Stripe payments, live GPS, mover onboarding screens, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
 
-Prices on the landing page are **labelled sample rates** calculated on the server
-([`design/DECISIONS.md`](design/DECISIONS.md)); real prices will come from each mover's own rate card.
+Prices on the landing page come from each mover's own rate card via the server `quote` function — for now
+**clearly marked test movers** with researched local rates, priced for a typical load per van size
+([`design/DECISIONS.md`](design/DECISIONS.md) #9–#11). Without the cloud (offline tests) the page shows labelled
+sample rates instead.
 
 ## Stack
 

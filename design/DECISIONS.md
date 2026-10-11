@@ -16,6 +16,7 @@ these decisions apply:
 | 8 | Three apps, mandatory (2026-10-12) | Like Lugg, the market leader: the platform is **always three apps** — the **website** (`web/app`: booking, service pages, tracking links, admin), the **customer app** (`mobile/customer`) and a separate **mover app** (`mobile/mover`). Every customer feature exists on the website and in the customer app; mover features live in the mover app. Open `ranktrip.code-workspace` in VS Code to see them as separate folders. |
 | 9 | Prices per country (2026-10-12) | Every country has its own price level and currency (EUR in Kosovo/Germany/Austria, lek, denar, złoty, franc). Researched reference rates live in `packages/shared/src/market-rates.ts` — information only (COMPLIANCE §1): they pre-fill a new mover's card, which the mover reviews and saves, and they price the test movers. Movers always set their own rates. |
 | 10 | Moves within one city (2026-10-12) | Local moves are first-class: same city, or ≤ 25 km in one country, shows as **Local**; neighbourhoods are shown instead of "Prishtina → Prishtina" ("Dardania → Velania"); popular routes include local ones. |
+| 11 | Home page prices (2026-10-12) | Before the visitor lists items, the "from" prices assume a **typical load per van size at ground floor** (a few boxes · sofa + 10 boxes · studio · 2–3 rooms · house) — the recommended option, taken when the owner said "continue". Easy to change: `TYPICAL_LOADS` in `packages/shared/src/items.ts`. The note under the prices says so, and says when they come from test movers. |
 
 ## Landing page status
 
@@ -36,7 +37,6 @@ Done (2026-10-11):
 Still open:
 - "Date to be announced" until launch dates are set (instead of "[LAUNCH DATE]").
 - Terms / Privacy footer links once those pages exist.
-- Replace sample prices with real server quotes (pricing engine + `quote` function).
 
 ## Planned: services directory (owner request, 2026-10-12)
 
@@ -85,5 +85,7 @@ Still open:
 
 - **Cabotage rule (needs the lawyer's OK):** a job inside one country is offered only to movers registered in that country; a
   cross-border job only to movers registered in the pickup or drop-off country (`quotable_vehicles`, COMPLIANCE-TODO §14).
-- The home page still shows sample rates until step 4d switches it to the live `quote` function.
+- Step 4d done: the home page shows live "from" prices from the `quote` function (movers' own rate cards, a typical
+  load per class, offers count, local currency); the labelled sample rates remain as the fallback and for offline tests
+  (`QUOTE_SOURCE=sample`). The pricing chart below stays an illustrative example (sample rates), as the design allows.
 - Test movers are quoted only while the project secret `INCLUDE_TEST_MOVERS` is `true`; switch it off and delete them before launch.
