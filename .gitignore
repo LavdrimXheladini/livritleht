@@ -1,0 +1,25 @@
+node_modules/
+.turbo/
+dist/
+coverage/
+.next/
+out/
+.expo/
+expo-env.d.ts
+ios/
+android/
+*.tsbuildinfo
+.DS_Store
+
+# env / secrets — never commit keys
+.env
+.env.*
+!.env.example
+
+# supabase
+supabase/.branches/
+supabase/.temp/
+
+# test output
+playwright-report/
+test-results/

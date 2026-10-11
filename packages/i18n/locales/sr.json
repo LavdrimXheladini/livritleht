@@ -1,0 +1,317 @@
+{
+  "common": {
+    "appName": "Ranktrip",
+    "continue": "Nastavi",
+    "back": "Nazad",
+    "loading": "Učitavanje…",
+    "errorGeneric": "Nešto nije u redu. Pokušajte ponovo.",
+    "signOut": "Odjavi se"
+  },
+  "auth": {
+    "title": "Prijava",
+    "subtitle": "Poslaćemo vam kod od 6 cifara.",
+    "usePhone": "Telefon",
+    "useEmail": "Email",
+    "phoneLabel": "Broj telefona",
+    "phonePlaceholder": "+381 64 123 4567",
+    "emailLabel": "Email",
+    "emailPlaceholder": "vi@primer.com",
+    "sendCode": "Pošalji kod",
+    "codeLabel": "Kod od 6 cifara",
+    "codeSentTo": "Poslali smo kod na {{target}}.",
+    "linkSentTo": "Poslali smo link za prijavu na {{target}}. Otvorite ga na ovom uređaju da biste se prijavili.",
+    "orEnterCode": "Dobili ste kod od 6 cifara? Unesite ga ovde.",
+    "verify": "Potvrdi",
+    "resend": "Pošalji novi kod",
+    "changeTarget": "Koristi drugi broj ili email",
+    "errors": {
+      "invalid_phone": "Unesite broj sa pozivnim brojem zemlje, npr. +381 64 123 4567.",
+      "invalid_email": "Unesite ispravnu email adresu.",
+      "invalid_code": "Kod ima 6 cifara.",
+      "wrong_code": "Kod je pogrešan ili je istekao.",
+      "link_invalid": "Ovaj link za prijavu nije ispravan ili je istekao. Zatražite novi."
+    }
+  },
+  "customer": {
+    "homeTitle": "Rezerviši selidbu kod prevoznika",
+    "homeSubtitle": "Prevoznici na Ranktripu sami određuju svoje cene. Pre rezervacije vidite prevoznika i njegovu cenu."
+  },
+  "mover": {
+    "homeTitle": "Dobro došli, partneru",
+    "homeSubtitle": "Sledeće: dodajte firmu, dokumente, vozila i svoje cene.",
+    "trackingNotice": "Vašu lokaciju delimo sa klijentom samo tokom aktivnog posla."
+  },
+  "places": {
+    "prishtina": "Priština",
+    "prizren": "Prizren",
+    "tirana": "Tirana",
+    "skopje": "Skoplje",
+    "warsaw": "Varšava",
+    "krakow": "Krakov",
+    "munich": "Minhen",
+    "zurich": "Cirih",
+    "vienna": "Beč",
+    "stuttgart": "Štutgart",
+    "peja": "Peć",
+    "gjakova": "Đakovica",
+    "ferizaj": "Uroševac",
+    "podgorica": "Podgorica"
+  },
+  "vehicles": {
+    "SMALL": {
+      "name": "Mali kombi",
+      "fits": "Kutije, prtljag, mali nameštaj",
+      "short": "Mali"
+    },
+    "VAN": {
+      "name": "Kombi",
+      "fits": "Kauč, frižider, nekoliko većih stvari",
+      "short": "Kombi"
+    },
+    "LARGE_VAN": {
+      "name": "Veliki kombi",
+      "fits": "Garsonjera ili jednosoban stan",
+      "short": "Veliki"
+    },
+    "BOX": {
+      "name": "Kamion sa sandukom",
+      "fits": "Dvosoban–trosoban stan, sa rampom",
+      "short": "Sanduk"
+    },
+    "TRUCK": {
+      "name": "Kamion",
+      "fits": "Kuće i kancelarije",
+      "short": "Kamion"
+    }
+  },
+  "landing": {
+    "nav": {
+      "how": "Kako funkcioniše",
+      "movers": "Za prevoznike",
+      "markets": "Tržišta",
+      "demo": "Demo uživo",
+      "getPrice": "Saznaj cenu",
+      "language": "Jezik",
+      "home": "Ranktrip – početna",
+      "main": "Glavno"
+    },
+    "hero": {
+      "title": "Preselite bilo šta,\ngde god je dom.",
+      "subtitle": "Rezervišite nezavisnog prevoznika sa kombijem za par minuta — cena unapred, plaćanje karticom i praćenje uživo. Od Prištine do Prizrena, ili od Minhena do kuće."
+    },
+    "quote": {
+      "pickup": "Preuzimanje",
+      "dropoff": "Dostava",
+      "swap": "Zameni preuzimanje i dostavu",
+      "classes": "Vrsta vozila",
+      "crew": "Ekipa",
+      "crew1": "Samo prevoznik",
+      "crew2": "+1 pomoćnik",
+      "crew3": "+2 pomoćnika",
+      "seeMovers": "Pogledaj prevoznike",
+      "note": "Primer tarifa za demo — svaki prevoznik sam određuje cenu za svaku vrstu vozila. Pre plaćanja vidite prevoznika i njegovu fiksnu cenu, a naknadu za rezervaciju posebno.",
+      "soonTitle": "Cene uživo stižu uskoro.",
+      "soonText": "Prijavite se na listu čekanja i javićemo vam se mejlom kada prevoznici u vašoj blizini budu na Ranktripu.",
+      "soonLink": "Prijavi se na listu →",
+      "from": "od",
+      "domestic": "Domaće",
+      "crossBorder": "Međunarodno",
+      "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} h",
+      "addressPlaceholder": "Ulica, broj, grad",
+      "searching": "Pretraga…",
+      "noResults": "Adresa nije pronađena. Probajte ulicu i grad.",
+      "searchError": "Pretraga adresa trenutno nije dostupna. Pokušajte ponovo za trenutak.",
+      "samePlace": "Preuzimanje i dostava su isto mesto.",
+      "routeError": "Nismo uspeli da izračunamo ovu rutu. Probajte drugu adresu."
+    },
+    "map": {
+      "status": "Na putu",
+      "company": "Example Moving Co.",
+      "subtitle": "{{vehicle}} · primer prevoznika",
+      "speed": "Brzina",
+      "left": "Preostalo",
+      "eta": "Dolazak",
+      "kmh": "km/h",
+      "km": "km",
+      "min": "min",
+      "footer": "GPS uživo tokom aktivne selidbe · ažurira se na nekoliko sekundi",
+      "dashboard": "Otvori ceo pregled →",
+      "dropoff": "Dostava · {{place}}",
+      "progress": "Napredak rute"
+    },
+    "why": {
+      "title": "Napravljeno za prave selidbe.",
+      "subtitle": "Sve što selidbi treba, ništa više.",
+      "pricing": {
+        "tag": "Cena",
+        "word": "Unapred.",
+        "line": "Cena pre rezervacije.",
+        "note": "Svaki prevoznik sam određuje tarife za svoja vozila. Bez cenkanja na vratima."
+      },
+      "tracking": {
+        "tag": "Praćenje",
+        "word": "Uživo.",
+        "line": "GPS od preuzimanja do vrata.",
+        "note": "Pratite prevoznika na mapi i podelite link sa porodicom."
+      },
+      "payment": {
+        "tag": "Plaćanje",
+        "word": "Karticom.",
+        "line": "Bezbedno plaćeno u aplikaciji.",
+        "note": "Obrađuje Stripe. Bez gotovine, bez iznenađenja."
+      }
+    },
+    "story": {
+      "text": "Ranktrip povezuje ljude kojima treba selidba sa <mov>nezavisnim prevoznicima</mov> koji imaju kombije. Izaberite <veh>vrstu vozila</veh>, pogledajte <pri>cenu unapred</pri>, platite <pay>karticom</pay> i <trk>pratite prevoznika uživo</trk> na mapi. Selite se između Nemačke, Austrije ili Švajcarske i kuće? <dia>Koridori dijaspore</dia> napravljeni su upravo za to.",
+      "mov": {
+        "title": "Nezavisni prevoznici",
+        "text": "Lokalne firme sa sopstvenim kombijima. Same određuju tarife, biraju poslove i odgovaraju za vaše stvari."
+      },
+      "veh": {
+        "title": "Pet vrsta vozila",
+        "text": "Od malog kombija za nekoliko kutija do kamiona za celu kuću."
+      },
+      "pri": {
+        "title": "Cena unapred",
+        "text": "Pre rezervacije vidite prevoznika i njegovu punu cenu — iz njegovih tarifa za vozilo, razdaljinu i ekipu."
+      },
+      "pay": {
+        "title": "Plaćanje karticom",
+        "text": "Platite u aplikaciji. Plaćanja idu preko Stripe-a; Ranktrip nikada ne drži vaš novac."
+      },
+      "trk": {
+        "title": "Praćenje uživo",
+        "text": "Gledajte prevoznika na mapi od preuzimanja do dostave i podelite link sa porodicom."
+      },
+      "dia": {
+        "title": "Koridori dijaspore",
+        "text": "Nemačka, Austrija i Švajcarska ↔ Kosovo, Albanija i Severna Makedonija."
+      }
+    },
+    "pricing": {
+      "title": "Saznajte cenu\npre rezervacije.",
+      "subtitle": "Pomerite razdaljinu. Izaberite vozilo. To je ceo obračun.",
+      "sentence": "<veh>{{vehicle}}</veh> za {{km}} km košta <price>{{price}}</price> bez pomoćnika.",
+      "distance": "Razdaljina",
+      "chart": "Primer cene po razdaljini za svaku vrstu vozila",
+      "classes": "Vrsta vozila",
+      "corridors": "Popularne rute",
+      "hint": "Dodirnite koridor da ga učitate u kalkulator iznad. Primer tarifa; duže relacije su jeftinije po km."
+    },
+    "movers": {
+      "title": "Napravljeno za\nnezavisne prevoznike.",
+      "cta": "Postanite prevoznik",
+      "rates": {
+        "title": "Vaš kombi, vaše tarife.",
+        "text": "Sami određujete cenu za svako vozilo. Vi vodite posao — Ranktrip dovodi klijente."
+      },
+      "freedom": {
+        "title": "Prihvatite ili odbijte slobodno.",
+        "text": "Pogledajte rutu, stvari i isplatu pre nego što prihvatite posao. Bez kvota, bez kazni za odbijanje."
+      },
+      "payouts": {
+        "title": "Isplata preko Stripe-a.",
+        "text": "Zadržavate 80% na domaćim i 85% na međunarodnim poslovima, direktno na vaš račun."
+      },
+      "corridors": {
+        "title": "Međunarodne vožnje.",
+        "text": "Popunite kombi na koridorima Nemačka, Austrija i Švajcarska ↔ Balkan."
+      },
+      "phone": {
+        "app": "Ranktrip Partner",
+        "online": "● Online",
+        "newRequest": "Novi zahtev",
+        "payout": "Isplata",
+        "breakdown": "Vaša cena {{price}}\nprovizija {{pct}}%",
+        "district": "Tačna adresa posle prihvatanja",
+        "decline": "Odbij",
+        "accept": "Prihvati posao",
+        "acceptedTitle": "Posao prihvaćen",
+        "acceptedText": "Krenite na preuzimanje u mestu {{place}}. Tačna adresa je sada vidljiva, a klijent vas vidi na mapi.",
+        "back": "Nazad na zahteve",
+        "declinedTitle": "Nema problema.",
+        "declinedText": "Posao se nudi drugim prevoznicima u blizini. Odbijanje nikada ne utiče na vaš rang.",
+        "showAgain": "Prikaži zahtev ponovo",
+        "caption": "Prati ponudu koju ste napravili iznad.",
+        "crew1": "Samo prevoznik",
+        "crew2": "Prevoznik + 1 pomoćnik",
+        "crew3": "Prevoznik + 2 pomoćnika"
+      }
+    },
+    "markets": {
+      "title": "Gde počinjemo.",
+      "subtitle": "Prvo Kosovo, zatim ostatak Balkana i Poljska — sa koridorima dijaspore koji ih povezuju.",
+      "rail": "Tržišta",
+      "dateTbc": "Datum će biti objavljen",
+      "waitlist": "Prijavi se na listu",
+      "haveVan": "Imam kombi",
+      "kosovo": {
+        "tag": "Prvo tržište",
+        "title": "Kosovo",
+        "text": "Priština, Prizren, Peć, Đakovica i Uroševac — lokalne selidbe i između gradova."
+      },
+      "albania": {
+        "tag": "Uskoro",
+        "title": "Albanija i Severna Makedonija",
+        "text": "Tirana i Skoplje, plus prometne prekogranične rute ka Kosovu."
+      },
+      "poland": {
+        "tag": "Uskoro",
+        "title": "Poljska",
+        "text": "Varšava i Krakov — veliko tržište iznajmljivanja sa mnogo selidbi svakog meseca."
+      },
+      "diaspora": {
+        "tag": "Koridori",
+        "title": "Rute dijaspore",
+        "text": "Nemačka, Austrija i Švajcarska ↔ Balkan. Povratak kući ili odlazak u inostranstvo."
+      }
+    },
+    "faq": {
+      "title": "Česta\npitanja.",
+      "contact": "Niste našli odgovor? <link>Pišite nam</link> i rado ćemo pomoći.",
+      "items": {
+        "q1": {
+          "q": "Ko su prevoznici?",
+          "a": "Nezavisne firme sa sopstvenim kombijima. Svaka sama određuje tarife za svoja vozila i može da prihvati ili odbije svaki posao."
+        },
+        "q2": {
+          "q": "Kako se računa cena?",
+          "a": "Iz sopstvenih tarifa prevoznika za vozilo, razdaljinu rute i ekipu. Pre rezervacije vidite prevoznika i njegovu punu cenu — sa naknadom za rezervaciju prikazanom posebno."
+        },
+        "q3": {
+          "q": "Kako plaćam?",
+          "a": "Karticom u aplikaciji. Plaćanja obrađuje Stripe i idu prevozniku; Ranktrip uzima proviziju i nikada ne drži vaš novac."
+        },
+        "q4": {
+          "q": "Šta ako se nešto ošteti?",
+          "a": "Prevoznik odgovara za stvari koje prevozi i mora imati osiguranje prevoznika. Prijavite problem u aplikaciji sa fotografijama i povezaćemo vas sa prevoznikom i njegovim osiguravačem."
+        },
+        "q5": {
+          "q": "Mogu li da se selim između država?",
+          "a": "Da. Koridori dijaspore pokrivaju Nemačku, Austriju i Švajcarsku ka i od Kosova, Albanije i Severne Makedonije, sa prevoznicima koji imaju odgovarajuće osiguranje i dokumente."
+        },
+        "q6": {
+          "q": "Mogu li da pratim prevoznika?",
+          "a": "Da — uživo na mapi od trenutka kada je prevoznik na putu do završetka posla, a link za praćenje možete podeliti sa bilo kim."
+        },
+        "q7": {
+          "q": "Kako da postanem prevoznik?",
+          "a": "Registrujte se u aplikaciji Ranktrip Partner, dodajte firmu, kombi i dokumente, odredite svoje tarife i počnite da prihvatate poslove kada budete verifikovani."
+        }
+      }
+    },
+    "footer": {
+      "title": "Budite prvi koji se seli\nsa Ranktripom.",
+      "subtitle": "Javićemo vam se jednom kada krenemo u vašem gradu.",
+      "emailLabel": "Email adresa",
+      "placeholder": "vi@email.com",
+      "join": "Prijavi se",
+      "joining": "Prijava…",
+      "joined": "Na listi ste. Hvala!",
+      "consent": "Vaš email koristimo samo za ovo obaveštenje o početku rada.",
+      "invalid": "Unesite ispravnu email adresu.",
+      "error": "Nešto nije u redu. Pokušajte ponovo.",
+      "legal": "© {{year}} Ranktrip. Prevoznici su nezavisne firme."
+    }
+  }
+}

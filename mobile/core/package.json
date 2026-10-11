@@ -1,0 +1,41 @@
+{
+  "name": "@ranktrip/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ranktrip/i18n": "workspace:*",
+    "@ranktrip/shared": "workspace:*",
+    "@ranktrip/ui": "workspace:*"
+  },
+  "peerDependencies": {
+    "@expo-google-fonts/geist": "*",
+    "@expo-google-fonts/geist-mono": "*",
+    "@hookform/resolvers": "*",
+    "@react-native-async-storage/async-storage": "*",
+    "@supabase/supabase-js": "*",
+    "expo-font": "*",
+    "expo-localization": "*",
+    "i18next": "*",
+    "nativewind": "*",
+    "react": "*",
+    "react-hook-form": "*",
+    "react-i18next": "*",
+    "react-native": "*",
+    "react-native-css-interop": "*",
+    "react-native-url-polyfill": "*",
+    "zod": "*"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "expo": "~57.0.27",
+    "typescript": "~6.0.3"
+  }
+}

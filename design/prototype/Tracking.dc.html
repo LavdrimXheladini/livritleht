@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ranktrip — Live moves</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A0807}
+a{color:#D9A574}a:hover{color:#E6BF96}
+.disp{font-family:'Archivo',sans-serif;font-stretch:112%;font-weight:600;letter-spacing:-0.035em}
+.mono{font-family:'Geist Mono',ui-monospace,monospace}
+.hov{transition:background .2s,border-color .2s}
+.hov:hover{border-color:#4E655E !important}
+.pulse{animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(185,131,80,.5)}100%{box-shadow:0 0 0 30px rgba(185,131,80,0)}}
+</style>
+</helmet>
+<div style="font-family:'Geist',system-ui,sans-serif;color:#ECE7DA;background:#0A0807;min-height:100vh;padding:20px;box-sizing:border-box">
+<div style="max-width:1400px;margin:0 auto;background:#0F0B09;border:1px solid #263632;border-radius:28px;padding:14px;display:flex;flex-wrap:wrap;gap:14px">
+
+  <!-- rail -->
+  <nav aria-label="Main" style="flex:1 1 56px;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0">
+    <a href="Main.dc.html" aria-label="Back to website" style="width:40px;height:40px;border-radius:12px;background:#B98350;display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 15.5 L12 4 L21 15.5" stroke="#0F0B09" stroke-width="3" stroke-linejoin="round"/><path d="M7 20 H17" stroke="#0F0B09" stroke-width="3" stroke-linecap="round"/></svg>
+    </a>
+    <div style="height:10px"></div>
+    <button aria-label="Live map" style="width:44px;height:44px;border-radius:12px;border:0;background:#24362F;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ECE7DA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></button>
+    <button aria-label="Bookings" style="width:44px;height:44px;border-radius:12px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B4BCAA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></button>
+    <button aria-label="Movers" style="width:44px;height:44px;border-radius:12px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B4BCAA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg></button>
+    <button aria-label="Payouts" style="width:44px;height:44px;border-radius:12px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B4BCAA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></button>
+    <button aria-label="Settings" style="width:44px;height:44px;border-radius:12px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#B4BCAA" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.8 1.2V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3.2 14H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 9 4.6V4.5a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.8 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V10a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></button>
+  </nav>
+
+  <!-- main -->
+  <main style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:14px">
+
+    <!-- top bar -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-size:12px;background:#18241F;border:1px solid #2A3C36;padding:6px 10px;border-radius:999px">Live moves <b style="color:#FBF9F4">3</b></span>
+        <span style="font-size:12px;background:#18241F;border:1px solid #2A3C36;padding:6px 10px;border-radius:999px">Movers online <b style="color:#FBF9F4">[N]</b></span>
+        <span style="font-size:12px;background:#18241F;border:1px solid #2A3C36;padding:6px 10px;border-radius:999px">Today's GMV <b style="color:#FBF9F4">€[X]</b></span>
+        <span style="font-size:12px;background:#18241F;border:1px solid #2A3C36;padding:6px 10px;border-radius:999px">Simulated data</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button onClick="{{togglePlay}}" style="display:flex;gap:8px;align-items:center;font:inherit;font-size:13px;color:#ECE7DA;background:#18241F;border:1px solid #2A3C36;border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer">
+          <sc-if value="{{playing}}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#ECE7DA" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg></sc-if>
+          <sc-if value="{{paused}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#ECE7DA" aria-hidden="true"><path d="M6 4v16l14-8z"/></svg></sc-if>
+          {{playLabel}}
+        </button>
+        <div style="display:flex;align-items:center;gap:8px;background:#18241F;border:1px solid #2A3C36;border-radius:999px;padding:4px 12px 4px 4px">
+          <span style="width:30px;height:30px;border-radius:50%;background:#2C403A;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">OP</span>
+          <span style="font-size:12.5px">Ops · Ranktrip</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+      <div>
+        <h1 class="disp" style="font-size:28px;margin:0">Live moves</h1>
+        <div style="font-size:12.5px;color:#B4BCAA;margin-top:4px">Every active job on the map, in real time</div>
+      </div>
+      <div style="display:flex;gap:4px;background:#18241F;border:1px solid #2A3C36;border-radius:999px;padding:4px">
+        <sc-for list="{{views}}" as="v" hint-placeholder-count="2">
+          <button onClick="{{v.pick}}" style="{{v.style}}">{{v.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <!-- MAP / LOAD panel -->
+      <section style="flex:999 1 520px;min-width:0;position:relative;height:600px;border-radius:20px;overflow:hidden;background:#16221F;border:1px solid #263632">
+
+        <sc-if value="{{isMap}}" hint-placeholder-val="{{ true }}">
+          <svg viewBox="0 0 1000 600" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
+            <g stroke="#24372F" stroke-width="12" fill="none">
+              <path vector-effect="non-scaling-stroke" d="M0 520 C200 480 380 430 520 380 S800 300 1000 290"/>
+              <path vector-effect="non-scaling-stroke" d="M0 150 C200 170 380 210 520 190 S800 80 1000 60"/>
+              <path vector-effect="non-scaling-stroke" d="M260 0 C280 160 320 340 290 600"/>
+              <path vector-effect="non-scaling-stroke" d="M660 0 C620 180 640 380 700 600"/>
+            </g>
+            <g stroke="#1D2C28" stroke-width="2" fill="none">
+              <path vector-effect="non-scaling-stroke" d="M0 70 L1000 160"/><path vector-effect="non-scaling-stroke" d="M0 250 L1000 210"/>
+              <path vector-effect="non-scaling-stroke" d="M0 330 L1000 400"/><path vector-effect="non-scaling-stroke" d="M0 440 L1000 470"/>
+              <path vector-effect="non-scaling-stroke" d="M90 0 L50 600"/><path vector-effect="non-scaling-stroke" d="M170 0 L210 600"/>
+              <path vector-effect="non-scaling-stroke" d="M400 0 L440 600"/><path vector-effect="non-scaling-stroke" d="M510 0 L480 600"/>
+              <path vector-effect="non-scaling-stroke" d="M790 0 L820 600"/><path vector-effect="non-scaling-stroke" d="M900 0 L870 600"/>
+              <path vector-effect="non-scaling-stroke" d="M560 0 L1000 380"/><path vector-effect="non-scaling-stroke" d="M0 600 L480 0"/>
+              <path vector-effect="non-scaling-stroke" d="M100 380 L360 280 L540 340 L980 270"/>
+              <path vector-effect="non-scaling-stroke" d="M0 560 L1000 540"/><path vector-effect="non-scaling-stroke" d="M0 30 L1000 20"/>
+            </g>
+            <sc-for list="{{jobs}}" as="j" hint-placeholder-count="3">
+              <path d="{{j.full}}" stroke="{{j.ghost}}" stroke-width="3" fill="none" stroke-dasharray="2 7" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+              <path d="{{j.done}}" stroke="{{j.ink}}" stroke-width="{{j.sw}}" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+            </sc-for>
+          </svg>
+          <sc-for list="{{jobs}}" as="j" hint-placeholder-count="3">
+            <button onClick="{{j.pick}}" aria-label="{{j.aria}}" style="{{j.markerStyle}}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+            </button>
+            <span style="{{j.endStyle}}"></span>
+          </sc-for>
+
+          <!-- job overlay card -->
+          <div style="position:absolute;left:16px;top:16px;width:min(340px,calc(100% - 32px));background:rgba(15,11,9,.9);border:1px solid #2E423C;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(8px)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:38px;height:38px;border-radius:10px;background:#24362F;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B98350" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg></div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;gap:8px;align-items:center"><span class="mono" style="font-size:14px;font-weight:500">{{sel.id}}</span><span style="font-size:10.5px;background:#B98350;color:#0F0B09;padding:2px 7px;border-radius:999px;font-weight:600">{{sel.status}}</span></div>
+                <div style="font-size:12px;color:#B4BCAA">{{sel.vehicle}} · {{sel.mover}}</div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px"><span>{{sel.from}} → {{sel.to}}</span><span class="mono">{{sel.km}} km</span></div>
+              <div style="height:5px;background:#2A3C36;border-radius:4px;overflow:hidden;margin-top:8px"><div style="height:100%;width:{{sel.pctCss}};background:linear-gradient(90deg,#8E5F33,#B98350)"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;color:#B4BCAA;margin-top:6px"><span>ETA {{sel.eta}}</span><span>{{sel.left}} km left</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+              <div style="background:#1B2824;border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center">
+                <div style="font-size:11px;color:#B4BCAA;align-self:flex-start">Speed</div>
+                <svg width="104" height="70" viewBox="0 0 104 70" aria-hidden="true">
+                  <path d="M12 62 A40 40 0 1 1 92 62" fill="none" stroke="#2E423C" stroke-width="7" stroke-linecap="round" pathLength="100"/>
+                  <path d="M12 62 A40 40 0 1 1 92 62" fill="none" stroke="#B98350" stroke-width="7" stroke-linecap="round" pathLength="100" stroke-dasharray="{{sel.gauge}}"/>
+                </svg>
+                <div style="margin-top:-30px;font-size:18px;font-weight:600">{{sel.speed}}</div>
+                <div style="font-size:10.5px;color:#B4BCAA">km/h</div>
+              </div>
+              <div style="background:#1B2824;border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center">
+                <div style="font-size:11px;color:#B4BCAA;align-self:flex-start">Van load</div>
+                <div style="width:64px;height:64px;border-radius:50%;border:2px solid #2E423C;position:relative;overflow:hidden;margin-top:4px">
+                  <div style="position:absolute;left:0;right:0;bottom:0;height:{{sel.loadCss}};background:linear-gradient(180deg,#B98350,#8E5F33)"></div>
+                  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#FBF9F4;text-shadow:0 1px 3px rgba(0,0,0,.6)">{{sel.load}}%</div>
+                </div>
+                <div style="font-size:10.5px;color:#B4BCAA;margin-top:6px">{{sel.vol}}</div>
+              </div>
+            </div>
+            <sc-if value="{{sel.isCross}}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:8px;align-items:center;background:#2A1E14;border:1px solid #5A3F25;border-radius:10px;padding:9px 11px;font-size:12px;color:#D9A574">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D9A574" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+                Cross-border · customs docs checked · 15% fee
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- compass + map tools -->
+          <div style="position:absolute;right:16px;top:16px;width:84px;height:84px;border-radius:50%;background:#1A2723;border:1px solid #2E423C;display:flex;align-items:center;justify-content:center">
+            <div style="width:62px;height:62px;border-radius:50%;border:5px solid #2A3C36;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px">{{sel.dir}}</div>
+          </div>
+          <div style="position:absolute;right:16px;bottom:56px;display:flex;flex-direction:column;gap:6px">
+            <button aria-label="Zoom in" style="width:40px;height:40px;border-radius:10px;background:#1A2723;border:1px solid #2E423C;color:#ECE7DA;font-size:18px;cursor:pointer">+</button>
+            <button aria-label="Zoom out" style="width:40px;height:40px;border-radius:10px;background:#1A2723;border:1px solid #2E423C;color:#ECE7DA;font-size:18px;cursor:pointer">−</button>
+          </div>
+          <div style="position:absolute;left:16px;right:16px;bottom:14px;display:flex;justify-content:space-between;font-size:11.5px;color:#8E978A;gap:10px;flex-wrap:wrap"><span>Click a van to focus it</span><span>Map preview — Google Maps in the app</span></div>
+        </sc-if>
+
+        <sc-if value="{{isLoad}}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;padding:22px;display:flex;flex-direction:column;gap:16px;overflow:auto">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+              <div><div style="font-size:15px;font-weight:600">Van layout · {{sel.vehicle}}</div><div style="font-size:12px;color:#B4BCAA;margin-top:2px">Planned by the mover at pickup · {{sel.vol}}</div></div>
+              <div style="display:flex;gap:10px;font-size:11.5px;color:#B4BCAA;flex-wrap:wrap">
+                <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#B98350;margin-right:5px"></span>Selected</span>
+                <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#9FA996;margin-right:5px"></span>Fragile</span>
+                <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#405751;margin-right:5px"></span>Item</span>
+              </div>
+            </div>
+            <!-- van body -->
+            <div style="display:flex;align-items:flex-end;gap:0;min-width:600px">
+              <div style="flex:1;border:2px solid #405751;border-right:0;border-radius:14px 0 0 6px;padding:10px;background:#121B18">
+                <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(3,70px);gap:6px">
+                  <sc-for list="{{slots}}" as="sl" hint-placeholder-count="18">
+                    <button onClick="{{sl.pick}}" style="{{sl.style}}" aria-label="{{sl.aria}}"><span class="mono" style="font-size:10.5px">{{sl.code}}</span><span style="font-size:11px;opacity:.85;text-align:left;line-height:1.2">{{sl.name}}</span></button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="width:110px;height:170px;border:2px solid #405751;border-radius:0 40px 10px 0;background:#1B2824;position:relative">
+                <div style="position:absolute;right:12px;top:16px;width:52px;height:46px;border:2px solid #405751;border-radius:4px 26px 4px 4px"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:200px;padding-left:60px;margin-top:-14px">
+              <span style="width:44px;height:44px;border-radius:50%;background:#24362F;border:6px solid #2E423C"></span>
+              <span style="width:44px;height:44px;border-radius:50%;background:#24362F;border:6px solid #2E423C"></span>
+            </div>
+          </div>
+        </sc-if>
+      </section>
+
+      <!-- side panel -->
+      <aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:14px">
+        <div style="background:#16221F;border:1px solid #263632;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px"><span style="font-size:14px;font-weight:600">Active jobs</span><span style="font-size:11.5px;color:#B4BCAA">3 of 3</span></div>
+          <sc-for list="{{jobs}}" as="j" hint-placeholder-count="3">
+            <button class="hov" onClick="{{j.pick}}" style="{{j.rowStyle}}">
+              <span style="display:flex;justify-content:space-between;width:100%;align-items:center"><span class="mono" style="font-size:12.5px">{{j.id}}</span><span style="{{j.badge}}">{{j.statusShort}}</span></span>
+              <span style="font-size:13.5px;font-weight:500">{{j.from}} → {{j.to}}</span>
+              <span style="display:flex;justify-content:space-between;width:100%;font-size:11.5px;color:#B4BCAA"><span>{{j.vehicle}} · {{j.mover}}</span><span>€{{j.price}}</span></span>
+              <span style="height:3px;width:100%;background:#2A3C36;border-radius:3px;overflow:hidden;display:block"><span style="display:block;height:100%;width:{{j.pctCss}};background:#B98350"></span></span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="background:#16221F;border:1px solid #263632;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:6px;flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px"><span style="font-size:14px;font-weight:600">Items</span><span style="font-size:11.5px;color:#B4BCAA">{{sel.itemCount}} items · {{sel.vol}}</span></div>
+          <sc-for list="{{items}}" as="it" hint-placeholder-count="5">
+            <button class="hov" onClick="{{it.pick}}" style="{{it.style}}">
+              <span style="display:flex;justify-content:space-between;width:100%;align-items:center;gap:8px"><span style="font-size:13px;font-weight:500">{{it.name}}</span><span class="mono" style="font-size:11px;color:#B4BCAA">{{it.code}}</span></span>
+              <sc-if value="{{it.open}}" hint-placeholder-val="{{ false }}">
+                <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;margin-top:8px;font-size:11.5px;color:#B4BCAA;text-align:left">
+                  <span>Size<br><b style="color:#ECE7DA;font-weight:500">{{it.size}}</b></span>
+                  <span>Volume<br><b style="color:#ECE7DA;font-weight:500">{{it.vol}}</b></span>
+                  <span>Room<br><b style="color:#ECE7DA;font-weight:500">{{it.room}}</b></span>
+                </span>
+                <sc-if value="{{it.fragile}}" hint-placeholder-val="{{ false }}">
+                  <span style="display:block;width:100%;box-sizing:border-box;margin-top:8px;background:#22302B;border:1px solid #4C5E55;color:#C9D0BF;border-radius:8px;padding:7px 9px;font-size:11.5px;text-align:left">Fragile — wrap and load last.</span>
+                </sc-if>
+              </sc-if>
+            </button>
+          </sc-for>
+          <div style="display:flex;gap:8px;margin-top:auto;padding-top:8px">
+            <button style="flex:1;min-height:44px;border-radius:999px;border:1px solid #3A4F48;background:transparent;color:#ECE7DA;font:inherit;font-size:13px;cursor:pointer">Call mover</button>
+            <button onClick="{{share}}" style="flex:1;min-height:44px;border-radius:999px;border:0;background:#B98350;color:#0F0B09;font:inherit;font-size:13px;font-weight:600;cursor:pointer">{{shareLabel}}</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- timeline -->
+    <div style="background:#16221F;border:1px solid #263632;border-radius:20px;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+      <sc-for list="{{steps}}" as="st" hint-placeholder-count="5">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="{{st.dot}}"></span>
+          <div><div style="font-size:13px;font-weight:500;{{st.text}}">{{st.label}}</div><div style="font-size:11.5px;color:#B4BCAA;margin-top:2px">{{st.sub}}</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":940}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 0, view: 'map', playing: true, ts: [0.22, 0.48, 0.71], item: 0, shared: false };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (!this.state.playing) return;
+      const sp = [0.0022, 0.0009, 0.0035];
+      this.setState({ ts: this.state.ts.map((t, i) => (t + sp[i]) % 1) });
+    }, 90);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  jobDefs() {
+    return [
+      { id: 'RT-2041', from: 'Prishtina', to: 'Prizren', km: 82, vehicle: 'Large van', mover: 'Arben K.', price: 196, cross: false, cap: 13, base: 72,
+        pts: [[120, 520], [220, 470], [290, 380], [420, 350], [520, 300], [610, 330], [700, 290]],
+        items: [['Sofa, 3-seat', '220×95×85 cm', '1.8 m³', 'Living', false, 3], ['Wardrobe (flat-packed)', '200×60×10 cm', '0.6 m³', 'Bedroom', false, 2], ['Mattress 160', '200×160×25 cm', '0.8 m³', 'Bedroom', false, 2], ['Washing machine', '60×60×85 cm', '0.3 m³', 'Bathroom', false, 1], ['Mirror', '120×80 cm', '0.1 m³', 'Hall', true, 1], ['Boxes ×14', 'mixed', '1.4 m³', 'All', false, 4], ['Plants ×3', '—', '0.3 m³', 'Balcony', true, 1]] },
+      { id: 'RT-2047', from: 'Munich', to: 'Prishtina', km: 1210, vehicle: 'Large van', mover: 'Driton M.', price: 740, cross: true, cap: 13, base: 58,
+        pts: [[80, 90], [220, 130], [330, 200], [430, 190], [560, 260], [680, 300], [800, 380], [900, 470]],
+        items: [['Boxes ×22', 'mixed', '2.2 m³', 'All', false, 5], ['TV 55"', '125×75×10 cm', '0.1 m³', 'Living', true, 1], ['Desk', '140×70×75 cm', '0.7 m³', 'Office', false, 2], ['Bicycle', '180×60×100 cm', '0.4 m³', 'Garage', false, 1], ['Suitcases ×4', '—', '0.5 m³', '—', false, 1]] },
+      { id: 'RT-2052', from: 'Mokotów', to: 'Wola, Warsaw', km: 9, vehicle: 'Medium van', mover: 'Piotr S.', price: 64, cross: false, cap: 6, base: 41,
+        pts: [[560, 560], [600, 480], [660, 430], [760, 410], [820, 330], [880, 250], [930, 180]],
+        items: [['Boxes ×8', 'mixed', '0.8 m³', 'All', false, 2], ['Armchair', '80×85×95 cm', '0.6 m³', 'Living', false, 2], ['Bookshelf', '180×80×30 cm', '0.4 m³', 'Office', false, 1], ['Lamp', '—', '0.1 m³', 'Living', true, 1]] }
+    ];
+  }
+  along(pts, t) {
+    const seg = []; let total = 0;
+    for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); seg.push(d); total += d; }
+    let goal = total * t; const done = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      if (goal <= seg[i - 1]) {
+        const f = seg[i - 1] ? goal / seg[i - 1] : 0;
+        const p = [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f];
+        done.push(p);
+        return { p, done, ang: Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]) };
+      }
+      goal -= seg[i - 1]; done.push(pts[i]);
+    }
+    return { p: pts[pts.length - 1], done, ang: 0 };
+  }
+  d(pts) { return pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' '); }
+  fmtEta(min) { min = Math.round(min); return min < 60 ? min + ' min' : Math.floor(min / 60) + 'h ' + (min % 60) + 'm'; }
+
+  renderVals() {
+    const s = this.state;
+    const defs = this.jobDefs();
+    const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    const jobs = defs.map((j, i) => {
+      const t = s.ts[i];
+      const a = this.along(j.pts, t);
+      const on = i === s.sel;
+      const last = j.pts[j.pts.length - 1];
+      const statusShort = t < 0.08 ? 'Loading' : 'On the way';
+      return {
+        ...j, t, a, on, statusShort,
+        pctCss: (t * 100).toFixed(1) + '%',
+        full: this.d(j.pts), done: this.d(a.done),
+        ghost: on ? '#4E655E' : '#2C403A', ink: on ? '#B98350' : '#8E978A', sw: on ? 4 : 2.5,
+        aria: 'Focus ' + j.id + ', ' + j.from + ' to ' + j.to,
+        pick: () => this.setState({ sel: i, item: 0 }),
+        markerStyle: 'position:absolute;left:' + (a.p[0] / 10).toFixed(2) + '%;top:' + (a.p[1] / 6).toFixed(2) + '%;transform:translate(-50%,-50%);width:' + (on ? 40 : 30) + 'px;height:' + (on ? 40 : 30) + 'px;border-radius:50%;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;background:' + (on ? '#B98350' : '#B4BCAA') + (on ? ';animation:pulse 2s ease-out infinite' : '') + ';z-index:' + (on ? 3 : 2),
+        endStyle: 'position:absolute;left:' + (last[0] / 10) + '%;top:' + (last[1] / 6) + '%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#FBF9F4;border:3px solid #16221F;opacity:' + (on ? 1 : 0.5),
+        rowStyle: 'text-align:left;font:inherit;color:#ECE7DA;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:14px;min-height:44px;' + (on ? 'background:#1F302B;border:1px solid #B98350' : 'background:#18241F;border:1px solid #2A3C36'),
+        badge: 'font-size:10.5px;padding:2px 7px;border-radius:999px;' + (statusShort === 'Loading' ? 'background:#2E423C;color:#ECE7DA' : 'background:#B98350;color:#0F0B09;font-weight:600')
+      };
+    });
+
+    const j = jobs[s.sel];
+    const leftKm = Math.max(0, Math.round(j.km * (1 - j.t)));
+    const speed = j.km < 20 ? Math.round(28 + 10 * Math.sin(j.t * 60)) : Math.round(78 + 16 * Math.sin(j.t * 50));
+    const deg = (j.a.ang * 180 / Math.PI + 90 + 360) % 360;
+    const volUsed = j.items.reduce((acc, it) => acc + parseFloat(it[2]), 0);
+    const load = Math.min(99, Math.round(volUsed / j.cap * 100));
+    const sel = {
+      id: j.id, from: j.from, to: j.to, km: j.km, vehicle: j.vehicle, mover: j.mover,
+      status: j.statusShort, pctCss: j.pctCss, left: leftKm,
+      eta: this.fmtEta(leftKm / (j.km < 20 ? 25 : 75) * 60 + (j.cross && leftKm > 200 ? 45 : 0)),
+      speed, gauge: (speed / 130 * 100).toFixed(1) + ' 100',
+      load, loadCss: load + '%', vol: volUsed.toFixed(1) + ' / ' + j.cap + ' m³',
+      dir: dirs[Math.round(deg / 45) % 8], isCross: j.cross, itemCount: j.items.length
+    };
+
+    const items = j.items.map((it, k) => {
+      const open = s.item === k;
+      return {
+        name: it[0], size: it[1], vol: it[2], room: it[3], fragile: it[4], open,
+        code: 'IT-' + (k + 1 < 10 ? '0' : '') + (k + 1),
+        pick: () => this.setState({ item: k }),
+        style: 'text-align:left;font:inherit;color:#ECE7DA;cursor:pointer;display:flex;flex-direction:column;padding:11px 12px;border-radius:12px;min-height:44px;' + (open ? 'background:#1F302B;border:1px solid #4E655E' : 'background:transparent;border:1px solid transparent')
+      };
+    });
+
+    // cargo slots: 18 cells
+    const slots = [];
+    j.items.forEach((it, k) => {
+      for (let n = 0; n < it[5] && slots.length < 18; n++) {
+        const on = s.item === k;
+        slots.push({
+          code: 'IT-' + (k + 1 < 10 ? '0' : '') + (k + 1), name: n === 0 ? it[0] : '', aria: it[0],
+          pick: () => this.setState({ item: k }),
+          style: 'font:inherit;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:7px;border-radius:6px;overflow:hidden;' + (on ? 'background:#B98350;color:#0F0B09;border:1px solid #B98350' : it[4] ? 'background:#2E3B33;color:#C9D0BF;border:1px solid #6F7D69' : 'background:#263832;color:#D2CDBD;border:1px solid #34493F')
+        });
+      }
+    });
+    while (slots.length < 18) slots.push({ code: '', name: 'Free', aria: 'Free space', pick: () => {}, style: 'font:inherit;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:7px;border-radius:6px;background:transparent;color:#6F7A6E;border:1px dashed #3A4F48' });
+
+    const views = [['map', 'Map'], ['load', 'Van load']].map(([id, label]) => ({
+      label, pick: () => this.setState({ view: id }),
+      style: 'font:inherit;font-size:13px;cursor:pointer;border:0;border-radius:999px;padding:0 16px;min-height:36px;' + (s.view === id ? 'background:#ECE7DA;color:#0F0B09' : 'background:transparent;color:#B4BCAA')
+    }));
+
+    const p = j.t;
+    const stepDefs = [['Booked', 'Paid by card', 0], ['Mover assigned', j.mover, 0], ['Picked up', j.from, 0.05], ['On the way', sel.left + ' km left', 0.06], ['Delivered', j.to, 1]];
+    const steps = stepDefs.map(([label, sub, at], i) => {
+      const done = i < 3 ? true : (i === 3 ? p > at : false);
+      const cur = i === 3;
+      return {
+        label, sub,
+        dot: 'flex:0 0 auto;margin-top:3px;width:12px;height:12px;border-radius:50%;' + (cur ? 'background:#B98350;box-shadow:0 0 0 4px rgba(185,131,80,.18)' : done ? 'background:#ECE7DA' : 'background:transparent;border:2px solid #405751;box-sizing:border-box'),
+        text: done || cur ? 'color:#ECE7DA' : 'color:#8E978A'
+      };
+    });
+
+    return {
+      jobs, sel, items, slots, views, steps,
+      isMap: s.view === 'map', isLoad: s.view === 'load',
+      playing: s.playing, paused: !s.playing, playLabel: s.playing ? 'Pause' : 'Play',
+      togglePlay: () => this.setState({ playing: !s.playing }),
+      share: () => this.setState({ shared: !s.shared }),
+      shareLabel: s.shared ? 'Link copied ✓' : 'Share live link'
+    };
+  }
+}
+</script>
+</body>
+</html>

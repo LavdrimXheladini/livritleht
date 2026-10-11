@@ -1,0 +1,317 @@
+{
+  "common": {
+    "appName": "Ranktrip",
+    "continue": "Weiter",
+    "back": "Zurück",
+    "loading": "Wird geladen…",
+    "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "signOut": "Abmelden"
+  },
+  "auth": {
+    "title": "Anmelden",
+    "subtitle": "Wir schicken dir einen 6-stelligen Code.",
+    "usePhone": "Telefon",
+    "useEmail": "E-Mail",
+    "phoneLabel": "Telefonnummer",
+    "phonePlaceholder": "+49 151 2345 6789",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "du@beispiel.de",
+    "sendCode": "Code senden",
+    "codeLabel": "6-stelliger Code",
+    "codeSentTo": "Wir haben einen Code an {{target}} gesendet.",
+    "linkSentTo": "Wir haben einen Anmeldelink an {{target}} gesendet. Öffne ihn auf diesem Gerät, um dich anzumelden.",
+    "orEnterCode": "Hast du stattdessen einen 6-stelligen Code? Gib ihn hier ein.",
+    "verify": "Bestätigen",
+    "resend": "Neuen Code senden",
+    "changeTarget": "Andere Nummer oder E-Mail verwenden",
+    "errors": {
+      "invalid_phone": "Gib deine Nummer mit Ländervorwahl ein, z. B. +49 151 2345 6789.",
+      "invalid_email": "Gib eine gültige E-Mail-Adresse ein.",
+      "invalid_code": "Der Code hat 6 Ziffern.",
+      "wrong_code": "Der Code ist falsch oder abgelaufen.",
+      "link_invalid": "Dieser Anmeldelink ist ungültig oder abgelaufen. Fordere einen neuen an."
+    }
+  },
+  "customer": {
+    "homeTitle": "Mit einem Umzugsunternehmen buchen",
+    "homeSubtitle": "Umzugsunternehmen auf Ranktrip legen ihre Preise selbst fest. Vor der Buchung siehst du das Unternehmen und seinen Preis."
+  },
+  "mover": {
+    "homeTitle": "Willkommen, Partner",
+    "homeSubtitle": "Als Nächstes: Firma, Dokumente, Fahrzeuge und deine eigenen Preise hinzufügen.",
+    "trackingNotice": "Wir teilen deinen Standort nur während eines aktiven Auftrags mit dem Kunden."
+  },
+  "places": {
+    "prishtina": "Prishtina",
+    "prizren": "Prizren",
+    "tirana": "Tirana",
+    "skopje": "Skopje",
+    "warsaw": "Warschau",
+    "krakow": "Krakau",
+    "munich": "München",
+    "zurich": "Zürich",
+    "vienna": "Wien",
+    "stuttgart": "Stuttgart",
+    "peja": "Peja",
+    "gjakova": "Gjakova",
+    "ferizaj": "Ferizaj",
+    "podgorica": "Podgorica"
+  },
+  "vehicles": {
+    "SMALL": {
+      "name": "Kleiner Transporter",
+      "fits": "Kartons, Gepäck, kleine Möbel",
+      "short": "Klein"
+    },
+    "VAN": {
+      "name": "Transporter",
+      "fits": "Sofa, Kühlschrank, einige große Teile",
+      "short": "Transporter"
+    },
+    "LARGE_VAN": {
+      "name": "Großer Transporter",
+      "fits": "Studio oder 1-Zimmer-Wohnung",
+      "short": "Groß"
+    },
+    "BOX": {
+      "name": "Kofferaufbau",
+      "fits": "2–3-Zimmer-Wohnung, mit Ladebordwand",
+      "short": "Koffer"
+    },
+    "TRUCK": {
+      "name": "LKW",
+      "fits": "Häuser und Büros",
+      "short": "LKW"
+    }
+  },
+  "landing": {
+    "nav": {
+      "how": "So funktioniert's",
+      "movers": "Für Umzugsunternehmen",
+      "markets": "Märkte",
+      "demo": "Live-Demo",
+      "getPrice": "Preis ansehen",
+      "language": "Sprache",
+      "home": "Ranktrip Startseite",
+      "main": "Hauptmenü"
+    },
+    "hero": {
+      "title": "Alles bewegen,\nwo immer Zuhause ist.",
+      "subtitle": "Buche in wenigen Minuten ein unabhängiges Umzugsunternehmen mit Transporter — Preis vorab, Kartenzahlung und Live-Tracking. Von Prishtina nach Prizren oder von München nach Hause."
+    },
+    "quote": {
+      "pickup": "Abholung",
+      "dropoff": "Lieferung",
+      "swap": "Abholung und Lieferung tauschen",
+      "classes": "Fahrzeugklasse",
+      "crew": "Team",
+      "crew1": "Nur Umzugsunternehmen",
+      "crew2": "+1 Helfer",
+      "crew3": "+2 Helfer",
+      "seeMovers": "Unternehmen ansehen",
+      "note": "Beispieltarife für die Demo — jedes Umzugsunternehmen legt seinen Preis pro Fahrzeugklasse selbst fest. Vor der Zahlung siehst du das Unternehmen und seinen Festpreis, die Buchungsgebühr separat.",
+      "soonTitle": "Live-Preise kommen bald.",
+      "soonText": "Trag dich in die Warteliste ein, und wir schreiben dir, sobald Umzugsunternehmen in deiner Nähe auf Ranktrip sind.",
+      "soonLink": "Zur Warteliste →",
+      "from": "ab",
+      "domestic": "Inland",
+      "crossBorder": "Grenzüberschreitend",
+      "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} Std.",
+      "addressPlaceholder": "Straße, Nummer, Ort",
+      "searching": "Suche…",
+      "noResults": "Keine Adresse gefunden. Versuch es mit Straße und Ort.",
+      "searchError": "Die Adresssuche ist gerade nicht verfügbar. Versuch es gleich noch einmal.",
+      "samePlace": "Abholung und Lieferung sind derselbe Ort.",
+      "routeError": "Diese Strecke konnten wir nicht berechnen. Versuch eine andere Adresse."
+    },
+    "map": {
+      "status": "Unterwegs",
+      "company": "Example Moving Co.",
+      "subtitle": "{{vehicle}} · Beispielunternehmen",
+      "speed": "Tempo",
+      "left": "Rest",
+      "eta": "Ankunft",
+      "kmh": "km/h",
+      "km": "km",
+      "min": "Min.",
+      "footer": "Live-GPS während eines aktiven Umzugs · Aktualisierung alle paar Sekunden",
+      "dashboard": "Volles Dashboard öffnen →",
+      "dropoff": "Lieferung · {{place}}",
+      "progress": "Routenfortschritt"
+    },
+    "why": {
+      "title": "Gemacht für echte Umzüge.",
+      "subtitle": "Alles, was ein Umzug braucht, nichts darüber hinaus.",
+      "pricing": {
+        "tag": "Preis",
+        "word": "Vorab.",
+        "line": "Preis vor der Buchung.",
+        "note": "Jedes Umzugsunternehmen legt seine Tarife pro Fahrzeug selbst fest. Kein Feilschen an der Tür."
+      },
+      "tracking": {
+        "tag": "Tracking",
+        "word": "Live.",
+        "line": "GPS von der Abholung bis zur Tür.",
+        "note": "Verfolge dein Umzugsunternehmen auf der Karte und teile den Link mit der Familie."
+      },
+      "payment": {
+        "tag": "Zahlung",
+        "word": "Per Karte.",
+        "line": "Sicher in der App bezahlt.",
+        "note": "Abgewickelt über Stripe. Kein Bargeld, keine Überraschungen."
+      }
+    },
+    "story": {
+      "text": "Ranktrip verbindet Menschen, die umziehen, mit <mov>unabhängigen Umzugsunternehmen</mov>, die eigene Transporter haben. Wähle eine <veh>Fahrzeugklasse</veh>, sieh einen <pri>Preis vorab</pri>, zahle per <pay>Karte</pay> und <trk>verfolge dein Umzugsunternehmen live</trk> auf der Karte. Du ziehst zwischen Deutschland, Österreich oder der Schweiz und der Heimat um? Die <dia>Diaspora-Korridore</dia> sind genau dafür gemacht.",
+      "mov": {
+        "title": "Unabhängige Umzugsunternehmen",
+        "text": "Lokale Betriebe mit eigenen Transportern. Sie legen ihre Tarife selbst fest, wählen ihre Aufträge und haften für deine Sachen."
+      },
+      "veh": {
+        "title": "Fünf Fahrzeugklassen",
+        "text": "Vom kleinen Transporter für ein paar Kartons bis zum LKW für ein ganzes Haus."
+      },
+      "pri": {
+        "title": "Preis vorab",
+        "text": "Vor der Buchung siehst du das Unternehmen und seinen Gesamtpreis — aus den eigenen Tarifen für Fahrzeug, Strecke und Team."
+      },
+      "pay": {
+        "title": "Kartenzahlung",
+        "text": "Bezahle in der App. Zahlungen laufen über Stripe; Ranktrip verwahrt nie dein Geld."
+      },
+      "trk": {
+        "title": "Live-Tracking",
+        "text": "Sieh dein Umzugsunternehmen auf der Karte von der Abholung bis zur Lieferung und teile den Link mit der Familie."
+      },
+      "dia": {
+        "title": "Diaspora-Korridore",
+        "text": "Deutschland, Österreich und die Schweiz ↔ Kosovo, Albanien und Nordmazedonien."
+      }
+    },
+    "pricing": {
+      "title": "Den Preis kennen,\nbevor du buchst.",
+      "subtitle": "Strecke ziehen. Fahrzeug wählen. Das ist die ganze Rechnung.",
+      "sentence": "Ein <veh>{{vehicle}}</veh> für {{km}} km kostet <price>{{price}}</price> ohne Helfer.",
+      "distance": "Strecke",
+      "chart": "Beispielpreis nach Strecke für jede Fahrzeugklasse",
+      "classes": "Fahrzeugklasse",
+      "corridors": "Beliebte Strecken",
+      "hint": "Tippe auf einen Korridor, um ihn oben in den Preisrechner zu laden. Beispieltarife; lange Strecken sind pro km günstiger."
+    },
+    "movers": {
+      "title": "Gemacht für\nunabhängige Umzugsunternehmen.",
+      "cta": "Umzugsunternehmen werden",
+      "rates": {
+        "title": "Dein Transporter, deine Tarife.",
+        "text": "Lege deinen Preis für jedes Fahrzeug selbst fest. Du führst dein Geschäft — Ranktrip bringt die Kundschaft."
+      },
+      "freedom": {
+        "title": "Frei annehmen oder ablehnen.",
+        "text": "Sieh Strecke, Gegenstände und Auszahlung, bevor du einen Auftrag annimmst. Keine Quoten, keine Strafen fürs Ablehnen."
+      },
+      "payouts": {
+        "title": "Auszahlung über Stripe.",
+        "text": "Behalte 80 % bei Inlandsaufträgen und 85 % bei grenzüberschreitenden Aufträgen, direkt auf dein Konto."
+      },
+      "corridors": {
+        "title": "Grenzüberschreitende Fahrten.",
+        "text": "Fülle deinen Transporter auf den Korridoren Deutschland, Österreich und Schweiz ↔ Balkan."
+      },
+      "phone": {
+        "app": "Ranktrip Partner",
+        "online": "● Online",
+        "newRequest": "Neue Anfrage",
+        "payout": "Auszahlung",
+        "breakdown": "Dein Preis {{price}}\nProvision {{pct}} %",
+        "district": "Genaue Adresse nach der Annahme",
+        "decline": "Ablehnen",
+        "accept": "Auftrag annehmen",
+        "acceptedTitle": "Auftrag angenommen",
+        "acceptedText": "Fahr zur Abholung in {{place}}. Die genaue Adresse ist jetzt sichtbar, und die Kundschaft sieht dich auf der Karte.",
+        "back": "Zurück zu den Anfragen",
+        "declinedTitle": "Kein Problem.",
+        "declinedText": "Der Auftrag wird anderen Unternehmen in der Nähe angeboten. Ablehnen wirkt sich nie auf dein Ranking aus.",
+        "showAgain": "Anfrage erneut zeigen",
+        "caption": "Spiegelt das Angebot wider, das du oben erstellt hast.",
+        "crew1": "Nur Unternehmen",
+        "crew2": "Unternehmen + 1 Helfer",
+        "crew3": "Unternehmen + 2 Helfer"
+      }
+    },
+    "markets": {
+      "title": "Hier fangen wir an.",
+      "subtitle": "Zuerst Kosovo, dann der restliche Balkan und Polen — mit den Diaspora-Korridoren, die sie verbinden.",
+      "rail": "Märkte",
+      "dateTbc": "Datum folgt",
+      "waitlist": "Zur Warteliste",
+      "haveVan": "Ich habe einen Transporter",
+      "kosovo": {
+        "tag": "Startmarkt",
+        "title": "Kosovo",
+        "text": "Prishtina, Prizren, Peja, Gjakova und Ferizaj — lokale Umzüge und von Stadt zu Stadt."
+      },
+      "albania": {
+        "tag": "Als Nächstes",
+        "title": "Albanien & Nordmazedonien",
+        "text": "Tirana und Skopje sowie die vielbefahrenen Strecken über die Grenze nach Kosovo."
+      },
+      "poland": {
+        "tag": "Als Nächstes",
+        "title": "Polen",
+        "text": "Warschau und Krakau — ein großer Mietmarkt mit vielen Umzügen jeden Monat."
+      },
+      "diaspora": {
+        "tag": "Korridore",
+        "title": "Diaspora-Strecken",
+        "text": "Deutschland, Österreich und die Schweiz ↔ Balkan. Zurück nach Hause oder ins Ausland."
+      }
+    },
+    "faq": {
+      "title": "Häufig\ngestellte\nFragen.",
+      "contact": "Keine Antwort gefunden? <link>Schreib uns</link> — wir helfen gern.",
+      "items": {
+        "q1": {
+          "q": "Wer sind die Umzugsunternehmen?",
+          "a": "Unabhängige Betriebe mit eigenen Transportern. Jedes legt seine Tarife pro Fahrzeug selbst fest und kann jeden Auftrag annehmen oder ablehnen."
+        },
+        "q2": {
+          "q": "Wie wird der Preis berechnet?",
+          "a": "Aus den eigenen Tarifen des Unternehmens für Fahrzeug, Streckenlänge und Team. Vor der Buchung siehst du das Unternehmen und seinen Gesamtpreis — die Buchungsgebühr separat ausgewiesen."
+        },
+        "q3": {
+          "q": "Wie bezahle ich?",
+          "a": "Per Karte in der App. Zahlungen wickelt Stripe ab und sie gehen an das Umzugsunternehmen; Ranktrip erhält eine Provision und verwahrt nie dein Geld."
+        },
+        "q4": {
+          "q": "Was, wenn etwas beschädigt wird?",
+          "a": "Das Umzugsunternehmen haftet für die transportierten Sachen und muss eine Frachtführerhaftpflicht haben. Melde den Schaden mit Fotos in der App, und wir bringen dich mit dem Unternehmen und seiner Versicherung zusammen."
+        },
+        "q5": {
+          "q": "Kann ich ins Ausland umziehen?",
+          "a": "Ja. Die Diaspora-Korridore verbinden Deutschland, Österreich und die Schweiz mit Kosovo, Albanien und Nordmazedonien — mit Unternehmen, die die passende Versicherung und die nötigen Dokumente haben."
+        },
+        "q6": {
+          "q": "Kann ich mein Umzugsunternehmen verfolgen?",
+          "a": "Ja — live auf der Karte, sobald es unterwegs ist, bis der Auftrag erledigt ist. Den Tracking-Link kannst du mit allen teilen."
+        },
+        "q7": {
+          "q": "Wie werde ich Umzugsunternehmen auf Ranktrip?",
+          "a": "Registriere dich in der App Ranktrip Partner, füge Firma, Transporter und Dokumente hinzu, lege deine Tarife fest und nimm nach der Verifizierung Aufträge an."
+        }
+      }
+    },
+    "footer": {
+      "title": "Zieh als Erste:r\nmit Ranktrip um.",
+      "subtitle": "Wir schreiben dir einmal, wenn wir in deiner Stadt starten.",
+      "emailLabel": "E-Mail-Adresse",
+      "placeholder": "du@email.de",
+      "join": "Eintragen",
+      "joining": "Wird eingetragen…",
+      "joined": "Du stehst auf der Liste. Danke!",
+      "consent": "Wir nutzen deine E-Mail nur für diese Startankündigung.",
+      "invalid": "Gib eine gültige E-Mail-Adresse ein.",
+      "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+      "legal": "© {{year}} Ranktrip. Umzugsunternehmen sind unabhängige Betriebe."
+    }
+  }
+}

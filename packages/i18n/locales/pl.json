@@ -1,0 +1,317 @@
+{
+  "common": {
+    "appName": "Ranktrip",
+    "continue": "Dalej",
+    "back": "Wstecz",
+    "loading": "Ładowanie…",
+    "errorGeneric": "Coś poszło nie tak. Spróbuj ponownie.",
+    "signOut": "Wyloguj się"
+  },
+  "auth": {
+    "title": "Zaloguj się",
+    "subtitle": "Wyślemy Ci 6-cyfrowy kod.",
+    "usePhone": "Telefon",
+    "useEmail": "E-mail",
+    "phoneLabel": "Numer telefonu",
+    "phonePlaceholder": "+48 501 234 567",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "ty@przyklad.pl",
+    "sendCode": "Wyślij kod",
+    "codeLabel": "6-cyfrowy kod",
+    "codeSentTo": "Wysłaliśmy kod na {{target}}.",
+    "linkSentTo": "Wysłaliśmy link do logowania na {{target}}. Otwórz go na tym urządzeniu, aby się zalogować.",
+    "orEnterCode": "Masz 6-cyfrowy kod? Wpisz go tutaj.",
+    "verify": "Potwierdź",
+    "resend": "Wyślij nowy kod",
+    "changeTarget": "Użyj innego numeru lub e-maila",
+    "errors": {
+      "invalid_phone": "Podaj numer z kierunkowym kraju, np. +48 501 234 567.",
+      "invalid_email": "Podaj prawidłowy adres e-mail.",
+      "invalid_code": "Kod ma 6 cyfr.",
+      "wrong_code": "Kod jest nieprawidłowy lub wygasł.",
+      "link_invalid": "Ten link do logowania jest nieprawidłowy lub wygasł. Poproś o nowy."
+    }
+  },
+  "customer": {
+    "homeTitle": "Zarezerwuj przewoźnika",
+    "homeSubtitle": "Przewoźnicy w Ranktrip sami ustalają swoje ceny. Przed rezerwacją widzisz przewoźnika i jego cenę."
+  },
+  "mover": {
+    "homeTitle": "Witaj, partnerze",
+    "homeSubtitle": "Dalej: dodaj firmę, dokumenty, pojazdy i własne stawki.",
+    "trackingNotice": "Udostępniamy Twoją lokalizację klientowi tylko podczas aktywnego zlecenia."
+  },
+  "places": {
+    "prishtina": "Prisztina",
+    "prizren": "Prizren",
+    "tirana": "Tirana",
+    "skopje": "Skopje",
+    "warsaw": "Warszawa",
+    "krakow": "Kraków",
+    "munich": "Monachium",
+    "zurich": "Zurych",
+    "vienna": "Wiedeń",
+    "stuttgart": "Stuttgart",
+    "peja": "Peć",
+    "gjakova": "Djakowica",
+    "ferizaj": "Ferizaj",
+    "podgorica": "Podgorica"
+  },
+  "vehicles": {
+    "SMALL": {
+      "name": "Mały bus",
+      "fits": "Kartony, bagaże, małe meble",
+      "short": "Mały"
+    },
+    "VAN": {
+      "name": "Bus",
+      "fits": "Kanapa, lodówka, kilka dużych rzeczy",
+      "short": "Bus"
+    },
+    "LARGE_VAN": {
+      "name": "Duży bus",
+      "fits": "Kawalerka lub mieszkanie 1-pokojowe",
+      "short": "Duży"
+    },
+    "BOX": {
+      "name": "Kontener",
+      "fits": "Mieszkanie 2–3-pokojowe, z windą",
+      "short": "Kontener"
+    },
+    "TRUCK": {
+      "name": "Ciężarówka",
+      "fits": "Domy i biura",
+      "short": "Ciężarówka"
+    }
+  },
+  "landing": {
+    "nav": {
+      "how": "Jak to działa",
+      "movers": "Dla przewoźników",
+      "markets": "Rynki",
+      "demo": "Demo na żywo",
+      "getPrice": "Sprawdź cenę",
+      "language": "Język",
+      "home": "Ranktrip – strona główna",
+      "main": "Główne"
+    },
+    "hero": {
+      "title": "Przewieź wszystko,\ngdziekolwiek jest dom.",
+      "subtitle": "Zarezerwuj niezależnego przewoźnika z busem w kilka minut — cena z góry, płatność kartą i śledzenie na żywo. Z Warszawy do Krakowa albo z Monachium do domu."
+    },
+    "quote": {
+      "pickup": "Odbiór",
+      "dropoff": "Dostawa",
+      "swap": "Zamień odbiór z dostawą",
+      "classes": "Rodzaj pojazdu",
+      "crew": "Ekipa",
+      "crew1": "Sam przewoźnik",
+      "crew2": "+1 pomocnik",
+      "crew3": "+2 pomocników",
+      "seeMovers": "Zobacz przewoźników",
+      "note": "Przykładowe stawki na potrzeby demo — każdy przewoźnik sam ustala cenę dla każdego rodzaju pojazdu. Przed płatnością widzisz przewoźnika i jego stałą cenę, a opłatę rezerwacyjną osobno.",
+      "soonTitle": "Ceny na żywo już wkrótce.",
+      "soonText": "Zapisz się na listę, a napiszemy do Ciebie, gdy przewoźnicy w Twojej okolicy pojawią się w Ranktrip.",
+      "soonLink": "Zapisz się na listę →",
+      "from": "od",
+      "domestic": "Krajowe",
+      "crossBorder": "Międzynarodowe",
+      "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} h",
+      "addressPlaceholder": "Ulica, numer, miasto",
+      "searching": "Szukanie…",
+      "noResults": "Nie znaleziono adresu. Wpisz ulicę i miasto.",
+      "searchError": "Wyszukiwanie adresów jest teraz niedostępne. Spróbuj za chwilę.",
+      "samePlace": "Odbiór i dostawa to to samo miejsce.",
+      "routeError": "Nie udało się wyznaczyć trasy. Spróbuj innego adresu."
+    },
+    "map": {
+      "status": "W drodze",
+      "company": "Example Moving Co.",
+      "subtitle": "{{vehicle}} · przykładowy przewoźnik",
+      "speed": "Prędkość",
+      "left": "Zostało",
+      "eta": "Przyjazd",
+      "kmh": "km/h",
+      "km": "km",
+      "min": "min",
+      "footer": "GPS na żywo podczas aktywnej przeprowadzki · aktualizacja co kilka sekund",
+      "dashboard": "Otwórz pełny panel →",
+      "dropoff": "Dostawa · {{place}}",
+      "progress": "Postęp trasy"
+    },
+    "why": {
+      "title": "Stworzone do prawdziwych przeprowadzek.",
+      "subtitle": "Wszystko, czego potrzebuje przeprowadzka, i nic więcej.",
+      "pricing": {
+        "tag": "Cena",
+        "word": "Z góry.",
+        "line": "Cena przed rezerwacją.",
+        "note": "Każdy przewoźnik sam ustala stawki dla swoich pojazdów. Bez targowania się w drzwiach."
+      },
+      "tracking": {
+        "tag": "Śledzenie",
+        "word": "Na żywo.",
+        "line": "GPS od odbioru do drzwi.",
+        "note": "Śledź przewoźnika na mapie i udostępnij link rodzinie."
+      },
+      "payment": {
+        "tag": "Płatność",
+        "word": "Kartą.",
+        "line": "Bezpiecznie w aplikacji.",
+        "note": "Obsługiwane przez Stripe. Bez gotówki, bez niespodzianek."
+      }
+    },
+    "story": {
+      "text": "Ranktrip łączy osoby, które się przeprowadzają, z <mov>niezależnymi przewoźnikami</mov> z własnymi busami. Wybierz <veh>rodzaj pojazdu</veh>, zobacz <pri>cenę z góry</pri>, zapłać <pay>kartą</pay> i <trk>śledź przewoźnika na żywo</trk> na mapie. Przeprowadzasz się między Niemcami, Austrią lub Szwajcarią a domem? <dia>Korytarze diaspory</dia> są stworzone właśnie do tego.",
+      "mov": {
+        "title": "Niezależni przewoźnicy",
+        "text": "Lokalne firmy z własnymi busami. Same ustalają stawki, wybierają zlecenia i odpowiadają za Twoje rzeczy."
+      },
+      "veh": {
+        "title": "Pięć rodzajów pojazdów",
+        "text": "Od małego busa na kilka kartonów po ciężarówkę na cały dom."
+      },
+      "pri": {
+        "title": "Cena z góry",
+        "text": "Przed rezerwacją widzisz przewoźnika i jego pełną cenę — z jego własnych stawek za pojazd, dystans i ekipę."
+      },
+      "pay": {
+        "title": "Płatność kartą",
+        "text": "Płacisz w aplikacji. Płatności obsługuje Stripe; Ranktrip nigdy nie przechowuje Twoich pieniędzy."
+      },
+      "trk": {
+        "title": "Śledzenie na żywo",
+        "text": "Obserwuj przewoźnika na mapie od odbioru do dostawy i udostępnij link rodzinie."
+      },
+      "dia": {
+        "title": "Korytarze diaspory",
+        "text": "Niemcy, Austria i Szwajcaria ↔ Kosowo, Albania i Macedonia Północna."
+      }
+    },
+    "pricing": {
+      "title": "Poznaj cenę\nprzed rezerwacją.",
+      "subtitle": "Przesuń dystans. Wybierz pojazd. To całe wyliczenie.",
+      "sentence": "<veh>{{vehicle}}</veh> na {{km}} km kosztuje <price>{{price}}</price> bez pomocników.",
+      "distance": "Dystans",
+      "chart": "Przykładowa cena w zależności od dystansu dla każdego rodzaju pojazdu",
+      "classes": "Rodzaj pojazdu",
+      "corridors": "Popularne trasy",
+      "hint": "Kliknij trasę, aby wczytać ją do kalkulatora powyżej. Przykładowe stawki; długie trasy są tańsze za km."
+    },
+    "movers": {
+      "title": "Stworzone dla\nniezależnych przewoźników.",
+      "cta": "Zostań przewoźnikiem",
+      "rates": {
+        "title": "Twój bus, Twoje stawki.",
+        "text": "Sam ustalasz cenę dla każdego pojazdu. Prowadzisz własną firmę — Ranktrip przyprowadza klientów."
+      },
+      "freedom": {
+        "title": "Przyjmuj lub odrzucaj swobodnie.",
+        "text": "Zobacz trasę, rzeczy i wypłatę, zanim przyjmiesz zlecenie. Bez limitów, bez kar za odmowę."
+      },
+      "payouts": {
+        "title": "Wypłaty przez Stripe.",
+        "text": "Zatrzymujesz 80% przy zleceniach krajowych i 85% przy międzynarodowych, prosto na Twoje konto."
+      },
+      "corridors": {
+        "title": "Kursy międzynarodowe.",
+        "text": "Zapełnij busa na trasach Niemcy, Austria i Szwajcaria ↔ Bałkany."
+      },
+      "phone": {
+        "app": "Ranktrip Partner",
+        "online": "● Online",
+        "newRequest": "Nowe zlecenie",
+        "payout": "Wypłata",
+        "breakdown": "Twoja cena {{price}}\nprowizja {{pct}}%",
+        "district": "Dokładny adres po przyjęciu zlecenia",
+        "decline": "Odrzuć",
+        "accept": "Przyjmij zlecenie",
+        "acceptedTitle": "Zlecenie przyjęte",
+        "acceptedText": "Jedź po odbiór w {{place}}. Dokładny adres jest już widoczny, a klient widzi Cię na mapie.",
+        "back": "Wróć do zleceń",
+        "declinedTitle": "Nie ma problemu.",
+        "declinedText": "Zlecenie trafi do innych przewoźników w okolicy. Odmowa nigdy nie wpływa na Twoją pozycję.",
+        "showAgain": "Pokaż zlecenie ponownie",
+        "caption": "Odzwierciedla wycenę, którą zbudowałeś powyżej.",
+        "crew1": "Sam przewoźnik",
+        "crew2": "Przewoźnik + 1 pomocnik",
+        "crew3": "Przewoźnik + 2 pomocników"
+      }
+    },
+    "markets": {
+      "title": "Gdzie zaczynamy.",
+      "subtitle": "Najpierw Kosowo, potem reszta Bałkanów i Polska — z korytarzami diaspory, które je łączą.",
+      "rail": "Rynki",
+      "dateTbc": "Data zostanie ogłoszona",
+      "waitlist": "Zapisz się na listę",
+      "haveVan": "Mam busa",
+      "kosovo": {
+        "tag": "Rynek startowy",
+        "title": "Kosowo",
+        "text": "Prisztina, Prizren, Peć, Djakowica i Ferizaj — przeprowadzki lokalne i między miastami."
+      },
+      "albania": {
+        "tag": "Wkrótce",
+        "title": "Albania i Macedonia Północna",
+        "text": "Tirana i Skopje oraz ruchliwe trasy transgraniczne do Kosowa."
+      },
+      "poland": {
+        "tag": "Wkrótce",
+        "title": "Polska",
+        "text": "Warszawa i Kraków — duży rynek najmu z wieloma przeprowadzkami co miesiąc."
+      },
+      "diaspora": {
+        "tag": "Korytarze",
+        "title": "Trasy diaspory",
+        "text": "Niemcy, Austria i Szwajcaria ↔ Bałkany. Powrót do domu albo wyjazd za granicę."
+      }
+    },
+    "faq": {
+      "title": "Najczęściej\nzadawane\npytania.",
+      "contact": "Nie ma tu odpowiedzi? <link>Napisz do nas</link> — chętnie pomożemy.",
+      "items": {
+        "q1": {
+          "q": "Kim są przewoźnicy?",
+          "a": "To niezależne firmy z własnymi busami. Każda sama ustala stawki dla swoich pojazdów i może przyjąć lub odrzucić każde zlecenie."
+        },
+        "q2": {
+          "q": "Jak liczona jest cena?",
+          "a": "Z własnych stawek przewoźnika za pojazd, dystans trasy i ekipę. Przed rezerwacją widzisz przewoźnika i jego pełną cenę — z opłatą rezerwacyjną pokazaną osobno."
+        },
+        "q3": {
+          "q": "Jak płacę?",
+          "a": "Kartą w aplikacji. Płatności obsługuje Stripe i trafiają one do przewoźnika; Ranktrip pobiera prowizję i nigdy nie przechowuje Twoich pieniędzy."
+        },
+        "q4": {
+          "q": "Co, jeśli coś się uszkodzi?",
+          "a": "Przewoźnik odpowiada za przewożone rzeczy i musi mieć ubezpieczenie OC przewoźnika. Zgłoś problem w aplikacji ze zdjęciami, a połączymy Cię z przewoźnikiem i jego ubezpieczycielem."
+        },
+        "q5": {
+          "q": "Czy mogę przeprowadzić się do innego kraju?",
+          "a": "Tak. Korytarze diaspory obejmują Niemcy, Austrię i Szwajcarię do i z Kosowa, Albanii oraz Macedonii Północnej, z przewoźnikami posiadającymi odpowiednie ubezpieczenie i dokumenty."
+        },
+        "q6": {
+          "q": "Czy mogę śledzić przewoźnika?",
+          "a": "Tak — na żywo na mapie od momentu, gdy przewoźnik jest w drodze, aż do zakończenia zlecenia. Link do śledzenia możesz udostępnić każdemu."
+        },
+        "q7": {
+          "q": "Jak zostać przewoźnikiem?",
+          "a": "Zarejestruj się w aplikacji Ranktrip Partner, dodaj firmę, busa i dokumenty, ustal własne stawki i po weryfikacji zacznij przyjmować zlecenia."
+        }
+      }
+    },
+    "footer": {
+      "title": "Przeprowadź się\nz Ranktrip jako pierwszy.",
+      "subtitle": "Napiszemy do Ciebie raz, gdy wystartujemy w Twoim mieście.",
+      "emailLabel": "Adres e-mail",
+      "placeholder": "ty@email.com",
+      "join": "Zapisz się",
+      "joining": "Zapisywanie…",
+      "joined": "Jesteś na liście. Dziękujemy!",
+      "consent": "Twój e-mail wykorzystamy wyłącznie do tej informacji o starcie.",
+      "invalid": "Podaj prawidłowy adres e-mail.",
+      "error": "Coś poszło nie tak. Spróbuj ponownie.",
+      "legal": "© {{year}} Ranktrip. Przewoźnicy to niezależne firmy."
+    }
+  }
+}

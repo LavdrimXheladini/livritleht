@@ -1,0 +1,25 @@
+{
+  "name": "ranktrip",
+  "private": true,
+  "packageManager": "pnpm@10.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:customer": "pnpm --filter @ranktrip/customer start",
+    "dev:mover": "pnpm --filter @ranktrip/mover start",
+    "dev:web": "pnpm --filter @ranktrip/web dev",
+    "db:types": "supabase gen types typescript --local > packages/shared/src/database.types.ts",
+    "test": "turbo run test",
+    "test:db": "supabase test db",
+    "e2e": "pnpm --filter @ranktrip/e2e e2e",
+    "e2e:mobile": "maestro test mobile/maestro",
+    "lint": "turbo run lint --concurrency=2",
+    "typecheck": "turbo run typecheck --concurrency=2"
+  },
+  "devDependencies": {
+    "turbo": "2.11.7",
+    "typescript": "~6.0.3"
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "common": {
+    "appName": "Ranktrip",
+    "continue": "Vazhdo",
+    "back": "Kthehu",
+    "loading": "Duke u ngarkuar…",
+    "errorGeneric": "Diçka shkoi keq. Ju lutemi provoni përsëri.",
+    "signOut": "Dil"
+  },
+  "auth": {
+    "title": "Hyr",
+    "subtitle": "Do t'ju dërgojmë një kod me 6 shifra.",
+    "usePhone": "Telefoni",
+    "useEmail": "Email",
+    "phoneLabel": "Numri i telefonit",
+    "phonePlaceholder": "+383 44 123 456",
+    "emailLabel": "Email",
+    "emailPlaceholder": "ju@shembull.com",
+    "sendCode": "Dërgo kodin",
+    "codeLabel": "Kodi me 6 shifra",
+    "codeSentTo": "Ju dërguam një kod në {{target}}.",
+    "linkSentTo": "Ju dërguam një lidhje hyrjeje në {{target}}. Hapeni në këtë pajisje për të hyrë.",
+    "orEnterCode": "Keni marrë një kod me 6 shifra? Shkruajeni këtu.",
+    "verify": "Verifiko",
+    "resend": "Dërgo një kod të ri",
+    "changeTarget": "Përdor një numër ose email tjetër",
+    "errors": {
+      "invalid_phone": "Shkruani numrin me prefiksin e shtetit, p.sh. +383 44 123 456.",
+      "invalid_email": "Shkruani një adresë email të vlefshme.",
+      "invalid_code": "Kodi ka 6 shifra.",
+      "wrong_code": "Kodi është i gabuar ose ka skaduar.",
+      "link_invalid": "Kjo lidhje hyrjeje është e pavlefshme ose ka skaduar. Kërkoni një të re."
+    }
+  },
+  "customer": {
+    "homeTitle": "Rezervo me një transportues",
+    "homeSubtitle": "Transportuesit në Ranktrip vendosin vetë çmimet e tyre. E shihni transportuesin dhe çmimin e tij para se të rezervoni."
+  },
+  "mover": {
+    "homeTitle": "Mirë se vini, partner",
+    "homeSubtitle": "Hapi tjetër: shtoni kompaninë, dokumentet, automjetet dhe tarifat tuaja.",
+    "trackingNotice": "Vendndodhjen tuaj e ndajmë me klientin vetëm gjatë një pune aktive."
+  },
+  "places": {
+    "prishtina": "Prishtina",
+    "prizren": "Prizreni",
+    "tirana": "Tirana",
+    "skopje": "Shkupi",
+    "warsaw": "Varshava",
+    "krakow": "Krakova",
+    "munich": "Mynihu",
+    "zurich": "Cyrihu",
+    "vienna": "Vjena",
+    "stuttgart": "Shtutgarti",
+    "peja": "Peja",
+    "gjakova": "Gjakova",
+    "ferizaj": "Ferizaji",
+    "podgorica": "Podgorica"
+  },
+  "vehicles": {
+    "SMALL": {
+      "name": "Furgon i vogël",
+      "fits": "Kuti, bagazhe, mobilie të vogla",
+      "short": "I vogël"
+    },
+    "VAN": {
+      "name": "Furgon",
+      "fits": "Divan, frigorifer, disa sende të mëdha",
+      "short": "Furgon"
+    },
+    "LARGE_VAN": {
+      "name": "Furgon i madh",
+      "fits": "Garsoniere ose banesë 1-dhomëshe",
+      "short": "I madh"
+    },
+    "BOX": {
+      "name": "Kamion kuti",
+      "fits": "Banesë 2–3 dhomëshe, me platformë ngritëse",
+      "short": "Kuti"
+    },
+    "TRUCK": {
+      "name": "Kamion",
+      "fits": "Shtëpi dhe zyra",
+      "short": "Kamion"
+    }
+  },
+  "landing": {
+    "nav": {
+      "how": "Si funksionon",
+      "movers": "Për transportuesit",
+      "markets": "Tregjet",
+      "demo": "Demo live",
+      "getPrice": "Merr çmimin",
+      "language": "Gjuha",
+      "home": "Ranktrip – kreu",
+      "main": "Kryesore"
+    },
+    "hero": {
+      "title": "Zhvendos çdo gjë,\nkudo që është shtëpia.",
+      "subtitle": "Rezervo një transportues të pavarur me furgon për pak minuta — çmim paraprakisht, pagesë me kartelë dhe ndjekje live. Nga Prishtina në Prizren, ose nga Mynihu në shtëpi."
+    },
+    "quote": {
+      "pickup": "Marrja",
+      "dropoff": "Dorëzimi",
+      "swap": "Ndërro marrjen me dorëzimin",
+      "classes": "Lloji i automjetit",
+      "crew": "Ekipi",
+      "crew1": "Vetëm transportuesi",
+      "crew2": "+1 ndihmës",
+      "crew3": "+2 ndihmës",
+      "seeMovers": "Shiko transportuesit",
+      "note": "Tarifa shembull për demon — çdo transportues vendos vetë çmimin për çdo lloj automjeti. Para pagesës e sheh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit veçmas.",
+      "soonTitle": "Çmimet live vijnë së shpejti.",
+      "soonText": "Regjistrohu në listën e pritjes dhe do të të njoftojmë me email kur transportuesit pranë teje të jenë në Ranktrip.",
+      "soonLink": "Regjistrohu në listë →",
+      "from": "nga",
+      "domestic": "Vendore",
+      "crossBorder": "Ndërkufitare",
+      "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} orë",
+      "addressPlaceholder": "Rruga, numri, qyteti",
+      "searching": "Duke kërkuar…",
+      "noResults": "Nuk u gjet adresa. Provo rrugën dhe qytetin.",
+      "searchError": "Kërkimi i adresave nuk funksionon tani. Provo përsëri pas pak.",
+      "samePlace": "Marrja dhe dorëzimi janë i njëjti vend.",
+      "routeError": "Nuk mundëm ta llogarisim këtë rrugë. Provo një adresë tjetër."
+    },
+    "map": {
+      "status": "Në rrugë",
+      "company": "Example Moving Co.",
+      "subtitle": "{{vehicle}} · transportues shembull",
+      "speed": "Shpejtësia",
+      "left": "Mbeten",
+      "eta": "Mbërritja",
+      "kmh": "km/h",
+      "km": "km",
+      "min": "min",
+      "footer": "GPS live gjatë një zhvendosjeje aktive · përditësohet çdo disa sekonda",
+      "dashboard": "Hap panelin e plotë →",
+      "dropoff": "Dorëzimi · {{place}}",
+      "progress": "Përparimi i rrugës"
+    },
+    "why": {
+      "title": "Ndërtuar për zhvendosje të vërteta.",
+      "subtitle": "Gjithçka që i duhet një zhvendosjeje, asgjë më shumë.",
+      "pricing": {
+        "tag": "Çmimi",
+        "word": "Paraprakisht.",
+        "line": "Çmimi para rezervimit.",
+        "note": "Çdo transportues vendos vetë tarifat për çdo automjet. Pa pazar te dera."
+      },
+      "tracking": {
+        "tag": "Ndjekja",
+        "word": "Live.",
+        "line": "GPS nga marrja deri te dera.",
+        "note": "Ndiqe transportuesin në hartë dhe ndaje lidhjen me familjen."
+      },
+      "payment": {
+        "tag": "Pagesa",
+        "word": "Me kartelë.",
+        "line": "Paguhet në mënyrë të sigurt në aplikacion.",
+        "note": "Përpunohet nga Stripe. Pa para në dorë, pa surpriza."
+      }
+    },
+    "story": {
+      "text": "Ranktrip lidh njerëzit që duhet të zhvendosen me <mov>transportues të pavarur</mov> që kanë furgonë. Zgjidh një <veh>lloj automjeti</veh>, shiko një <pri>çmim paraprak</pri>, paguaj me <pay>kartelë</pay> dhe <trk>ndiqe transportuesin live</trk> në hartë. Po zhvendosesh mes Gjermanisë, Austrisë ose Zvicrës dhe shtëpisë? <dia>Korridoret e diasporës</dia> janë ndërtuar pikërisht për këtë.",
+      "mov": {
+        "title": "Transportues të pavarur",
+        "text": "Biznese lokale me furgonët e tyre. Vendosin vetë tarifat, zgjedhin punët dhe mbajnë përgjegjësi për sendet e tua."
+      },
+      "veh": {
+        "title": "Pesë lloje automjetesh",
+        "text": "Nga një furgon i vogël për disa kuti deri te një kamion për një shtëpi të tërë."
+      },
+      "pri": {
+        "title": "Çmim paraprak",
+        "text": "E sheh transportuesin dhe çmimin e tij të plotë para rezervimit — nga tarifat e tij për furgonin, distancën dhe ekipin."
+      },
+      "pay": {
+        "title": "Pagesë me kartelë",
+        "text": "Paguaj në aplikacion. Pagesat kalojnë përmes Stripe; Ranktrip nuk i mban kurrë paratë e tua."
+      },
+      "trk": {
+        "title": "Ndjekje live",
+        "text": "Shiko transportuesin në hartë nga marrja deri te dorëzimi dhe ndaje lidhjen me familjen."
+      },
+      "dia": {
+        "title": "Korridoret e diasporës",
+        "text": "Gjermania, Austria dhe Zvicra ↔ Kosova, Shqipëria dhe Maqedonia e Veriut."
+      }
+    },
+    "pricing": {
+      "title": "Dije çmimin\npara se të rezervosh.",
+      "subtitle": "Lëviz distancën. Zgjidh një furgon. Kaq është e gjithë llogaria.",
+      "sentence": "Një <veh>{{vehicle}}</veh> për {{km}} km kushton <price>{{price}}</price> pa ndihmës.",
+      "distance": "Distanca",
+      "chart": "Çmim shembull sipas distancës për çdo lloj automjeti",
+      "classes": "Lloji i automjetit",
+      "corridors": "Rrugë të njohura",
+      "hint": "Prek një korridor për ta ngarkuar te kalkulatori më sipër. Tarifa shembull; distancat e gjata kushtojnë më pak për km."
+    },
+    "movers": {
+      "title": "Ndërtuar për\ntransportues të pavarur.",
+      "cta": "Bëhu transportues",
+      "rates": {
+        "title": "Furgoni yt, tarifat e tua.",
+        "text": "Vendos vetë çmimin për çdo automjet. Ti drejton biznesin — Ranktrip sjell klientët."
+      },
+      "freedom": {
+        "title": "Prano ose refuzo lirshëm.",
+        "text": "Shiko rrugën, sendet dhe pagesën para se të marrësh një punë. Pa kuota, pa ndëshkime kur thua jo."
+      },
+      "payouts": {
+        "title": "Paguhesh përmes Stripe.",
+        "text": "Mbaj 80% në punët vendore dhe 85% në ato ndërkufitare, direkt në llogarinë tënde."
+      },
+      "corridors": {
+        "title": "Udhëtime ndërkufitare.",
+        "text": "Mbush furgonin në korridoret Gjermani, Austri dhe Zvicër ↔ Ballkan."
+      },
+      "phone": {
+        "app": "Ranktrip Partner",
+        "online": "● Online",
+        "newRequest": "Kërkesë e re",
+        "payout": "Pagesa për ty",
+        "breakdown": "Çmimi yt {{price}}\nkomision {{pct}}%",
+        "district": "Adresa e saktë shfaqet pasi pranon",
+        "decline": "Refuzo",
+        "accept": "Prano punën",
+        "acceptedTitle": "Puna u pranua",
+        "acceptedText": "Nisu për marrjen në {{place}}. Adresa e saktë tani duket dhe klienti të sheh në hartë.",
+        "back": "Kthehu te kërkesat",
+        "declinedTitle": "S’ka problem.",
+        "declinedText": "Puna u ofrohet transportuesve të tjerë afër. Refuzimi nuk ndikon kurrë në renditjen tënde.",
+        "showAgain": "Shfaq kërkesën përsëri",
+        "caption": "Pasqyron ofertën që ndërtove më sipër.",
+        "crew1": "Vetëm transportuesi",
+        "crew2": "Transportuesi + 1 ndihmës",
+        "crew3": "Transportuesi + 2 ndihmës"
+      }
+    },
+    "markets": {
+      "title": "Ku po fillojmë.",
+      "subtitle": "Fillimisht Kosova, pastaj pjesa tjetër e Ballkanit dhe Polonia — me korridoret e diasporës që i lidhin.",
+      "rail": "Tregjet",
+      "dateTbc": "Data do të njoftohet",
+      "waitlist": "Regjistrohu në listë",
+      "haveVan": "Kam furgon",
+      "kosovo": {
+        "tag": "Tregu i parë",
+        "title": "Kosova",
+        "text": "Prishtina, Prizreni, Peja, Gjakova dhe Ferizaji — zhvendosje lokale dhe nga qyteti në qytet."
+      },
+      "albania": {
+        "tag": "Së shpejti",
+        "title": "Shqipëria & Maqedonia e Veriut",
+        "text": "Tirana dhe Shkupi, plus rrugët e ngarkuara ndërkufitare drejt Kosovës."
+      },
+      "poland": {
+        "tag": "Së shpejti",
+        "title": "Polonia",
+        "text": "Varshava dhe Krakova — treg i madh qirash me shumë zhvendosje çdo muaj."
+      },
+      "diaspora": {
+        "tag": "Korridore",
+        "title": "Rrugët e diasporës",
+        "text": "Gjermania, Austria dhe Zvicra ↔ Ballkani. Kthim në shtëpi ose zhvendosje jashtë."
+      }
+    },
+    "faq": {
+      "title": "Pyetje\ntë shpeshta.",
+      "contact": "Nuk e gjen përgjigjen? <link>Na kontakto</link> dhe do të të ndihmojmë me kënaqësi.",
+      "items": {
+        "q1": {
+          "q": "Kush janë transportuesit?",
+          "a": "Biznese të pavarura me furgonët e tyre. Secili vendos vetë tarifat për çdo automjet dhe mund të pranojë ose refuzojë çdo punë."
+        },
+        "q2": {
+          "q": "Si llogaritet çmimi?",
+          "a": "Nga tarifat e vetë transportuesit për automjetin, distancën e rrugës dhe ekipin. E sheh transportuesin dhe çmimin e plotë — me tarifën e rezervimit veçmas — para se të rezervosh."
+        },
+        "q3": {
+          "q": "Si paguaj?",
+          "a": "Me kartelë në aplikacion. Pagesat përpunohen nga Stripe dhe shkojnë te transportuesi; Ranktrip merr një komision dhe nuk i mban kurrë paratë e tua."
+        },
+        "q4": {
+          "q": "Po nëse dëmtohet diçka?",
+          "a": "Transportuesi është përgjegjës për sendet që bart dhe duhet të ketë sigurim transportuesi. Raporto problemin në aplikacion me foto dhe do të të lidhim me transportuesin dhe siguruesin e tij."
+        },
+        "q5": {
+          "q": "A mund të zhvendosem mes shteteve?",
+          "a": "Po. Korridoret e diasporës mbulojnë Gjermaninë, Austrinë dhe Zvicrën drejt dhe nga Kosova, Shqipëria dhe Maqedonia e Veriut, me transportues që kanë sigurimin dhe dokumentet e duhura."
+        },
+        "q6": {
+          "q": "A mund ta ndjek transportuesin?",
+          "a": "Po — live në hartë nga momenti kur transportuesi niset deri sa mbaron puna, dhe mund ta ndash lidhjen e ndjekjes me këdo."
+        },
+        "q7": {
+          "q": "Si bëhem transportues?",
+          "a": "Regjistrohu në aplikacionin Ranktrip Partner, shto kompaninë, furgonin dhe dokumentet, vendos tarifat e tua dhe fillo të pranosh punë pasi të verifikohesh."
+        }
+      }
+    },
+    "footer": {
+      "title": "Bëhu i pari që zhvendoset\nme Ranktrip.",
+      "subtitle": "Do të të shkruajmë një herë kur të nisim në qytetin tënd.",
+      "emailLabel": "Adresa e email-it",
+      "placeholder": "ti@email.com",
+      "join": "Regjistrohu",
+      "joining": "Duke u regjistruar…",
+      "joined": "Je në listë. Faleminderit!",
+      "consent": "Email-in tënd e përdorim vetëm për këtë njoftim nisjeje.",
+      "invalid": "Shkruaj një adresë email të vlefshme.",
+      "error": "Diçka shkoi keq. Provo përsëri.",
+      "legal": "© {{year}} Ranktrip. Transportuesit janë biznese të pavarura."
+    }
+  }
+}

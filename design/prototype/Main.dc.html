@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ranktrip — Move anything</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;family=Geist:wght@300..700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#D2CDBD}
+a{color:#0F0B09}a:hover{color:#4A443E}
+.disp{font-family:'Archivo',sans-serif;font-stretch:118%;font-weight:600;letter-spacing:-0.045em}
+.ph{font:inherit;color:inherit;background:none;border:0;padding:0 2px;margin:0 -2px;cursor:pointer;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:5px;border-radius:3px;transition:background .2s,color .2s}
+.ph.on{background:#2A3F39;color:#FBF9F4;text-decoration:none}
+.lift{transition:transform .25s ease,box-shadow .25s ease}
+.lift:hover{transform:translateY(-4px);box-shadow:0 24px 50px -24px rgba(0,0,0,.28)}
+.btn{transition:background .2s,color .2s,transform .15s}
+.btn:active{transform:scale(.97)}
+select{appearance:none;-webkit-appearance:none}
+input[type=range]{accent-color:#0F0B09}
+.pulse{animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(185,131,80,.55)}100%{box-shadow:0 0 0 26px rgba(185,131,80,0)}}
+.navlink{color:#0F0B09;text-decoration:none}
+.navlink:hover{color:#5C564F}
+</style>
+</helmet>
+<div style="font-family:'Geist',system-ui,sans-serif;color:#0F0B09;background:#D2CDBD;padding:20px 20px 0;box-sizing:border-box">
+
+<!-- ================= HERO SHEET ================= -->
+<div style="background:#F6F3EC;border-radius:24px;max-width:1400px;margin:0 auto;overflow:hidden">
+
+  <!-- NAV -->
+  <nav style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 32px">
+    <div style="display:flex;gap:28px;font-size:14px;align-items:center;flex:1 1 200px;flex-wrap:wrap">
+      <a class="navlink" href="#how">How it works</a>
+      <a class="navlink" href="#movers">For movers</a>
+      <a class="navlink" href="#markets">Markets</a>
+      <a class="navlink" href="Tracking.dc.html">Live demo</a>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 15.5 L12 4 L21 15.5" stroke="#0F0B09" stroke-width="3" stroke-linejoin="round"/><path d="M7 20 H17" stroke="#0F0B09" stroke-width="3" stroke-linecap="round"/></svg>
+      <span style="font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:700;font-size:11px;letter-spacing:.16em">RANKTRIP</span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 200px">
+      <button class="btn" onClick="{{cycleLang}}" style="font:inherit;font-size:14px;background:none;border:0;cursor:pointer;padding:10px 8px;min-height:44px">{{lang}} ▾</button>
+      <a class="btn" href="#quote" style="background:#2A3F39;color:#FBF9F4;text-decoration:none;font-size:14px;padding:12px 20px;border-radius:999px">Get a price</a>
+    </div>
+  </nav>
+
+  <!-- HERO COPY -->
+  <section style="text-align:center;padding:72px 24px 40px">
+    <h1 class="disp" style="font-size:clamp(44px,7vw,96px);line-height:.95;margin:0 auto;max-width:1000px">Move anything,<br>wherever home is.</h1>
+    <p style="font-size:19px;line-height:1.5;color:#48423C;max-width:600px;margin:26px auto 0">Book an independent mover with a van in minutes — upfront price, card payment and live tracking. From Prishtina to Prizren, or Munich to home.</p>
+  </section>
+
+  <!-- QUOTE WIDGET -->
+  <section id="quote" style="padding:0 24px 56px">
+    <div style="max-width:980px;margin:0 auto;background:#FBF9F4;border-radius:22px;box-shadow:0 1px 0 rgba(0,0,0,.04),0 30px 70px -30px rgba(0,0,0,.25);border:1px solid #E2DDD0;padding:22px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:stretch">
+        <label style="flex:1 1 220px;display:flex;flex-direction:column;gap:6px;background:#ECE8DD;border-radius:14px;padding:12px 16px">
+          <span style="font-size:12px;color:#5C564F">Pickup</span>
+          <select value="{{fromId}}" onChange="{{onFrom}}" style="font:inherit;font-size:17px;font-weight:500;border:0;background:transparent;padding:0;cursor:pointer;color:#0F0B09">
+            <sc-for list="{{cities}}" as="c" hint-placeholder-count="6"><option value="{{c.id}}">{{c.label}}</option></sc-for>
+          </select>
+        </label>
+        <button class="btn" onClick="{{swap}}" aria-label="Swap pickup and drop-off" style="width:48px;min-height:48px;border-radius:14px;border:1px solid #D6D0C1;background:#FBF9F4;cursor:pointer;display:flex;align-items:center;justify-content:center;align-self:center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg>
+        </button>
+        <label style="flex:1 1 220px;display:flex;flex-direction:column;gap:6px;background:#ECE8DD;border-radius:14px;padding:12px 16px">
+          <span style="font-size:12px;color:#5C564F">Drop-off</span>
+          <select value="{{toId}}" onChange="{{onTo}}" style="font:inherit;font-size:17px;font-weight:500;border:0;background:transparent;padding:0;cursor:pointer;color:#0F0B09">
+            <sc-for list="{{cities}}" as="c" hint-placeholder-count="6"><option value="{{c.id}}">{{c.label}}</option></sc-for>
+          </select>
+        </label>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+        <sc-for list="{{classes}}" as="k" hint-placeholder-count="4">
+          <button class="btn" onClick="{{k.pick}}" style="{{k.style}}">
+            <span style="display:flex;justify-content:space-between;align-items:center;width:100%">
+              <span style="font-size:15px;font-weight:600">{{k.name}}</span>
+              <span style="font-size:12px;padding:3px 8px;border-radius:999px;{{k.chip}}">{{k.cap}}</span>
+            </span>
+            <span style="font-size:12.5px;opacity:.72">{{k.ex}}</span>
+            <span style="font-size:12.5px;opacity:.72">{{k.fits}}</span>
+            <span class="disp" style="font-size:22px;margin-top:6px">€{{k.price}}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;border-top:1px solid #E4DFD2;padding-top:18px">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="font-size:13px;color:#5C564F;margin-right:4px">Crew</span>
+          <sc-for list="{{crew}}" as="h" hint-placeholder-count="3">
+            <button class="btn" onClick="{{h.pick}}" style="{{h.style}}">{{h.label}}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <div style="text-align:right">
+            <div style="font-size:12.5px;color:#5C564F">{{q.kind}} · ≈{{q.km}} km · {{q.hours}}</div>
+            <div class="disp" style="font-size:34px;line-height:1.1">€{{q.total}}</div>
+          </div>
+          <button class="btn" onClick="{{book}}" style="background:#2A3F39;color:#FBF9F4;border:0;border-radius:999px;padding:16px 26px;font:inherit;font-size:15px;font-weight:500;cursor:pointer;min-height:52px">{{bookLabel}}</button>
+        </div>
+      </div>
+
+      <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#2A3F39;color:#FBF9F4;border-radius:14px;padding:14px 18px">
+          <div style="display:flex;gap:12px;align-items:center">
+            <span class="pulse" style="width:10px;height:10px;border-radius:50%;background:#B98350;display:inline-block"></span>
+            <span style="font-size:14.5px">Request sent to movers with a {{q.className}} near {{q.fromName}}. The first to accept gets the job.</span>
+          </div>
+          <a href="Tracking.dc.html" style="color:#D9A574;font-size:14.5px;font-weight:500;text-decoration:none;padding:10px 0">Track this move →</a>
+        </div>
+      </sc-if>
+      <div style="font-size:12px;color:#6B645C">Sample rates for the demo — each mover sets their own price per vehicle class. Price includes Ranktrip's fee ({{q.feePct}}% {{q.kindLower}}); the mover receives €{{q.mover}}.</div>
+    </div>
+  </section>
+
+  <!-- HERO VISUAL: live map in a dark device -->
+  <section style="padding:0 24px 24px">
+    <div style="max-width:1300px;margin:0 auto;background:#0F0B09;border-radius:26px;padding:12px;box-shadow:0 40px 90px -40px rgba(0,0,0,.6)">
+      <div style="position:relative;height:clamp(380px,46vw,560px);border-radius:18px;overflow:hidden;background:#1C2B27">
+        <svg viewBox="0 0 1200 520" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true">
+          <g stroke="#2C403A" stroke-width="10" fill="none" vector-effect="non-scaling-stroke">
+            <path vector-effect="non-scaling-stroke" d="M0 470 C200 440 300 400 420 350 S700 300 1200 260"/>
+            <path vector-effect="non-scaling-stroke" d="M0 120 C180 140 380 180 520 160 S900 60 1200 40"/>
+            <path vector-effect="non-scaling-stroke" d="M300 0 C320 140 360 300 330 520"/>
+            <path vector-effect="non-scaling-stroke" d="M760 0 C720 160 740 340 800 520"/>
+          </g>
+          <g stroke="#24362F" stroke-width="2" fill="none">
+            <path vector-effect="non-scaling-stroke" d="M0 60 L1200 140"/><path vector-effect="non-scaling-stroke" d="M0 220 L1200 180"/>
+            <path vector-effect="non-scaling-stroke" d="M0 300 L1200 360"/><path vector-effect="non-scaling-stroke" d="M0 390 L1200 420"/>
+            <path vector-effect="non-scaling-stroke" d="M100 0 L60 520"/><path vector-effect="non-scaling-stroke" d="M200 0 L240 520"/>
+            <path vector-effect="non-scaling-stroke" d="M460 0 L500 520"/><path vector-effect="non-scaling-stroke" d="M590 0 L560 520"/>
+            <path vector-effect="non-scaling-stroke" d="M900 0 L930 520"/><path vector-effect="non-scaling-stroke" d="M1040 0 L1000 520"/>
+            <path vector-effect="non-scaling-stroke" d="M640 0 L1200 330"/><path vector-effect="non-scaling-stroke" d="M0 520 L560 0"/>
+            <path vector-effect="non-scaling-stroke" d="M120 330 L420 240 L620 300 L1150 240"/>
+          </g>
+          <path d="{{hero.full}}" stroke="#4A5F58" stroke-width="4" fill="none" stroke-dasharray="2 8" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          <path d="{{hero.done}}" stroke="#B98350" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <div style="position:absolute;left:11.6%;top:80.7%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:#FBF9F4;border:3px solid #1C2B27"></div>
+        <div style="position:absolute;left:83.3%;top:21%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:4px">
+          <span style="background:#FBF9F4;color:#0F0B09;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px">Drop-off · {{q.toName}}</span>
+          <svg width="18" height="22" viewBox="0 0 18 22" aria-hidden="true"><path d="M9 21s7-7 7-12A7 7 0 0 0 2 9c0 5 7 12 7 12Z" fill="#FBF9F4"/><circle cx="9" cy="9" r="2.5" fill="#1C2B27"/></svg>
+        </div>
+        <div class="pulse" style="position:absolute;left:{{hero.left}};top:{{hero.top}};transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#B98350;display:flex;align-items:center;justify-content:center">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+        </div>
+
+        <!-- overlay card -->
+        <div style="position:absolute;left:20px;top:20px;width:min(330px,calc(100% - 40px));background:rgba(15,11,9,.88);border:1px solid #33483F;border-radius:16px;padding:16px;color:#ECE7DA;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(8px)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:38px;height:38px;border-radius:50%;background:#2C403A;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px">AK</div>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:600">Arben K. <span style="font-size:11px;font-weight:500;background:#B98350;color:#0F0B09;padding:2px 7px;border-radius:999px;margin-left:4px">On the way</span></div>
+              <div style="font-size:12px;color:#B4BCAA">{{q.className}} · sample mover</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#D2CDBD"><span>{{q.fromName}} → {{q.toName}}</span><span>{{hero.pct}}%</span></div>
+          <div style="height:4px;background:#2C403A;border-radius:4px;overflow:hidden"><div style="height:100%;width:{{hero.pctCss}};background:#B98350"></div></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+            <div style="background:#16221F;border-radius:10px;padding:10px"><div style="font-size:11px;color:#B4BCAA">Speed</div><div style="font-size:17px;font-weight:600;margin-top:2px">{{hero.speed}} <span style="font-size:11px;color:#B4BCAA">km/h</span></div></div>
+            <div style="background:#16221F;border-radius:10px;padding:10px"><div style="font-size:11px;color:#B4BCAA">Left</div><div style="font-size:17px;font-weight:600;margin-top:2px">{{hero.left_km}} <span style="font-size:11px;color:#B4BCAA">km</span></div></div>
+            <div style="background:#16221F;border-radius:10px;padding:10px"><div style="font-size:11px;color:#B4BCAA">ETA</div><div style="font-size:17px;font-weight:600;margin-top:2px">{{hero.eta}}</div></div>
+          </div>
+        </div>
+
+        <!-- compass -->
+        <div style="position:absolute;right:20px;top:20px;width:76px;height:76px;border-radius:50%;border:1px solid #4A5F58;background:#1A1A1D;display:flex;align-items:center;justify-content:center">
+          <div style="width:56px;height:56px;border-radius:50%;border:4px solid #2C403A;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#FBF9F4">{{hero.dir}}</div>
+        </div>
+
+        <div style="position:absolute;left:20px;right:20px;bottom:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#B4BCAA">
+          <span>Live GPS · updates every few seconds</span>
+          <a href="Tracking.dc.html" style="color:#D9A574;text-decoration:none">Open full dashboard →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= WHY ================= -->
+<section id="how" style="max-width:1400px;margin:20px auto 0;background:#EAE5D9;border-radius:24px;padding:96px 24px">
+  <div style="text-align:center">
+    <h2 class="disp" style="font-size:clamp(34px,4.4vw,52px);margin:0">Built for real moves.</h2>
+    <p style="color:#514B45;font-size:16px;margin:14px 0 0">Everything a move needs, nothing it doesn't.</p>
+  </div>
+  <div style="max-width:1000px;margin:56px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+    <div class="lift" style="background:#FBF9F4;border-radius:18px;padding:22px;min-height:230px;display:flex;flex-direction:column;box-shadow:0 18px 40px -30px rgba(0,0,0,.25)">
+      <span style="align-self:flex-start;font-size:12px;background:#E3DED0;padding:4px 10px;border-radius:999px">Pricing</span>
+      <div style="margin-top:auto">
+        <div class="disp" style="font-size:40px">Upfront.</div>
+        <div style="font-size:15px;margin-top:4px">Price before you book.</div>
+        <div style="font-size:13px;color:#5C564F;font-style:italic;margin-top:14px;line-height:1.45">Each mover sets a rate per vehicle class. No haggling at the door.</div>
+      </div>
+    </div>
+    <div class="lift" style="background:#FBF9F4;border-radius:18px;padding:22px;min-height:230px;display:flex;flex-direction:column;box-shadow:0 18px 40px -30px rgba(0,0,0,.25)">
+      <span style="align-self:flex-start;font-size:12px;background:#E3DED0;padding:4px 10px;border-radius:999px">Tracking</span>
+      <div style="margin-top:auto">
+        <div class="disp" style="font-size:40px">Live.</div>
+        <div style="font-size:15px;margin-top:4px">GPS from pickup to door.</div>
+        <div style="font-size:13px;color:#5C564F;font-style:italic;margin-top:14px;line-height:1.45">Follow your mover on the map and share the link with family.</div>
+      </div>
+    </div>
+    <div class="lift" style="background:#FBF9F4;border-radius:18px;padding:22px;min-height:230px;display:flex;flex-direction:column;box-shadow:0 18px 40px -30px rgba(0,0,0,.25)">
+      <span style="align-self:flex-start;font-size:12px;background:#E3DED0;padding:4px 10px;border-radius:999px">Payment</span>
+      <div style="margin-top:auto">
+        <div class="disp" style="font-size:40px">By card.</div>
+        <div style="font-size:15px;margin-top:4px">Paid securely in the app.</div>
+        <div style="font-size:13px;color:#5C564F;font-style:italic;margin-top:14px;line-height:1.45">Processed by Stripe. No cash, no surprises.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STORY PARAGRAPH ================= -->
+<section style="max-width:1400px;margin:20px auto 0;background:#FBF9F4;border-radius:24px;padding:110px 24px">
+  <div style="max-width:760px;margin:0 auto">
+    <p style="font-size:clamp(22px,2.4vw,30px);line-height:1.45;margin:0;letter-spacing:-0.01em">Ranktrip connects people who need to move with <button class="{{p.mov.cls}}" onMouseEnter="{{p.mov.on}}" onFocus="{{p.mov.on}}" onClick="{{p.mov.on}}">independent movers</button> who own vans. Pick a <button class="{{p.veh.cls}}" onMouseEnter="{{p.veh.on}}" onFocus="{{p.veh.on}}" onClick="{{p.veh.on}}">vehicle class</button>, see an <button class="{{p.pri.cls}}" onMouseEnter="{{p.pri.on}}" onFocus="{{p.pri.on}}" onClick="{{p.pri.on}}">upfront price</button>, pay by <button class="{{p.pay.cls}}" onMouseEnter="{{p.pay.on}}" onFocus="{{p.pay.on}}" onClick="{{p.pay.on}}">card</button> and <button class="{{p.trk.cls}}" onMouseEnter="{{p.trk.on}}" onFocus="{{p.trk.on}}" onClick="{{p.trk.on}}">track your mover live</button> on the map. Moving between Germany, Austria or Switzerland and home? Our <button class="{{p.dia.cls}}" onMouseEnter="{{p.dia.on}}" onFocus="{{p.dia.on}}" onClick="{{p.dia.on}}">diaspora corridors</button> are built for exactly that.</p>
+    <div style="margin-top:36px;display:flex;gap:18px;align-items:center;background:#EAE5D9;border-radius:16px;padding:16px;max-width:520px">
+      <div style="width:84px;height:64px;border-radius:10px;background:#1C2B27;flex:0 0 auto;display:flex;align-items:center;justify-content:center">
+        <span style="width:12px;height:12px;border-radius:50%;background:#B98350;display:inline-block"></span>
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:600">{{story.title}}</div>
+        <div style="font-size:13.5px;color:#554F48;line-height:1.45;margin-top:3px">{{story.text}}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRICING CHART ================= -->
+<section style="max-width:1400px;margin:20px auto 0;background:#FBF9F4;border-radius:24px;padding:96px 24px">
+  <div style="text-align:center">
+    <h2 class="disp" style="font-size:clamp(34px,4.4vw,52px);line-height:1;margin:0">Know the price<br>before you book.</h2>
+    <p style="color:#514B45;font-size:16px;margin:16px 0 0">Drag the distance. Pick a van. That's the whole calculation.</p>
+  </div>
+  <div style="max-width:900px;margin:52px auto 0;background:#FBF9F4;border-radius:20px;box-shadow:0 1px 0 rgba(0,0,0,.04),0 30px 70px -36px rgba(0,0,0,.3);border:1px solid #E4DFD2;padding:32px">
+    <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end">
+      <p style="font-size:clamp(20px,2.2vw,26px);line-height:1.3;margin:0;max-width:520px;letter-spacing:-0.01em">A <span style="color:#2A3F39;font-weight:600">{{chart.name}}</span> for {{chart.km}} km costs <span style="background:#2A3F39;color:#FBF9F4;padding:0 6px;border-radius:4px">€{{chart.price}}</span> with one driver.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{classes}}" as="k" hint-placeholder-count="4">
+          <button class="btn" onClick="{{k.pick}}" style="{{k.tab}}">{{k.short}}</button>
+        </sc-for>
+      </div>
+    </div>
+    <svg viewBox="0 0 1000 340" style="width:100%;height:auto;margin-top:28px;display:block" role="img" aria-label="Sample price by distance for each vehicle class">
+      <g stroke="#E0DACC" stroke-width="1">
+        <line x1="40" y1="76" x2="990" y2="76"/><line x1="40" y1="151" x2="990" y2="151"/><line x1="40" y1="225" x2="990" y2="225"/>
+      </g>
+      <line x1="40" y1="300" x2="990" y2="300" stroke="#BDB6A6"/>
+      <g font-size="12" fill="#6B645C" font-family="Geist, sans-serif">
+        <text x="0" y="80">€1.2k</text><text x="0" y="155">€800</text><text x="0" y="229">€400</text><text x="0" y="304">€0</text>
+        <text x="40" y="324">0 km</text><text x="270" y="324">400</text><text x="508" y="324">800</text><text x="745" y="324">1,200</text><text x="940" y="324">1,600</text>
+      </g>
+      <sc-for list="{{chart.lines}}" as="l" hint-placeholder-count="4">
+        <path d="{{l.d}}" fill="none" stroke="{{l.color}}" stroke-width="{{l.w}}" stroke-linecap="round"/>
+      </sc-for>
+      <line x1="{{chart.x}}" y1="20" x2="{{chart.x}}" y2="300" stroke="#2A3F39" stroke-dasharray="3 5"/>
+      <circle cx="{{chart.x}}" cy="{{chart.y}}" r="14" fill="#2A3F39" fill-opacity=".15"/>
+      <circle cx="{{chart.x}}" cy="{{chart.y}}" r="6" fill="#2A3F39"/>
+    </svg>
+    <label style="display:flex;gap:16px;align-items:center;margin-top:18px;font-size:13px;color:#514B45">
+      <span style="flex:0 0 auto">Distance</span>
+      <input type="range" min="5" max="1600" step="5" value="{{chart.km}}" onInput="{{onDist}}" onChange="{{onDist}}" style="flex:1;min-height:44px">
+      <span style="flex:0 0 auto;font-weight:600;color:#0F0B09;width:70px;text-align:right">{{chart.km}} km</span>
+    </label>
+  </div>
+  <div style="max-width:900px;margin:28px auto 0;display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+    <sc-for list="{{corridors}}" as="c" hint-placeholder-count="6">
+      <button class="btn" onClick="{{c.pick}}" style="{{c.style}}">{{c.label}}</button>
+    </sc-for>
+  </div>
+  <p style="text-align:center;font-size:12px;color:#6B645C;margin:14px 0 0">Tap a corridor to load it into the price calculator above. Sample rates; long distances are cheaper per km.</p>
+</section>
+
+<!-- ================= FOR MOVERS ================= -->
+<section id="movers" style="max-width:1400px;margin:20px auto 0;background:#FBF9F4;border-radius:24px;padding:96px 24px">
+  <div style="max-width:1080px;margin:0 auto;display:flex;gap:56px;flex-wrap:wrap;align-items:center">
+    <div style="flex:1 1 380px;display:flex;flex-direction:column;gap:30px">
+      <h2 class="disp" style="font-size:clamp(34px,4.2vw,50px);line-height:1;margin:0">Built for<br>independent movers.</h2>
+      <div style="display:flex;gap:14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
+        <div><div style="font-size:16px;font-weight:600">Your van, your rates.</div><div style="font-size:14px;color:#554F48;line-height:1.5;margin-top:4px">Set your own price per vehicle class. You run your business — Ranktrip brings the customers.</div></div>
+      </div>
+      <div style="display:flex;gap:14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M20 6 9 17l-5-5"/></svg>
+        <div><div style="font-size:16px;font-weight:600">Accept or decline freely.</div><div style="font-size:14px;color:#554F48;line-height:1.5;margin-top:4px">See the route, items and payout before you take a job. No quotas, no penalties for saying no.</div></div>
+      </div>
+      <div style="display:flex;gap:14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        <div><div style="font-size:16px;font-weight:600">Paid through Stripe.</div><div style="font-size:14px;color:#554F48;line-height:1.5;margin-top:4px">Keep 80% on domestic jobs and 85% on cross-border jobs, paid straight to your account.</div></div>
+      </div>
+      <div style="display:flex;gap:14px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><circle cx="12" cy="10" r="3"/><path d="M12 21s7-6.5 7-11a7 7 0 0 0-14 0c0 4.5 7 11 7 11Z"/></svg>
+        <div><div style="font-size:16px;font-weight:600">Cross-border runs.</div><div style="font-size:14px;color:#554F48;line-height:1.5;margin-top:4px">Fill your van on the Germany, Austria and Switzerland ↔ Balkans corridors.</div></div>
+      </div>
+      <a href="#markets" style="align-self:flex-start;background:#2A3F39;color:#FBF9F4;text-decoration:none;font-size:14px;padding:14px 22px;border-radius:999px">Become a mover</a>
+    </div>
+
+    <!-- mover phone -->
+    <div style="flex:0 1 360px;margin:0 auto">
+      <div style="width:330px;max-width:100%;margin:0 auto;background:#0F0B09;border-radius:44px;padding:10px;box-shadow:0 40px 80px -36px rgba(0,0,0,.55)">
+        <div style="background:#1C2B27;border-radius:36px;padding:22px 18px;color:#ECE7DA;min-height:600px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:#B4BCAA">Ranktrip Mover</span>
+            <span style="font-size:11px;background:#2E2318;color:#D9A574;padding:4px 9px;border-radius:999px">● Online</span>
+          </div>
+          <sc-if value="{{phone.pending}}" hint-placeholder-val="{{ true }}">
+            <div style="font-family:'Archivo',sans-serif;font-stretch:115%;font-weight:600;font-size:24px;letter-spacing:-0.03em">New request</div>
+            <div style="background:#16221F;border:1px solid #33483F;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px">
+              <div style="height:120px;border-radius:12px;background:#13201C;position:relative;overflow:hidden">
+                <svg viewBox="0 0 300 120" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><path d="M0 90 L300 70 M60 0 L90 120 M200 0 L180 120 M0 30 L300 50" stroke="#2C403A" stroke-width="6"/><path d="M30 95 C90 80 110 40 170 45 S240 30 270 25" stroke="#B98350" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="30" cy="95" r="6" fill="#FBF9F4"/><circle cx="270" cy="25" r="6" fill="#B98350"/></svg>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:14px"><span style="font-weight:600">{{q.fromName}} → {{q.toName}}</span><span style="color:#B4BCAA">{{q.km}} km</span></div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span style="font-size:11.5px;background:#33483F;padding:4px 8px;border-radius:6px">{{q.className}}</span>
+                <span style="font-size:11.5px;background:#33483F;padding:4px 8px;border-radius:6px">{{q.crewLabel}}</span>
+                <span style="font-size:11.5px;background:#33483F;padding:4px 8px;border-radius:6px">{{q.kind}}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #33483F;padding-top:12px">
+                <div><div style="font-size:11.5px;color:#B4BCAA">You earn</div><div style="font-family:'Archivo',sans-serif;font-stretch:115%;font-weight:600;font-size:30px;letter-spacing:-0.03em;color:#D9A574">€{{q.mover}}</div></div>
+                <div style="font-size:11.5px;color:#B4BCAA;text-align:right">Customer pays €{{q.total}}<br>Fee {{q.feePct}}%</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:auto">
+              <button class="btn" onClick="{{decline}}" style="flex:1;min-height:52px;border-radius:999px;border:1px solid #4A5F58;background:transparent;color:#ECE7DA;font:inherit;font-size:15px;cursor:pointer">Decline</button>
+              <button class="btn" onClick="{{accept}}" style="flex:1.4;min-height:52px;border-radius:999px;border:0;background:#B98350;color:#0F0B09;font:inherit;font-size:15px;font-weight:600;cursor:pointer">Accept job</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{phone.accepted}}" hint-placeholder-val="{{ false }}">
+            <div style="margin:auto 0;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center">
+              <div style="width:72px;height:72px;border-radius:50%;background:#B98350;display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <div style="font-family:'Archivo',sans-serif;font-stretch:115%;font-weight:600;font-size:24px;letter-spacing:-0.03em">Job accepted</div>
+              <div style="font-size:14px;color:#B4BCAA;line-height:1.5">Head to pickup in {{q.fromName}}. The customer can now see you on the map.</div>
+            </div>
+            <button class="btn" onClick="{{resetPhone}}" style="min-height:52px;border-radius:999px;border:1px solid #4A5F58;background:transparent;color:#ECE7DA;font:inherit;font-size:15px;cursor:pointer">Back to requests</button>
+          </sc-if>
+          <sc-if value="{{phone.declined}}" hint-placeholder-val="{{ false }}">
+            <div style="margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:10px">
+              <div style="font-family:'Archivo',sans-serif;font-stretch:115%;font-weight:600;font-size:24px;letter-spacing:-0.03em">No problem.</div>
+              <div style="font-size:14px;color:#B4BCAA;line-height:1.5">The job goes to the next mover nearby. We'll ping you with the next one.</div>
+            </div>
+            <button class="btn" onClick="{{resetPhone}}" style="min-height:52px;border-radius:999px;border:1px solid #4A5F58;background:transparent;color:#ECE7DA;font:inherit;font-size:15px;cursor:pointer">Show request again</button>
+          </sc-if>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:12px;color:#6B645C;margin:14px 0 0">Mirrors the quote you built above.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MARKETS ================= -->
+<section id="markets" style="max-width:1400px;margin:20px auto 0;background:#FBF9F4;border-radius:24px;padding:96px 0">
+  <div style="text-align:center;padding:0 24px">
+    <h2 class="disp" style="font-size:clamp(34px,4.4vw,52px);margin:0">Where we're starting.</h2>
+    <p style="color:#514B45;font-size:16px;margin:14px auto 0;max-width:520px;line-height:1.5">Kosovo first, then the rest of the Balkans and Poland — with the diaspora corridors that connect them.</p>
+  </div>
+  <div style="display:flex;gap:16px;overflow-x:auto;padding:52px 24px 12px;scroll-snap-type:x mandatory">
+    <article class="lift" style="flex:0 0 290px;scroll-snap-align:start;background:#FBF9F4;border:1px solid #E2DDD0;border-radius:18px;padding:8px;display:flex;flex-direction:column">
+      <div style="height:170px;border-radius:12px;background:#1C2B27;position:relative;overflow:hidden">
+        <svg viewBox="0 0 290 170" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><path d="M0 120 L290 90 M80 0 L110 170 M0 40 L290 70 M210 0 L190 170" stroke="#2C403A" stroke-width="6"/><circle cx="150" cy="80" r="26" fill="#B98350" fill-opacity=".15"/><circle cx="150" cy="80" r="7" fill="#B98350"/></svg>
+      </div>
+      <div style="padding:16px 10px 10px;display:flex;flex-direction:column;gap:8px;flex:1">
+        <span style="align-self:flex-start;font-size:11.5px;background:#2A3F39;color:#FBF9F4;padding:3px 9px;border-radius:999px">Launch market</span>
+        <h3 style="font-size:18px;font-weight:600;margin:0">Kosovo</h3>
+        <p style="font-size:13.5px;color:#554F48;margin:0;line-height:1.45">Prishtina, Prizren, Peja, Gjakova and Ferizaj — local moves and city-to-city.</p>
+        <span style="font-size:12px;color:#6B645C;margin-top:auto">[LAUNCH DATE]</span>
+      </div>
+    </article>
+    <article class="lift" style="flex:0 0 290px;scroll-snap-align:start;background:#FBF9F4;border:1px solid #E2DDD0;border-radius:18px;padding:8px;display:flex;flex-direction:column">
+      <div style="height:170px;border-radius:12px;background:#1C2B27;position:relative;overflow:hidden">
+        <svg viewBox="0 0 290 170" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><path d="M0 60 L290 120 M140 0 L120 170 M0 150 L290 20" stroke="#2C403A" stroke-width="6"/><circle cx="90" cy="70" r="6" fill="#FBF9F4"/><circle cx="200" cy="110" r="6" fill="#FBF9F4"/><path d="M90 70 Q150 40 200 110" stroke="#B98350" stroke-width="3" fill="none"/></svg>
+      </div>
+      <div style="padding:16px 10px 10px;display:flex;flex-direction:column;gap:8px;flex:1">
+        <span style="align-self:flex-start;font-size:11.5px;background:#E3DED0;padding:3px 9px;border-radius:999px">Next</span>
+        <h3 style="font-size:18px;font-weight:600;margin:0">Albania &amp; North Macedonia</h3>
+        <p style="font-size:13.5px;color:#554F48;margin:0;line-height:1.45">Tirana and Skopje, plus the busy cross-border routes to Kosovo.</p>
+        <span style="font-size:12px;color:#6B645C;margin-top:auto">[DATE]</span>
+      </div>
+    </article>
+    <article class="lift" style="flex:0 0 290px;scroll-snap-align:start;background:#FBF9F4;border:1px solid #E2DDD0;border-radius:18px;padding:8px;display:flex;flex-direction:column">
+      <div style="height:170px;border-radius:12px;background:#1C2B27;position:relative;overflow:hidden">
+        <svg viewBox="0 0 290 170" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><path d="M0 100 L290 100 M145 0 L145 170 M0 0 L290 170 M290 0 L0 170" stroke="#2C403A" stroke-width="5"/><circle cx="145" cy="100" r="34" fill="none" stroke="#B98350" stroke-opacity=".35" stroke-width="2"/><circle cx="145" cy="100" r="7" fill="#B98350"/></svg>
+      </div>
+      <div style="padding:16px 10px 10px;display:flex;flex-direction:column;gap:8px;flex:1">
+        <span style="align-self:flex-start;font-size:11.5px;background:#E3DED0;padding:3px 9px;border-radius:999px">Next</span>
+        <h3 style="font-size:18px;font-weight:600;margin:0">Poland</h3>
+        <p style="font-size:13.5px;color:#554F48;margin:0;line-height:1.45">Warsaw and Kraków — a big rental market with lots of moving every month.</p>
+        <span style="font-size:12px;color:#6B645C;margin-top:auto">[DATE]</span>
+      </div>
+    </article>
+    <article class="lift" style="flex:0 0 290px;scroll-snap-align:start;background:#FBF9F4;border:1px solid #E2DDD0;border-radius:18px;padding:8px;display:flex;flex-direction:column">
+      <div style="height:170px;border-radius:12px;background:#1C2B27;position:relative;overflow:hidden">
+        <svg viewBox="0 0 290 170" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><circle cx="50" cy="40" r="6" fill="#FBF9F4"/><circle cx="90" cy="30" r="6" fill="#FBF9F4"/><circle cx="130" cy="45" r="6" fill="#FBF9F4"/><circle cx="240" cy="135" r="7" fill="#B98350"/><path d="M50 40 C120 60 180 100 240 135 M90 30 C150 60 200 100 240 135 M130 45 C170 70 210 110 240 135" stroke="#B98350" stroke-width="2" stroke-opacity=".7" fill="none" stroke-dasharray="4 5"/></svg>
+      </div>
+      <div style="padding:16px 10px 10px;display:flex;flex-direction:column;gap:8px;flex:1">
+        <span style="align-self:flex-start;font-size:11.5px;background:#B98350;padding:3px 9px;border-radius:999px">Corridors</span>
+        <h3 style="font-size:18px;font-weight:600;margin:0">Diaspora routes</h3>
+        <p style="font-size:13.5px;color:#554F48;margin:0;line-height:1.45">Germany, Austria and Switzerland ↔ the Balkans. Moving home, or moving abroad.</p>
+        <span style="font-size:12px;color:#6B645C;margin-top:auto">[DATE]</span>
+      </div>
+    </article>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:28px">
+    <a href="#join" style="background:#2A3F39;color:#FBF9F4;text-decoration:none;font-size:14px;padding:13px 22px;border-radius:999px">Join the waitlist</a>
+    <a href="#movers" style="background:#E3DED0;color:#0F0B09;text-decoration:none;font-size:14px;padding:13px 22px;border-radius:999px">I have a van</a>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section style="max-width:1400px;margin:20px auto 0;background:#FBF9F4;border-radius:24px;padding:96px 24px">
+  <div style="max-width:1080px;margin:0 auto;display:flex;gap:48px;flex-wrap:wrap">
+    <div style="flex:1 1 300px">
+      <h2 class="disp" style="font-size:clamp(34px,4.2vw,50px);line-height:1;margin:0">Frequently<br>asked<br>questions.</h2>
+      <p style="font-size:14px;color:#554F48;margin:28px 0 0;line-height:1.5">Can't find an answer?<br><a href="mailto:[CONTACT EMAIL]">Contact us</a>, and we'll be happy to help.</p>
+    </div>
+    <div style="flex:1.4 1 420px;display:flex;flex-direction:column">
+      <sc-for list="{{faq}}" as="f" hint-placeholder-count="7">
+        <div style="border-bottom:1px solid #E4DFD2">
+          <button onClick="{{f.toggle}}" aria-expanded="{{f.open}}" style="width:100%;display:flex;gap:16px;align-items:flex-start;text-align:left;background:none;border:0;padding:18px 0;font:inherit;font-size:17px;cursor:pointer;color:#0F0B09;min-height:44px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="{{f.icon}}"><path d="M12 5v14M5 12h14"/></svg>
+            <span>{{f.q}}</span>
+          </button>
+          <sc-if value="{{f.open}}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0 0 20px 34px;font-size:14.5px;line-height:1.55;color:#554F48;max-width:560px">{{f.a}}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="join" style="max-width:1400px;margin:20px auto 0;background:#2A3F39;color:#ECE7DA;border-radius:24px 24px 0 0;padding:80px 32px 32px">
+  <div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:space-between;align-items:flex-end">
+    <div style="flex:1 1 380px">
+      <h2 class="disp" style="font-size:clamp(30px,3.6vw,44px);line-height:1.05;margin:0">Be first to move<br>with Ranktrip.</h2>
+      <p style="color:#B4BCAA;font-size:15px;margin:14px 0 0">We'll email you once when we launch in your city.</p>
+    </div>
+    <div style="flex:1 1 380px;max-width:480px">
+      <sc-if value="{{notJoined}}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{join}}" style="display:flex;gap:8px;background:#16221F;border-radius:999px;padding:6px;border:1px solid #33483F">
+          <label for="wl" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email address</label>
+          <input id="wl" type="email" required placeholder="you@email.com" style="flex:1;min-width:0;background:transparent;border:0;color:#ECE7DA;font:inherit;font-size:15px;padding:0 16px;outline:none;min-height:44px">
+          <button class="btn" type="submit" style="background:#B98350;color:#0F0B09;border:0;border-radius:999px;padding:0 22px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;min-height:44px">Join waitlist</button>
+        </form>
+      </sc-if>
+      <sc-if value="{{joined}}" hint-placeholder-val="{{ false }}">
+        <div style="background:#16221F;border-radius:999px;padding:16px 22px;border:1px solid #33483F;font-size:15px"><span style="color:#D9A574">✓</span> You're on the list. Faleminderit!</div>
+      </sc-if>
+    </div>
+  </div>
+  <div style="font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:700;letter-spacing:-0.05em;font-size:clamp(64px,15vw,220px);line-height:.8;margin:80px 0 32px;color:#34504A">RANKTRIP</div>
+  <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:#B4BCAA;border-top:1px solid #3A554E;padding-top:22px">
+    <span>© 2026 Ranktrip. Movers are independent businesses.</span>
+    <span style="display:flex;gap:22px;flex-wrap:wrap"><a href="#how" style="color:#B4BCAA">How it works</a><a href="#movers" style="color:#B4BCAA">For movers</a><a href="#" style="color:#B4BCAA">Terms</a><a href="#" style="color:#B4BCAA">Privacy</a></span>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":6200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { fromId: 'prn', toId: 'prz', cls: 'l', crew: 2, sent: false, langI: 0, story: 'mov', dist: 82, faqOpen: 0, phone: 'pending', joined: false, t: 0.18 };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => { this.setState({ t: ((this.state.t || 0) + 0.0016) % 1 }); }, 80);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  cities() {
+    return [
+      { id: 'prn', name: 'Prishtina', c: 'XK', lat: 42.6629, lon: 21.1655 },
+      { id: 'prz', name: 'Prizren', c: 'XK', lat: 42.2139, lon: 20.7397 },
+      { id: 'pej', name: 'Peja', c: 'XK', lat: 42.6593, lon: 20.2887 },
+      { id: 'gjk', name: 'Gjakova', c: 'XK', lat: 42.3803, lon: 20.4308 },
+      { id: 'fer', name: 'Ferizaj', c: 'XK', lat: 42.3702, lon: 21.1553 },
+      { id: 'tir', name: 'Tirana', c: 'AL', lat: 41.3275, lon: 19.8187 },
+      { id: 'skp', name: 'Skopje', c: 'MK', lat: 41.9981, lon: 21.4254 },
+      { id: 'pod', name: 'Podgorica', c: 'ME', lat: 42.4304, lon: 19.2594 },
+      { id: 'waw', name: 'Warsaw', c: 'PL', lat: 52.2297, lon: 21.0122 },
+      { id: 'krk', name: 'Kraków', c: 'PL', lat: 50.0647, lon: 19.945 },
+      { id: 'muc', name: 'Munich', c: 'DE', lat: 48.1351, lon: 11.582 },
+      { id: 'stg', name: 'Stuttgart', c: 'DE', lat: 48.7758, lon: 9.1829 },
+      { id: 'vie', name: 'Vienna', c: 'AT', lat: 48.2082, lon: 16.3738 },
+      { id: 'zrh', name: 'Zürich', c: 'CH', lat: 47.3769, lon: 8.5417 }
+    ];
+  }
+  classList() {
+    return [
+      { id: 's', name: 'Small van', short: 'Small', ex: 'Caddy · Kangoo', fits: 'A few boxes or one big item', cap: '3 m³', base: 25, km: 0.6, color: '#C9C9C4' },
+      { id: 'm', name: 'Medium van', short: 'Medium', ex: 'Transit Custom · Vito', fits: 'Studio or 1-room flat', cap: '6 m³', base: 39, km: 0.8, color: '#B5B5B0' },
+      { id: 'l', name: 'Large van', short: 'Large', ex: 'Sprinter · Crafter 3.5t', fits: '1–2 bedroom home', cap: '13 m³', base: 59, km: 1.0, color: '#A0A09A' },
+      { id: 't', name: 'Box truck', short: 'Truck', ex: '7.5t with tail lift', fits: 'A full family home', cap: '35 m³', base: 99, km: 1.5, color: '#8C8C86' }
+    ];
+  }
+  city(id) { return this.cities().find((c) => c.id === id); }
+  roadKm(a, b) {
+    if (a.id === b.id) return 12;
+    const r = Math.PI / 180, R = 6371;
+    const dLat = (b.lat - a.lat) * r, dLon = (b.lon - a.lon) * r;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
+    return Math.round(2 * R * Math.asin(Math.sqrt(h)) * 1.28);
+  }
+  price(k, km, crew) {
+    const near = Math.min(km, 150), far = Math.max(km - 150, 0);
+    return Math.round(k.base + near * k.km + far * k.km * 0.55 + (crew - 1) * 25);
+  }
+  routePts() {
+    return [[140, 420], [250, 395], [330, 310], [470, 290], [560, 210], [720, 195], [830, 140], [1000, 110]];
+  }
+  along(pts, t) {
+    const seg = [];
+    let total = 0;
+    for (let i = 1; i < pts.length; i++) { const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); seg.push(d); total += d; }
+    let goal = total * t, done = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      if (goal <= seg[i - 1]) {
+        const f = seg[i - 1] ? goal / seg[i - 1] : 0;
+        const p = [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f];
+        done.push(p);
+        const ang = Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]);
+        return { p, done, ang };
+      }
+      goal -= seg[i - 1];
+      done.push(pts[i]);
+    }
+    return { p: pts[pts.length - 1], done, ang: 0 };
+  }
+  d(pts) { return pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' '); }
+
+  renderVals() {
+    const s = this.state;
+    const from = this.city(s.fromId), to = this.city(s.toId);
+    const km = this.roadKm(from, to);
+    const cross = from.c !== to.c;
+    const feePct = cross ? 15 : 20;
+    const ks = this.classList();
+    const sel = ks.find((k) => k.id === s.cls);
+    const total = this.price(sel, km, s.crew);
+    const hrs = km / 70 + 1;
+    const hoursLabel = hrs < 1.5 ? '≈1 h' : (hrs < 24 ? '≈' + Math.round(hrs) + ' h' : '≈' + Math.ceil(hrs / 10) + ' days');
+    const crewLabels = { 1: 'Driver only', 2: 'Driver + 1 helper', 3: 'Driver + 2 helpers' };
+
+    const q = {
+      km, total, feePct,
+      mover: Math.round(total * (1 - feePct / 100)),
+      kind: cross ? 'Cross-border' : 'Domestic',
+      kindLower: cross ? 'cross-border' : 'domestic',
+      hours: hoursLabel,
+      fromName: from.name, toName: to.name,
+      className: sel.name, crewLabel: crewLabels[s.crew]
+    };
+
+    const classes = ks.map((k) => {
+      const on = k.id === s.cls;
+      return {
+        ...k,
+        price: this.price(k, km, s.crew),
+        pick: () => this.setState({ cls: k.id }),
+        style: 'text-align:left;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:3px;padding:14px 16px;border-radius:14px;min-height:44px;' + (on ? 'background:#2A3F39;color:#FBF9F4;border:1px solid #2A3F39' : 'background:#FBF9F4;color:#0F0B09;border:1px solid #D6D0C1'),
+        chip: on ? 'background:#B98350;color:#0F0B09' : 'background:#E3DED0;color:#4A443E',
+        tab: 'font:inherit;font-size:13px;cursor:pointer;padding:10px 14px;border-radius:999px;min-height:40px;' + (on ? 'background:#2A3F39;color:#FBF9F4;border:1px solid #2A3F39' : 'background:#FBF9F4;color:#0F0B09;border:1px solid #D6D0C1')
+      };
+    });
+
+    const crew = [1, 2, 3].map((n) => ({
+      label: n === 1 ? 'Driver' : n === 2 ? '+1 helper' : '+2 helpers',
+      pick: () => this.setState({ crew: n }),
+      style: 'font:inherit;font-size:13px;cursor:pointer;padding:10px 14px;border-radius:999px;min-height:40px;' + (s.crew === n ? 'background:#2A3F39;color:#FBF9F4;border:1px solid #2A3F39' : 'background:#FBF9F4;color:#0F0B09;border:1px solid #D6D0C1')
+    }));
+
+    const cities = this.cities().map((c) => ({ id: c.id, label: c.name + ' · ' + c.c }));
+
+    // hero live map
+    const pts = this.routePts();
+    const a = this.along(pts, s.t);
+    const deg = (a.ang * 180 / Math.PI + 90 + 360) % 360;
+    const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    const hero = {
+      full: this.d(pts), done: this.d(a.done),
+      left: (a.p[0] / 1200 * 100).toFixed(2) + '%', top: (a.p[1] / 520 * 100).toFixed(2) + '%',
+      pct: Math.round(s.t * 100), pctCss: (s.t * 100).toFixed(1) + '%',
+      speed: Math.round(62 + 18 * Math.sin(s.t * 40)),
+      left_km: Math.max(1, Math.round(km * (1 - s.t))),
+      eta: (() => { const m = Math.round(km * (1 - s.t) / 70 * 60); return m < 60 ? m + ' min' : Math.floor(m / 60) + 'h ' + (m % 60) + 'm'; })(),
+      dir: dirs[Math.round(deg / 45) % 8]
+    };
+
+    // story phrases
+    const stories = {
+      mov: ['Independent movers', 'Local businesses with their own vans. They set their rates, choose their jobs and carry liability for your goods.'],
+      veh: ['Four vehicle classes', 'From a small van for a few boxes to a 7.5t box truck for a full family home.'],
+      pri: ['Upfront price', 'You see the full price before you book — based on the van, the distance and the crew.'],
+      pay: ['Card payment', 'Pay in the app. Payments run through Stripe; Ranktrip never holds your money.'],
+      trk: ['Live tracking', 'Watch your mover on the map from pickup to drop-off, and share the link with family.'],
+      dia: ['Diaspora corridors', 'Germany, Austria and Switzerland ↔ Kosovo, Albania and North Macedonia.']
+    };
+    const p = {};
+    Object.keys(stories).forEach((k) => { p[k] = { cls: 'ph' + (s.story === k ? ' on' : ''), on: () => this.setState({ story: k }) }; });
+    const story = { title: stories[s.story][0], text: stories[s.story][1] };
+
+    // pricing chart
+    const X = (kmv) => 40 + kmv / 1600 * 950;
+    const Y = (eur) => 300 - eur / 1500 * 280;
+    const lines = ks.map((k) => {
+      const ptsL = [];
+      for (let i = 0; i <= 40; i++) { const kmv = i * 40; ptsL.push([X(kmv), Math.max(14, Y(this.price(k, kmv, 1)))]); }
+      const on = k.id === s.cls;
+      return { d: this.d(ptsL), color: on ? '#2A3F39' : '#9FA996', w: on ? 3 : 1.5 };
+    });
+    const selLine = lines.splice(ks.findIndex((k) => k.id === s.cls), 1)[0];
+    lines.push(selLine);
+    const chartPrice = this.price(sel, s.dist, 1);
+    const chart = { lines, km: s.dist, price: chartPrice, name: sel.name.toLowerCase(), x: X(s.dist).toFixed(1), y: Math.max(14, Y(chartPrice)).toFixed(1) };
+
+    const corrDefs = [['prn', 'prz'], ['prn', 'tir'], ['skp', 'prn'], ['waw', 'krk'], ['muc', 'prn'], ['zrh', 'prn'], ['vie', 'skp'], ['stg', 'tir']];
+    const corridors = corrDefs.map(([f, t2]) => {
+      const on = s.fromId === f && s.toId === t2;
+      return {
+        label: this.city(f).name + ' → ' + this.city(t2).name,
+        pick: () => this.setState({ fromId: f, toId: t2, dist: Math.min(1600, this.roadKm(this.city(f), this.city(t2))), sent: false }),
+        style: 'font:inherit;font-size:13px;cursor:pointer;padding:10px 16px;border-radius:10px;min-height:44px;' + (on ? 'background:#FBF9F4;color:#0F0B09;border:1.5px solid #2A3F39' : 'background:#EAE5D9;color:#514B45;border:1.5px solid #EAE5D9')
+      };
+    });
+
+    const faqDefs = [
+      ['Who are the movers?', 'Independent businesses and owner-drivers with their own vans. Each one sets their own rates per vehicle class and can accept or decline any job.'],
+      ['How is the price calculated?', 'By vehicle class, distance and crew size, using the rates your mover set. You see the full price before you book — no negotiating on the day.'],
+      ['How do I pay?', 'By card in the app. Payments are processed by Stripe and go straight to the mover; Ranktrip takes a commission and never holds your money.'],
+      ['What if something gets damaged?', 'Movers carry liability for the goods they transport. Report any issue in the app and we help you reach the mover. [ADD YOUR CLAIMS PROCESS]'],
+      ['Can I move between countries?', 'Yes. Diaspora corridors cover Germany, Austria and Switzerland to and from Kosovo, Albania and North Macedonia, with movers who do these routes regularly.'],
+      ['Can I track my mover?', 'Yes — live on the map from the moment the mover is on the way, and you can share the tracking link with anyone.'],
+      ['How do I become a mover?', 'Sign up in the Ranktrip Mover app, add your van and documents, set your rates and start accepting jobs once you are approved.']
+    ];
+    const faq = faqDefs.map(([qq, aa], i) => ({
+      q: qq, a: aa, open: s.faqOpen === i,
+      toggle: () => this.setState({ faqOpen: s.faqOpen === i ? -1 : i }),
+      icon: 'flex:0 0 auto;margin-top:3px;transition:transform .2s;transform:rotate(' + (s.faqOpen === i ? '45' : '0') + 'deg)'
+    }));
+
+    const langs = ['EN', 'SQ', 'PL', 'DE'];
+
+    return {
+      lang: langs[s.langI],
+      cycleLang: () => this.setState({ langI: (s.langI + 1) % langs.length }),
+      fromId: s.fromId, toId: s.toId, cities,
+      onFrom: (e) => this.setState({ fromId: e.target.value, sent: false, dist: Math.min(1600, this.roadKm(this.city(e.target.value), to)) }),
+      onTo: (e) => this.setState({ toId: e.target.value, sent: false, dist: Math.min(1600, this.roadKm(from, this.city(e.target.value))) }),
+      swap: () => this.setState({ fromId: s.toId, toId: s.fromId, sent: false }),
+      classes, crew, q,
+      book: () => this.setState({ sent: !s.sent }),
+      bookLabel: s.sent ? 'Cancel request' : 'Request movers',
+      sent: s.sent,
+      hero, p, story, chart, corridors,
+      onDist: (e) => this.setState({ dist: Number(e.target.value) }),
+      phone: { pending: s.phone === 'pending', accepted: s.phone === 'accepted', declined: s.phone === 'declined' },
+      accept: () => this.setState({ phone: 'accepted' }),
+      decline: () => this.setState({ phone: 'declined' }),
+      resetPhone: () => this.setState({ phone: 'pending' }),
+      faq,
+      joined: s.joined, notJoined: !s.joined,
+      join: (e) => { e.preventDefault(); this.setState({ joined: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

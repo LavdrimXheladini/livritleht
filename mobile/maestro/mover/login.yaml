@@ -1,0 +1,16 @@
+# Requires a dev build + `supabase start` (test OTP numbers in supabase/config.toml).
+appId: com.ranktrip.mover
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    id: login-target
+- inputText: "+48500000001"
+- tapOn:
+    id: login-send-code
+- tapOn:
+    id: verify-code
+- inputText: "123456"
+- tapOn:
+    id: verify-submit
+- assertVisible: "Welcome, partner"

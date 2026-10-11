@@ -1,0 +1,10 @@
+packages:
+  # Web platform: Next.js app + Playwright tests
+  - web/*
+  # Mobile platform: customer app, mover app, shared mobile code (maestro/ has no package.json)
+  - mobile/*
+  # Shared by both platforms
+  - packages/*
+
+onlyBuiltDependencies:
+  - unrs-resolver

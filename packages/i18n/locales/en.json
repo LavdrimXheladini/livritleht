@@ -1,0 +1,317 @@
+{
+  "common": {
+    "appName": "Ranktrip",
+    "continue": "Continue",
+    "back": "Back",
+    "loading": "Loading…",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "We'll send you a 6-digit code.",
+    "usePhone": "Phone",
+    "useEmail": "Email",
+    "phoneLabel": "Phone number",
+    "phonePlaceholder": "+383 44 123 456",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendCode": "Send code",
+    "codeLabel": "6-digit code",
+    "codeSentTo": "We sent a code to {{target}}.",
+    "linkSentTo": "We sent a sign-in link to {{target}}. Open it on this device to sign in.",
+    "orEnterCode": "Got a 6-digit code instead? Enter it here.",
+    "verify": "Verify",
+    "resend": "Send a new code",
+    "changeTarget": "Use a different number or email",
+    "errors": {
+      "invalid_phone": "Enter your number with country code, e.g. +383 44 123 456.",
+      "invalid_email": "Enter a valid email address.",
+      "invalid_code": "The code has 6 digits.",
+      "wrong_code": "That code is wrong or has expired.",
+      "link_invalid": "That sign-in link is invalid or has expired. Request a new one."
+    }
+  },
+  "customer": {
+    "homeTitle": "Book with a mover",
+    "homeSubtitle": "Movers on Ranktrip set their own prices. You see your mover and their price before you book."
+  },
+  "mover": {
+    "homeTitle": "Welcome, partner",
+    "homeSubtitle": "Next: add your company, documents, vehicles and your own rates.",
+    "trackingNotice": "We share your location with the customer only during an active job."
+  },
+  "places": {
+    "prishtina": "Prishtina",
+    "prizren": "Prizren",
+    "tirana": "Tirana",
+    "skopje": "Skopje",
+    "warsaw": "Warsaw",
+    "krakow": "Kraków",
+    "munich": "Munich",
+    "zurich": "Zürich",
+    "vienna": "Vienna",
+    "stuttgart": "Stuttgart",
+    "peja": "Peja",
+    "gjakova": "Gjakova",
+    "ferizaj": "Ferizaj",
+    "podgorica": "Podgorica"
+  },
+  "vehicles": {
+    "SMALL": {
+      "name": "Small van",
+      "fits": "Boxes, luggage, small furniture",
+      "short": "Small"
+    },
+    "VAN": {
+      "name": "Van",
+      "fits": "Sofa, fridge, a few large items",
+      "short": "Van"
+    },
+    "LARGE_VAN": {
+      "name": "Large van",
+      "fits": "Studio or 1-room flat",
+      "short": "Large"
+    },
+    "BOX": {
+      "name": "Box van",
+      "fits": "2–3 room flat, with tail lift",
+      "short": "Box"
+    },
+    "TRUCK": {
+      "name": "Truck",
+      "fits": "Houses and offices",
+      "short": "Truck"
+    }
+  },
+  "landing": {
+    "nav": {
+      "how": "How it works",
+      "movers": "For movers",
+      "markets": "Markets",
+      "demo": "Live demo",
+      "getPrice": "Get a price",
+      "language": "Language",
+      "home": "Ranktrip home",
+      "main": "Main"
+    },
+    "hero": {
+      "title": "Move anything,\nwherever home is.",
+      "subtitle": "Book an independent mover with a van in minutes — upfront price, card payment and live tracking. From Prishtina to Prizren, or Munich to home."
+    },
+    "quote": {
+      "pickup": "Pickup",
+      "dropoff": "Drop-off",
+      "swap": "Swap pickup and drop-off",
+      "classes": "Vehicle class",
+      "crew": "Crew",
+      "crew1": "Mover only",
+      "crew2": "+1 helper",
+      "crew3": "+2 helpers",
+      "seeMovers": "See movers",
+      "note": "Sample rates for the demo — each mover sets their own price per vehicle class. Before you pay, you see your mover and their fixed total, with the booking fee listed separately.",
+      "soonTitle": "Live prices are coming soon.",
+      "soonText": "Join the waitlist and we'll email you when movers near you are on Ranktrip.",
+      "soonLink": "Join the waitlist →",
+      "from": "from",
+      "domestic": "Domestic",
+      "crossBorder": "Cross-border",
+      "summary": "{{kind}} · ≈{{km}} km · ≈{{hours}} h",
+      "addressPlaceholder": "Street, number, city",
+      "searching": "Searching…",
+      "noResults": "No address found. Try the street and city.",
+      "searchError": "Address search is unavailable right now. Try again in a moment.",
+      "samePlace": "Pickup and drop-off are the same place.",
+      "routeError": "We couldn't calculate this route. Try another address."
+    },
+    "map": {
+      "status": "On the way",
+      "company": "Example Moving Co.",
+      "subtitle": "{{vehicle}} · sample mover",
+      "speed": "Speed",
+      "left": "Left",
+      "eta": "ETA",
+      "kmh": "km/h",
+      "km": "km",
+      "min": "min",
+      "footer": "Live GPS during an active move · updates every few seconds",
+      "dashboard": "Open full dashboard →",
+      "dropoff": "Drop-off · {{place}}",
+      "progress": "Route progress"
+    },
+    "why": {
+      "title": "Built for real moves.",
+      "subtitle": "Everything a move needs, nothing it doesn't.",
+      "pricing": {
+        "tag": "Pricing",
+        "word": "Upfront.",
+        "line": "Price before you book.",
+        "note": "Each mover sets a rate per vehicle class. No haggling at the door."
+      },
+      "tracking": {
+        "tag": "Tracking",
+        "word": "Live.",
+        "line": "GPS from pickup to door.",
+        "note": "Follow your mover on the map and share the link with family."
+      },
+      "payment": {
+        "tag": "Payment",
+        "word": "By card.",
+        "line": "Paid securely in the app.",
+        "note": "Processed by Stripe. No cash, no surprises."
+      }
+    },
+    "story": {
+      "text": "Ranktrip connects people who need to move with <mov>independent movers</mov> who own vans. Pick a <veh>vehicle class</veh>, see an <pri>upfront price</pri>, pay by <pay>card</pay> and <trk>track your mover live</trk> on the map. Moving between Germany, Austria or Switzerland and home? Our <dia>diaspora corridors</dia> are built for exactly that.",
+      "mov": {
+        "title": "Independent movers",
+        "text": "Local businesses with their own vans. They set their rates, choose their jobs and carry liability for your goods."
+      },
+      "veh": {
+        "title": "Five vehicle classes",
+        "text": "From a small van for a few boxes to a truck for a whole house."
+      },
+      "pri": {
+        "title": "Upfront price",
+        "text": "You see the full price before you book — based on the van, the distance and the crew."
+      },
+      "pay": {
+        "title": "Card payment",
+        "text": "Pay in the app. Payments run through Stripe; Ranktrip never holds your money."
+      },
+      "trk": {
+        "title": "Live tracking",
+        "text": "Watch your mover on the map from pickup to drop-off, and share the link with family."
+      },
+      "dia": {
+        "title": "Diaspora corridors",
+        "text": "Germany, Austria and Switzerland ↔ Kosovo, Albania and North Macedonia."
+      }
+    },
+    "pricing": {
+      "title": "Know the price\nbefore you book.",
+      "subtitle": "Drag the distance. Pick a van. That's the whole calculation.",
+      "sentence": "A <veh>{{vehicle}}</veh> for {{km}} km costs <price>{{price}}</price> with no helpers.",
+      "distance": "Distance",
+      "chart": "Example price by distance for each vehicle class",
+      "classes": "Vehicle class",
+      "corridors": "Popular routes",
+      "hint": "Tap a corridor to load it into the price calculator above. Sample rates; long distances are cheaper per km."
+    },
+    "movers": {
+      "title": "Built for\nindependent movers.",
+      "cta": "Become a mover",
+      "rates": {
+        "title": "Your van, your rates.",
+        "text": "Set your own price per vehicle class. You run your business — Ranktrip brings the customers."
+      },
+      "freedom": {
+        "title": "Accept or decline freely.",
+        "text": "See the route, items and payout before you take a job. No quotas, no penalties for saying no."
+      },
+      "payouts": {
+        "title": "Paid through Stripe.",
+        "text": "Keep 80% on domestic jobs and 85% on cross-border jobs, paid straight to your account."
+      },
+      "corridors": {
+        "title": "Cross-border runs.",
+        "text": "Fill your van on the Germany, Austria and Switzerland ↔ Balkans corridors."
+      },
+      "phone": {
+        "app": "Ranktrip Partner",
+        "online": "● Online",
+        "newRequest": "New request",
+        "payout": "Payout",
+        "breakdown": "Your price {{price}}\ncommission {{pct}}%",
+        "district": "Exact address shown after you accept",
+        "decline": "Decline",
+        "accept": "Accept job",
+        "acceptedTitle": "Job accepted",
+        "acceptedText": "Head to pickup in {{place}}. The exact address is now visible, and the customer can see you on the map.",
+        "back": "Back to requests",
+        "declinedTitle": "No problem.",
+        "declinedText": "The job is offered to other movers nearby. Saying no never affects your ranking.",
+        "showAgain": "Show request again",
+        "caption": "Mirrors the quote you built above.",
+        "crew1": "Mover only",
+        "crew2": "Mover + 1 helper",
+        "crew3": "Mover + 2 helpers"
+      }
+    },
+    "markets": {
+      "title": "Where we're starting.",
+      "subtitle": "Kosovo first, then the rest of the Balkans and Poland — with the diaspora corridors that connect them.",
+      "rail": "Markets",
+      "dateTbc": "Date to be announced",
+      "waitlist": "Join the waitlist",
+      "haveVan": "I have a van",
+      "kosovo": {
+        "tag": "Launch market",
+        "title": "Kosovo",
+        "text": "Prishtina, Prizren, Peja, Gjakova and Ferizaj — local moves and city-to-city."
+      },
+      "albania": {
+        "tag": "Next",
+        "title": "Albania & North Macedonia",
+        "text": "Tirana and Skopje, plus the busy cross-border routes to Kosovo."
+      },
+      "poland": {
+        "tag": "Next",
+        "title": "Poland",
+        "text": "Warsaw and Kraków — a big rental market with lots of moving every month."
+      },
+      "diaspora": {
+        "tag": "Corridors",
+        "title": "Diaspora routes",
+        "text": "Germany, Austria and Switzerland ↔ the Balkans. Moving home, or moving abroad."
+      }
+    },
+    "faq": {
+      "title": "Frequently\nasked\nquestions.",
+      "contact": "Can't find an answer? <link>Contact us</link> and we'll be happy to help.",
+      "items": {
+        "q1": {
+          "q": "Who are the movers?",
+          "a": "Independent businesses with their own vans. Each one sets their own rates per vehicle and can accept or decline any job."
+        },
+        "q2": {
+          "q": "How is the price calculated?",
+          "a": "By vehicle class, distance and crew size, using the rates your mover set. You see the full price before you book — no negotiating on the day."
+        },
+        "q3": {
+          "q": "How do I pay?",
+          "a": "By card in the app. Payments are processed by Stripe and go straight to the mover; Ranktrip takes a commission and never holds your money."
+        },
+        "q4": {
+          "q": "What if something gets damaged?",
+          "a": "Your mover is responsible for the goods they carry and must have carrier insurance. Report the issue in the app with photos, and we'll connect you with the mover and their insurer."
+        },
+        "q5": {
+          "q": "Can I move between countries?",
+          "a": "Yes. Diaspora corridors cover Germany, Austria and Switzerland to and from Kosovo, Albania and North Macedonia, with movers who do these routes regularly."
+        },
+        "q6": {
+          "q": "Can I track my mover?",
+          "a": "Yes — live on the map from the moment the mover is on the way, and you can share the tracking link with anyone."
+        },
+        "q7": {
+          "q": "How do I become a mover?",
+          "a": "Sign up in the Ranktrip Partner app, add your van and documents, set your rates and start accepting jobs once you are approved."
+        }
+      }
+    },
+    "footer": {
+      "title": "Be first to move\nwith Ranktrip.",
+      "subtitle": "We'll email you once when we launch in your city.",
+      "emailLabel": "Email address",
+      "placeholder": "you@email.com",
+      "join": "Join waitlist",
+      "joining": "Joining…",
+      "joined": "You're on the list. Faleminderit!",
+      "consent": "We use your email only for this launch announcement.",
+      "invalid": "Enter a valid email address.",
+      "error": "Something went wrong. Please try again.",
+      "legal": "© {{year}} Ranktrip. Movers are independent businesses."
+    }
+  }
+}

@@ -1,0 +1,53 @@
+/* Motion + helpers for @ranktrip/ui/web components. Import after theme.css.
+   Colours only via token variables — no raw values. */
+
+/* Let Tailwind see the classes used inside packages/ui components. */
+@source "./src";
+
+@theme {
+  --animate-pulse-ring: pulse-ring 2s ease-out infinite;
+
+  /* Live / active marker: copper ring that expands and fades (prototype .pulse). */
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-500) 55%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 26px color-mix(in srgb, var(--color-accent-500) 0%, transparent);
+    }
+  }
+}
+
+/* Card hover: lift 4px with a deeper shadow (prototype .lift). */
+@utility lift {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+/* Button press (prototype .btn:active). */
+@utility press {
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+  &:active {
+    transform: scale(0.97);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:active {
+      transform: none;
+    }
+  }
+}

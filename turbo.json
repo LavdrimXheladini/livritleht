@@ -1,0 +1,31 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "globalDependencies": [
+    "pnpm-workspace.yaml",
+    ".npmrc",
+    "tsconfig.base.json",
+    "packages/ui/tokens.json"
+  ],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**"
+      ]
+    },
+    "lint": {},
+    "typecheck": {},
+    "test": {
+      "outputs": []
+    }
+  }
+}
