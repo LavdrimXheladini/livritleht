@@ -8,6 +8,7 @@
 
 import { quoteForRequest, type QuotableVehicleRow } from '../_shared/ranktrip/pricing/index.ts';
 import { BOOKING_FEE_RULE, type Place, type VehicleClass } from '../_shared/ranktrip/shared/index.ts';
+import { failure, json, preflight } from '../_shared/http.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
@@ -43,16 +44,14 @@ async function quotableVehicles(args: { pickup: Place; dropoff: Place; vehicleCl
   return (await res.json()) as QuotableVehicleRow[];
 }
 
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
-
 Deno.serve(async (req) => {
-  if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
+  if (req.method === 'OPTIONS') return preflight(req);
+  if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405);
   let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return json({ error: 'invalid_json' }, 400);
+    return json(req, { error: 'invalid_json' }, 400);
   }
   try {
     const outcome = await quoteForRequest(body, {
@@ -61,9 +60,9 @@ Deno.serve(async (req) => {
       bookingFee: BOOKING_FEE_RULE,
       testMovers: INCLUDE_TEST_MOVERS,
     });
-    return outcome.ok ? json(outcome.response) : json({ error: outcome.error, issues: outcome.issues }, 400);
+    return outcome.ok ? json(req, outcome.response) : json(req, { error: outcome.error, issues: outcome.issues }, 400);
   } catch (e) {
-    console.error('quote failed', e);
-    return json({ error: 'quote_failed' }, 500);
+    console.error('quote failed', failure(e));
+    return json(req, { error: 'quote_failed' }, 500);
   }
 });

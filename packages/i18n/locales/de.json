@@ -6,7 +6,8 @@
     "loading": "Wird geladen…",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     "signOut": "Abmelden",
-    "backToTop": "Nach oben"
+    "backToTop": "Nach oben",
+    "partner": "Partner"
   },
   "auth": {
     "title": "Anmelden",
@@ -35,12 +36,43 @@
   },
   "customer": {
     "homeTitle": "Mit einem Umzugsunternehmen buchen",
-    "homeSubtitle": "Umzugsunternehmen auf Ranktrip legen ihre Preise selbst fest. Vor der Buchung siehst du das Unternehmen und seinen Preis."
+    "homeSubtitle": "Umzugsunternehmen auf Ranktrip legen ihre Preise selbst fest. Vor der Buchung siehst du das Unternehmen und seinen Preis.",
+    "quoteSummary": "{{kind}} · ≈{{km}} km",
+    "bookingSoon": "Vor dem Bezahlen siehst du dein Umzugsunternehmen und seinen Festpreis, die Buchungsgebühr wird separat ausgewiesen.",
+    "priceLoading": "Suche Umzugsunternehmen…",
+    "retry": "Erneut versuchen",
+    "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf Ranktrip."
   },
   "mover": {
     "homeTitle": "Willkommen, Partner",
     "homeSubtitle": "Als Nächstes: Firma, Dokumente, Fahrzeuge und deine eigenen Preise hinzufügen.",
-    "trackingNotice": "Wir teilen deinen Standort nur während eines aktiven Auftrags mit dem Kunden."
+    "trackingNotice": "Wir teilen deinen Standort nur während eines aktiven Auftrags mit dem Kunden.",
+    "exampleLabel": "Beispielanfrage — echte Anfragen kommen, sobald dein Unternehmen verifiziert ist.",
+    "signInCta": "Anmelden oder registrieren",
+    "checklistTitle": "Bereit für Aufträge",
+    "comingSoon": "Kommt bald",
+    "steps": {
+      "company": {
+        "title": "Dein Unternehmen",
+        "text": "Firmenname, Registernummer und Steuernummer."
+      },
+      "documents": {
+        "title": "Dokumente",
+        "text": "Frachtführerhaftpflicht, Ausweis oder Registerauszug; CMR für grenzüberschreitende Fahrten."
+      },
+      "vehicles": {
+        "title": "Deine Fahrzeuge",
+        "text": "Kennzeichen, Größenklasse und Ladevolumen."
+      },
+      "rates": {
+        "title": "Deine Preise",
+        "text": "Eigene Preise pro Fahrzeug — starte mit lokalen Durchschnittswerten und ändere sie jederzeit."
+      },
+      "payouts": {
+        "title": "Auszahlungen",
+        "text": "Verbinde Stripe, um nach jedem abgeschlossenen Umzug ausgezahlt zu werden."
+      }
+    }
   },
   "places": {
     "prishtina": "Prishtina",
@@ -122,7 +154,7 @@
       "soonLink": "Zur Warteliste →",
       "from": "ab",
       "offers": "Angebote: {{n}}",
-      "noMovers": "Hier noch kein Umzugsunternehmen",
+      "noMovers": "Hier noch kein Angebot",
       "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf Ranktrip — trag dich in die Warteliste ein.",
       "local": "Nahumzug",
       "domestic": "Inland",

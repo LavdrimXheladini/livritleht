@@ -73,6 +73,17 @@ test('address search: type, pick a suggestion, the server re-prices the route', 
   await expect(page.locator('#movers')).not.toContainText('Tirana Centre');
 });
 
+test('Enter never takes the suggestion of an older query', async ({ page }) => {
+  await page.goto('/en');
+  const dropoff = page.getByRole('combobox', { name: en.landing.quote.dropoff });
+  await dropoff.fill('Tirana');
+  await expect(page.getByRole('option', { name: /Tirana Centre/ })).toBeVisible();
+  // Typing on: until the new search answers, the list still shows the answer for "Tirana".
+  await dropoff.fill('Tirana Rruga e Durrësit');
+  await dropoff.press('Enter');
+  await expect(dropoff).toHaveValue('Tirana Rruga e Durrësit');
+});
+
 test('swap exchanges pickup and drop-off', async ({ page }) => {
   await page.goto('/en');
   await page.getByRole('button', { name: en.landing.quote.swap }).click();

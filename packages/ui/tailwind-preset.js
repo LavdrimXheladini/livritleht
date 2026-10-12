@@ -3,6 +3,9 @@ const tokens = require('./tokens.json');
 
 const px = (n) => `${n}px`;
 const nf = tokens.nativeFonts;
+// React Native draws one shadow layer with no spread, and Android needs an elevation, so the web's
+// layered, negative-spread shadows would come out flat or far too heavy: the apps use their own.
+const nativeShadow = (field) => Object.fromEntries(Object.entries(tokens.nativeShadow).map(([k, v]) => [k, String(v[field])]));
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,7 +13,8 @@ module.exports = {
     extend: {
       colors: tokens.colors,
       borderRadius: Object.fromEntries(Object.entries(tokens.radius).map(([k, v]) => [k, px(v)])),
-      boxShadow: tokens.shadow,
+      boxShadow: nativeShadow('shadow'),
+      elevation: nativeShadow('elevation'),
       spacing: { gutter: px(tokens.spacing.gutter) },
       // React Native can't stretch a variable font, so the display/wordmark faces are static
       // instances of Archivo at the token width (generated into assets/fonts).

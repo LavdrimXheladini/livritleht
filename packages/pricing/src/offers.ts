@@ -45,6 +45,11 @@ export type Offer = { vehicleId: string; companyId: string; companyName: string;
 /** Lowest offer in one currency (a class can mix currencies, e.g. EUR and PLN movers). */
 export type FromPrice = { currency: Currency; moverPrice: number; moverPayout: number; bookingFee: number | null; total: number };
 
+/** The "from" price to show: in the preferred currency (e.g. the pickup country's) when offered, else the first. */
+export function pickFrom(from: readonly FromPrice[], preferred?: Currency): FromPrice | undefined {
+  return (preferred && from.find((f) => f.currency === preferred)) || from[0];
+}
+
 export type ClassOffers = {
   vehicleClass: VehicleClass;
   /** Number of offers; 0 = no mover available for this class here. */

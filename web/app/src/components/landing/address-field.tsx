@@ -39,6 +39,8 @@ export function AddressField({
   const listId = `${id}-list`;
   const [text, setText] = useState(value.label);
   const [results, setResults] = useState<GeoSuggestion[]>([]);
+  /** The query `results` answer — while a newer one is pending, the list still shows the older answer. */
+  const [resultsFor, setResultsFor] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
@@ -73,6 +75,7 @@ export function AddressField({
         const body = (await res.json()) as { results: GeoSuggestion[] };
         if (!res.ok) throw new Error(String(res.status));
         setResults(body.results);
+        setResultsFor(query);
         setActive(body.results.length ? 0 : -1);
         setStatus('done');
       } catch {
@@ -102,7 +105,8 @@ export function AddressField({
       setActive((i) => (i + step + results.length) % results.length);
     } else if (e.key === 'Enter' && open && results[active]) {
       e.preventDefault();
-      choose(results[active]);
+      // Only a suggestion for what is typed now, never the older query's top result.
+      if (resultsFor === query) choose(results[active]);
     } else if (e.key === 'Escape') {
       setOpen(false);
       setText(value.label);

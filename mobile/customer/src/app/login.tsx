@@ -7,6 +7,7 @@ export default function Login() {
     <LoginScreen
       role="customer"
       onCodeSent={(sent) => router.push({ pathname: '/verify', params: sent })}
+      onClose={() => (router.canGoBack() ? router.back() : router.replace('/'))}
     />
   );
 }

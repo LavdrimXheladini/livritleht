@@ -3,6 +3,11 @@ appId: com.ranktrip.customer
 ---
 - launchApp:
     clearState: true
+# Home is public (live prices); signing in starts from the header.
+- assertVisible:
+    id: quote-pickup
+- tapOn:
+    id: home-sign-in
 - tapOn:
     id: login-target
 - inputText: "+38344000001"
@@ -13,4 +18,5 @@ appId: com.ranktrip.customer
 - inputText: "123456"
 - tapOn:
     id: verify-submit
-- assertVisible: "Book with a mover"
+- assertVisible:
+    id: home-sign-out

@@ -2,9 +2,8 @@ import 'server-only';
 
 import { cacheLife } from 'next/cache';
 
-import type { Locale, Place } from '@ranktrip/shared';
+import { photonSearchUrl, photonSuggestions, type Locale, type PhotonFeature, type Place } from '@ranktrip/shared';
 
-import { formatPhotonFeature, type PhotonFeature } from './photon';
 import { DEMO_CITIES, haversineM, type GeoSuggestion, type LineCoords, type RouteResult } from './types';
 
 /**
@@ -20,36 +19,17 @@ export interface GeoProvider {
   route(from: Place, to: Place): Promise<RouteResult | null>;
 }
 
-const USER_AGENT = 'Ranktrip/0.1 (+https://github.com/LorikShabanii/Ranktripi)';
-/** Europe incl. the Balkans, Poland and the DACH diaspora corridors. */
-const EUROPE_BBOX = '-25,34,45,72';
-/** Photon translates results into these languages; others get local names. */
-const PHOTON_LANGS = new Set(['en', 'de', 'fr']);
+const USER_AGENT = 'Ranktrip/0.1 (+https://github.com/LavdrimXheladini/livritleht)';
 const MAX_ROUTE_POINTS = 400;
 
 async function photonSearch(query: string, locale: Locale, nearKey: string): Promise<GeoSuggestion[]> {
   'use cache';
   cacheLife('days');
-  const url = new URL('https://photon.komoot.io/api/');
-  url.searchParams.set('q', query);
-  url.searchParams.set('limit', '6');
-  url.searchParams.set('bbox', EUROPE_BBOX);
-  if (PHOTON_LANGS.has(locale)) url.searchParams.set('lang', locale);
-  if (nearKey) {
-    const [lat, lon] = nearKey.split(',');
-    url.searchParams.set('lat', lat!);
-    url.searchParams.set('lon', lon!);
-  }
+  const [lat, lon] = nearKey.split(',').map(Number);
+  const url = photonSearchUrl(query, locale, nearKey ? { lat: lat!, lon: lon! } : undefined);
   const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(5000) });
   if (!res.ok) throw new Error(`photon ${res.status}`);
-  const body = (await res.json()) as { features?: PhotonFeature[] };
-  // Photon often returns the same address twice (node + way); keep the first of each label.
-  const unique = new Map<string, GeoSuggestion>();
-  for (const feature of body.features ?? []) {
-    const s = formatPhotonFeature(feature);
-    if (s && !unique.has(s.label)) unique.set(s.label, s);
-  }
-  return [...unique.values()];
+  return photonSuggestions((await res.json()) as { features?: PhotonFeature[] });
 }
 
 async function osrmRoute(fromKey: string, toKey: string): Promise<RouteResult | null> {

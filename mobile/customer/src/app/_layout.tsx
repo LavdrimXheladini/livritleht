@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AuthProvider, initI18n, useAppFonts, useAuth } from '@ranktrip/mobile';
+import { colors } from '@ranktrip/ui';
 
 import { supabase } from '@/lib/supabase';
 
@@ -37,10 +38,9 @@ function RootStack() {
   if (!ready) return null;
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!session}>
-        <Stack.Screen name="index" />
-      </Stack.Protected>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.stone[100] } }}>
+      {/* Prices are public, like on the website; signing in is needed only to book. */}
+      <Stack.Screen name="index" />
       <Stack.Protected guard={!session}>
         <Stack.Screen name="login" />
         <Stack.Screen name="verify" />

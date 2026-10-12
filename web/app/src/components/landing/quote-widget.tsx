@@ -22,7 +22,8 @@ export function QuoteWidget({ locale }: { locale: Locale }) {
   const { t } = useTranslation();
   const { pickup, dropoff, cls, crew, setPlaces, setCls, setCrew, route, pending, error } = useLandingState();
   const [submitted, setSubmitted] = useState(false);
-  const money = (p: { moverPrice: number; currency: Currency }) => formatMoney(p.moverPrice, p.currency, locale, { wholeUnits: true });
+  // To the cent, never rounded: "from" equals the lowest mover quote (COMPLIANCE §13).
+  const money = (p: { moverPrice: number; currency: Currency }) => formatMoney(p.moverPrice, p.currency, locale);
   const crewIndex = crew - 1;
   const selected = route.prices[cls][crewIndex];
   const live = route.source === 'movers';

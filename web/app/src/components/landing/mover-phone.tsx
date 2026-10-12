@@ -21,7 +21,7 @@ export function MoverPhone({ locale }: { locale: Locale }) {
   const [state, setState] = useState<'pending' | 'accepted' | 'declined'>('pending');
   // The cheapest offer in the chosen class — the mover's own price and their payout (§12 "Payout").
   const offer = route.prices[cls][crew - 1];
-  const money = (c: number | undefined) => (c === undefined ? '—' : formatMoney(c, offer?.currency ?? 'EUR', locale, { wholeUnits: true }));
+  const money = (c: number | undefined) => (c === undefined ? '—' : formatMoney(c, offer?.currency ?? 'EUR', locale));
   // Only the city / neighbourhood before the mover accepts — never the street (COMPLIANCE §9.1).
   const routeText = routeLabel(pickup, dropoff, (city) => t('landing.quote.withinCity', { city }));
 

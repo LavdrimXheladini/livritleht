@@ -1,6 +1,6 @@
 // Pure mapping from a quote answer (live or sample) to what the landing page shows. Kept apart from
 // route-quote.ts (server-only, does the fetching) so it can be unit-tested.
-import type { FromPrice, QuoteResponse } from '@ranktrip/pricing';
+import { pickFrom, type QuoteResponse } from '@ranktrip/pricing';
 import { MARKET_RATES, PLATFORM_TAKE_RATE_PCT, VEHICLE_CLASSES, type Currency, type Place, type VehicleClass } from '@ranktrip/shared';
 
 import type { CrewFrom, RouteQuote, SampleRoute } from './landing-types';
@@ -31,7 +31,6 @@ export function fromSample(s: SampleRoute): RouteQuote {
 export function fromLive(s: SampleRoute, live: QuoteResponse, pickup: Place): RouteQuote {
   // Prices in the pickup country's own currency when a class has several (e.g. EUR and CHF).
   const local: Currency | undefined = MARKET_RATES[pickup.countryCode as keyof typeof MARKET_RATES]?.currency;
-  const pick = (from: FromPrice[]) => from.find((f) => f.currency === local) ?? from[0];
   return {
     km: Math.max(1, Math.round(live.distanceKm)),
     crossBorder: live.crossBorder,
@@ -42,7 +41,7 @@ export function fromLive(s: SampleRoute, live: QuoteResponse, pickup: Place): Ro
     testMovers: live.testMovers,
     prices: perClass((cls, crew) => {
       const summary = live.classes.find((c) => c.vehicleClass === cls)?.crews[crew];
-      const best = summary ? pick(summary.from) : undefined;
+      const best = summary ? pickFrom(summary.from, local) : undefined;
       return best && summary
         ? { moverPrice: best.moverPrice, payout: best.moverPayout, currency: best.currency, offers: summary.count }
         : null;

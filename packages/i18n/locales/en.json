@@ -6,7 +6,8 @@
     "loading": "Loading…",
     "errorGeneric": "Something went wrong. Please try again.",
     "signOut": "Sign out",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "partner": "Partner"
   },
   "auth": {
     "title": "Sign in",
@@ -35,12 +36,43 @@
   },
   "customer": {
     "homeTitle": "Book with a mover",
-    "homeSubtitle": "Movers on Ranktrip set their own prices. You see your mover and their price before you book."
+    "homeSubtitle": "Movers on Ranktrip set their own prices. You see your mover and their price before you book.",
+    "quoteSummary": "{{kind}} · ≈{{km}} km",
+    "bookingSoon": "Before you pay, you'll see your mover and their fixed total, with the booking fee listed separately.",
+    "priceLoading": "Finding movers…",
+    "retry": "Try again",
+    "noMoversHere": "No movers on Ranktrip here yet."
   },
   "mover": {
     "homeTitle": "Welcome, partner",
     "homeSubtitle": "Next: add your company, documents, vehicles and your own rates.",
-    "trackingNotice": "We share your location with the customer only during an active job."
+    "trackingNotice": "We share your location with the customer only during an active job.",
+    "exampleLabel": "Example request — real requests arrive once your company is verified.",
+    "signInCta": "Sign in or sign up",
+    "checklistTitle": "Get ready to take jobs",
+    "comingSoon": "Coming next",
+    "steps": {
+      "company": {
+        "title": "Your company",
+        "text": "Legal name, registration and tax number."
+      },
+      "documents": {
+        "title": "Documents",
+        "text": "Carrier insurance, ID or company extract; CMR for cross-border runs."
+      },
+      "vehicles": {
+        "title": "Your vans",
+        "text": "Plate, size class and capacity."
+      },
+      "rates": {
+        "title": "Your rates",
+        "text": "Your own prices per van — start from local averages and change them any time."
+      },
+      "payouts": {
+        "title": "Payouts",
+        "text": "Connect Stripe to get paid after each completed move."
+      }
+    }
   },
   "places": {
     "prishtina": "Prishtina",

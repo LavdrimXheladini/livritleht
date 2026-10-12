@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AuthProvider, initI18n, useAppFonts, useAuth } from '@ranktrip/mobile';
+import { colors } from '@ranktrip/ui';
 
 import { supabase } from '@/lib/supabase';
 
@@ -19,7 +20,7 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider supabase={supabase}>
         <RootStack />
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </AuthProvider>
     </QueryClientProvider>
   );
@@ -37,10 +38,9 @@ function RootStack() {
   if (!ready) return null;
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!session}>
-        <Stack.Screen name="index" />
-      </Stack.Protected>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.night[900] } }}>
+      {/* Home is public: signed out it introduces Ranktrip Partner, signed in it is the mover's start page. */}
+      <Stack.Screen name="index" />
       <Stack.Protected guard={!session}>
         <Stack.Screen name="login" />
         <Stack.Screen name="verify" />

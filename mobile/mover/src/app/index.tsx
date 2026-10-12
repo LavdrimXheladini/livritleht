@@ -1,20 +1,49 @@
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
 
-import { Button, useAuth } from '@ranktrip/mobile';
+import { Button, Screen, Wordmark, useAuth } from '@ranktrip/mobile';
 
+import { ExampleRequest } from '@/components/example-request';
+import { PartnerIntro } from '@/components/partner-intro';
+import { SetupChecklist } from '@/components/setup-checklist';
+
+/**
+ * Home (public, see _layout.tsx): signed out it introduces Ranktrip Partner, signed in it is the
+ * mover's start page. Both end with an example job request priced by the live server quote.
+ */
 export default function Home() {
   const { t } = useTranslation();
-  const { supabase } = useAuth();
+  const { supabase, session } = useAuth();
+  const signIn = () => router.push('/login');
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 justify-center gap-4 px-4">
-        <Text className="text-3xl font-bold text-ink-900">{t('mover.homeTitle')}</Text>
-        <Text className="text-base text-ink-500">{t('mover.homeSubtitle')}</Text>
-        <Button variant="link" title={t('common.signOut')} onPress={() => void supabase.auth.signOut()} />
+    <Screen tone="dark">
+      {/* Wraps (button below, right-aligned) when a long label does not fit a narrow phone. */}
+      <View className="flex-row flex-wrap items-center gap-2">
+        <Wordmark tone="dark" partner={t('common.partner')} />
+        {/* Copper link (readable on night), at least 44 x 44 pt. */}
+        {session ? (
+          <Button
+            testID="mover-sign-out"
+            variant="link-dark"
+            className="ml-auto"
+            title={t('common.signOut')}
+            onPress={() => void supabase.auth.signOut()}
+          />
+        ) : (
+          <Button
+            testID="mover-header-sign-in"
+            variant="link-dark"
+            className="ml-auto"
+            title={t('auth.title')}
+            onPress={signIn}
+          />
+        )}
       </View>
-    </SafeAreaView>
+
+      {session ? <SetupChecklist /> : <PartnerIntro onSignIn={signIn} />}
+      <ExampleRequest />
+    </Screen>
   );
 }

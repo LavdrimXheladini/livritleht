@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ranktrip/i18n": "workspace:*",
+    "@ranktrip/pricing": "workspace:*",
     "@ranktrip/shared": "workspace:*",
     "@ranktrip/ui": "workspace:*"
   },
@@ -22,6 +23,7 @@
     "@hookform/resolvers": "*",
     "@react-native-async-storage/async-storage": "*",
     "@supabase/supabase-js": "*",
+    "@tanstack/react-query": "*",
     "expo-font": "*",
     "expo-localization": "*",
     "i18next": "*",
@@ -31,12 +33,17 @@
     "react-i18next": "*",
     "react-native": "*",
     "react-native-css-interop": "*",
+    "react-native-safe-area-context": "*",
+    "react-native-svg": "*",
     "react-native-url-polyfill": "*",
     "zod": "*"
   },
   "devDependencies": {
+    "@tanstack/react-query": "^5.104.1",
     "@types/react": "~19.2.2",
     "expo": "~57.0.27",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
     "typescript": "~6.0.3"
   }
 }

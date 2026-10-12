@@ -15,6 +15,12 @@ const SINGLETONS = new Set([
   'react-native-css-interop',
   'react-native-reanimated',
   'react-native-safe-area-context',
+  // Registers native views by name: a second copy would crash with a duplicate registration.
+  'react-native-svg',
+  // React contexts: the provider in the app and the hooks in mobile/core must share one copy.
+  '@tanstack/react-query',
+  'i18next',
+  'react-i18next',
 ]);
 
 const packageName = (moduleName) =>

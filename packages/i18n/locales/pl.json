@@ -6,7 +6,8 @@
     "loading": "Ładowanie…",
     "errorGeneric": "Coś poszło nie tak. Spróbuj ponownie.",
     "signOut": "Wyloguj się",
-    "backToTop": "Wróć na górę"
+    "backToTop": "Wróć na górę",
+    "partner": "Partner"
   },
   "auth": {
     "title": "Zaloguj się",
@@ -35,12 +36,43 @@
   },
   "customer": {
     "homeTitle": "Zarezerwuj przewoźnika",
-    "homeSubtitle": "Przewoźnicy w Ranktrip sami ustalają swoje ceny. Przed rezerwacją widzisz przewoźnika i jego cenę."
+    "homeSubtitle": "Przewoźnicy w Ranktrip sami ustalają swoje ceny. Przed rezerwacją widzisz przewoźnika i jego cenę.",
+    "quoteSummary": "{{kind}} · ≈{{km}} km",
+    "bookingSoon": "Przed płatnością zobaczysz przewoźnika i jego stałą cenę, a opłata rezerwacyjna będzie podana osobno.",
+    "priceLoading": "Szukamy przewoźników…",
+    "retry": "Spróbuj ponownie",
+    "noMoversHere": "Na razie brak przewoźników w Ranktrip w tej okolicy."
   },
   "mover": {
     "homeTitle": "Witaj, partnerze",
     "homeSubtitle": "Dalej: dodaj firmę, dokumenty, pojazdy i własne stawki.",
-    "trackingNotice": "Udostępniamy Twoją lokalizację klientowi tylko podczas aktywnego zlecenia."
+    "trackingNotice": "Udostępniamy Twoją lokalizację klientowi tylko podczas aktywnego zlecenia.",
+    "exampleLabel": "Przykładowe zlecenie — prawdziwe zlecenia pojawią się po weryfikacji Twojej firmy.",
+    "signInCta": "Zaloguj się lub zarejestruj",
+    "checklistTitle": "Przygotuj się do przyjmowania zleceń",
+    "comingSoon": "Wkrótce",
+    "steps": {
+      "company": {
+        "title": "Twoja firma",
+        "text": "Nazwa, numer rejestrowy i NIP."
+      },
+      "documents": {
+        "title": "Dokumenty",
+        "text": "Ubezpieczenie OC przewoźnika, dowód lub odpis z rejestru; CMR na trasy międzynarodowe."
+      },
+      "vehicles": {
+        "title": "Twoje auta",
+        "text": "Rejestracja, klasa wielkości i ładowność."
+      },
+      "rates": {
+        "title": "Twoje stawki",
+        "text": "Własne ceny dla każdego auta — zacznij od lokalnych średnich i zmieniaj je w dowolnym momencie."
+      },
+      "payouts": {
+        "title": "Wypłaty",
+        "text": "Połącz Stripe, aby otrzymywać wypłatę po każdej zakończonej przeprowadzce."
+      }
+    }
   },
   "places": {
     "prishtina": "Prisztina",

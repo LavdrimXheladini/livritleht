@@ -6,7 +6,8 @@
     "loading": "Učitavanje…",
     "errorGeneric": "Nešto nije u redu. Pokušajte ponovo.",
     "signOut": "Odjavi se",
-    "backToTop": "Nazad na vrh"
+    "backToTop": "Nazad na vrh",
+    "partner": "Partner"
   },
   "auth": {
     "title": "Prijava",
@@ -35,12 +36,43 @@
   },
   "customer": {
     "homeTitle": "Rezerviši selidbu kod prevoznika",
-    "homeSubtitle": "Prevoznici na Ranktripu sami određuju svoje cene. Pre rezervacije vidite prevoznika i njegovu cenu."
+    "homeSubtitle": "Prevoznici na Ranktripu sami određuju svoje cene. Pre rezervacije vidite prevoznika i njegovu cenu.",
+    "quoteSummary": "{{kind}} · ≈{{km}} km",
+    "bookingSoon": "Pre plaćanja videćete prevoznika i njegovu fiksnu cenu, a naknada za rezervaciju biće navedena posebno.",
+    "priceLoading": "Tražimo prevoznike…",
+    "retry": "Pokušaj ponovo",
+    "noMoversHere": "Ovde još nema prevoznika na Ranktripu."
   },
   "mover": {
     "homeTitle": "Dobro došli, partneru",
     "homeSubtitle": "Sledeće: dodajte firmu, dokumente, vozila i svoje cene.",
-    "trackingNotice": "Vašu lokaciju delimo sa klijentom samo tokom aktivnog posla."
+    "trackingNotice": "Vašu lokaciju delimo sa klijentom samo tokom aktivnog posla.",
+    "exampleLabel": "Primer zahteva — pravi zahtevi stižu kada vaša firma bude verifikovana.",
+    "signInCta": "Prijavi se ili registruj",
+    "checklistTitle": "Pripremite se za poslove",
+    "comingSoon": "Uskoro",
+    "steps": {
+      "company": {
+        "title": "Vaša firma",
+        "text": "Pravni naziv, registarski i poreski broj."
+      },
+      "documents": {
+        "title": "Dokumenti",
+        "text": "Osiguranje prevoznika, lična karta ili izvod iz registra; CMR za međunarodne vožnje."
+      },
+      "vehicles": {
+        "title": "Vaša vozila",
+        "text": "Tablice, klasa veličine i nosivost."
+      },
+      "rates": {
+        "title": "Vaše cene",
+        "text": "Sopstvene cene za svako vozilo — krenite od lokalnih proseka i menjajte ih bilo kada."
+      },
+      "payouts": {
+        "title": "Isplate",
+        "text": "Povežite Stripe da biste dobili isplatu posle svake završene selidbe."
+      }
+    }
   },
   "places": {
     "prishtina": "Priština",

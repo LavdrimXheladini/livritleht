@@ -3,6 +3,7 @@ export * from './items';
 export * from './market-rates';
 export * from './money';
 export * from './move-scope';
+export * from './places';
 export * from './retention.config';
 export * from './schemas/auth';
 export * from './schemas/geo';

@@ -1,20 +1,31 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { z } from 'zod';
 
-import { otpCodeSchema } from '@ranktrip/shared';
+import { otpCodeSchema, type SelfSignupRole } from '@ranktrip/shared';
 
 import { useAuth } from '../auth-provider';
-import { Button, TextField } from '../components/ui';
+import { cx } from '../components/cx';
+import { Button, Display, TextField, type Tone } from '../components/ui';
 import { useAuthErrorText } from './auth-errors';
-import type { OtpSent } from './login-screen';
+import { AuthFrame, type OtpSent } from './login-screen';
 
 const schema = z.object({ code: otpCodeSchema });
 
 /** On success the auth session changes and the root layout's guard navigates away. */
-export function VerifyScreen({ sent, onBack }: { sent: OtpSent; onBack: () => void }) {
+export function VerifyScreen({
+  sent,
+  onBack,
+  role,
+  tone = 'light',
+}: {
+  sent: OtpSent;
+  onBack: () => void;
+  role: SelfSignupRole;
+  tone?: Tone;
+}) {
   const { t } = useTranslation();
   const errorText = useAuthErrorText();
   const { supabase } = useAuth();
@@ -31,20 +42,24 @@ export function VerifyScreen({ sent, onBack }: { sent: OtpSent; onBack: () => vo
     if (error) form.setError('code', { message: 'wrong_code' });
   });
 
+  const dark = tone === 'dark';
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      className="flex-1 justify-center gap-6 bg-white px-4"
-    >
-      <View className="gap-1">
-        <Text className="text-2xl font-bold text-ink-900">{t('auth.title')}</Text>
-        <Text className="text-base text-ink-700">{t('auth.codeSentTo', { target: sent.target })}</Text>
+    <AuthFrame tone={tone} role={role}>
+      <View className="gap-2">
+        <Display size={38} tone={tone}>
+          {t('auth.title')}
+        </Display>
+        <Text className={cx('font-sans text-base', dark ? 'text-sage-400' : 'text-ink-600')}>
+          {t('auth.codeSentTo', { target: sent.target })}
+        </Text>
       </View>
       <Controller
         control={form.control}
         name="code"
         render={({ field, fieldState }) => (
           <TextField
+            ref={field.ref}
+            tone={tone}
             testID="verify-code"
             label={t('auth.codeLabel')}
             keyboardType="number-pad"
@@ -58,8 +73,14 @@ export function VerifyScreen({ sent, onBack }: { sent: OtpSent; onBack: () => vo
           />
         )}
       />
-      <Button testID="verify-submit" title={t('auth.verify')} onPress={submit} loading={form.formState.isSubmitting} />
-      <Button variant="link" title={t('auth.changeTarget')} onPress={onBack} />
-    </KeyboardAvoidingView>
+      <Button
+        testID="verify-submit"
+        variant={dark ? 'accent' : 'primary'}
+        title={t('auth.verify')}
+        onPress={submit}
+        loading={form.formState.isSubmitting}
+      />
+      <Button variant={dark ? 'link-dark' : 'link'} title={t('auth.changeTarget')} onPress={onBack} />
+    </AuthFrame>
   );
 }

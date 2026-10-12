@@ -3,6 +3,9 @@ appId: com.ranktrip.mover
 ---
 - launchApp:
     clearState: true
+# Home is public: the Ranktrip Partner intro with the sign-in call to action.
+- tapOn:
+    id: mover-sign-in
 - tapOn:
     id: login-target
 - inputText: "+48500000001"

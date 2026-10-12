@@ -6,7 +6,8 @@
     "loading": "Duke u ngarkuar…",
     "errorGeneric": "Diçka shkoi keq. Ju lutemi provoni përsëri.",
     "signOut": "Dil",
-    "backToTop": "Kthehu në krye"
+    "backToTop": "Kthehu në krye",
+    "partner": "Partner"
   },
   "auth": {
     "title": "Hyr",
@@ -35,12 +36,43 @@
   },
   "customer": {
     "homeTitle": "Rezervo me një transportues",
-    "homeSubtitle": "Transportuesit në Ranktrip vendosin vetë çmimet e tyre. E shihni transportuesin dhe çmimin e tij para se të rezervoni."
+    "homeSubtitle": "Transportuesit në Ranktrip vendosin vetë çmimet e tyre. E shihni transportuesin dhe çmimin e tij para se të rezervoni.",
+    "quoteSummary": "{{kind}} · ≈{{km}} km",
+    "bookingSoon": "Para pagesës do të shohësh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit të shënuar veçmas.",
+    "priceLoading": "Duke kërkuar transportues…",
+    "retry": "Provo përsëri",
+    "noMoversHere": "Ende nuk ka transportues në Ranktrip këtu."
   },
   "mover": {
-    "homeTitle": "Mirë se vini, partner",
-    "homeSubtitle": "Hapi tjetër: shtoni kompaninë, dokumentet, automjetet dhe tarifat tuaja.",
-    "trackingNotice": "Vendndodhjen tuaj e ndajmë me klientin vetëm gjatë një pune aktive."
+    "homeTitle": "Mirë se vjen, partner",
+    "homeSubtitle": "Hapi tjetër: shto kompaninë, dokumentet, automjetet dhe tarifat e tua.",
+    "trackingNotice": "Vendndodhjen tënde e ndajmë me klientin vetëm gjatë një pune aktive.",
+    "exampleLabel": "Shembull kërkese — kërkesat e vërteta vijnë pasi të verifikohet kompania jote.",
+    "signInCta": "Hyr ose regjistrohu",
+    "checklistTitle": "Bëhu gati për punë",
+    "comingSoon": "Së shpejti",
+    "steps": {
+      "company": {
+        "title": "Kompania jote",
+        "text": "Emri ligjor, numri i regjistrimit dhe numri fiskal."
+      },
+      "documents": {
+        "title": "Dokumentet",
+        "text": "Sigurimi i transportuesit, letërnjoftimi ose ekstrakti i biznesit; CMR për rrugët ndërkufitare."
+      },
+      "vehicles": {
+        "title": "Furgonët e tu",
+        "text": "Targa, klasa e madhësisë dhe kapaciteti."
+      },
+      "rates": {
+        "title": "Tarifat e tua",
+        "text": "Çmimet e tua për çdo furgon — fillo nga mesataret vendore dhe ndryshoji kur të duash."
+      },
+      "payouts": {
+        "title": "Pagesat",
+        "text": "Lidh Stripe për të marrë pagesën pas çdo zhvendosjeje të përfunduar."
+      }
+    }
   },
   "places": {
     "prishtina": "Prishtina",
