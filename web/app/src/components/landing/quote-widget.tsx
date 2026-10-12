@@ -80,7 +80,11 @@ export function QuoteWidget({ locale }: { locale: Locale }) {
       </div>
       {error ? (
         <p role="alert" className="-mt-2 mb-0 text-[13px] text-danger">
-          {error === 'same_place' ? t('landing.quote.samePlace') : t('landing.quote.routeError')}
+          {error === 'same_place'
+            ? t('landing.quote.samePlace')
+            : error === 'rate_limited'
+              ? t('landing.quote.rateLimited')
+              : t('landing.quote.routeError')}
         </p>
       ) : null}
 

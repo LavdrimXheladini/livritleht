@@ -15,13 +15,15 @@ function corsHeaders(req: Request): Record<string, string> {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     // supabase-js sends authorization, apikey, x-client-info and content-type.
     'Access-Control-Allow-Headers': req.headers.get('Access-Control-Request-Headers') ?? 'authorization, apikey, x-client-info, content-type',
+    // The browser preview may read when to try again after a 429.
+    'Access-Control-Expose-Headers': 'Retry-After',
     Vary: 'Origin',
   };
 }
 
 /** JSON answer, with CORS headers when the request comes from the local preview. */
-export const json = (req: Request, body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...corsHeaders(req) } });
+export const json = (req: Request, body: unknown, status = 200, headers: Record<string, string> = {}) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...headers, ...corsHeaders(req) } });
 
 /** Answer to the browser's CORS preflight (OPTIONS). */
 export const preflight = (req: Request) => new Response(null, { status: 204, headers: corsHeaders(req) });

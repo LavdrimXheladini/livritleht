@@ -2,12 +2,14 @@
 // /api/geo/search: visitors' IP addresses never reach the geocoder (GDPR) and the provider can
 // change (Google Places later) without an app update.
 //   POST { q, locale, near? } → { suggestions: [{ id, label, area, district?, lat, lon, countryCode }] }
-// Public, like `quote`. Shared code: run `pnpm functions:build` before serving or deploying.
+// Public, like `quote`, and limited per IP (RATE_LIMITS.addressSearch → 429): Photon is fair-use
+// only. Shared code: run `pnpm functions:build` before serving or deploying.
 
 import { z } from 'zod';
 
 import { LOCALES, photonSearchUrl, photonSuggestions, type PhotonFeature } from '../_shared/movershub/shared/index.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
+import { rateLimited } from '../_shared/rate-limit.ts';
 
 const requestSchema = z
   .object({
@@ -22,7 +24,9 @@ const USER_AGENT = 'MoversHub/0.1 (+https://github.com/LavdrimXheladini/livritle
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return preflight(req);
-  if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405);
+  if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405, { Allow: 'POST, OPTIONS' });
+  const limited = await rateLimited(req, 'addressSearch');
+  if (limited) return limited;
   let body: unknown;
   try {
     body = await req.json();

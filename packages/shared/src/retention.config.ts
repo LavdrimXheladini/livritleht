@@ -20,6 +20,7 @@ export const RETENTION_CATEGORIES = [
   'payments',
   'dac7_quarterly_totals',
   'waitlist',
+  'rate_limits',
 ] as const;
 export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
@@ -36,4 +37,7 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   dac7_quarterly_totals: { keepDays: null, from: 'created', holdIfDisputeOpen: false },
   // Launch-announcement emails: delete once the launch email for that market is sent.
   waitlist: { keepDays: null, from: 'created', holdIfDisputeOpen: false },
+  // Per-IP request counters (public.rate_limits, hashed addresses): useless once their window is
+  // over. public.hit_rate_limit() itself deletes them a day after their window started.
+  rate_limits: { keepDays: 1, from: 'created', holdIfDisputeOpen: false },
 };

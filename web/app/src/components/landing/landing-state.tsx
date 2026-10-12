@@ -8,7 +8,7 @@ import { quoteRoute } from '@/app/[lang]/quote-action';
 import type { RouteQuote } from '@/lib/landing-types';
 
 export type Crew = 1 | 2 | 3;
-export type QuoteError = 'same_place' | 'invalid' | 'unavailable';
+export type QuoteError = 'same_place' | 'invalid' | 'rate_limited' | 'unavailable';
 
 /**
  * The quote built in the hero widget. The live map, the mover phone and the pricing chart all

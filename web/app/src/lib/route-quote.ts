@@ -19,7 +19,10 @@ async function liveQuote(pickup: Place, dropoff: Place): Promise<QuoteResponse> 
   'use cache';
   cacheLife('minutes');
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  // The secret key marks this as our own server: the quote action has already limited the visitor
+  // (lib/rate-limit.ts), so the function's per-IP limit — which would see one IP for all visitors —
+  // doesn't apply. With only the publishable key, all visitors share that limit.
+  const key = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) throw new Error('NEXT_PUBLIC_SUPABASE_URL / _PUBLISHABLE_KEY are not set');
   const res = await fetch(`${url}/functions/v1/quote`, {
     method: 'POST',

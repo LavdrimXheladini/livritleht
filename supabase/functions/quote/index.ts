@@ -2,21 +2,38 @@
 //   POST { pickup, dropoff, pickupStop?, dropoffStop?, helpers, items?, vehicleClass?, scheduledAt? }
 //   → { distanceKm, scope, crossBorder, typicalLoad, testMovers, classes: [{ vehicleClass, count, from, offers, crews }] }
 // Without items each class is priced for its typical load (the landing's "from" prices).
-// Public: visitors see prices before signing in. The client never sends a price — the request
-// schema rejects one. The logic lives in packages/pricing (unit-tested); this file only plugs in
-// the route lookup and the database. Run `pnpm functions:build` before serving or deploying.
+// Public: visitors see prices before signing in, limited per IP (RATE_LIMITS.quote → 429). The
+// client never sends a price — the request schema rejects one. The logic lives in packages/pricing
+// (unit-tested); this file only plugs in the route lookup and the database. Run
+// `pnpm functions:build` before serving or deploying.
 
 import { quoteForRequest, type QuotableVehicleRow } from '../_shared/movershub/pricing/index.ts';
-import { BOOKING_FEE_RULE, type Place, type VehicleClass } from '../_shared/movershub/shared/index.ts';
+import {
+  BOOKING_FEE_RULE,
+  routeCacheKey,
+  ttlCache,
+  type Place,
+  type VehicleClass,
+} from '../_shared/movershub/shared/index.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
+import { rateLimited } from '../_shared/rate-limit.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 /** Test movers (design/DECISIONS.md #7) are quoted only while this secret is "true". */
 const INCLUDE_TEST_MOVERS = Deno.env.get('INCLUDE_TEST_MOVERS') === 'true';
 
+/**
+ * Distances already looked up by this isolate, by stops rounded to ~11 m: a re-quote of the same
+ * route (another crew, a retry) doesn't call OSRM again. Roads rarely change within hours.
+ */
+const routeCache = ttlCache<number>({ ttlMs: 6 * 60 * 60 * 1000, maxEntries: 2000 });
+
 /** Road distance from the OSRM demo server — fair use only, NOT for production (see CLAUDE.md, maps). */
 async function routeKm(a: Place, b: Place): Promise<number | null> {
+  const key = routeCacheKey(a, b);
+  const cached = routeCache.get(key);
+  if (cached !== undefined) return cached;
   const res = await fetch(
     `https://router.project-osrm.org/route/v1/driving/${a.lon},${a.lat};${b.lon},${b.lat}?overview=false`,
     { signal: AbortSignal.timeout(5000), headers: { 'User-Agent': 'MoversHub/0.1 (quote function)' } },
@@ -24,7 +41,9 @@ async function routeKm(a: Place, b: Place): Promise<number | null> {
   if (!res.ok) return null;
   const body = (await res.json()) as { code?: string; routes?: { distance: number }[] };
   const metres = body.code === 'Ok' ? body.routes?.[0]?.distance : undefined;
-  return metres === undefined ? null : metres / 1000;
+  if (metres === undefined) return null;
+  routeCache.set(key, metres / 1000);
+  return metres / 1000;
 }
 
 /** Eligible vehicles for one class on the move date (`public.quotable_vehicles`, service role only). */
@@ -53,7 +72,9 @@ async function quotableVehicles(args: {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return preflight(req);
-  if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405);
+  if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405, { Allow: 'POST, OPTIONS' });
+  const limited = await rateLimited(req, 'quote');
+  if (limited) return limited;
   let body: unknown;
   try {
     body = await req.json();

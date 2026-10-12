@@ -166,6 +166,7 @@
       "searchError": "Pretraga adresa trenutno nije dostupna. Pokušajte ponovo za trenutak.",
       "samePlace": "Preuzimanje i dostava su isto mesto.",
       "routeError": "Nismo uspeli da izračunamo ovu rutu. Probajte drugu adresu.",
+      "rateLimited": "Previše upita za cenu u kratkom roku. Pokušajte ponovo za nekoliko minuta.",
       "withinCity": "Unutar grada · {{city}}"
     },
     "map": {

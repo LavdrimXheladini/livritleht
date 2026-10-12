@@ -78,7 +78,7 @@ publishable key — it is public by design; **never commit these files**):
 
 | File | Variables |
 |---|---|
-| `web/app/.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, optional `CONTACT_EMAIL` |
+| `web/app/.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, optional `CONTACT_EMAIL`, optional `SUPABASE_SECRET_KEY` (server only — rate limits) |
 | `mobile/customer/.env` and `mobile/mover/.env` | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |
 
 Without them the website still opens, but sign-in won't work.
@@ -135,6 +135,12 @@ The `quote` function quotes test movers only while the project secret `INCLUDE_T
 `quote` and `places` are public. Browsers may call them only from the apps' local preview
 (`http://localhost` / `127.0.0.1`, see `supabase/functions/_shared/http.ts`); the website calls them from
 its server and the phone apps don't need CORS.
+
+Both are limited per IP (`RATE_LIMITS` in `packages/shared/src/rate-limit.ts`: 30 quotes per 10 minutes,
+60 address searches per minute → `429` + `Retry-After`), counted in the database by `hit_rate_limit`; the
+website's quote action and `/api/geo/search` use the same limits. The website calls `quote` with
+`SUPABASE_SECRET_KEY` so its visitors don't share one limit there — set that key on the website **before**
+deploying the functions, or every visitor counts against the website's single IP.
 
 ## Good to know
 

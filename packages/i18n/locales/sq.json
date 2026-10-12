@@ -166,6 +166,7 @@
       "searchError": "Kërkimi i adresave nuk funksionon tani. Provo përsëri pas pak.",
       "samePlace": "Marrja dhe dorëzimi janë i njëjti vend.",
       "routeError": "Nuk mundëm ta llogarisim këtë rrugë. Provo një adresë tjetër.",
+      "rateLimited": "Shumë kërkesa për çmim në pak kohë. Provo përsëri pas disa minutash.",
       "withinCity": "Brenda qytetit · {{city}}"
     },
     "map": {

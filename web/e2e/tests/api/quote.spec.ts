@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 // API tests for the deployed `quote` edge function (network + test movers enabled). Skipped unless:
 //   QUOTE_API_URL=https://<ref>.supabase.co/functions/v1/quote QUOTE_API_KEY=<publishable key> pnpm e2e
 // The pricing rules themselves are unit-tested in packages/pricing; these check the live wiring.
+// One run makes ~18 quote requests: the function allows 30 per IP per 10 minutes (RATE_LIMITS.quote),
+// so a second run within 10 minutes gets 429s.
 const url = process.env.QUOTE_API_URL ?? '';
 const key = process.env.QUOTE_API_KEY ?? '';
 test.skip(!url || !key, 'set QUOTE_API_URL and QUOTE_API_KEY to test the deployed quote function');

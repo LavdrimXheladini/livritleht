@@ -166,6 +166,7 @@
       "searchError": "Wyszukiwanie adresów jest teraz niedostępne. Spróbuj za chwilę.",
       "samePlace": "Odbiór i dostawa to to samo miejsce.",
       "routeError": "Nie udało się wyznaczyć trasy. Spróbuj innego adresu.",
+      "rateLimited": "Zbyt wiele zapytań o cenę w krótkim czasie. Spróbuj ponownie za kilka minut.",
       "withinCity": "W obrębie miasta · {{city}}"
     },
     "map": {

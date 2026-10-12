@@ -166,6 +166,7 @@
       "searchError": "Die Adresssuche ist gerade nicht verfügbar. Versuch es gleich noch einmal.",
       "samePlace": "Abholung und Lieferung sind derselbe Ort.",
       "routeError": "Diese Strecke konnten wir nicht berechnen. Versuch eine andere Adresse.",
+      "rateLimited": "Zu viele Preisabfragen in kurzer Zeit. Versuch es in ein paar Minuten noch einmal.",
       "withinCity": "Innerhalb von {{city}}"
     },
     "map": {
