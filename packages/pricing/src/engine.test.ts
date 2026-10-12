@@ -165,3 +165,56 @@ describe('commission, booking fee and eligibility', () => {
     expect(quoteVehicle(job, { ...card, currency: 'PLN' }, noFee).ok).toBe(true);
   });
 });
+
+describe('lek, denar and dinar: whole units (their hundredths are no longer used)', () => {
+  // The Macedonian test mover's large van: 45,50 den per km and 31,35 den per crew minute.
+  const denar: RateCard = {
+    currency: 'MKD',
+    baseFee: 156000,
+    perKm: 4550,
+    perLaborMinute: { 1: 1650, 2: 3135, 3: 4290 },
+    minPrice: 325000,
+    floorWithoutLiftFee: 13200,
+    heavyItemFee: 27500,
+    assemblyPerItem: 38500,
+    longDistanceThresholdKm: null,
+    longDistancePerKm: 0,
+  };
+  const whole = (q: Quote) => [q.moverPrice, q.platformCommission, q.moverPayout, q.total, ...q.lines.map((l) => l.amount)];
+
+  it('rounds each line, so the lines still add up to the price', () => {
+    const q = quoteOf(job, denar);
+    // 82.4 km × 45,50 den = 3 749,20 den → 3 749 den
+    expect(q.lines.find((l) => l.kind === 'distance')).toEqual({ kind: 'distance', amount: 374900, quantity: 82.4, unitAmount: 4550 });
+    expect(q.lines.reduce((s, l) => s + l.amount, 0)).toBe(q.moverPrice);
+    for (const n of whole(q)) expect(n % 100).toBe(0);
+  });
+
+  it('holds for any job, crew and card in all three currencies', () => {
+    let seed = 11;
+    const rnd = (n: number) => (seed = (seed * 48271) % 2147483647) % n;
+    for (let i = 0; i < 300; i++) {
+      const currency = (['ALL', 'MKD', 'RSD'] as const)[rnd(3)]!;
+      const j: QuoteJob = { ...job, distanceKm: rnd(250_000) / 100, helpers: ([1, 2, 3] as const)[rnd(3)]! };
+      const c: RateCard = {
+        ...denar,
+        currency,
+        baseFee: rnd(500_000),
+        perKm: rnd(20_000),
+        perLaborMinute: { 1: rnd(5000), 2: rnd(9000), 3: rnd(12_000) },
+        minPrice: rnd(900_000),
+        longDistanceThresholdKm: rnd(2) === 1 ? rnd(300) : null,
+        longDistancePerKm: rnd(10_000),
+      };
+      const q = quoteOf(j, c, { bookingFee: { kind: 'percent', pct: 3 } });
+      for (const n of whole(q)) expect(n % 100).toBe(0);
+      expect(q.lines.reduce((s, l) => s + l.amount, 0)).toBe(q.moverPrice);
+      expect(q.platformCommission + q.moverPayout).toBe(q.moverPrice);
+    }
+  });
+
+  it('keeps euro cents as they are', () => {
+    expect(quoteOf(job).lines.find((l) => l.kind === 'distance')!.amount).toBe(7416);
+    expect(quoteOf(job, { ...card, currency: 'PLN' }).moverPrice).toBe(21216);
+  });
+});

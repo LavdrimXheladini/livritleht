@@ -1,11 +1,13 @@
 // Pricing engine (CLAUDE.md §4): pure functions, no I/O. Runs only on the server (the `quote`
 // function); the client never sends a price. Every amount comes from ONE mover's own rate card —
 // the platform only adds its labour-time estimate, its commission and the separate booking fee
-// (COMPLIANCE §1, §1.1). Money is integer minor units (cents) of the rate card's currency.
+// (COMPLIANCE §1, §1.1). Money is integer minor units (cents) of the rate card's currency; in lek,
+// denar and dinar every amount is a whole unit (`roundToPriceStep`), as their hundredths aren't used.
 
 import {
   ITEM_CATALOGUE,
   PLATFORM_TAKE_RATE_PCT,
+  roundToPriceStep,
   type BookingFeeRule,
   type CrewSize,
   type Currency,
@@ -42,7 +44,10 @@ export type QuoteLineKind =
   /** Top-up to the mover's minimum price. */
   | 'minimumPrice';
 
-/** One line of the mover's price. `quantity × unitAmount` explains `amount` (rounded to cents). */
+/**
+ * One line of the mover's price. `quantity × unitAmount` explains `amount`, rounded to cents — or to
+ * whole lek / denar / dinar, so the lines of every quote add up to its price exactly.
+ */
 export type QuoteLine = { kind: QuoteLineKind; amount: number; quantity?: number; unitAmount?: number };
 
 export type Quote = {
@@ -89,8 +94,10 @@ export function quoteVehicle(job: QuoteJob, card: RateCard, opts: { bookingFee: 
   const heavyItems = job.items.reduce((n, it) => n + (ITEM_CATALOGUE[it.key].heavy ? it.qty : 0), 0);
   const assemblyItems = job.items.reduce((n, it) => n + (it.assembly && ITEM_CATALOGUE[it.key].assemblable ? it.qty : 0), 0);
 
+  const step = (amount: number) => roundToPriceStep(amount, card.currency);
   const lines: QuoteLine[] = [];
-  const add = (kind: QuoteLineKind, amount: number, quantity?: number, unitAmount?: number) => {
+  const add = (kind: QuoteLineKind, raw: number, quantity?: number, unitAmount?: number) => {
+    const amount = step(raw);
     if (amount > 0) lines.push(quantity === undefined ? { kind, amount } : { kind, amount, quantity, unitAmount });
   };
   add('base', card.baseFee);
@@ -104,11 +111,12 @@ export function quoteVehicle(job: QuoteJob, card: RateCard, opts: { bookingFee: 
     add('longDistance', Math.round((card.longDistancePerKm * extraTenths) / 10), extraTenths / 10, card.longDistancePerKm);
   }
   const subtotal = lines.reduce((sum, l) => sum + l.amount, 0);
-  add('minimumPrice', card.minPrice - subtotal);
-  const moverPrice = Math.max(subtotal, card.minPrice);
+  const minPrice = step(card.minPrice);
+  add('minimumPrice', minPrice - subtotal);
+  const moverPrice = Math.max(subtotal, minPrice);
 
   const takeRatePct = job.crossBorder ? PLATFORM_TAKE_RATE_PCT.crossBorder : PLATFORM_TAKE_RATE_PCT.domestic;
-  const platformCommission = Math.round((moverPrice * takeRatePct) / 100);
+  const platformCommission = step((moverPrice * takeRatePct) / 100);
   const bookingFee = bookingFeeFor(opts.bookingFee, moverPrice, card.currency);
 
   return {
@@ -130,8 +138,8 @@ export function quoteVehicle(job: QuoteJob, card: RateCard, opts: { bookingFee: 
 /** Ranktrip's booking fee for a quote, or `null` while the amount isn't decided. */
 export function bookingFeeFor(rule: BookingFeeRule | null, moverPrice: number, currency: Currency): number | null {
   if (rule === null) return null;
-  if (rule.kind === 'percent') return Math.round((moverPrice * rule.pct) / 100);
+  if (rule.kind === 'percent') return roundToPriceStep((moverPrice * rule.pct) / 100, currency);
   const amount = rule.amountByCurrency[currency];
   if (amount === undefined) throw new Error(`Booking fee has no flat amount for ${currency}`);
-  return amount;
+  return roundToPriceStep(amount, currency);
 }

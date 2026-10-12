@@ -1,8 +1,23 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatMoney, formatNumber, formatTenths } from './money';
+import { formatMoney, formatNumber, formatTenths, roundToPriceStep } from './money';
 
 const NBSP = ' ';
+
+describe('roundToPriceStep', () => {
+  it('rounds lek, denar and dinar to whole units — their hundredths are no longer used', () => {
+    expect(roundToPriceStep(1265260, 'ALL')).toBe(1265300); // 12 652,60 L → 12 653 L
+    expect(roundToPriceStep(1265249, 'ALL')).toBe(1265200);
+    expect(roundToPriceStep(364050, 'MKD')).toBe(364100);
+    expect(roundToPriceStep(1234549, 'RSD')).toBe(1234500);
+  });
+
+  it('keeps cents in euro, złoty and francs', () => {
+    expect(roundToPriceStep(14942, 'EUR')).toBe(14942);
+    expect(roundToPriceStep(31630, 'PLN')).toBe(31630);
+    expect(roundToPriceStep(28005, 'CHF')).toBe(28005);
+  });
+});
 
 describe('formatMoney', () => {
   it('formats whole euros without decimals', () => {

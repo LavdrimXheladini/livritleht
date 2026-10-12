@@ -1,4 +1,4 @@
-import type { Locale } from './constants';
+import type { Currency, Locale } from './constants';
 
 // Money is always integer minor units (cents) + ISO currency (CLAUDE.md §9). Format only for display.
 //
@@ -27,6 +27,18 @@ const RULES: Record<Locale, NumberRules> = {
 };
 
 const SYMBOLS: Record<string, string> = { EUR: '€', PLN: 'zł', CHF: 'CHF', ALL: 'L', MKD: 'ден', RSD: 'RSD' };
+
+/**
+ * Currencies whose hundredths are no longer used — no qindarka, deni (withdrawn 2013) or para
+ * (gone since 2008) coins — so their prices are whole units (owner decision 2026-10-12). Amounts
+ * still count in hundredths like every currency (CLAUDE.md §9), so the database and Stripe don't change.
+ */
+export const WHOLE_UNIT_CURRENCIES: readonly Currency[] = ['ALL', 'MKD', 'RSD'];
+
+/** Rounds an amount (minor units) to what a price in this currency can be: whole lek / denar / dinar, else cents. */
+export function roundToPriceStep(amount: number, currency: Currency): number {
+  return WHOLE_UNIT_CURRENCIES.includes(currency) ? Math.round(amount / 100) * 100 : Math.round(amount);
+}
 
 function groupDigits(int: string, rules: NumberRules): string {
   if (int.length < rules.minGroupDigits) return int;

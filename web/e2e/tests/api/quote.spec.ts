@@ -65,3 +65,21 @@ test('corridor jobs are offered in EUR only (COMPLIANCE §11)', async ({ request
   expect(body.crossBorder).toBe(true);
   expect(body.classes.flatMap((c) => c.offers).every((o) => o.quote.currency === 'EUR')).toBe(true);
 });
+
+test('lek and denar prices are whole units (their hundredths are no longer used)', async ({ request }) => {
+  const tirana = { label: 'Tirana', area: 'Tirana', lat: 41.3275, lon: 19.8187, countryCode: 'AL' };
+  const durres = { label: 'Durrës', area: 'Durrës', lat: 41.3231, lon: 19.4414, countryCode: 'AL' };
+  const skopje = { label: 'Skopje', area: 'Skopje', lat: 41.9973, lon: 21.428, countryCode: 'MK' };
+  const bitola = { label: 'Bitola', area: 'Bitola', lat: 41.0297, lon: 21.3292, countryCode: 'MK' };
+  for (const [pickup, dropoff, currency] of [[tirana, durres, 'ALL'], [skopje, bitola, 'MKD']] as const) {
+    const res = await request.post(url, { headers: { apikey: key }, data: { pickup, dropoff, ...job } });
+    expect(res.ok()).toBe(true);
+    const offers = ((await res.json()) as QuoteResponse).classes.flatMap((c) => c.offers);
+    expect(offers.length).toBeGreaterThan(0);
+    for (const { quote } of offers) {
+      expect(quote.currency).toBe(currency);
+      expect(quote.moverPrice % 100).toBe(0);
+      expect(quote.total % 100).toBe(0);
+    }
+  }
+});
