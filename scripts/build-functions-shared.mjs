@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Copies the pricing engine and shared code into supabase/functions/_shared/ranktrip/ so the Deno
+// Copies the pricing engine and shared code into supabase/functions/_shared/movershub/ so the Deno
 // edge functions use the SAME code as the apps and tests. Only import paths change: Deno needs file
-// extensions (`./x` → `./x.ts`) and doesn't know our workspace names (`@ranktrip/shared` → relative
+// extensions (`./x` → `./x.ts`) and doesn't know our workspace names (`@movershub/shared` → relative
 // path). `zod` stays a bare import, mapped to npm:zod in each function's deno.json. The output is
 // git-ignored; `pnpm functions:deploy` runs this first.
 
@@ -9,10 +9,10 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, wri
 import { dirname, join, posix, relative, sep } from 'node:path';
 
 const ROOT = join(import.meta.dirname, '..');
-const OUT = join(ROOT, 'supabase', 'functions', '_shared', 'ranktrip');
+const OUT = join(ROOT, 'supabase', 'functions', '_shared', 'movershub');
 const PACKAGES = [
-  { name: '@ranktrip/shared', src: join(ROOT, 'packages', 'shared', 'src'), out: join(OUT, 'shared') },
-  { name: '@ranktrip/pricing', src: join(ROOT, 'packages', 'pricing', 'src'), out: join(OUT, 'pricing') },
+  { name: '@movershub/shared', src: join(ROOT, 'packages', 'shared', 'src'), out: join(OUT, 'shared') },
+  { name: '@movershub/pricing', src: join(ROOT, 'packages', 'pricing', 'src'), out: join(OUT, 'pricing') },
 ];
 /** Bare imports allowed in function code (each must be mapped in the function's deno.json). */
 const ALLOWED_BARE = new Set(['zod']);

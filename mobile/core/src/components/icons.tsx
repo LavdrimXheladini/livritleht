@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Platform } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
-import { colors } from '@ranktrip/ui';
+import { colors } from '@movershub/ui';
 
 // Stroke icons from the design (same paths as packages/ui/src/web/icons.tsx). Decorative: hidden
 // from screen readers — the control around them carries the label.
@@ -120,7 +120,7 @@ export const TagIcon = (p: IconProps) => (
   </Icon>
 );
 
-/** Ranktrip mark: roof chevron over a baseline. */
+/** MoversHub mark: roof chevron over a baseline. */
 export const LogoMark = ({ size = 22, ...p }: IconProps) => (
   <Icon size={size} strokeWidth={3} {...p}>
     <Path d="M3 15.5 L12 4 L21 15.5" strokeLinecap="butt" />

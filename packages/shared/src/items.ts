@@ -1,6 +1,6 @@
 // Item catalogue for the labour estimate (CLAUDE.md §4). These are the platform's TIME and volume
 // estimates only — every price comes from the mover's own rate card (COMPLIANCE §1).
-// Item names are translated in @ranktrip/i18n when the booking flow adds its item picker.
+// Item names are translated in @movershub/i18n when the booking flow adds its item picker.
 
 import type { VehicleClass } from './constants';
 

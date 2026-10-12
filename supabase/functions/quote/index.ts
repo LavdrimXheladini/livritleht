@@ -6,8 +6,8 @@
 // schema rejects one. The logic lives in packages/pricing (unit-tested); this file only plugs in
 // the route lookup and the database. Run `pnpm functions:build` before serving or deploying.
 
-import { quoteForRequest, type QuotableVehicleRow } from '../_shared/ranktrip/pricing/index.ts';
-import { BOOKING_FEE_RULE, type Place, type VehicleClass } from '../_shared/ranktrip/shared/index.ts';
+import { quoteForRequest, type QuotableVehicleRow } from '../_shared/movershub/pricing/index.ts';
+import { BOOKING_FEE_RULE, type Place, type VehicleClass } from '../_shared/movershub/shared/index.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
@@ -19,7 +19,7 @@ const INCLUDE_TEST_MOVERS = Deno.env.get('INCLUDE_TEST_MOVERS') === 'true';
 async function routeKm(a: Place, b: Place): Promise<number | null> {
   const res = await fetch(
     `https://router.project-osrm.org/route/v1/driving/${a.lon},${a.lat};${b.lon},${b.lat}?overview=false`,
-    { signal: AbortSignal.timeout(5000), headers: { 'User-Agent': 'Ranktrip/0.1 (quote function)' } },
+    { signal: AbortSignal.timeout(5000), headers: { 'User-Agent': 'MoversHub/0.1 (quote function)' } },
   );
   if (!res.ok) return null;
   const body = (await res.json()) as { code?: string; routes?: { distance: number }[] };

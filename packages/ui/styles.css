@@ -1,4 +1,4 @@
-/* Motion + helpers for @ranktrip/ui/web components. Import after theme.css.
+/* Motion + helpers for @movershub/ui/web components. Import after theme.css.
    Colours only via token variables — no raw values. */
 
 /* Let Tailwind see the classes used inside packages/ui components. */

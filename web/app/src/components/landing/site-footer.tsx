@@ -1,7 +1,7 @@
 import { cacheLife } from 'next/cache';
 
-import type { Locale } from '@ranktrip/i18n';
-import { Sheet } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/i18n';
+import { Sheet } from '@movershub/ui/web';
 
 import { getT } from '@/lib/i18n';
 import { lines } from '@/lib/rich-text';
@@ -33,7 +33,7 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
         aria-hidden="true"
         className="type-wordmark mt-20 mb-8 text-[clamp(64px,15vw,220px)] leading-[0.8] tracking-[-0.05em] whitespace-nowrap text-brand-400"
       >
-        RANKTRIP
+        MOVERSHUB
       </div>
       <div className="flex flex-wrap justify-between gap-4 border-t border-brand-400 pt-5.5 text-[13px] text-sage-400">
         <span>{t('landing.footer.legal', { year })}</span>

@@ -68,7 +68,7 @@ export type CrewSize = (typeof CREW_SIZES)[number];
 /** Platform commission on the mover's price, whole percent (COMPLIANCE §1 ALLOWED). */
 export const PLATFORM_TAKE_RATE_PCT = { domestic: 20, crossBorder: 15 } as const;
 
-/** Ranktrip's customer booking fee: a flat amount per currency, or a percent of the mover's price. */
+/** MoversHub's customer booking fee: a flat amount per currency, or a percent of the mover's price. */
 export type BookingFeeRule =
   | { kind: 'flat'; amountByCurrency: Partial<Record<Currency, number>> }
   | { kind: 'percent'; pct: number };
@@ -81,7 +81,7 @@ export const BOOKING_FEE_RULE: BookingFeeRule | null = null;
 
 /**
  * Display facts per vehicle class (COMPLIANCE §1.1 table). Categories only — never prices.
- * Names and "fits" text are translated in @ranktrip/i18n under `vehicles.<CLASS>`.
+ * Names and "fits" text are translated in @movershub/i18n under `vehicles.<CLASS>`.
  */
 export const VEHICLE_CLASS_INFO: Record<VehicleClass, { capacity: string; examples: string }> = {
   SMALL: { capacity: '≤ 3 m³', examples: 'Caddy · Berlingo' },

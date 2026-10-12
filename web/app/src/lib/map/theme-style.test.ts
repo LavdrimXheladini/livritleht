@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { colors } from '@ranktrip/ui';
+import { colors } from '@movershub/ui';
 
 import { themeMapStyle, type StyleSpecification } from './theme-style';
 

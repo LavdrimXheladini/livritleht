@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Locale, Place } from '@ranktrip/shared';
+import type { Locale, Place } from '@movershub/shared';
 
 import type { GeoSuggestion } from '@/lib/geo/types';
 

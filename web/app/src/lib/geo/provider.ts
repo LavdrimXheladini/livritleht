@@ -2,7 +2,7 @@ import 'server-only';
 
 import { cacheLife } from 'next/cache';
 
-import { photonSearchUrl, photonSuggestions, type Locale, type PhotonFeature, type Place } from '@ranktrip/shared';
+import { photonSearchUrl, photonSuggestions, type Locale, type PhotonFeature, type Place } from '@movershub/shared';
 
 import { DEMO_CITIES, haversineM, type GeoSuggestion, type LineCoords, type RouteResult } from './types';
 
@@ -19,7 +19,7 @@ export interface GeoProvider {
   route(from: Place, to: Place): Promise<RouteResult | null>;
 }
 
-const USER_AGENT = 'Ranktrip/0.1 (+https://github.com/LavdrimXheladini/livritleht)';
+const USER_AGENT = 'MoversHub/0.1 (+https://github.com/LavdrimXheladini/livritleht)';
 const MAX_ROUTE_POINTS = 400;
 
 async function photonSearch(query: string, locale: Locale, nearKey: string): Promise<GeoSuggestion[]> {

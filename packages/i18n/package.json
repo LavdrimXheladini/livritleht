@@ -1,5 +1,5 @@
 {
-  "name": "@ranktrip/i18n",
+  "name": "@movershub/i18n",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -12,7 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@ranktrip/shared": "workspace:*",
+    "@movershub/shared": "workspace:*",
     "i18next": "^26.4.3"
   },
   "devDependencies": {

@@ -144,7 +144,7 @@ test('every offer names its mover by the company’s legal name (COMPLIANCE §4)
   expect(offers.length).toBeGreaterThan(0);
   for (const { companyName } of offers) {
     expect(companyName.length).toBeGreaterThanOrEqual(2); // mover_companies.legal_name: 2–160 characters
-    expect(companyName).not.toMatch(/ranktrip/i); // the mover is the provider, never the platform
+    expect(companyName).not.toMatch(/movershub/i); // the mover is the provider, never the platform
   }
   expect(offers.map((o) => o.companyName)).toContain('Test Movers Prishtina');
 });

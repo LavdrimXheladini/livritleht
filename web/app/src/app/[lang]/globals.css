@@ -2,9 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 /* Design tokens (colours, radii, shadows, fonts, type scale) — generated from packages/ui/tokens.json. */
-@import "@ranktrip/ui/theme.css";
+@import "@movershub/ui/theme.css";
 /* Component motion (pulse, lift, press) + @source for packages/ui components. */
-@import "@ranktrip/ui/styles.css";
+@import "@movershub/ui/styles.css";
 
 @custom-variant dark (&:is(.dark *));
 

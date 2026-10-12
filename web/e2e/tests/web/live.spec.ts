@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-import { LOCALES, resources } from '@ranktrip/i18n';
+import { LOCALES, resources } from '@movershub/i18n';
 
 const en = resources.en.translation;
 const d = en.dashboard;

@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Ranktrip Partner",
-    "slug": "ranktrip-mover",
+    "name": "MoversHub Partner",
+    "slug": "movershub-mover",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "ranktrip-mover",
+    "scheme": "movershub-mover",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.ranktrip.mover"
+      "bundleIdentifier": "com.movershub.mover"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.ranktrip.mover"
+      "package": "com.movershub.mover"
     },
     "web": {
       "output": "static",

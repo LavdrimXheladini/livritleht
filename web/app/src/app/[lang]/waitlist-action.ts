@@ -1,6 +1,6 @@
 'use server';
 
-import { emailSchema, isLocale } from '@ranktrip/shared';
+import { emailSchema, isLocale } from '@movershub/shared';
 
 import { createClient } from '@/lib/supabase/server';
 

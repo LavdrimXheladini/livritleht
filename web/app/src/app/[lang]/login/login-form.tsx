@@ -13,7 +13,7 @@ import {
   phoneSchema,
   type Locale,
   type SignupMetadata,
-} from '@ranktrip/shared';
+} from '@movershub/shared';
 
 import { createClient } from '@/lib/supabase/client';
 

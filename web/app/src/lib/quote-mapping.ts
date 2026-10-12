@@ -1,7 +1,7 @@
 // Pure mapping from a quote answer (live or sample) to what the landing page shows. Kept apart from
 // route-quote.ts (server-only, does the fetching) so it can be unit-tested.
-import { pickFrom, type QuoteResponse } from '@ranktrip/pricing';
-import { MARKET_RATES, PLATFORM_TAKE_RATE_PCT, VEHICLE_CLASSES, type Currency, type Place, type VehicleClass } from '@ranktrip/shared';
+import { pickFrom, type QuoteResponse } from '@movershub/pricing';
+import { MARKET_RATES, PLATFORM_TAKE_RATE_PCT, VEHICLE_CLASSES, type Currency, type Place, type VehicleClass } from '@movershub/shared';
 
 import type { CrewFrom, RouteQuote, SampleRoute } from './landing-types';
 

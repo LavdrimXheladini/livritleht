@@ -1,5 +1,5 @@
 // Web UI primitives (React DOM + Tailwind 4). Styled only with token classes from theme.css.
-// The web app must import "@ranktrip/ui/theme.css" and "@ranktrip/ui/styles.css".
+// The web app must import "@movershub/ui/theme.css" and "@movershub/ui/styles.css".
 // Mobile equivalents live in mobile/core (React Native + NativeWind).
 export { Accordion, AccordionItem } from './accordion';
 export { Button, buttonVariants, type ButtonProps } from './button';

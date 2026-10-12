@@ -13,9 +13,9 @@ import {
   useAnnouncement,
   useQuote,
   type ClassFrom,
-} from '@ranktrip/mobile';
-import { VEHICLE_CLASSES, demoPlace, formatNumber, type CrewSize, type Locale, type Place, type VehicleClass } from '@ranktrip/shared';
-import { colors } from '@ranktrip/ui';
+} from '@movershub/mobile';
+import { VEHICLE_CLASSES, demoPlace, formatNumber, type CrewSize, type Locale, type Place, type VehicleClass } from '@movershub/shared';
+import { colors } from '@movershub/ui';
 
 import { AddressField } from './address-field';
 import { offersFor, priceText, type LiveQuote } from './offers';

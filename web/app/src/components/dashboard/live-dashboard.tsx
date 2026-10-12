@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Locale } from '@ranktrip/i18n';
-import { formatMoney, formatNumber, formatTenths } from '@ranktrip/shared';
-import { Button, CardIcon, DarkPanel, Gauge, LogoMark, Pill, ProgressBar, Timeline, VanIcon, WarningIcon } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/i18n';
+import { formatMoney, formatNumber, formatTenths } from '@movershub/shared';
+import { Button, CardIcon, DarkPanel, Gauge, LogoMark, Pill, ProgressBar, Timeline, VanIcon, WarningIcon } from '@movershub/ui/web';
 
 import { alongLine, compassPoint } from '@/lib/geo/line';
 import type { DemoItem, LiveJob } from '@/lib/live-demo-types';

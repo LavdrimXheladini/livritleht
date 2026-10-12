@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import type { Locale } from '@ranktrip/i18n';
-import { Button, LogoMark } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/i18n';
+import { Button, LogoMark } from '@movershub/ui/web';
 
 import { getT } from '@/lib/i18n';
 
@@ -31,7 +31,7 @@ export function Nav({ locale }: { locale: Locale }) {
         className="flex flex-col items-center gap-0.75 text-ink-900 no-underline md:flex-none"
       >
         <LogoMark />
-        <span className="type-wordmark text-[11px]">RANKTRIP</span>
+        <span className="type-wordmark text-[11px]">MOVERSHUB</span>
       </Link>
       <div className="flex flex-[1_1_200px] items-center justify-end gap-2.5">
         <LanguageSwitcher locale={locale} label={t('landing.nav.language')} />

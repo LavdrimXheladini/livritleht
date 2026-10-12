@@ -1,5 +1,5 @@
 # Requires a dev build + `supabase start` (test OTP numbers in supabase/config.toml).
-appId: com.ranktrip.customer
+appId: com.movershub.customer
 ---
 - launchApp:
     clearState: true

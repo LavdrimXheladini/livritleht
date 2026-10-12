@@ -13,7 +13,7 @@ import {
   type Place,
   type QuoteJob,
   type VehicleClass,
-} from '@ranktrip/shared';
+} from '@movershub/shared';
 
 import { buildClassOffers, type ClassOffers, type FromPrice, type QuotableVehicleRow } from './offers';
 

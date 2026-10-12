@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessibilityInfo, Text, View } from 'react-native';
 
-import { Button, CheckIcon, DarkPanel, Display, Pill, classFrom, useQuote } from '@ranktrip/mobile';
+import { Button, CheckIcon, DarkPanel, Display, Pill, classFrom, useQuote } from '@movershub/mobile';
 import {
   PLATFORM_TAKE_RATE_PCT,
   demoPlace,
@@ -12,8 +12,8 @@ import {
   routeLabel,
   stopName,
   type VehicleClass,
-} from '@ranktrip/shared';
-import { colors } from '@ranktrip/ui';
+} from '@movershub/shared';
+import { colors } from '@movershub/ui';
 
 import { RouteSketch } from './route-sketch';
 

@@ -3,8 +3,8 @@
 import { useActionState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Locale } from '@ranktrip/shared';
-import { Button } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/shared';
+import { Button } from '@movershub/ui/web';
 
 import { joinWaitlist, type WaitlistState } from '@/app/[lang]/waitlist-action';
 

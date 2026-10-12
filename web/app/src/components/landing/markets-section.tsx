@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import type { Locale } from '@ranktrip/i18n';
-import { Button, Card, Pill, SectionTitle, Sheet, type PillProps } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/i18n';
+import { Button, Card, Pill, SectionTitle, Sheet, type PillProps } from '@movershub/ui/web';
 
 import { getT } from '@/lib/i18n';
 

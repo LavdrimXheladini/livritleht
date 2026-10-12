@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Place, VehicleClass } from '@ranktrip/shared';
+import type { Place, VehicleClass } from '@movershub/shared';
 
 import type { Quote } from './engine';
 import type { QuotableVehicleRow } from './offers';

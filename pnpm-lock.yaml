@@ -26,16 +26,16 @@ importers:
       '@hookform/resolvers':
         specifier: '*'
         version: 5.9.1(@sinclair/typebox@0.27.12)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.89.0(@types/react@19.2.18)(react@19.2.3))(zod@4.6.5)
-      '@ranktrip/i18n':
+      '@movershub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@ranktrip/pricing':
+      '@movershub/pricing':
         specifier: workspace:*
         version: link:../../packages/pricing
-      '@ranktrip/shared':
+      '@movershub/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@ranktrip/ui':
+      '@movershub/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@react-native-async-storage/async-storage':
@@ -108,16 +108,16 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.9.1
         version: 5.9.1(@sinclair/typebox@0.27.12)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.89.0(@types/react@19.2.18)(react@19.2.3))(zod@4.6.5)
-      '@ranktrip/i18n':
+      '@movershub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@ranktrip/mobile':
+      '@movershub/mobile':
         specifier: workspace:*
         version: link:../core
-      '@ranktrip/shared':
+      '@movershub/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@ranktrip/ui':
+      '@movershub/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@react-native-async-storage/async-storage':
@@ -250,16 +250,16 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.9.1
         version: 5.9.1(@sinclair/typebox@0.27.12)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.89.0(@types/react@19.2.18)(react@19.2.3))(zod@4.6.5)
-      '@ranktrip/i18n':
+      '@movershub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@ranktrip/mobile':
+      '@movershub/mobile':
         specifier: workspace:*
         version: link:../core
-      '@ranktrip/shared':
+      '@movershub/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@ranktrip/ui':
+      '@movershub/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@react-native-async-storage/async-storage':
@@ -383,7 +383,7 @@ importers:
 
   packages/i18n:
     dependencies:
-      '@ranktrip/shared':
+      '@movershub/shared':
         specifier: workspace:*
         version: link:../shared
       i18next:
@@ -402,7 +402,7 @@ importers:
 
   packages/pricing:
     dependencies:
-      '@ranktrip/shared':
+      '@movershub/shared':
         specifier: workspace:*
         version: link:../shared
     devDependencies:
@@ -459,16 +459,16 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.9.1
         version: 5.9.1(@sinclair/typebox@0.27.12)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.89.0(@types/react@19.2.18)(react@19.2.3))(zod@4.6.5)
-      '@ranktrip/i18n':
+      '@movershub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@ranktrip/pricing':
+      '@movershub/pricing':
         specifier: workspace:*
         version: link:../../packages/pricing
-      '@ranktrip/shared':
+      '@movershub/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@ranktrip/ui':
+      '@movershub/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@supabase/ssr':
@@ -553,12 +553,12 @@ importers:
 
   web/e2e:
     devDependencies:
+      '@movershub/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@playwright/test':
         specifier: ^1.64.0
         version: 1.64.0
-      '@ranktrip/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
       '@types/node':
         specifier: ^22
         version: 22.20.5

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Ranktrip — Move anything</title>
+<title>MoversHub — Move anything</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -43,7 +43,7 @@ input[type=range]{accent-color:#0F0B09}
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 15.5 L12 4 L21 15.5" stroke="#0F0B09" stroke-width="3" stroke-linejoin="round"/><path d="M7 20 H17" stroke="#0F0B09" stroke-width="3" stroke-linecap="round"/></svg>
-      <span style="font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:700;font-size:11px;letter-spacing:.16em">RANKTRIP</span>
+      <span style="font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:700;font-size:11px;letter-spacing:.16em">MOVERSHUB</span>
     </div>
     <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 200px">
       <button class="btn" onClick="{{cycleLang}}" style="font:inherit;font-size:14px;background:none;border:0;cursor:pointer;padding:10px 8px;min-height:44px">{{lang}} ▾</button>
@@ -117,7 +117,7 @@ input[type=range]{accent-color:#0F0B09}
           <a href="Tracking.dc.html" style="color:#D9A574;font-size:14.5px;font-weight:500;text-decoration:none;padding:10px 0">Track this move →</a>
         </div>
       </sc-if>
-      <div style="font-size:12px;color:#6B645C">Sample rates for the demo — each mover sets their own price per vehicle class. Price includes Ranktrip's fee ({{q.feePct}}% {{q.kindLower}}); the mover receives €{{q.mover}}.</div>
+      <div style="font-size:12px;color:#6B645C">Sample rates for the demo — each mover sets their own price per vehicle class. Price includes MoversHub's fee ({{q.feePct}}% {{q.kindLower}}); the mover receives €{{q.mover}}.</div>
     </div>
   </section>
 
@@ -222,7 +222,7 @@ input[type=range]{accent-color:#0F0B09}
 <!-- ================= STORY PARAGRAPH ================= -->
 <section style="max-width:1400px;margin:20px auto 0;background:#FBF9F4;border-radius:24px;padding:110px 24px">
   <div style="max-width:760px;margin:0 auto">
-    <p style="font-size:clamp(22px,2.4vw,30px);line-height:1.45;margin:0;letter-spacing:-0.01em">Ranktrip connects people who need to move with <button class="{{p.mov.cls}}" onMouseEnter="{{p.mov.on}}" onFocus="{{p.mov.on}}" onClick="{{p.mov.on}}">independent movers</button> who own vans. Pick a <button class="{{p.veh.cls}}" onMouseEnter="{{p.veh.on}}" onFocus="{{p.veh.on}}" onClick="{{p.veh.on}}">vehicle class</button>, see an <button class="{{p.pri.cls}}" onMouseEnter="{{p.pri.on}}" onFocus="{{p.pri.on}}" onClick="{{p.pri.on}}">upfront price</button>, pay by <button class="{{p.pay.cls}}" onMouseEnter="{{p.pay.on}}" onFocus="{{p.pay.on}}" onClick="{{p.pay.on}}">card</button> and <button class="{{p.trk.cls}}" onMouseEnter="{{p.trk.on}}" onFocus="{{p.trk.on}}" onClick="{{p.trk.on}}">track your mover live</button> on the map. Moving between Germany, Austria or Switzerland and home? Our <button class="{{p.dia.cls}}" onMouseEnter="{{p.dia.on}}" onFocus="{{p.dia.on}}" onClick="{{p.dia.on}}">diaspora corridors</button> are built for exactly that.</p>
+    <p style="font-size:clamp(22px,2.4vw,30px);line-height:1.45;margin:0;letter-spacing:-0.01em">MoversHub connects people who need to move with <button class="{{p.mov.cls}}" onMouseEnter="{{p.mov.on}}" onFocus="{{p.mov.on}}" onClick="{{p.mov.on}}">independent movers</button> who own vans. Pick a <button class="{{p.veh.cls}}" onMouseEnter="{{p.veh.on}}" onFocus="{{p.veh.on}}" onClick="{{p.veh.on}}">vehicle class</button>, see an <button class="{{p.pri.cls}}" onMouseEnter="{{p.pri.on}}" onFocus="{{p.pri.on}}" onClick="{{p.pri.on}}">upfront price</button>, pay by <button class="{{p.pay.cls}}" onMouseEnter="{{p.pay.on}}" onFocus="{{p.pay.on}}" onClick="{{p.pay.on}}">card</button> and <button class="{{p.trk.cls}}" onMouseEnter="{{p.trk.on}}" onFocus="{{p.trk.on}}" onClick="{{p.trk.on}}">track your mover live</button> on the map. Moving between Germany, Austria or Switzerland and home? Our <button class="{{p.dia.cls}}" onMouseEnter="{{p.dia.on}}" onFocus="{{p.dia.on}}" onClick="{{p.dia.on}}">diaspora corridors</button> are built for exactly that.</p>
     <div style="margin-top:36px;display:flex;gap:18px;align-items:center;background:#EAE5D9;border-radius:16px;padding:16px;max-width:520px">
       <div style="width:84px;height:64px;border-radius:10px;background:#1C2B27;flex:0 0 auto;display:flex;align-items:center;justify-content:center">
         <span style="width:12px;height:12px;border-radius:50%;background:#B98350;display:inline-block"></span>
@@ -287,7 +287,7 @@ input[type=range]{accent-color:#0F0B09}
       <h2 class="disp" style="font-size:clamp(34px,4.2vw,50px);line-height:1;margin:0">Built for<br>independent movers.</h2>
       <div style="display:flex;gap:14px">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
-        <div><div style="font-size:16px;font-weight:600">Your van, your rates.</div><div style="font-size:14px;color:#554F48;line-height:1.5;margin-top:4px">Set your own price per vehicle class. You run your business — Ranktrip brings the customers.</div></div>
+        <div><div style="font-size:16px;font-weight:600">Your van, your rates.</div><div style="font-size:14px;color:#554F48;line-height:1.5;margin-top:4px">Set your own price per vehicle class. You run your business — MoversHub brings the customers.</div></div>
       </div>
       <div style="display:flex;gap:14px">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F0B09" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M20 6 9 17l-5-5"/></svg>
@@ -309,7 +309,7 @@ input[type=range]{accent-color:#0F0B09}
       <div style="width:330px;max-width:100%;margin:0 auto;background:#0F0B09;border-radius:44px;padding:10px;box-shadow:0 40px 80px -36px rgba(0,0,0,.55)">
         <div style="background:#1C2B27;border-radius:36px;padding:22px 18px;color:#ECE7DA;min-height:600px;display:flex;flex-direction:column;gap:14px">
           <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:13px;color:#B4BCAA">Ranktrip Mover</span>
+            <span style="font-size:13px;color:#B4BCAA">MoversHub Mover</span>
             <span style="font-size:11px;background:#2E2318;color:#D9A574;padding:4px 9px;border-radius:999px">● Online</span>
           </div>
           <sc-if value="{{phone.pending}}" hint-placeholder-val="{{ true }}">
@@ -441,7 +441,7 @@ input[type=range]{accent-color:#0F0B09}
 <footer id="join" style="max-width:1400px;margin:20px auto 0;background:#2A3F39;color:#ECE7DA;border-radius:24px 24px 0 0;padding:80px 32px 32px">
   <div style="display:flex;gap:40px;flex-wrap:wrap;justify-content:space-between;align-items:flex-end">
     <div style="flex:1 1 380px">
-      <h2 class="disp" style="font-size:clamp(30px,3.6vw,44px);line-height:1.05;margin:0">Be first to move<br>with Ranktrip.</h2>
+      <h2 class="disp" style="font-size:clamp(30px,3.6vw,44px);line-height:1.05;margin:0">Be first to move<br>with MoversHub.</h2>
       <p style="color:#B4BCAA;font-size:15px;margin:14px 0 0">We'll email you once when we launch in your city.</p>
     </div>
     <div style="flex:1 1 380px;max-width:480px">
@@ -457,9 +457,9 @@ input[type=range]{accent-color:#0F0B09}
       </sc-if>
     </div>
   </div>
-  <div style="font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:700;letter-spacing:-0.05em;font-size:clamp(64px,15vw,220px);line-height:.8;margin:80px 0 32px;color:#34504A">RANKTRIP</div>
+  <div style="font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:700;letter-spacing:-0.05em;font-size:clamp(64px,15vw,220px);line-height:.8;margin:80px 0 32px;color:#34504A">MOVERSHUB</div>
   <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:#B4BCAA;border-top:1px solid #3A554E;padding-top:22px">
-    <span>© 2026 Ranktrip. Movers are independent businesses.</span>
+    <span>© 2026 MoversHub. Movers are independent businesses.</span>
     <span style="display:flex;gap:22px;flex-wrap:wrap"><a href="#how" style="color:#B4BCAA">How it works</a><a href="#movers" style="color:#B4BCAA">For movers</a><a href="#" style="color:#B4BCAA">Terms</a><a href="#" style="color:#B4BCAA">Privacy</a></span>
   </div>
 </footer>
@@ -600,7 +600,7 @@ class Component extends DCLogic {
       mov: ['Independent movers', 'Local businesses with their own vans. They set their rates, choose their jobs and carry liability for your goods.'],
       veh: ['Four vehicle classes', 'From a small van for a few boxes to a 7.5t box truck for a full family home.'],
       pri: ['Upfront price', 'You see the full price before you book — based on the van, the distance and the crew.'],
-      pay: ['Card payment', 'Pay in the app. Payments run through Stripe; Ranktrip never holds your money.'],
+      pay: ['Card payment', 'Pay in the app. Payments run through Stripe; MoversHub never holds your money.'],
       trk: ['Live tracking', 'Watch your mover on the map from pickup to drop-off, and share the link with family.'],
       dia: ['Diaspora corridors', 'Germany, Austria and Switzerland ↔ Kosovo, Albania and North Macedonia.']
     };
@@ -635,11 +635,11 @@ class Component extends DCLogic {
     const faqDefs = [
       ['Who are the movers?', 'Independent businesses and owner-drivers with their own vans. Each one sets their own rates per vehicle class and can accept or decline any job.'],
       ['How is the price calculated?', 'By vehicle class, distance and crew size, using the rates your mover set. You see the full price before you book — no negotiating on the day.'],
-      ['How do I pay?', 'By card in the app. Payments are processed by Stripe and go straight to the mover; Ranktrip takes a commission and never holds your money.'],
+      ['How do I pay?', 'By card in the app. Payments are processed by Stripe and go straight to the mover; MoversHub takes a commission and never holds your money.'],
       ['What if something gets damaged?', 'Movers carry liability for the goods they transport. Report any issue in the app and we help you reach the mover. [ADD YOUR CLAIMS PROCESS]'],
       ['Can I move between countries?', 'Yes. Diaspora corridors cover Germany, Austria and Switzerland to and from Kosovo, Albania and North Macedonia, with movers who do these routes regularly.'],
       ['Can I track my mover?', 'Yes — live on the map from the moment the mover is on the way, and you can share the tracking link with anyone.'],
-      ['How do I become a mover?', 'Sign up in the Ranktrip Mover app, add your van and documents, set your rates and start accepting jobs once you are approved.']
+      ['How do I become a mover?', 'Sign up in the MoversHub Mover app, add your van and documents, set your rates and start accepting jobs once you are approved.']
     ];
     const faq = faqDefs.map(([qq, aa], i) => ({
       q: qq, a: aa, open: s.faqOpen === i,

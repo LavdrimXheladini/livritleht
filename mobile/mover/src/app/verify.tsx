@@ -1,6 +1,6 @@
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 
-import { VerifyScreen } from '@ranktrip/mobile';
+import { VerifyScreen } from '@movershub/mobile';
 
 export default function Verify() {
   const { channel, target } = useLocalSearchParams<{ channel: string; target: string }>();

@@ -6,7 +6,7 @@
 
 import { z } from 'zod';
 
-import { LOCALES, photonSearchUrl, photonSuggestions, type PhotonFeature } from '../_shared/ranktrip/shared/index.ts';
+import { LOCALES, photonSearchUrl, photonSuggestions, type PhotonFeature } from '../_shared/movershub/shared/index.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
 
 const requestSchema = z
@@ -18,7 +18,7 @@ const requestSchema = z
   })
   .strict();
 
-const USER_AGENT = 'Ranktrip/0.1 (+https://github.com/LavdrimXheladini/livritleht)';
+const USER_AGENT = 'MoversHub/0.1 (+https://github.com/LavdrimXheladini/livritleht)';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return preflight(req);

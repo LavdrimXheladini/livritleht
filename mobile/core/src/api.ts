@@ -1,8 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { pickFrom, type QuoteResponse } from '@ranktrip/pricing';
-import { MARKET_RATES, type Currency, type GeoSuggestion, type Locale, type Place, type VehicleClass } from '@ranktrip/shared';
+import { pickFrom, type QuoteResponse } from '@movershub/pricing';
+import { MARKET_RATES, type Currency, type GeoSuggestion, type Locale, type Place, type VehicleClass } from '@movershub/shared';
 
 import { useAuth } from './auth-provider';
 

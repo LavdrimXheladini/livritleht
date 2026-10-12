@@ -2,6 +2,6 @@
 module.exports = {
   content: ['./src/**/*.{ts,tsx}', '../core/src/**/*.{ts,tsx}'],
   // nativewind first, then our tokens (colours, radii, shadows, fonts) on top.
-  presets: [require('nativewind/preset'), require('@ranktrip/ui/tailwind-preset')],
+  presets: [require('nativewind/preset'), require('@movershub/ui/tailwind-preset')],
   plugins: [],
 };

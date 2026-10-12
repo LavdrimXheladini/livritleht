@@ -7,10 +7,10 @@ import { GeistMono_400Regular } from '@expo-google-fonts/geist-mono/400Regular';
 import { GeistMono_500Medium } from '@expo-google-fonts/geist-mono/500Medium';
 import { useFonts } from 'expo-font';
 
-import { tokens } from '@ranktrip/ui';
+import { tokens } from '@movershub/ui';
 // Static Archivo instances at the token width/weight (React Native can't stretch a variable font).
-import archivoDisplay from '@ranktrip/ui/assets/fonts/Archivo-Display.ttf';
-import archivoWordmark from '@ranktrip/ui/assets/fonts/Archivo-Wordmark.ttf';
+import archivoDisplay from '@movershub/ui/assets/fonts/Archivo-Display.ttf';
+import archivoWordmark from '@movershub/ui/assets/fonts/Archivo-Wordmark.ttf';
 
 const nf = tokens.nativeFonts;
 

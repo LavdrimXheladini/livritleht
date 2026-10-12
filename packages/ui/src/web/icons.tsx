@@ -73,7 +73,7 @@ export const WarningIcon = (p: IconProps) => (
   </Svg>
 );
 
-/** Ranktrip mark: roof chevron over a baseline. */
+/** MoversHub mark: roof chevron over a baseline. */
 export const LogoMark = ({ size = 22, ...p }: IconProps) => (
   <Svg size={size} strokeWidth={3} {...p}>
     <path d="M3 15.5 L12 4 L21 15.5" strokeLinecap="butt" />

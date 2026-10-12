@@ -1,4 +1,4 @@
-# Ranktrip — Design handoff (v1, Oct 2026)
+# MoversHub — Design handoff (v1, Oct 2026)
 
 Visual direction for the **web** (`apps/web`) marketing site + booking entry, and the **live tracking / ops dashboard**. Mobile apps (`apps/customer`, `apps/mover`) should reuse the same tokens.
 
@@ -46,7 +46,7 @@ Shape: sheets radius 24px, cards 18–22px, inputs 14px, pills fully rounded. Sh
 ## 3. Screens & components
 
 ### Web — landing (`/[lang]`)
-1. **Nav** — left links (How it works · For movers · Markets · Live demo), centered logo mark + `RANKTRIP` wordmark, right language switcher (EN/SQ/PL/DE via `@ranktrip/i18n`) + primary pill "Get a price".
+1. **Nav** — left links (How it works · For movers · Markets · Live demo), centered logo mark + `MOVERSHUB` wordmark, right language switcher (EN/SQ/PL/DE via `@movershub/i18n`) + primary pill "Get a price".
 2. **Hero** — headline "Move anything, wherever home is." + one-line subtitle.
 3. **Quote widget** (card) — Pickup / Drop-off (Google Places autocomplete), swap button, **vehicle-class tiles** (name, typical vehicle, capacity chip, "from €X"), crew pills (driver / +1 / +2 helpers), summary (domestic/cross-border · km · duration) and primary CTA. After submit: dark confirmation strip with pulsing dot + link to tracking.
 4. **Live map device** — dark rounded frame, map with dashed full route + copper travelled route, copper pulsing van marker, drop-off pin, floating mover card (avatar, company name, status badge, progress bar, speed / km left / ETA tiles), compass.
@@ -75,17 +75,17 @@ Shape: sheets radius 24px, cards 18–22px, inputs 14px, pills fully rounded. Sh
 | Pricing chart with platform curves | Keep the chart visual only as **illustrative "how prices are built"** or drive it from real "from €X" data — never a platform price list | §1.1 |
 | Mover card shows a person's first name ("Arben K.") | "Your mover, [Company name]" + legal name / reg. no. on booking & receipt | §12, §13 |
 | Phone mockup "You earn €X" | **"Payout €X"**, price from the mover's own card | §12 |
-| Fee line "Price includes Ranktrip's fee" | Itemize platform commission / booking fee transparently | §1 ALLOWED |
+| Fee line "Price includes MoversHub's fee" | Itemize platform commission / booking fee transparently | §1 ALLOWED |
 | Cross-border notice in dashboard | Also show customs documentation notice for non-EU Balkan routes; prices in EUR | §11 |
 | Tracking runs in demo always | GPS only from `EN_ROUTE_TO_PICKUP` to `COMPLETED`/`CANCELLED`; share link expires when job ends | §13 |
 | Pickup address visible in mover request | Hide customer address until mover accepts | §13 |
-| Copy | Run all strings through the §12 banned-words test (no "our movers", "drivers", "salary", "Ranktrip guarantees") | §12 |
+| Copy | Run all strings through the §12 banned-words test (no "our movers", "drivers", "salary", "MoversHub guarantees") | §12 |
 | Placeholders `[LAUNCH DATE]`, `[CONTACT EMAIL]`, `[N]`, `€[X]`, claims process | Fill from real data / config; damage cover is an open item | §14 |
 
 ## 5. Suggested implementation order
 1. Update `packages/ui/tokens.json` from `tokens.proposed.json` (keep `success/warning/danger`), wire into Tailwind 4 `@theme` on web and NativeWind config on mobile.
 2. Fonts via `next/font`. Base shadcn/ui theme variables mapped to the tokens.
-3. Landing sections as components in `apps/web/src/components/landing/*`, all strings in `@ranktrip/i18n`.
+3. Landing sections as components in `apps/web/src/components/landing/*`, all strings in `@movershub/i18n`.
 4. Quote widget wired to the real pricing endpoint (no client-side prices).
 5. Tracking dashboard with `@vis.gl/react-google-maps` (dark map style JSON matching the dark tokens).
 6. Playwright: visual smoke for each section + the §13 copy/pricing tests.

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ranktrip",
+    "appName": "MoversHub",
     "continue": "Vazhdo",
     "back": "Kthehu",
     "loading": "Duke u ngarkuar…",
@@ -36,12 +36,12 @@
   },
   "customer": {
     "homeTitle": "Rezervo me një transportues",
-    "homeSubtitle": "Transportuesit në Ranktrip vendosin vetë çmimet e tyre. E shihni transportuesin dhe çmimin e tij para se të rezervoni.",
+    "homeSubtitle": "Transportuesit në MoversHub vendosin vetë çmimet e tyre. E shihni transportuesin dhe çmimin e tij para se të rezervoni.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",
     "bookingSoon": "Para pagesës do të shohësh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit të shënuar veçmas.",
     "priceLoading": "Duke kërkuar transportues…",
     "retry": "Provo përsëri",
-    "noMoversHere": "Ende nuk ka transportues në Ranktrip këtu."
+    "noMoversHere": "Ende nuk ka transportues në MoversHub këtu."
   },
   "mover": {
     "homeTitle": "Mirë se vjen, partner",
@@ -129,7 +129,7 @@
       "demo": "Demo live",
       "getPrice": "Merr çmimin",
       "language": "Gjuha",
-      "home": "Ranktrip – kreu",
+      "home": "MoversHub – kreu",
       "main": "Kryesore"
     },
     "hero": {
@@ -147,15 +147,15 @@
       "crew3": "+2 ndihmës",
       "seeMovers": "Shiko transportuesit",
       "note": "Tarifa shembull për demon — çdo transportues vendos vetë çmimin për çdo lloj automjeti. Para pagesës e sheh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit veçmas.",
-      "liveNote": "Çmimet nga transportuesit në Ranktrip — tarifat e vetë secilit transportues, për një ngarkesë tipike të secilës madhësi furgoni në katin përdhes. Çmimi yt varet nga sendet dhe katet; para pagesës sheh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit të shënuar veçmas.",
+      "liveNote": "Çmimet nga transportuesit në MoversHub — tarifat e vetë secilit transportues, për një ngarkesë tipike të secilës madhësi furgoni në katin përdhes. Çmimi yt varet nga sendet dhe katet; para pagesës sheh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit të shënuar veçmas.",
       "testNote": "Për momentin këta janë transportues testues me tarifa tipike vendore; transportuesit e vërtetë bashkohen në nisje.",
       "soonTitle": "Rezervimet hapen së shpejti.",
-      "soonText": "Regjistrohu në listën e pritjes dhe do të të njoftojmë me email kur transportuesit pranë teje të jenë në Ranktrip.",
+      "soonText": "Regjistrohu në listën e pritjes dhe do të të njoftojmë me email kur transportuesit pranë teje të jenë në MoversHub.",
       "soonLink": "Regjistrohu në listë →",
       "from": "nga",
       "offers": "Oferta: {{n}}",
       "noMovers": "Ende pa transportues këtu",
-      "noMoversHere": "Ende nuk ka transportues në Ranktrip këtu — bashkohu në listën e pritjes.",
+      "noMoversHere": "Ende nuk ka transportues në MoversHub këtu — bashkohu në listën e pritjes.",
       "local": "Brenda qytetit",
       "domestic": "Brenda vendit",
       "crossBorder": "Ndërkufitare",
@@ -206,7 +206,7 @@
       }
     },
     "story": {
-      "text": "Ranktrip lidh njerëzit që duhet të zhvendosen me <mov>transportues të pavarur</mov> që kanë furgonë. Zgjidh një <veh>lloj automjeti</veh>, shiko një <pri>çmim paraprak</pri>, paguaj me <pay>kartelë</pay> dhe <trk>ndiqe transportuesin live</trk> në hartë. Po zhvendosesh mes Gjermanisë, Austrisë ose Zvicrës dhe shtëpisë? <dia>Korridoret e diasporës</dia> janë ndërtuar pikërisht për këtë.",
+      "text": "MoversHub lidh njerëzit që duhet të zhvendosen me <mov>transportues të pavarur</mov> që kanë furgonë. Zgjidh një <veh>lloj automjeti</veh>, shiko një <pri>çmim paraprak</pri>, paguaj me <pay>kartelë</pay> dhe <trk>ndiqe transportuesin live</trk> në hartë. Po zhvendosesh mes Gjermanisë, Austrisë ose Zvicrës dhe shtëpisë? <dia>Korridoret e diasporës</dia> janë ndërtuar pikërisht për këtë.",
       "mov": {
         "title": "Transportues të pavarur",
         "text": "Biznese lokale me furgonët e tyre. Vendosin vetë tarifat, zgjedhin punët dhe mbajnë përgjegjësi për sendet e tua."
@@ -221,7 +221,7 @@
       },
       "pay": {
         "title": "Pagesë me kartelë",
-        "text": "Paguaj në aplikacion. Pagesat kalojnë përmes Stripe; Ranktrip nuk i mban kurrë paratë e tua."
+        "text": "Paguaj në aplikacion. Pagesat kalojnë përmes Stripe; MoversHub nuk i mban kurrë paratë e tua."
       },
       "trk": {
         "title": "Ndjekje live",
@@ -248,7 +248,7 @@
       "cta": "Bëhu transportues",
       "rates": {
         "title": "Furgoni yt, tarifat e tua.",
-        "text": "Vendos vetë çmimin për çdo automjet. Ti drejton biznesin — Ranktrip sjell klientët."
+        "text": "Vendos vetë çmimin për çdo automjet. Ti drejton biznesin — MoversHub sjell klientët."
       },
       "freedom": {
         "title": "Prano ose refuzo lirshëm.",
@@ -263,7 +263,7 @@
         "text": "Mbush furgonin në korridoret Gjermani, Austri dhe Zvicër ↔ Ballkan."
       },
       "phone": {
-        "app": "Ranktrip Partner",
+        "app": "MoversHub Partner",
         "online": "● Online",
         "newRequest": "Kërkesë e re",
         "payout": "Pagesa për ty",
@@ -325,7 +325,7 @@
         },
         "q3": {
           "q": "Si paguaj?",
-          "a": "Me kartelë në aplikacion. Pagesat përpunohen nga Stripe dhe shkojnë te transportuesi; Ranktrip merr një komision dhe nuk i mban kurrë paratë e tua."
+          "a": "Me kartelë në aplikacion. Pagesat përpunohen nga Stripe dhe shkojnë te transportuesi; MoversHub merr një komision dhe nuk i mban kurrë paratë e tua."
         },
         "q4": {
           "q": "Po nëse dëmtohet diçka?",
@@ -341,12 +341,12 @@
         },
         "q7": {
           "q": "Si bëhem transportues?",
-          "a": "Regjistrohu në aplikacionin Ranktrip Partner, shto kompaninë, furgonin dhe dokumentet, vendos tarifat e tua dhe fillo të pranosh punë pasi të verifikohesh."
+          "a": "Regjistrohu në aplikacionin MoversHub Partner, shto kompaninë, furgonin dhe dokumentet, vendos tarifat e tua dhe fillo të pranosh punë pasi të verifikohesh."
         }
       }
     },
     "footer": {
-      "title": "Bëhu i pari që zhvendoset\nme Ranktrip.",
+      "title": "Bëhu i pari që zhvendoset\nme MoversHub.",
       "subtitle": "Do të të shkruajmë një herë kur të nisim në qytetin tënd.",
       "emailLabel": "Adresa e email-it",
       "placeholder": "ti@email.com",
@@ -356,7 +356,7 @@
       "consent": "Email-in tënd e përdorim vetëm për këtë njoftim nisjeje.",
       "invalid": "Shkruaj një adresë email të vlefshme.",
       "error": "Diçka shkoi keq. Provo përsëri.",
-      "legal": "© {{year}} Ranktrip. Transportuesit janë biznese të pavarura."
+      "legal": "© {{year}} MoversHub. Transportuesit janë biznese të pavarura."
     }
   },
   "dashboard": {
@@ -364,7 +364,7 @@
     "subtitle": "Çdo punë aktive në hartë, në kohë reale",
     "play": "Luaj",
     "pause": "Pauzë",
-    "ops": "Operacionet · Ranktrip",
+    "ops": "Operacionet · MoversHub",
     "note": "Të dhëna të simuluara për demonstrim: tri punë shembull nga transportues shembull. Rrugët dhe distancat janë reale; çmimet përdorin të njëjtat tarifa shembull si faqja kryesore. Në një rezervim real, çdo transportues vendos çmimin e vet.",
     "rail": {
       "label": "Paneli",

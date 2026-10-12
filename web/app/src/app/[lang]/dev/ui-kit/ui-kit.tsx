@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { formatMoney, type Locale, type VehicleClass } from '@ranktrip/shared';
+import { formatMoney, type Locale, type VehicleClass } from '@movershub/shared';
 import {
   Accordion,
   AccordionItem,
@@ -23,7 +23,7 @@ import {
   Timeline,
   VanIcon,
   VehicleClassTile,
-} from '@ranktrip/ui/web';
+} from '@movershub/ui/web';
 
 // DEV-ONLY sample content (English, not translated): this page 404s in production.
 // Prices are fake "from" labels — real ones come from the server quote (COMPLIANCE §1.1).
@@ -53,7 +53,7 @@ export function UiKit({ locale }: { locale: Locale }) {
       <Sheet tone="cream" padding="section">
         <div className="mx-auto mb-12 flex w-fit flex-col items-center gap-1">
           <LogoMark className="text-ink-900" />
-          <span className="type-wordmark text-[11px]">RANKTRIP</span>
+          <span className="type-wordmark text-[11px]">MOVERSHUB</span>
         </div>
         <SectionTitle
           as="h1"

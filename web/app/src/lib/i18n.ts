@@ -1,6 +1,6 @@
 import { createInstance, type TFunction } from 'i18next';
 
-import { i18nOptions, type Locale } from '@ranktrip/i18n';
+import { i18nOptions, type Locale } from '@movershub/i18n';
 
 /** Server-side translator. Resources are bundled, so init is synchronous. */
 export function getT(locale: Locale): TFunction {

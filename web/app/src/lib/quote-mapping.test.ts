@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { FromPrice, QuoteResponse } from '@ranktrip/pricing';
-import { VEHICLE_CLASSES, type Place, type VehicleClass } from '@ranktrip/shared';
+import type { FromPrice, QuoteResponse } from '@movershub/pricing';
+import { VEHICLE_CLASSES, type Place, type VehicleClass } from '@movershub/shared';
 
 import type { CrewPrices, SampleRoute } from './landing-types';
 import { fromLive, fromSample } from './quote-mapping';

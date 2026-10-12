@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react';
 import { Text, View } from 'react-native';
 
-import { Pill, type IconProps } from '@ranktrip/mobile';
-import { colors } from '@ranktrip/ui';
+import { Pill, type IconProps } from '@movershub/mobile';
+import { colors } from '@movershub/ui';
 
 /**
  * Copper icon + title + text, like the website's mover feature list. Screen readers read it as one

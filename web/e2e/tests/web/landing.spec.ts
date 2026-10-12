@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { LOCALES, resources } from '@ranktrip/i18n';
+import { LOCALES, resources } from '@movershub/i18n';
 
 const en = resources.en.translation;
 
@@ -30,7 +30,7 @@ test('quote widget: five classes, "from" prices, labelled as sample rates (COMPL
     await expect(tile).toContainText(new RegExp(`${en.landing.quote.from}\\s*€\\d+`));
   }
   await expect(quote.getByText(en.landing.quote.note)).toBeVisible();
-  await expect(quote).not.toContainText(/includes Ranktrip's fee/i);
+  await expect(quote).not.toContainText(/includes MoversHub's fee/i);
 });
 
 test('picking a popular route loads it into the quote widget and the mover phone', async ({ page }) => {

@@ -1,6 +1,6 @@
-# Ranktrip
+# MoversHub
 
-Ranktrip is a **moving marketplace** for Kosovo, the Balkans and Poland, including the diaspora
+MoversHub is a **moving marketplace** for Kosovo, the Balkans and Poland, including the diaspora
 routes to Germany, Austria and Switzerland. Customers book an **independent mover with a van** — a
 single item, a small move, a full home or a cross-border move:
 
@@ -9,7 +9,7 @@ single item, a small move, a full home or a cross-border move:
 3. Book and pay by card
 4. Track the mover live on a map
 
-Ranktrip is a **pure middleman**: movers are independent businesses that set their own prices and
+MoversHub is a **pure middleman**: movers are independent businesses that set their own prices and
 accept or decline jobs freely; payments are held and split by Stripe. The legal rules behind this are
 in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 
@@ -19,7 +19,7 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 |---|---|
 | **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search (also within one city), real map and route, live "from" prices from movers' rate cards (test movers for now), mover section, FAQ, waitlist; live-moves dashboard demo; sign-in by email link |
 | **Customer app** (`mobile/customer`) | Expo app in the website's design: public home with address search and live "from" prices (like the website), sign-in screens (booking flow not built yet) |
-| **Mover app** (`mobile/mover`) | Expo app "Ranktrip Partner" (dark design): intro, example job request priced by the live quote, setup checklist after sign-in (onboarding / jobs not built yet) |
+| **Mover app** (`mobile/mover`) | Expo app "MoversHub Partner" (dark design): intro, example job request priced by the live quote, setup checklist after sign-in (onboarding / jobs not built yet) |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
 | **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first; prices are shown exactly (to the cent; whole lek, denar and dinar) |
 | **Address search for the apps** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — visitors' IP addresses never reach the geocoder |
@@ -68,7 +68,7 @@ git switch develop
 pnpm install
 ```
 
-In VS Code, open **`ranktrip.code-workspace`** (File → Open Workspace from File…): the three apps — website,
+In VS Code, open **`movershub.code-workspace`** (File → Open Workspace from File…): the three apps — website,
 customer app, mover app — show as separate folders, next to the shared code, database and tests.
 
 ### 3. Add the environment files
@@ -103,7 +103,7 @@ On a machine with little free memory, run **one** app at a time.
 pnpm lint          # ESLint (2 packages at a time)
 pnpm typecheck     # TypeScript (2 packages at a time)
 pnpm test          # unit tests (Vitest), incl. the banned-wording check, + the COMPLIANCE-TESTS.md check
-pnpm --filter @ranktrip/e2e install-browsers   # once
+pnpm --filter @movershub/e2e install-browsers   # once
 pnpm e2e           # Playwright against a production build on port 3100 (offline test data)
 pnpm e2e:visual    # screenshots of the website (5 languages, phone + laptop) compared with the saved ones
 pnpm e2e:apps      # screenshots of both phone apps in their browser preview, one app at a time

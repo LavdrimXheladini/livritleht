@@ -1,6 +1,6 @@
 // Client-safe types for the landing demo. Data is built on the server (landing-example.ts,
 // server-only; quote-action.ts) and passed to client components.
-import type { Currency, MoveScope, VehicleClass } from '@ranktrip/shared';
+import type { Currency, MoveScope, VehicleClass } from '@movershub/shared';
 
 import type { DemoPlaceId, LineCoords } from './geo/types';
 

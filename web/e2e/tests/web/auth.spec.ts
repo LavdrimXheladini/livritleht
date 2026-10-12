@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { resources } from '@ranktrip/i18n';
+import { resources } from '@movershub/i18n';
 
 const en = resources.en.translation;
 const sq = resources.sq.translation;
@@ -14,7 +14,7 @@ test('bare URL redirects to the browser language', async ({ browser }) => {
   await context.close();
 });
 
-test('landing page presents Ranktrip as a platform, not the mover (COMPLIANCE §4)', async ({ page }) => {
+test('landing page presents MoversHub as a platform, not the mover (COMPLIANCE §4)', async ({ page }) => {
   await page.goto('/en');
   await expect(page.getByText(/Movers are independent businesses\./)).toBeVisible();
   await expect(page.locator('body')).not.toContainText(/our movers|our team|our vans/i);

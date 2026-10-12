@@ -2,7 +2,7 @@ import 'server-only';
 
 import type { TFunction } from 'i18next';
 
-import type { Place, VehicleClass } from '@ranktrip/shared';
+import type { Place, VehicleClass } from '@movershub/shared';
 
 import { demoPlace } from './geo/types';
 import { sampleQuote } from './landing-example';

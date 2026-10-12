@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
-import type { Locale } from '@ranktrip/shared';
+import type { Locale } from '@movershub/shared';
 
 import { createClient } from '@/lib/supabase/client';
 

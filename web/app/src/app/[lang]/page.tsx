@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { isLocale } from '@ranktrip/i18n';
-import { SectionTitle, Sheet } from '@ranktrip/ui/web';
+import { isLocale } from '@movershub/i18n';
+import { SectionTitle, Sheet } from '@movershub/ui/web';
 
 import { FaqSection } from '@/components/landing/faq-section';
 import { LandingStateProvider } from '@/components/landing/landing-state';

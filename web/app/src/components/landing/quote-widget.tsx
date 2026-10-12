@@ -3,8 +3,8 @@
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { VEHICLE_CLASSES, VEHICLE_CLASS_INFO, formatMoney, formatNumber, type Currency, type Locale } from '@ranktrip/shared';
-import { Button, CrewPills, SwapIcon, VehicleClassTile, cardVariants } from '@ranktrip/ui/web';
+import { VEHICLE_CLASSES, VEHICLE_CLASS_INFO, formatMoney, formatNumber, type Currency, type Locale } from '@movershub/shared';
+import { Button, CrewPills, SwapIcon, VehicleClassTile, cardVariants } from '@movershub/ui/web';
 
 import { cn } from '@/lib/utils';
 

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ranktrip",
+    "appName": "MoversHub",
     "continue": "Continue",
     "back": "Back",
     "loading": "Loading…",
@@ -36,12 +36,12 @@
   },
   "customer": {
     "homeTitle": "Book with a mover",
-    "homeSubtitle": "Movers on Ranktrip set their own prices. You see your mover and their price before you book.",
+    "homeSubtitle": "Movers on MoversHub set their own prices. You see your mover and their price before you book.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",
     "bookingSoon": "Before you pay, you'll see your mover and their fixed total, with the booking fee listed separately.",
     "priceLoading": "Finding movers…",
     "retry": "Try again",
-    "noMoversHere": "No movers on Ranktrip here yet."
+    "noMoversHere": "No movers on MoversHub here yet."
   },
   "mover": {
     "homeTitle": "Welcome, partner",
@@ -129,7 +129,7 @@
       "demo": "Live demo",
       "getPrice": "Get a price",
       "language": "Language",
-      "home": "Ranktrip home",
+      "home": "MoversHub home",
       "main": "Main"
     },
     "hero": {
@@ -147,15 +147,15 @@
       "crew3": "+2 helpers",
       "seeMovers": "See movers",
       "note": "Sample rates for the demo — each mover sets their own price per vehicle class. Before you pay, you see your mover and their fixed total, with the booking fee listed separately.",
-      "liveNote": "Prices from movers on Ranktrip — each mover's own rates, for a typical load of each van size at ground floor. Your price depends on your items and floors; before you pay, you see your mover and their fixed total, with the booking fee listed separately.",
+      "liveNote": "Prices from movers on MoversHub — each mover's own rates, for a typical load of each van size at ground floor. Your price depends on your items and floors; before you pay, you see your mover and their fixed total, with the booking fee listed separately.",
       "testNote": "For now these are test movers with typical local rates; real movers join at launch.",
       "soonTitle": "Booking opens soon.",
-      "soonText": "Join the waitlist and we'll email you when movers near you are on Ranktrip.",
+      "soonText": "Join the waitlist and we'll email you when movers near you are on MoversHub.",
       "soonLink": "Join the waitlist →",
       "from": "from",
       "offers": "Offers: {{n}}",
       "noMovers": "No mover here yet",
-      "noMoversHere": "No movers on Ranktrip here yet — join the waitlist.",
+      "noMoversHere": "No movers on MoversHub here yet — join the waitlist.",
       "local": "Local",
       "domestic": "Domestic",
       "crossBorder": "Cross-border",
@@ -206,7 +206,7 @@
       }
     },
     "story": {
-      "text": "Ranktrip connects people who need to move with <mov>independent movers</mov> who own vans. Pick a <veh>vehicle class</veh>, see an <pri>upfront price</pri>, pay by <pay>card</pay> and <trk>track your mover live</trk> on the map. Moving between Germany, Austria or Switzerland and home? Our <dia>diaspora corridors</dia> are built for exactly that.",
+      "text": "MoversHub connects people who need to move with <mov>independent movers</mov> who own vans. Pick a <veh>vehicle class</veh>, see an <pri>upfront price</pri>, pay by <pay>card</pay> and <trk>track your mover live</trk> on the map. Moving between Germany, Austria or Switzerland and home? Our <dia>diaspora corridors</dia> are built for exactly that.",
       "mov": {
         "title": "Independent movers",
         "text": "Local businesses with their own vans. They set their rates, choose their jobs and carry liability for your goods."
@@ -221,7 +221,7 @@
       },
       "pay": {
         "title": "Card payment",
-        "text": "Pay in the app. Payments run through Stripe; Ranktrip never holds your money."
+        "text": "Pay in the app. Payments run through Stripe; MoversHub never holds your money."
       },
       "trk": {
         "title": "Live tracking",
@@ -248,7 +248,7 @@
       "cta": "Become a mover",
       "rates": {
         "title": "Your van, your rates.",
-        "text": "Set your own price per vehicle class. You run your business — Ranktrip brings the customers."
+        "text": "Set your own price per vehicle class. You run your business — MoversHub brings the customers."
       },
       "freedom": {
         "title": "Accept or decline freely.",
@@ -263,7 +263,7 @@
         "text": "Fill your van on the Germany, Austria and Switzerland ↔ Balkans corridors."
       },
       "phone": {
-        "app": "Ranktrip Partner",
+        "app": "MoversHub Partner",
         "online": "● Online",
         "newRequest": "New request",
         "payout": "Payout",
@@ -325,7 +325,7 @@
         },
         "q3": {
           "q": "How do I pay?",
-          "a": "By card in the app. Payments are processed by Stripe and go straight to the mover; Ranktrip takes a commission and never holds your money."
+          "a": "By card in the app. Payments are processed by Stripe and go straight to the mover; MoversHub takes a commission and never holds your money."
         },
         "q4": {
           "q": "What if something gets damaged?",
@@ -341,12 +341,12 @@
         },
         "q7": {
           "q": "How do I become a mover?",
-          "a": "Sign up in the Ranktrip Partner app, add your van and documents, set your rates and start accepting jobs once you are approved."
+          "a": "Sign up in the MoversHub Partner app, add your van and documents, set your rates and start accepting jobs once you are approved."
         }
       }
     },
     "footer": {
-      "title": "Be first to move\nwith Ranktrip.",
+      "title": "Be first to move\nwith MoversHub.",
       "subtitle": "We'll email you once when we launch in your city.",
       "emailLabel": "Email address",
       "placeholder": "you@email.com",
@@ -356,7 +356,7 @@
       "consent": "We use your email only for this launch announcement.",
       "invalid": "Enter a valid email address.",
       "error": "Something went wrong. Please try again.",
-      "legal": "© {{year}} Ranktrip. Movers are independent businesses."
+      "legal": "© {{year}} MoversHub. Movers are independent businesses."
     }
   },
   "dashboard": {
@@ -364,7 +364,7 @@
     "subtitle": "Every active job on the map, in real time",
     "play": "Play",
     "pause": "Pause",
-    "ops": "Ops · Ranktrip",
+    "ops": "Ops · MoversHub",
     "note": "Simulated data for the demo: three sample jobs by sample movers. Routes and distances are real; prices use the same sample rates as the home page. On a real booking each mover sets their own price.",
     "rail": {
       "label": "Dashboard",

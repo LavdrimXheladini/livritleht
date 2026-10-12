@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { isLocale, type Locale } from '@ranktrip/i18n';
+import { isLocale, type Locale } from '@movershub/i18n';
 
 import { getT } from '@/lib/i18n';
 import { createClient } from '@/lib/supabase/server';

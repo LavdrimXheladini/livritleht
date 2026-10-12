@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Text, View, useWindowDimensions } from 'react-native';
 
-import { Button, Display, Screen, Wordmark, useAuth } from '@ranktrip/mobile';
+import { Button, Display, Screen, Wordmark, useAuth } from '@movershub/mobile';
 
 import { QuoteCard } from '@/components/quote-card';
 

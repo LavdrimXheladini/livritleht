@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ranktrip",
+    "appName": "MoversHub",
     "continue": "Nastavi",
     "back": "Nazad",
     "loading": "Učitavanje…",
@@ -36,12 +36,12 @@
   },
   "customer": {
     "homeTitle": "Rezerviši selidbu kod prevoznika",
-    "homeSubtitle": "Prevoznici na Ranktripu sami određuju svoje cene. Pre rezervacije vidite prevoznika i njegovu cenu.",
+    "homeSubtitle": "Prevoznici na MoversHubu sami određuju svoje cene. Pre rezervacije vidite prevoznika i njegovu cenu.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",
     "bookingSoon": "Pre plaćanja videćete prevoznika i njegovu fiksnu cenu, a naknada za rezervaciju biće navedena posebno.",
     "priceLoading": "Tražimo prevoznike…",
     "retry": "Pokušaj ponovo",
-    "noMoversHere": "Ovde još nema prevoznika na Ranktripu."
+    "noMoversHere": "Ovde još nema prevoznika na MoversHubu."
   },
   "mover": {
     "homeTitle": "Dobro došli, partneru",
@@ -129,7 +129,7 @@
       "demo": "Demo uživo",
       "getPrice": "Saznaj cenu",
       "language": "Jezik",
-      "home": "Ranktrip – početna",
+      "home": "MoversHub – početna",
       "main": "Glavno"
     },
     "hero": {
@@ -147,15 +147,15 @@
       "crew3": "+2 pomoćnika",
       "seeMovers": "Pogledaj prevoznike",
       "note": "Primer tarifa za demo — svaki prevoznik sam određuje cenu za svaku vrstu vozila. Pre plaćanja vidite prevoznika i njegovu fiksnu cenu, a naknadu za rezervaciju posebno.",
-      "liveNote": "Cene od prevoznika na Ranktripu — sopstvene tarife svakog prevoznika, za tipičan tovar svake veličine vozila, u prizemlju. Vaša cena zavisi od stvari i spratova; pre plaćanja vidite prevoznika i njegovu fiksnu cenu, a naknada za rezervaciju je navedena posebno.",
+      "liveNote": "Cene od prevoznika na MoversHubu — sopstvene tarife svakog prevoznika, za tipičan tovar svake veličine vozila, u prizemlju. Vaša cena zavisi od stvari i spratova; pre plaćanja vidite prevoznika i njegovu fiksnu cenu, a naknada za rezervaciju je navedena posebno.",
       "testNote": "Za sada su ovo test prevoznici sa tipičnim lokalnim cenama; pravi prevoznici se pridružuju na početku rada.",
       "soonTitle": "Rezervacije uskoro.",
-      "soonText": "Prijavite se na listu čekanja i javićemo vam se mejlom kada prevoznici u vašoj blizini budu na Ranktripu.",
+      "soonText": "Prijavite se na listu čekanja i javićemo vam se mejlom kada prevoznici u vašoj blizini budu na MoversHubu.",
       "soonLink": "Prijavi se na listu →",
       "from": "od",
       "offers": "Ponude: {{n}}",
       "noMovers": "Još nema prevoznika ovde",
-      "noMoversHere": "Ovde još nema prevoznika na Ranktripu — prijavite se na listu čekanja.",
+      "noMoversHere": "Ovde još nema prevoznika na MoversHubu — prijavite se na listu čekanja.",
       "local": "Lokalno",
       "domestic": "Domaće",
       "crossBorder": "Međunarodno",
@@ -206,7 +206,7 @@
       }
     },
     "story": {
-      "text": "Ranktrip povezuje ljude kojima treba selidba sa <mov>nezavisnim prevoznicima</mov> koji imaju kombije. Izaberite <veh>vrstu vozila</veh>, pogledajte <pri>cenu unapred</pri>, platite <pay>karticom</pay> i <trk>pratite prevoznika uživo</trk> na mapi. Selite se između Nemačke, Austrije ili Švajcarske i kuće? <dia>Koridori dijaspore</dia> napravljeni su upravo za to.",
+      "text": "MoversHub povezuje ljude kojima treba selidba sa <mov>nezavisnim prevoznicima</mov> koji imaju kombije. Izaberite <veh>vrstu vozila</veh>, pogledajte <pri>cenu unapred</pri>, platite <pay>karticom</pay> i <trk>pratite prevoznika uživo</trk> na mapi. Selite se između Nemačke, Austrije ili Švajcarske i kuće? <dia>Koridori dijaspore</dia> napravljeni su upravo za to.",
       "mov": {
         "title": "Nezavisni prevoznici",
         "text": "Lokalne firme sa sopstvenim kombijima. Same određuju tarife, biraju poslove i odgovaraju za vaše stvari."
@@ -221,7 +221,7 @@
       },
       "pay": {
         "title": "Plaćanje karticom",
-        "text": "Platite u aplikaciji. Plaćanja idu preko Stripe-a; Ranktrip nikada ne drži vaš novac."
+        "text": "Platite u aplikaciji. Plaćanja idu preko Stripe-a; MoversHub nikada ne drži vaš novac."
       },
       "trk": {
         "title": "Praćenje uživo",
@@ -248,7 +248,7 @@
       "cta": "Postanite prevoznik",
       "rates": {
         "title": "Vaš kombi, vaše tarife.",
-        "text": "Sami određujete cenu za svako vozilo. Vi vodite posao — Ranktrip dovodi klijente."
+        "text": "Sami određujete cenu za svako vozilo. Vi vodite posao — MoversHub dovodi klijente."
       },
       "freedom": {
         "title": "Prihvatite ili odbijte slobodno.",
@@ -263,7 +263,7 @@
         "text": "Popunite kombi na koridorima Nemačka, Austrija i Švajcarska ↔ Balkan."
       },
       "phone": {
-        "app": "Ranktrip Partner",
+        "app": "MoversHub Partner",
         "online": "● Online",
         "newRequest": "Novi zahtev",
         "payout": "Isplata",
@@ -325,7 +325,7 @@
         },
         "q3": {
           "q": "Kako plaćam?",
-          "a": "Karticom u aplikaciji. Plaćanja obrađuje Stripe i idu prevozniku; Ranktrip uzima proviziju i nikada ne drži vaš novac."
+          "a": "Karticom u aplikaciji. Plaćanja obrađuje Stripe i idu prevozniku; MoversHub uzima proviziju i nikada ne drži vaš novac."
         },
         "q4": {
           "q": "Šta ako se nešto ošteti?",
@@ -341,12 +341,12 @@
         },
         "q7": {
           "q": "Kako da postanem prevoznik?",
-          "a": "Registrujte se u aplikaciji Ranktrip Partner, dodajte firmu, kombi i dokumente, odredite svoje tarife i počnite da prihvatate poslove kada budete verifikovani."
+          "a": "Registrujte se u aplikaciji MoversHub Partner, dodajte firmu, kombi i dokumente, odredite svoje tarife i počnite da prihvatate poslove kada budete verifikovani."
         }
       }
     },
     "footer": {
-      "title": "Budite prvi koji se seli\nsa Ranktripom.",
+      "title": "Budite prvi koji se seli\nsa MoversHubom.",
       "subtitle": "Javićemo vam se jednom kada krenemo u vašem gradu.",
       "emailLabel": "Email adresa",
       "placeholder": "vi@email.com",
@@ -356,7 +356,7 @@
       "consent": "Vaš email koristimo samo za ovo obaveštenje o početku rada.",
       "invalid": "Unesite ispravnu email adresu.",
       "error": "Nešto nije u redu. Pokušajte ponovo.",
-      "legal": "© {{year}} Ranktrip. Prevoznici su nezavisne firme."
+      "legal": "© {{year}} MoversHub. Prevoznici su nezavisne firme."
     }
   },
   "dashboard": {
@@ -364,7 +364,7 @@
     "subtitle": "Svaki aktivni posao na mapi, u realnom vremenu",
     "play": "Pokreni",
     "pause": "Pauza",
-    "ops": "Operacije · Ranktrip",
+    "ops": "Operacije · MoversHub",
     "note": "Simulirani podaci za demo: tri primera poslova primera prevoznika. Rute i udaljenosti su stvarne; cene koriste iste primere tarifa kao početna stranica. Kod prave rezervacije svaki prevoznik određuje svoju cenu.",
     "rail": {
       "label": "Kontrolna tabla",

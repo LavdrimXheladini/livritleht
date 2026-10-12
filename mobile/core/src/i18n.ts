@@ -2,7 +2,7 @@ import { getLocales } from 'expo-localization';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { i18nOptions, resolveLocale, type Locale } from '@ranktrip/i18n';
+import { i18nOptions, resolveLocale, type Locale } from '@movershub/i18n';
 
 /** Initialise i18next once with the device language. Call at the top of the root layout. */
 export function initI18n(): Locale {

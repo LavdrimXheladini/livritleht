@@ -2,14 +2,14 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { Button, Screen, Wordmark, useAuth } from '@ranktrip/mobile';
+import { Button, Screen, Wordmark, useAuth } from '@movershub/mobile';
 
 import { ExampleRequest } from '@/components/example-request';
 import { PartnerIntro } from '@/components/partner-intro';
 import { SetupChecklist } from '@/components/setup-checklist';
 
 /**
- * Home (public, see _layout.tsx): signed out it introduces Ranktrip Partner, signed in it is the
+ * Home (public, see _layout.tsx): signed out it introduces MoversHub Partner, signed in it is the
  * mover's start page. Both end with an example job request priced by the live server quote.
  */
 export default function Home() {

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Archivo, Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 
-import { LOCALES, isLocale } from '@ranktrip/i18n';
+import { LOCALES, isLocale } from '@movershub/i18n';
 
 import { BackToTop } from '@/components/back-to-top';
 import { I18nProvider } from '@/components/i18n-provider';

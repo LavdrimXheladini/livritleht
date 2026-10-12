@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { Card, Sheet } from '@ranktrip/ui/web';
+import { Card, Sheet } from '@movershub/ui/web';
 
 const PHRASES = ['mov', 'veh', 'pri', 'pay', 'trk', 'dia'] as const;
 type Phrase = (typeof PHRASES)[number];

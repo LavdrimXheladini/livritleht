@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { isLocale, resolveLocale } from '@ranktrip/shared';
+import { isLocale, resolveLocale } from '@movershub/shared';
 
 import { supabaseKey, supabaseUrl } from './lib/supabase/env';
 

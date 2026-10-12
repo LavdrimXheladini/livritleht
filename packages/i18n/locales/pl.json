@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ranktrip",
+    "appName": "MoversHub",
     "continue": "Dalej",
     "back": "Wstecz",
     "loading": "Ładowanie…",
@@ -36,12 +36,12 @@
   },
   "customer": {
     "homeTitle": "Zarezerwuj przewoźnika",
-    "homeSubtitle": "Przewoźnicy w Ranktrip sami ustalają swoje ceny. Przed rezerwacją widzisz przewoźnika i jego cenę.",
+    "homeSubtitle": "Przewoźnicy w MoversHub sami ustalają swoje ceny. Przed rezerwacją widzisz przewoźnika i jego cenę.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",
     "bookingSoon": "Przed płatnością zobaczysz przewoźnika i jego stałą cenę, a opłata rezerwacyjna będzie podana osobno.",
     "priceLoading": "Szukamy przewoźników…",
     "retry": "Spróbuj ponownie",
-    "noMoversHere": "Na razie brak przewoźników w Ranktrip w tej okolicy."
+    "noMoversHere": "Na razie brak przewoźników w MoversHub w tej okolicy."
   },
   "mover": {
     "homeTitle": "Witaj, partnerze",
@@ -129,7 +129,7 @@
       "demo": "Demo na żywo",
       "getPrice": "Sprawdź cenę",
       "language": "Język",
-      "home": "Ranktrip – strona główna",
+      "home": "MoversHub – strona główna",
       "main": "Główne"
     },
     "hero": {
@@ -147,15 +147,15 @@
       "crew3": "+2 pomocników",
       "seeMovers": "Zobacz przewoźników",
       "note": "Przykładowe stawki na potrzeby demo — każdy przewoźnik sam ustala cenę dla każdego rodzaju pojazdu. Przed płatnością widzisz przewoźnika i jego stałą cenę, a opłatę rezerwacyjną osobno.",
-      "liveNote": "Ceny od przewoźników w Ranktrip — własne stawki każdego przewoźnika, dla typowego ładunku każdej wielkości auta, na parterze. Twoja cena zależy od rzeczy i pięter; przed płatnością widzisz przewoźnika i jego stałą cenę, a opłata rezerwacyjna jest podana osobno.",
+      "liveNote": "Ceny od przewoźników w MoversHub — własne stawki każdego przewoźnika, dla typowego ładunku każdej wielkości auta, na parterze. Twoja cena zależy od rzeczy i pięter; przed płatnością widzisz przewoźnika i jego stałą cenę, a opłata rezerwacyjna jest podana osobno.",
       "testNote": "Na razie to testowi przewoźnicy z typowymi lokalnymi stawkami; prawdziwi przewoźnicy dołączą przy starcie.",
       "soonTitle": "Rezerwacje już wkrótce.",
-      "soonText": "Zapisz się na listę, a napiszemy do Ciebie, gdy przewoźnicy w Twojej okolicy pojawią się w Ranktrip.",
+      "soonText": "Zapisz się na listę, a napiszemy do Ciebie, gdy przewoźnicy w Twojej okolicy pojawią się w MoversHub.",
       "soonLink": "Zapisz się na listę →",
       "from": "od",
       "offers": "Oferty: {{n}}",
       "noMovers": "Brak przewoźnika w okolicy",
-      "noMoversHere": "Na razie brak przewoźników w Ranktrip w tej okolicy — zapisz się na listę oczekujących.",
+      "noMoversHere": "Na razie brak przewoźników w MoversHub w tej okolicy — zapisz się na listę oczekujących.",
       "local": "Lokalne",
       "domestic": "Krajowe",
       "crossBorder": "Międzynarodowe",
@@ -206,7 +206,7 @@
       }
     },
     "story": {
-      "text": "Ranktrip łączy osoby, które się przeprowadzają, z <mov>niezależnymi przewoźnikami</mov> z własnymi busami. Wybierz <veh>rodzaj pojazdu</veh>, zobacz <pri>cenę z góry</pri>, zapłać <pay>kartą</pay> i <trk>śledź przewoźnika na żywo</trk> na mapie. Przeprowadzasz się między Niemcami, Austrią lub Szwajcarią a domem? <dia>Korytarze diaspory</dia> są stworzone właśnie do tego.",
+      "text": "MoversHub łączy osoby, które się przeprowadzają, z <mov>niezależnymi przewoźnikami</mov> z własnymi busami. Wybierz <veh>rodzaj pojazdu</veh>, zobacz <pri>cenę z góry</pri>, zapłać <pay>kartą</pay> i <trk>śledź przewoźnika na żywo</trk> na mapie. Przeprowadzasz się między Niemcami, Austrią lub Szwajcarią a domem? <dia>Korytarze diaspory</dia> są stworzone właśnie do tego.",
       "mov": {
         "title": "Niezależni przewoźnicy",
         "text": "Lokalne firmy z własnymi busami. Same ustalają stawki, wybierają zlecenia i odpowiadają za Twoje rzeczy."
@@ -221,7 +221,7 @@
       },
       "pay": {
         "title": "Płatność kartą",
-        "text": "Płacisz w aplikacji. Płatności obsługuje Stripe; Ranktrip nigdy nie przechowuje Twoich pieniędzy."
+        "text": "Płacisz w aplikacji. Płatności obsługuje Stripe; MoversHub nigdy nie przechowuje Twoich pieniędzy."
       },
       "trk": {
         "title": "Śledzenie na żywo",
@@ -248,7 +248,7 @@
       "cta": "Zostań przewoźnikiem",
       "rates": {
         "title": "Twój bus, Twoje stawki.",
-        "text": "Sam ustalasz cenę dla każdego pojazdu. Prowadzisz własną firmę — Ranktrip przyprowadza klientów."
+        "text": "Sam ustalasz cenę dla każdego pojazdu. Prowadzisz własną firmę — MoversHub przyprowadza klientów."
       },
       "freedom": {
         "title": "Przyjmuj lub odrzucaj swobodnie.",
@@ -263,7 +263,7 @@
         "text": "Zapełnij busa na trasach Niemcy, Austria i Szwajcaria ↔ Bałkany."
       },
       "phone": {
-        "app": "Ranktrip Partner",
+        "app": "MoversHub Partner",
         "online": "● Online",
         "newRequest": "Nowe zlecenie",
         "payout": "Wypłata",
@@ -325,7 +325,7 @@
         },
         "q3": {
           "q": "Jak płacę?",
-          "a": "Kartą w aplikacji. Płatności obsługuje Stripe i trafiają one do przewoźnika; Ranktrip pobiera prowizję i nigdy nie przechowuje Twoich pieniędzy."
+          "a": "Kartą w aplikacji. Płatności obsługuje Stripe i trafiają one do przewoźnika; MoversHub pobiera prowizję i nigdy nie przechowuje Twoich pieniędzy."
         },
         "q4": {
           "q": "Co, jeśli coś się uszkodzi?",
@@ -341,12 +341,12 @@
         },
         "q7": {
           "q": "Jak zostać przewoźnikiem?",
-          "a": "Zarejestruj się w aplikacji Ranktrip Partner, dodaj firmę, busa i dokumenty, ustal własne stawki i po weryfikacji zacznij przyjmować zlecenia."
+          "a": "Zarejestruj się w aplikacji MoversHub Partner, dodaj firmę, busa i dokumenty, ustal własne stawki i po weryfikacji zacznij przyjmować zlecenia."
         }
       }
     },
     "footer": {
-      "title": "Przeprowadź się\nz Ranktrip jako pierwszy.",
+      "title": "Przeprowadź się\nz MoversHub jako pierwszy.",
       "subtitle": "Napiszemy do Ciebie raz, gdy wystartujemy w Twoim mieście.",
       "emailLabel": "Adres e-mail",
       "placeholder": "ty@email.com",
@@ -356,7 +356,7 @@
       "consent": "Twój e-mail wykorzystamy wyłącznie do tej informacji o starcie.",
       "invalid": "Podaj prawidłowy adres e-mail.",
       "error": "Coś poszło nie tak. Spróbuj ponownie.",
-      "legal": "© {{year}} Ranktrip. Przewoźnicy to niezależne firmy."
+      "legal": "© {{year}} MoversHub. Przewoźnicy to niezależne firmy."
     }
   },
   "dashboard": {
@@ -364,7 +364,7 @@
     "subtitle": "Każde aktywne zlecenie na mapie, w czasie rzeczywistym",
     "play": "Odtwórz",
     "pause": "Pauza",
-    "ops": "Operacje · Ranktrip",
+    "ops": "Operacje · MoversHub",
     "note": "Dane symulowane na potrzeby demo: trzy przykładowe zlecenia przykładowych przewoźników. Trasy i odległości są prawdziwe; ceny według tych samych przykładowych stawek co na stronie głównej. Przy prawdziwej rezerwacji każdy przewoźnik ustala własną cenę.",
     "rail": {
       "label": "Panel",

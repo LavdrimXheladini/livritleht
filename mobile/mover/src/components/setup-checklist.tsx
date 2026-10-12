@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { BuildingIcon, CardIcon, DarkPanel, Display, DocumentIcon, PinIcon, TagIcon, VanIcon } from '@ranktrip/mobile';
-import { colors } from '@ranktrip/ui';
+import { BuildingIcon, CardIcon, DarkPanel, Display, DocumentIcon, PinIcon, TagIcon, VanIcon } from '@movershub/mobile';
+import { colors } from '@movershub/ui';
 
 import { IconRow } from './icon-row';
 

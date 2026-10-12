@@ -1,6 +1,6 @@
 // Client-safe types for the "Live moves" dashboard demo. Data is built on the server
 // (live-demo.ts, server-only) and passed to client components.
-import type { VehicleClass } from '@ranktrip/shared';
+import type { VehicleClass } from '@movershub/shared';
 
 import type { LineCoords } from './geo/types';
 

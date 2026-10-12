@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatMoney, type Locale } from '@ranktrip/shared';
-import { Button, CheckIcon, Pill } from '@ranktrip/ui/web';
+import { formatMoney, type Locale } from '@movershub/shared';
+import { Button, CheckIcon, Pill } from '@movershub/ui/web';
 
 import { routeLabel, stopName } from '@/lib/route-label';
 

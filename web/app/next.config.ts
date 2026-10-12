@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   // Workspace packages ship TypeScript source.
-  transpilePackages: ['@ranktrip/shared', '@ranktrip/i18n', '@ranktrip/ui', '@ranktrip/pricing'],
+  transpilePackages: ['@movershub/shared', '@movershub/i18n', '@movershub/ui', '@movershub/pricing'],
   turbopack: {
     rules: {
       '*.css': {

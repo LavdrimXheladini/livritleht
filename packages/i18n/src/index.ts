@@ -1,6 +1,6 @@
 import type { InitOptions } from 'i18next';
 
-import { DEFAULT_LOCALE, LOCALES, isLocale, resolveLocale, type Locale } from '@ranktrip/shared';
+import { DEFAULT_LOCALE, LOCALES, isLocale, resolveLocale, type Locale } from '@movershub/shared';
 
 import de from '../locales/de.json';
 import en from '../locales/en.json';

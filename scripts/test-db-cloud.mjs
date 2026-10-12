@@ -21,11 +21,11 @@ const ROOT = join(import.meta.dirname, '..');
 const MIGRATIONS = join(ROOT, 'supabase', 'migrations');
 const TESTS = join(ROOT, 'supabase', 'tests', 'database');
 const MARKER = 'TAP-ROLLBACK';
-const FILE_DONE = 'ranktrip-test-file-done';
+const FILE_DONE = 'movershub-test-file-done';
 
 /** Run SQL on the linked project. Always via a file: the npm shim needs a shell on Windows, which would split inline SQL. */
 function runSql(sql) {
-  const dir = mkdtempSync(join(tmpdir(), 'ranktrip-dbtest-'));
+  const dir = mkdtempSync(join(tmpdir(), 'movershub-dbtest-'));
   const file = join(dir, 'query.sql');
   writeFileSync(file, sql);
   try {

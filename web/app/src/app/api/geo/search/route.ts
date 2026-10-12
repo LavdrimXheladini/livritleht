@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import { LOCALES } from '@ranktrip/shared';
+import { LOCALES } from '@movershub/shared';
 
 import { geoProvider } from '@/lib/geo/provider';
 

@@ -6,8 +6,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
-import { AuthProvider, initI18n, useAppFonts, useAuth } from '@ranktrip/mobile';
-import { colors } from '@ranktrip/ui';
+import { AuthProvider, initI18n, useAppFonts, useAuth } from '@movershub/mobile';
+import { colors } from '@movershub/ui';
 
 import { supabase } from '@/lib/supabase';
 

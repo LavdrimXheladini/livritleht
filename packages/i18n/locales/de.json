@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Ranktrip",
+    "appName": "MoversHub",
     "continue": "Weiter",
     "back": "Zurück",
     "loading": "Wird geladen…",
@@ -36,12 +36,12 @@
   },
   "customer": {
     "homeTitle": "Mit einem Umzugsunternehmen buchen",
-    "homeSubtitle": "Umzugsunternehmen auf Ranktrip legen ihre Preise selbst fest. Vor der Buchung siehst du das Unternehmen und seinen Preis.",
+    "homeSubtitle": "Umzugsunternehmen auf MoversHub legen ihre Preise selbst fest. Vor der Buchung siehst du das Unternehmen und seinen Preis.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",
     "bookingSoon": "Vor dem Bezahlen siehst du dein Umzugsunternehmen und seinen Festpreis, die Buchungsgebühr wird separat ausgewiesen.",
     "priceLoading": "Suche Umzugsunternehmen…",
     "retry": "Erneut versuchen",
-    "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf Ranktrip."
+    "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf MoversHub."
   },
   "mover": {
     "homeTitle": "Willkommen, Partner",
@@ -129,7 +129,7 @@
       "demo": "Live-Demo",
       "getPrice": "Preis ansehen",
       "language": "Sprache",
-      "home": "Ranktrip Startseite",
+      "home": "MoversHub Startseite",
       "main": "Hauptmenü"
     },
     "hero": {
@@ -147,15 +147,15 @@
       "crew3": "+2 Helfer",
       "seeMovers": "Unternehmen ansehen",
       "note": "Beispieltarife für die Demo — jedes Umzugsunternehmen legt seinen Preis pro Fahrzeugklasse selbst fest. Vor der Zahlung siehst du das Unternehmen und seinen Festpreis, die Buchungsgebühr separat.",
-      "liveNote": "Preise von Umzugsunternehmen auf Ranktrip — die eigenen Tarife jedes Unternehmens, für eine typische Ladung je Fahrzeuggröße im Erdgeschoss. Dein Preis hängt von deinen Sachen und Stockwerken ab; vor dem Bezahlen siehst du dein Umzugsunternehmen und seinen Festpreis, die Buchungsgebühr wird separat ausgewiesen.",
+      "liveNote": "Preise von Umzugsunternehmen auf MoversHub — die eigenen Tarife jedes Unternehmens, für eine typische Ladung je Fahrzeuggröße im Erdgeschoss. Dein Preis hängt von deinen Sachen und Stockwerken ab; vor dem Bezahlen siehst du dein Umzugsunternehmen und seinen Festpreis, die Buchungsgebühr wird separat ausgewiesen.",
       "testNote": "Vorerst sind das Test-Umzugsunternehmen mit typischen lokalen Preisen; echte Unternehmen kommen zum Start dazu.",
       "soonTitle": "Buchungen starten bald.",
-      "soonText": "Trag dich in die Warteliste ein, und wir schreiben dir, sobald Umzugsunternehmen in deiner Nähe auf Ranktrip sind.",
+      "soonText": "Trag dich in die Warteliste ein, und wir schreiben dir, sobald Umzugsunternehmen in deiner Nähe auf MoversHub sind.",
       "soonLink": "Zur Warteliste →",
       "from": "ab",
       "offers": "Angebote: {{n}}",
       "noMovers": "Hier noch kein Angebot",
-      "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf Ranktrip — trag dich in die Warteliste ein.",
+      "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf MoversHub — trag dich in die Warteliste ein.",
       "local": "Nahumzug",
       "domestic": "Inland",
       "crossBorder": "Grenzüberschreitend",
@@ -206,7 +206,7 @@
       }
     },
     "story": {
-      "text": "Ranktrip verbindet Menschen, die umziehen, mit <mov>unabhängigen Umzugsunternehmen</mov>, die eigene Transporter haben. Wähle eine <veh>Fahrzeugklasse</veh>, sieh einen <pri>Preis vorab</pri>, zahle per <pay>Karte</pay> und <trk>verfolge dein Umzugsunternehmen live</trk> auf der Karte. Du ziehst zwischen Deutschland, Österreich oder der Schweiz und der Heimat um? Die <dia>Diaspora-Korridore</dia> sind genau dafür gemacht.",
+      "text": "MoversHub verbindet Menschen, die umziehen, mit <mov>unabhängigen Umzugsunternehmen</mov>, die eigene Transporter haben. Wähle eine <veh>Fahrzeugklasse</veh>, sieh einen <pri>Preis vorab</pri>, zahle per <pay>Karte</pay> und <trk>verfolge dein Umzugsunternehmen live</trk> auf der Karte. Du ziehst zwischen Deutschland, Österreich oder der Schweiz und der Heimat um? Die <dia>Diaspora-Korridore</dia> sind genau dafür gemacht.",
       "mov": {
         "title": "Unabhängige Umzugsunternehmen",
         "text": "Lokale Betriebe mit eigenen Transportern. Sie legen ihre Tarife selbst fest, wählen ihre Aufträge und haften für deine Sachen."
@@ -221,7 +221,7 @@
       },
       "pay": {
         "title": "Kartenzahlung",
-        "text": "Bezahle in der App. Zahlungen laufen über Stripe; Ranktrip verwahrt nie dein Geld."
+        "text": "Bezahle in der App. Zahlungen laufen über Stripe; MoversHub verwahrt nie dein Geld."
       },
       "trk": {
         "title": "Live-Tracking",
@@ -248,7 +248,7 @@
       "cta": "Umzugsunternehmen werden",
       "rates": {
         "title": "Dein Transporter, deine Tarife.",
-        "text": "Lege deinen Preis für jedes Fahrzeug selbst fest. Du führst dein Geschäft — Ranktrip bringt die Kundschaft."
+        "text": "Lege deinen Preis für jedes Fahrzeug selbst fest. Du führst dein Geschäft — MoversHub bringt die Kundschaft."
       },
       "freedom": {
         "title": "Frei annehmen oder ablehnen.",
@@ -263,7 +263,7 @@
         "text": "Fülle deinen Transporter auf den Korridoren Deutschland, Österreich und Schweiz ↔ Balkan."
       },
       "phone": {
-        "app": "Ranktrip Partner",
+        "app": "MoversHub Partner",
         "online": "● Online",
         "newRequest": "Neue Anfrage",
         "payout": "Auszahlung",
@@ -325,7 +325,7 @@
         },
         "q3": {
           "q": "Wie bezahle ich?",
-          "a": "Per Karte in der App. Zahlungen wickelt Stripe ab und sie gehen an das Umzugsunternehmen; Ranktrip erhält eine Provision und verwahrt nie dein Geld."
+          "a": "Per Karte in der App. Zahlungen wickelt Stripe ab und sie gehen an das Umzugsunternehmen; MoversHub erhält eine Provision und verwahrt nie dein Geld."
         },
         "q4": {
           "q": "Was, wenn etwas beschädigt wird?",
@@ -340,13 +340,13 @@
           "a": "Ja — live auf der Karte, sobald es unterwegs ist, bis der Auftrag erledigt ist. Den Tracking-Link kannst du mit allen teilen."
         },
         "q7": {
-          "q": "Wie werde ich Umzugsunternehmen auf Ranktrip?",
-          "a": "Registriere dich in der App Ranktrip Partner, füge Firma, Transporter und Dokumente hinzu, lege deine Tarife fest und nimm nach der Verifizierung Aufträge an."
+          "q": "Wie werde ich Umzugsunternehmen auf MoversHub?",
+          "a": "Registriere dich in der App MoversHub Partner, füge Firma, Transporter und Dokumente hinzu, lege deine Tarife fest und nimm nach der Verifizierung Aufträge an."
         }
       }
     },
     "footer": {
-      "title": "Zieh als Erste:r\nmit Ranktrip um.",
+      "title": "Zieh als Erste:r\nmit MoversHub um.",
       "subtitle": "Wir schreiben dir einmal, wenn wir in deiner Stadt starten.",
       "emailLabel": "E-Mail-Adresse",
       "placeholder": "du@email.de",
@@ -356,7 +356,7 @@
       "consent": "Wir nutzen deine E-Mail nur für diese Startankündigung.",
       "invalid": "Gib eine gültige E-Mail-Adresse ein.",
       "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-      "legal": "© {{year}} Ranktrip. Umzugsunternehmen sind unabhängige Betriebe."
+      "legal": "© {{year}} MoversHub. Umzugsunternehmen sind unabhängige Betriebe."
     }
   },
   "dashboard": {
@@ -364,7 +364,7 @@
     "subtitle": "Jeder aktive Auftrag auf der Karte, in Echtzeit",
     "play": "Abspielen",
     "pause": "Pause",
-    "ops": "Betrieb · Ranktrip",
+    "ops": "Betrieb · MoversHub",
     "note": "Simulierte Daten für die Demo: drei Beispielaufträge von Beispiel-Umzugsunternehmen. Routen und Entfernungen sind echt; die Preise nutzen dieselben Beispieltarife wie die Startseite. Bei einer echten Buchung legt jedes Umzugsunternehmen seinen eigenen Preis fest.",
     "rail": {
       "label": "Dashboard",

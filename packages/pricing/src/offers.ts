@@ -1,7 +1,7 @@
 // Offers for one vehicle class: every quotable vehicle priced from its OWN rate card, cheapest
 // first, plus the "from" price the vehicle-class screen shows (COMPLIANCE §1.1). Pure, no I/O.
 
-import type { BookingFeeRule, Currency, QuoteJob, RateCard, VehicleClass } from '@ranktrip/shared';
+import type { BookingFeeRule, Currency, QuoteJob, RateCard, VehicleClass } from '@movershub/shared';
 
 import { quoteVehicle, type Quote } from './engine';
 

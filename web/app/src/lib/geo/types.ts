@@ -30,4 +30,4 @@ export {
   type DemoDistrictId,
   type DemoPlaceId,
   type GeoSuggestion,
-} from '@ranktrip/shared';
+} from '@movershub/shared';

@@ -1,5 +1,5 @@
 // Extends app.json: brand colours for splash / Android icon come from packages/ui/tokens.json.
-const { colors } = require('@ranktrip/ui/tokens.json');
+const { colors } = require('@movershub/ui/tokens.json');
 
 module.exports = ({ config }) => ({
   ...config,

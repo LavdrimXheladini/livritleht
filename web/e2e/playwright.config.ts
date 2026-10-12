@@ -39,7 +39,7 @@ export default defineConfig({
   webServer: app
     ? {
         // The app's browser preview; CI=1 keeps Expo from watching files or asking questions.
-        command: `pnpm --filter @ranktrip/${app} web`,
+        command: `pnpm --filter @movershub/${app} web`,
         url: `http://localhost:${APP_PORTS[app]}`,
         reuseExistingServer: true,
         timeout: 300_000,
@@ -48,7 +48,7 @@ export default defineConfig({
     : process.env.E2E_BASE_URL
       ? undefined
       : {
-          command: `pnpm --filter @ranktrip/web build && pnpm --filter @ranktrip/web exec next start -p ${PORT}`,
+          command: `pnpm --filter @movershub/web build && pnpm --filter @movershub/web exec next start -p ${PORT}`,
           url: baseURL,
           reuseExistingServer: false,
           timeout: 300_000,

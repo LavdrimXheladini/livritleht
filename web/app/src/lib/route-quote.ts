@@ -2,8 +2,8 @@ import 'server-only';
 
 import { cacheLife } from 'next/cache';
 
-import type { QuoteResponse } from '@ranktrip/pricing';
-import type { Place } from '@ranktrip/shared';
+import type { QuoteResponse } from '@movershub/pricing';
+import type { Place } from '@movershub/shared';
 
 import { sampleQuote } from './landing-example';
 import type { RouteQuote } from './landing-types';

@@ -6,8 +6,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
-import { AuthProvider, initI18n, useAppFonts, useAuth } from '@ranktrip/mobile';
-import { colors } from '@ranktrip/ui';
+import { AuthProvider, initI18n, useAppFonts, useAuth } from '@movershub/mobile';
+import { colors } from '@movershub/ui';
 
 import { supabase } from '@/lib/supabase';
 
@@ -39,7 +39,7 @@ function RootStack() {
 
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.night[900] } }}>
-      {/* Home is public: signed out it introduces Ranktrip Partner, signed in it is the mover's start page. */}
+      {/* Home is public: signed out it introduces MoversHub Partner, signed in it is the mover's start page. */}
       <Stack.Screen name="index" />
       <Stack.Protected guard={!session}>
         <Stack.Screen name="login" />

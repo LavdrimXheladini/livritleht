@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-import { LOCALES, resources } from '@ranktrip/i18n';
+import { LOCALES, resources } from '@movershub/i18n';
 
 // Screenshot comparisons of the website: `pnpm e2e:visual`. After an intended design change, look at
 // the new pictures and accept them with `pnpm e2e:visual --update-snapshots`.
@@ -18,7 +18,7 @@ async function open(page: Page, path: string, viewport: { width: number; height:
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
 }
 
-/** "© 2026 Ranktrip …" changes every January. */
+/** "© 2026 MoversHub …" changes every January. */
 const year = (page: Page) => page.locator('footer').getByText(/©/);
 
 for (const lang of LOCALES) {

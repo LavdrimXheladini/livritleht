@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { resources } from '@ranktrip/i18n';
+import { resources } from '@movershub/i18n';
 
 import { appUrl, fitScreenToPage, savedQuote, serveFixtures } from './app';
 

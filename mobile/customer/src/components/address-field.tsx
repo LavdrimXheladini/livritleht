@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 
-import { currentLocale, cx, searchPlaces, useAuth } from '@ranktrip/mobile';
-import type { GeoSuggestion, Place } from '@ranktrip/shared';
-import { colors } from '@ranktrip/ui';
+import { currentLocale, cx, searchPlaces, useAuth } from '@movershub/mobile';
+import type { GeoSuggestion, Place } from '@movershub/shared';
+import { colors } from '@movershub/ui';
 
 const MIN_CHARS = 3;
 const DEBOUNCE_MS = 300;

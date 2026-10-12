@@ -1,6 +1,6 @@
-# CLAUDE.md — Ranktrip
+# CLAUDE.md — MoversHub
 
-Ranktrip is a **two-sided moving marketplace** for Europe (start: Kosovo/Balkans + Poland). Customers book movers with a van for single items, small moves, full moves and cross-border moves. UX is Lugg-style: pick a vehicle class → upfront price → book → live tracking. Ranktrip is a **pure middleman**: movers are independent businesses, they set their own rates, and Stripe holds the money.
+MoversHub is a **two-sided moving marketplace** for Europe (start: Kosovo/Balkans + Poland). Customers book movers with a van for single items, small moves, full moves and cross-border moves. UX is Lugg-style: pick a vehicle class → upfront price → book → live tracking. MoversHub is a **pure middleman**: movers are independent businesses, they set their own rates, and Stripe holds the money.
 
 > **Before any change to pricing, jobs, payments, mover accounts, bookings, tracking or personal data, read `COMPLIANCE.md`.** Its MUST / MUST NOT rules are product requirements. If a task conflicts with them, stop and explain instead of implementing.
 
@@ -43,14 +43,14 @@ Do not add new frameworks or replace any of these without asking.
 ## 2. Repo structure
 
 ```
-ranktrip/
+movershub/
 ├─ web/                # WEB PLATFORM
-│  ├─ app/             # Next.js: booking site under /[lang], /t/[token] tracking page, /admin  (@ranktrip/web)
-│  └─ e2e/             # Playwright tests (web + API)                                          (@ranktrip/e2e)
+│  ├─ app/             # Next.js: booking site under /[lang], /t/[token] tracking page, /admin  (@movershub/web)
+│  └─ e2e/             # Playwright tests (web + API)                                          (@movershub/e2e)
 ├─ mobile/             # MOBILE PLATFORM
-│  ├─ customer/        # Expo app: booking, payment, live tracking                              (@ranktrip/customer)
-│  ├─ mover/           # Expo app: onboarding, rate cards, jobs, GPS                            (@ranktrip/mover)
-│  ├─ core/            # Shared Expo code: Supabase client, auth, fonts, login/verify screens   (@ranktrip/mobile)
+│  ├─ customer/        # Expo app: booking, payment, live tracking                              (@movershub/customer)
+│  ├─ mover/           # Expo app: onboarding, rate cards, jobs, GPS                            (@movershub/mover)
+│  ├─ core/            # Shared Expo code: Supabase client, auth, fonts, login/verify screens   (@movershub/mobile)
 │  └─ maestro/         # Mobile E2E flows
 ├─ packages/           # SHARED BY BOTH PLATFORMS
 │  ├─ shared/          # Zod schemas, types, constants (vehicle classes, job statuses), retention.config
@@ -209,7 +209,7 @@ pnpm e2e:mobile          # Maestro
 pnpm lint && pnpm typecheck
 stripe listen --forward-to localhost:54321/functions/v1/stripe-webhook
 ```
-Local setup: copy `.env.example` → `web/app/.env.local` and `mobile/{customer,mover}/.env` with the Supabase URL + publishable key. Dev ports: web 3000, customer 8081, mover 8082. Every dev/start/build runs `scripts/dev-prep.mjs` first (regenerates `theme.css`, clears Next/Metro caches when the lockfile, tokens or configs changed) — don't bypass it with raw `next dev` / `expo start`. Local sign-in: test phones `+383 44 000 001` (customer) / `+48 500 000 001` (mover), code `123456`; email codes appear in Mailpit (http://127.0.0.1:54324). Playwright browsers: `pnpm --filter @ranktrip/e2e install-browsers`.
+Local setup: copy `.env.example` → `web/app/.env.local` and `mobile/{customer,mover}/.env` with the Supabase URL + publishable key. Dev ports: web 3000, customer 8081, mover 8082. Every dev/start/build runs `scripts/dev-prep.mjs` first (regenerates `theme.css`, clears Next/Metro caches when the lockfile, tokens or configs changed) — don't bypass it with raw `next dev` / `expo start`. Local sign-in: test phones `+383 44 000 001` (customer) / `+48 500 000 001` (mover), code `123456`; email codes appear in Mailpit (http://127.0.0.1:54324). Playwright browsers: `pnpm --filter @movershub/e2e install-browsers`.
 
 Framework notes (newer than most training data — read the bundled docs before changing):
 - Next.js 16: `src/proxy.ts` replaces middleware; Cache Components are on, so anything reading cookies (Supabase session) must sit inside `<Suspense>`. Docs: `node_modules/next/dist/docs/`.
@@ -224,7 +224,7 @@ Framework notes (newer than most training data — read the bundled docs before 
 - Business rules on the server (edge functions / Postgres), never trusted from the client.
 - Every new table: RLS policy + pgTAP test.
 - Every new edge function: Zod input validation, auth check, Vitest/Playwright API test.
-- Every user-facing string through i18n; follow the wording rules in `COMPLIANCE.md` §12 (e.g., "movers on Ranktrip", never "our movers").
+- Every user-facing string through i18n; follow the wording rules in `COMPLIANCE.md` §12 (e.g., "movers on MoversHub", never "our movers").
 - Money: integer cents + currency. Dates: UTC in DB, local time in UI.
 - Secrets only in env (`.env.local`, Supabase secrets, EAS secrets). Never commit keys.
 - Small PRs; each PR lists which `COMPLIANCE.md` rules it touches.

@@ -56,7 +56,7 @@ for (const file of inputs) hash.update(file).update(existsSync(file) ? readFileS
 const fingerprint = hash.digest('hex');
 
 // Kept outside .next/.expo (which builds may clean). A fresh install wipes node_modules → one clean start.
-const stampDir = join(app, 'node_modules/.cache/ranktrip-dev-prep');
+const stampDir = join(app, 'node_modules/.cache/movershub-dev-prep');
 const stamp = join(stampDir, `.dev-prep-${mode}`);
 const stale = !existsSync(stamp) || readFileSync(stamp, 'utf8') !== fingerprint;
 

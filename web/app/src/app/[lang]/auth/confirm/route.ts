@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import { DEFAULT_LOCALE, isLocale } from '@ranktrip/i18n';
+import { DEFAULT_LOCALE, isLocale } from '@movershub/i18n';
 
 import { createClient } from '@/lib/supabase/server';
 

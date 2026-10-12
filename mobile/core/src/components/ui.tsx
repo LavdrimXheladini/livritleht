@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, tokens } from '@ranktrip/ui';
+import { colors, tokens } from '@movershub/ui';
 
 import { useAnnouncement } from '../a11y';
 import { cx } from './cx';
@@ -95,8 +95,8 @@ export function Display({
 }
 
 /**
- * Logo mark + RANKTRIP wordmark; `partner` adds the mover app's "Partner" label. A screen reader
- * reads it as one logo image, "Ranktrip Partner" (each screen's heading is its Display title).
+ * Logo mark + MOVERSHUB wordmark; `partner` adds the mover app's "Partner" label. A screen reader
+ * reads it as one logo image, "MoversHub Partner" (each screen's heading is its Display title).
  */
 export function Wordmark({ tone = 'light', partner }: { tone?: Tone; partner?: string }) {
   const ink = tone === 'dark' ? colors.night[50] : colors.ink[900];
@@ -105,7 +105,7 @@ export function Wordmark({ tone = 'light', partner }: { tone?: Tone; partner?: s
     <View
       accessible
       accessibilityRole="image"
-      accessibilityLabel={partner ? `Ranktrip ${partner}` : 'Ranktrip'}
+      accessibilityLabel={partner ? `MoversHub ${partner}` : 'MoversHub'}
       className="flex-row items-center gap-2"
     >
       <View className={cx('size-8 items-center justify-center rounded-md', tone === 'dark' ? 'bg-accent-500' : 'bg-brand-500')}>
@@ -115,7 +115,7 @@ export function Wordmark({ tone = 'light', partner }: { tone?: Tone; partner?: s
         className="font-wordmark"
         style={{ color: ink, fontSize: size, letterSpacing: em(tokens.typography.wordmark.tracking) * size }}
       >
-        RANKTRIP
+        MOVERSHUB
       </Text>
       {partner ? <Text className="font-sans-medium text-[13px] text-accent-300">{partner}</Text> : null}
     </View>

@@ -13,7 +13,7 @@ import {
   type Currency,
   type QuoteJob,
   type RateCard,
-} from '@ranktrip/shared';
+} from '@movershub/shared';
 
 /* ── Labour-time estimate (platform estimate of minutes, never a price) ── */
 
@@ -56,12 +56,12 @@ export type Quote = {
   /** The mover's price, itemised; the amounts add up to `moverPrice`. */
   lines: QuoteLine[];
   moverPrice: number;
-  /** Ranktrip's booking fee, its own line. `null` = amount not decided yet (design/DECISIONS.md #6). */
+  /** MoversHub's booking fee, its own line. `null` = amount not decided yet (design/DECISIONS.md #6). */
   bookingFee: number | null;
   /** What the customer pays: mover's price + booking fee. */
   total: number;
   takeRatePct: number;
-  /** Ranktrip's commission, taken from the mover's price. */
+  /** MoversHub's commission, taken from the mover's price. */
   platformCommission: number;
   moverPayout: number;
 };
@@ -135,7 +135,7 @@ export function quoteVehicle(job: QuoteJob, card: RateCard, opts: { bookingFee: 
   };
 }
 
-/** Ranktrip's booking fee for a quote, or `null` while the amount isn't decided. */
+/** MoversHub's booking fee for a quote, or `null` while the amount isn't decided. */
 export function bookingFeeFor(rule: BookingFeeRule | null, moverPrice: number, currency: Currency): number | null {
   if (rule === null) return null;
   if (rule.kind === 'percent') return roundToPriceStep((moverPrice * rule.pct) / 100, currency);

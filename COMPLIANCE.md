@@ -1,4 +1,4 @@
-# COMPLIANCE.md — Legal rules for the Ranktrip codebase
+# COMPLIANCE.md — Legal rules for the MoversHub codebase
 
 > **For Claude Code / AI agents:** Read this file before building or changing any feature that touches pricing, job assignment, payments, mover accounts, customer bookings, ratings, personal data, or deactivation. These rules are product requirements, not suggestions. If a requested feature would break a **MUST NOT** rule, stop, explain which rule it breaks, and propose a compliant alternative. Do not silently implement it.
 >
@@ -8,7 +8,7 @@
 
 ## 0. The one principle everything follows
 
-**Ranktrip is a pure middleman (marketplace).** It connects customers with independent movers. It does **not** move anything, does **not** employ movers, does **not** own vans, does **not** hold customer money, and is **not** liable for damaged items. The mover is the service provider and the carrier.
+**MoversHub is a pure middleman (marketplace).** It connects customers with independent movers. It does **not** move anything, does **not** employ movers, does **not** own vans, does **not** hold customer money, and is **not** liable for damaged items. The mover is the service provider and the carrier.
 
 Every rule below exists to keep that position legally true. If the code makes the platform *look like* or *act like* the mover or the employer, the platform loses that protection.
 
@@ -117,14 +117,14 @@ The customer experience is like Lugg: pick a vehicle class, see an upfront price
 
 **MUST**
 - Every booking screen, confirmation, receipt, and email shows: **mover's legal/company name, registration number, address, contact, and terms**.
-- Before payment, show clearly: **"Your contract for this move is with [Mover company name]. Ranktrip is the booking platform."**
+- Before payment, show clearly: **"Your contract for this move is with [Mover company name]. MoversHub is the booking platform."**
 - Show whether the provider is a business (trader) — and the consumer rights that apply.
 - Show the mover's verified insurance on their profile and on the booking.
 
 **MUST NOT**
 - ❌ Hide the mover's identity until after payment.
-- ❌ Copy that says "Ranktrip will move your stuff", "our movers", "our team", "our vans", "Ranktrip guarantees your move". Use "movers on Ranktrip", "your mover".
-- ❌ Platform-branded invoices for the move service. The move invoice is from the mover; Ranktrip invoices only its own commission/booking fee (with VAT).
+- ❌ Copy that says "MoversHub will move your stuff", "our movers", "our team", "our vans", "MoversHub guarantees your move". Use "movers on MoversHub", "your mover".
+- ❌ Platform-branded invoices for the move service. The move invoice is from the mover; MoversHub invoices only its own commission/booking fee (with VAT).
 
 ---
 
@@ -156,7 +156,7 @@ The customer experience is like Lugg: pick a vehicle class, see an upfront price
 **Provider: Stripe Connect.** Stripe is the licensed provider that holds and splits funds.
 
 **MUST**
-- Ranktrip's platform account is registered in a **Stripe-supported country** (Stripe does not support Kosovo-registered businesses; Poland is the default plan).
+- MoversHub's platform account is registered in a **Stripe-supported country** (Stripe does not support Kosovo-registered businesses; Poland is the default plan).
 - Movers onboard as **Stripe Connect Express** accounts. Stripe does their KYC; we store only the `stripe_account_id` and onboarding status.
 - A mover cannot accept paid jobs until `charges_enabled` / `payouts_enabled` (or transfers capability) is true.
 - **At booking:** save the customer's card with a **SetupIntent** (`usage: off_session`), so the later charge is covered by a mandate and doesn't need new 3D Secure. Do not charge yet.
@@ -165,11 +165,11 @@ The customer experience is like Lugg: pick a vehicle class, see an upfront price
 - If the off-session charge fails (card expired, needs authentication), notify the customer to pay in-app; the mover is not paid from platform funds.
 - Use **Stripe webhooks** as the source of truth for payment state (`payment_intent.succeeded`, `payment_intent.payment_failed`, `account.updated`, `charge.dispute.created`). Verify webhook signatures. Make handlers idempotent.
 - The in-app receipt clearly states the move was provided by the mover (the card statement will show the platform name).
-- Ranktrip issues a VAT invoice **only for its commission/booking fee** (Stripe Tax or invoicing tool).
+- MoversHub issues a VAT invoice **only for its commission/booking fee** (Stripe Tax or invoicing tool).
 - ⚠️ Movers in countries Stripe can't pay out to (check Kosovo, Montenegro) cannot be onboarded for card payments until a solution is chosen — see section 14.
 
 **MUST NOT**
-- ❌ Receive customer money into a Ranktrip bank account and pay movers later.
+- ❌ Receive customer money into a MoversHub bank account and pay movers later.
 - ❌ Build a custom wallet, balance, escrow, or stored-value system.
 - ❌ Store card numbers, IBANs, or bank credentials in our database. Use provider tokens/IDs only.
 - ❌ Let movers collect cash and "settle later" unless the mover has prepaid the commission (Balkans exception — needs explicit product decision and lawyer review).
@@ -186,8 +186,8 @@ The customer experience is like Lugg: pick a vehicle class, see an upfront price
 - Optional extra cover: only sold **through a licensed insurance partner**; insurer carries the risk.
 
 **MUST NOT**
-- ❌ Promise "Ranktrip covers any damage" or a platform-funded guarantee unless approved by the lawyer.
-- ❌ Sell insurance directly as Ranktrip.
+- ❌ Promise "MoversHub covers any damage" or a platform-funded guarantee unless approved by the lawyer.
+- ❌ Sell insurance directly as MoversHub.
 
 ---
 
@@ -266,14 +266,14 @@ The customer experience is like Lugg: pick a vehicle class, see an upfront price
 
 | ✅ Use | ❌ Never use |
 |---|---|
-| "Movers on Ranktrip" | "Our movers" / "Ranktrip movers" |
-| "Your mover, [Company name]" | "Ranktrip will move you" |
-| "Book with a mover" | "Hire Ranktrip" |
-| "Mover's price" | "Our price" / "Ranktrip price" |
+| "Movers on MoversHub" | "Our movers" / "MoversHub movers" |
+| "Your mover, [Company name]" | "MoversHub will move you" |
+| "Book with a mover" | "Hire MoversHub" |
+| "Mover's price" | "Our price" / "MoversHub price" |
 | "Partners" / "Movers" | "Drivers" / "Workers" / "Staff" / "Employees" |
 | "Payout" | "Salary" / "Wage" |
 | "Accept job" | "Assigned to you" |
-| "Mover's insurance covers..." | "Ranktrip covers / guarantees..." |
+| "Mover's insurance covers..." | "MoversHub covers / guarantees..." |
 
 ---
 

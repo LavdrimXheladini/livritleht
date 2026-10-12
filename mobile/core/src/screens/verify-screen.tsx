@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { z } from 'zod';
 
-import { otpCodeSchema, type SelfSignupRole } from '@ranktrip/shared';
+import { otpCodeSchema, type SelfSignupRole } from '@movershub/shared';
 
 import { useAuth } from '../auth-provider';
 import { cx } from '../components/cx';

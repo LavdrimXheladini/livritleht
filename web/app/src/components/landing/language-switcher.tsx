@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DropdownMenu } from 'radix-ui';
 
-import { LOCALES, type Locale } from '@ranktrip/i18n';
-import { Button } from '@ranktrip/ui/web';
+import { LOCALES, type Locale } from '@movershub/i18n';
+import { Button } from '@movershub/ui/web';
 
 const NAMES: Record<Locale, string> = { en: 'English', sq: 'Shqip', pl: 'Polski', sr: 'Srpski', de: 'Deutsch' };
 

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { Button, CardIcon, CheckIcon, Display, PinIcon, TagIcon } from '@ranktrip/mobile';
+import { Button, CardIcon, CheckIcon, Display, PinIcon, TagIcon } from '@movershub/mobile';
 
 import { IconRow } from './icon-row';
 
@@ -13,7 +13,7 @@ const FEATURES = [
   ['corridors', PinIcon],
 ] as const;
 
-/** Signed out: what Ranktrip Partner offers, then sign in / sign up. */
+/** Signed out: what MoversHub Partner offers, then sign in / sign up. */
 export function PartnerIntro({ onSignIn }: { onSignIn: () => void }) {
   const { t } = useTranslation();
   return (

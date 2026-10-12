@@ -1,6 +1,6 @@
 import type { MapOptions } from 'maplibre-gl';
 
-import { colors } from '@ranktrip/ui';
+import { colors } from '@movershub/ui';
 
 // Recolours OpenFreeMap's "dark" style with the design's night palette (Tracking.dc.html):
 // dark green land, darker water, quiet roads, sage labels. Colours come only from tokens.json.

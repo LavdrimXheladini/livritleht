@@ -1,9 +1,9 @@
 # Requires a dev build + `supabase start` (test OTP numbers in supabase/config.toml).
-appId: com.ranktrip.mover
+appId: com.movershub.mover
 ---
 - launchApp:
     clearState: true
-# Home is public: the Ranktrip Partner intro with the sign-in call to action.
+# Home is public: the MoversHub Partner intro with the sign-in call to action.
 - tapOn:
     id: mover-sign-in
 - tapOn:

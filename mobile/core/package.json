@@ -1,5 +1,5 @@
 {
-  "name": "@ranktrip/mobile",
+  "name": "@movershub/mobile",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -12,10 +12,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ranktrip/i18n": "workspace:*",
-    "@ranktrip/pricing": "workspace:*",
-    "@ranktrip/shared": "workspace:*",
-    "@ranktrip/ui": "workspace:*"
+    "@movershub/i18n": "workspace:*",
+    "@movershub/pricing": "workspace:*",
+    "@movershub/shared": "workspace:*",
+    "@movershub/ui": "workspace:*"
   },
   "peerDependencies": {
     "@expo-google-fonts/geist": "*",

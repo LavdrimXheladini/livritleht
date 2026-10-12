@@ -40,7 +40,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @ranktrip/e2e install-browsers
+      - run: pnpm --filter @movershub/e2e install-browsers
       - run: pnpm e2e
         env:
           NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321

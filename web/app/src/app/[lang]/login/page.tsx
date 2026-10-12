@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { isLocale } from '@ranktrip/i18n';
+import { isLocale } from '@movershub/i18n';
 
 import { LoginForm } from './login-form';
 

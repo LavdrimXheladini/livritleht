@@ -2,7 +2,7 @@
 
 import { createContext, use, useRef, useState, useTransition, type ReactNode } from 'react';
 
-import type { Place, VehicleClass } from '@ranktrip/shared';
+import type { Place, VehicleClass } from '@movershub/shared';
 
 import { quoteRoute } from '@/app/[lang]/quote-action';
 import type { RouteQuote } from '@/lib/landing-types';

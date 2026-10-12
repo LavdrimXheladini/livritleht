@@ -1,5 +1,5 @@
-import type { Locale } from '@ranktrip/i18n';
-import { Button, CardIcon, CheckIcon, PinIcon, SectionTitle, Sheet, VanIcon } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/i18n';
+import { Button, CardIcon, CheckIcon, PinIcon, SectionTitle, Sheet, VanIcon } from '@movershub/ui/web';
 
 import { getT } from '@/lib/i18n';
 import { lines } from '@/lib/rich-text';

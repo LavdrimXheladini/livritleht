@@ -7,7 +7,7 @@ import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
 
-import { emailSchema, phoneSchema, type SelfSignupRole, type SignupMetadata } from '@ranktrip/shared';
+import { emailSchema, phoneSchema, type SelfSignupRole, type SignupMetadata } from '@movershub/shared';
 
 import { useAnnouncement } from '../a11y';
 import { useAuth } from '../auth-provider';

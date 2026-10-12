@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { VehicleClassTile } from '@ranktrip/mobile';
-import { VEHICLE_CLASSES, VEHICLE_CLASS_INFO, formatNumber, type Locale, type VehicleClass } from '@ranktrip/shared';
+import { VehicleClassTile } from '@movershub/mobile';
+import { VEHICLE_CLASSES, VEHICLE_CLASS_INFO, formatNumber, type Locale, type VehicleClass } from '@movershub/shared';
 
 import { priceText, type ClassOffers } from './offers';
 

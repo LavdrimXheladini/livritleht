@@ -7,7 +7,7 @@ import tokens from '../tokens.json';
 import { buildThemeCss } from './theme-css';
 
 describe('theme.css', () => {
-  it('is in sync with tokens.json (run `pnpm --filter @ranktrip/ui build:theme`)', () => {
+  it('is in sync with tokens.json (run `pnpm --filter @movershub/ui build:theme`)', () => {
     const onDisk = readFileSync(join(__dirname, '..', 'theme.css'), 'utf8');
     expect(onDisk).toBe(buildThemeCss(tokens));
   });

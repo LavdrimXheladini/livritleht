@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { VEHICLE_CLASSES, formatMoney, formatNumber, type Locale, type VehicleClass } from '@ranktrip/shared';
-import { Card, ChipGroup } from '@ranktrip/ui/web';
+import { VEHICLE_CLASSES, formatMoney, formatNumber, type Locale, type VehicleClass } from '@movershub/shared';
+import { Card, ChipGroup } from '@movershub/ui/web';
 
 import { DEMO_DISTRICTS, demoPlaceById, isDemoDistrict } from '@/lib/geo/types';
 import type { Corridor, ExampleCurves } from '@/lib/landing-types';

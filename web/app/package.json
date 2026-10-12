@@ -1,5 +1,5 @@
 {
-  "name": "@ranktrip/web",
+  "name": "@movershub/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
-    "@ranktrip/i18n": "workspace:*",
-    "@ranktrip/pricing": "workspace:*",
-    "@ranktrip/shared": "workspace:*",
-    "@ranktrip/ui": "workspace:*",
+    "@movershub/i18n": "workspace:*",
+    "@movershub/pricing": "workspace:*",
+    "@movershub/shared": "workspace:*",
+    "@movershub/ui": "workspace:*",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.3",
     "class-variance-authority": "^0.7.1",

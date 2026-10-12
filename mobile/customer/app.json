@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Ranktrip",
-    "slug": "ranktrip-customer",
+    "name": "MoversHub",
+    "slug": "movershub-customer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "ranktrip-customer",
+    "scheme": "movershub-customer",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.ranktrip.customer"
+      "bundleIdentifier": "com.movershub.customer"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.ranktrip.customer"
+      "package": "com.movershub.customer"
     },
     "web": {
       "output": "static",

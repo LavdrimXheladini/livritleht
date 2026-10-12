@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DarkPanel, LiveMapCard, VanIcon } from '@ranktrip/ui/web';
+import { DarkPanel, LiveMapCard, VanIcon } from '@movershub/ui/web';
 
 import { alongLine, compassPoint } from '@/lib/geo/line';
 import { routeLabel, stopName } from '@/lib/route-label';

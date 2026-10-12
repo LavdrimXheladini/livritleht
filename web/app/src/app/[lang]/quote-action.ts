@@ -1,6 +1,6 @@
 'use server';
 
-import { routeRequestSchema } from '@ranktrip/shared';
+import { routeRequestSchema } from '@movershub/shared';
 
 import type { RouteQuote } from '@/lib/landing-types';
 import { routeQuote } from '@/lib/route-quote';

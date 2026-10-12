@@ -4,7 +4,7 @@ import { createInstance } from 'i18next';
 import { useState, type ReactNode } from 'react';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 
-import { i18nOptions, type Locale } from '@ranktrip/i18n';
+import { i18nOptions, type Locale } from '@movershub/i18n';
 
 export function I18nProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
   const [i18n] = useState(() => {

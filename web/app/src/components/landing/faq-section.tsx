@@ -1,5 +1,5 @@
-import type { Locale } from '@ranktrip/i18n';
-import { Accordion, AccordionItem, SectionTitle, Sheet } from '@ranktrip/ui/web';
+import type { Locale } from '@movershub/i18n';
+import { Accordion, AccordionItem, SectionTitle, Sheet } from '@movershub/ui/web';
 
 import { getT } from '@/lib/i18n';
 import { lines, richText } from '@/lib/rich-text';

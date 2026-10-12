@@ -5,7 +5,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import type { GeoJSONSource, Map as MapLibreMap, Marker } from 'maplibre-gl';
 import { useEffect, useRef, useState } from 'react';
 
-import { colors } from '@ranktrip/ui';
+import { colors } from '@movershub/ui';
 
 import type { LineCoords } from '@/lib/geo/types';
 import { lineCollection, loadMapLibre, markerElement, VAN_SVG } from '@/lib/map/load';

@@ -1,7 +1,7 @@
 import 'server-only';
 
-import type { Place, VehicleClass } from '@ranktrip/shared';
-import { PLATFORM_TAKE_RATE_PCT, VEHICLE_CLASSES, moveScope } from '@ranktrip/shared';
+import type { Place, VehicleClass } from '@movershub/shared';
+import { PLATFORM_TAKE_RATE_PCT, VEHICLE_CLASSES, moveScope } from '@movershub/shared';
 
 import { geoProvider } from './geo/provider';
 import { haversineM } from './geo/types';

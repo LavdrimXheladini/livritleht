@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { QuoteJob } from '@ranktrip/shared';
+import type { QuoteJob } from '@movershub/shared';
 
 import { quoteVehicle } from './engine';
 import { buildClassOffers, rateCardFromRow, type QuotableVehicleRow } from './offers';

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { ChipGroup } from '@ranktrip/mobile';
-import { DEMO_DISTRICTS, demoPlaceById, isDemoDistrict, type DemoPlaceId, type Place } from '@ranktrip/shared';
+import { ChipGroup } from '@movershub/mobile';
+import { DEMO_DISTRICTS, demoPlaceById, isDemoDistrict, type DemoPlaceId, type Place } from '@movershub/shared';
 
 type Route = { from: DemoPlaceId; to: DemoPlaceId };
 

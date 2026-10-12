@@ -1,5 +1,5 @@
 // Generates packages/ui/theme.css (Tailwind 4 @theme) from tokens.json.
-// Run `pnpm --filter @ranktrip/ui build:theme` after editing tokens.json.
+// Run `pnpm --filter @movershub/ui build:theme` after editing tokens.json.
 import type tokensJson from '../tokens.json';
 
 type Tokens = typeof tokensJson;
@@ -39,7 +39,7 @@ export function buildThemeCss(t: Tokens): string {
   ];
 
   return [
-    '/* GENERATED from packages/ui/tokens.json — do not edit. Run `pnpm --filter @ranktrip/ui build:theme`. */',
+    '/* GENERATED from packages/ui/tokens.json — do not edit. Run `pnpm --filter @movershub/ui build:theme`. */',
     '',
     '@theme {',
     ...theme.map((l) => (l ? `  ${l}` : '')),

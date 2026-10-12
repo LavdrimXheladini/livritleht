@@ -1,5 +1,5 @@
-import { classFrom, type ClassFrom } from '@ranktrip/mobile';
-import { VEHICLE_CLASSES, formatMoney, type CrewSize, type Locale, type Place, type VehicleClass } from '@ranktrip/shared';
+import { classFrom, type ClassFrom } from '@movershub/mobile';
+import { VEHICLE_CLASSES, formatMoney, type CrewSize, type Locale, type Place, type VehicleClass } from '@movershub/shared';
 
 // Reading the server's quote. Every price is computed on the server from a mover's own rate card
 // (COMPLIANCE §1.1); the app only looks prices up and formats them — it never computes one.

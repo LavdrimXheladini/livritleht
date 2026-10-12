@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import { LoginScreen } from '@ranktrip/mobile';
+import { LoginScreen } from '@movershub/mobile';
 
 export default function Login() {
   return (

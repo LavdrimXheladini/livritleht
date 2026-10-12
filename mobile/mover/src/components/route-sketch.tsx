@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors } from '@ranktrip/ui';
+import { colors } from '@movershub/ui';
 
 /**
  * Mini map of a job request, same shapes as the website's mover phone: a few streets, the copper
