@@ -91,6 +91,11 @@ export const quoteRequestSchema = z
     items: z.array(jobItemSchema).min(1).max(100).optional(),
     /** Only this class; every class when left out (the vehicle-class screen). */
     vehicleClass: z.enum(VEHICLE_CLASSES).optional(),
+    /**
+     * The move date. Movers' insurance and cross-border documents must still be valid then
+     * (COMPLIANCE §5). Left out = today (the landing's "from" prices).
+     */
+    scheduledAt: z.iso.datetime({ offset: true }).optional(),
   })
   .strict()
   .refine((r) => r.pickup.lat !== r.dropoff.lat || r.pickup.lon !== r.dropoff.lon, { message: 'same_place' })

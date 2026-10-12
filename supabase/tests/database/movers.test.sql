@@ -111,6 +111,7 @@ select is((select base_fee from public.rate_cards where vehicle_id = '00000000-0
 update public.mover_companies set verification_status = 'verified', stripe_onboarding_complete = true
 where id = '00000000-0000-0000-0000-0000000aa001';
 update public.mover_documents set verified_at = now() where id = '00000000-0000-0000-0000-0000000dd001';
+update public.vehicles set verified_at = now() where id = '00000000-0000-0000-0000-0000000bb001';
 
 select is(
   (select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'PT', 'VAN')
@@ -161,7 +162,9 @@ select is(
 insert into public.mover_documents (company_id, type, file_path, expires_at, verified_at)
 values ('00000000-0000-0000-0000-0000000aa001', 'cmr', 'aa001/cmr.pdf', now() + interval '1 year', now()),
        ('00000000-0000-0000-0000-0000000aa001', 'licence', 'aa001/licence.pdf', null, now());
-update public.vehicles set tachograph = true where id = '00000000-0000-0000-0000-0000000bb001';
+-- Vehicle edits below are an admin's, recorded as checked in the same update (`verified_at`), so
+-- only the rule under test decides (an unchecked vehicle is never quoted: vehicle_verification.test.sql).
+update public.vehicles set tachograph = true, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb001';
 select is(
   (select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'ES', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'),
@@ -185,10 +188,10 @@ select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-
 select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'PT', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 1, 'without CMR insurance the mover still takes jobs inside their own country');
 update public.mover_documents set expires_at = now() + interval '1 year' where company_id = '00000000-0000-0000-0000-0000000aa001' and type = 'cmr';
-update public.vehicles set tachograph = false where id = '00000000-0000-0000-0000-0000000bb001';
+update public.vehicles set tachograph = false, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb001';
 select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'ES', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 0, 'over 2.5 t, a van without a tachograph cannot go cross-border');
-update public.vehicles set tachograph = true where id = '00000000-0000-0000-0000-0000000bb001';
+update public.vehicles set tachograph = true, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb001';
 update public.mover_documents set verified_at = null where company_id = '00000000-0000-0000-0000-0000000aa001' and type = 'licence';
 select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'ES', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 0, 'over 2.5 t, an unverified operator licence blocks cross-border jobs');
@@ -197,15 +200,15 @@ select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 0, 'over 2.5 t, an expired operator licence blocks cross-border jobs');
 update public.mover_documents set expires_at = null where company_id = '00000000-0000-0000-0000-0000000aa001' and type = 'licence';
 -- Up to 2.5 t the CMR insurance is enough; an unknown weight counts as heavier.
-update public.vehicles set tachograph = false, max_weight_kg = 2500 where id = '00000000-0000-0000-0000-0000000bb001';
+update public.vehicles set tachograph = false, max_weight_kg = 2500, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb001';
 update public.mover_documents set verified_at = null where company_id = '00000000-0000-0000-0000-0000000aa001' and type = 'licence';
 select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'ES', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 1, 'a van up to 2.5 t needs only the CMR insurance to go cross-border');
 update public.mover_documents set verified_at = now() where company_id = '00000000-0000-0000-0000-0000000aa001' and type = 'licence';
-update public.vehicles set max_weight_kg = null where id = '00000000-0000-0000-0000-0000000bb001';
+update public.vehicles set max_weight_kg = null, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb001';
 select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'ES', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 0, 'a van of unknown weight counts as over 2.5 t');
-update public.vehicles set max_weight_kg = 2800, tachograph = true where id = '00000000-0000-0000-0000-0000000bb001';
+update public.vehicles set max_weight_kg = 2800, tachograph = true, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb001';
 select is((select count(*)::int from public.quotable_vehicles('SRID=4326;POINT(-9.15 38.71)', 'PT', 'ES', 'VAN')
    where vehicle_id = '00000000-0000-0000-0000-0000000bb001'), 1, 'with every document back in order, the van can go cross-border again');
 
@@ -282,8 +285,8 @@ select is(
 -- A second mover with everything except insurance (COMPLIANCE §5).
 insert into public.mover_companies (id, owner_id, legal_name, country, verification_status, stripe_onboarding_complete)
 values ('00000000-0000-0000-0000-0000000aa002', '00000000-0000-0000-0000-00000000d202', 'Lisboa Transportes Lda', 'PT', 'verified', true);
-insert into public.vehicles (id, company_id, class, plate)
-values ('00000000-0000-0000-0000-0000000bb002', '00000000-0000-0000-0000-0000000aa002', 'VAN', 'TEST-AA-2');
+insert into public.vehicles (id, company_id, class, plate, verified_at)
+values ('00000000-0000-0000-0000-0000000bb002', '00000000-0000-0000-0000-0000000aa002', 'VAN', 'TEST-AA-2', now());
 insert into public.rate_cards (vehicle_id, currency, base_fee, per_km, per_labor_minute_1_helper, confirmed_by_mover_at)
 values ('00000000-0000-0000-0000-0000000bb002', 'EUR', 2500, 60, 28, now());
 insert into public.service_areas (company_id, center, radius_km)

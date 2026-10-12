@@ -20,8 +20,11 @@ import { buildClassOffers, type ClassOffers, type FromPrice, type QuotableVehicl
 export type QuoteDeps = {
   /** Road distance in km from the routing service, or null when it is unavailable. */
   routeKm: (pickup: Place, dropoff: Place) => Promise<number | null>;
-  /** `public.quotable_vehicles` for one class (server only); the countries decide cabotage + cross-border rules. */
-  quotableVehicles: (args: { pickup: Place; dropoff: Place; vehicleClass: VehicleClass }) => Promise<QuotableVehicleRow[]>;
+  /**
+   * `public.quotable_vehicles` for one class (server only); the countries decide cabotage + cross-border
+   * rules, the move date (ISO 8601, today when left out) until when documents must be valid.
+   */
+  quotableVehicles: (args: { pickup: Place; dropoff: Place; vehicleClass: VehicleClass; scheduledAt?: string }) => Promise<QuotableVehicleRow[]>;
   bookingFee: BookingFeeRule | null;
   /** The answer includes test movers (development, design/DECISIONS.md #7) — the UI says so. */
   testMovers: boolean;
@@ -86,7 +89,7 @@ export async function quoteForRequest(body: unknown, deps: QuoteDeps): Promise<Q
         stops: [req.pickupStop, req.dropoffStop],
         items: req.items ?? [...TYPICAL_LOADS[vehicleClass]],
       };
-      const rows = await deps.quotableVehicles({ pickup: req.pickup, dropoff: req.dropoff, vehicleClass });
+      const rows = await deps.quotableVehicles({ pickup: req.pickup, dropoff: req.dropoff, vehicleClass, scheduledAt: req.scheduledAt });
       const crews = Object.fromEntries(
         CREW_SIZES.map((helpers) => {
           const { count, from } = buildClassOffers(vehicleClass, { ...job, helpers }, rows, deps.bookingFee);

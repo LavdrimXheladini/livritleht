@@ -56,6 +56,19 @@ describe('quote request', () => {
     expect(d.quotableVehicles).toHaveBeenCalledWith({ pickup: prishtina, dropoff: prizren, vehicleClass: 'VAN' });
   });
 
+  it('passes the move date on, so movers’ documents must be valid that day (COMPLIANCE §5)', async () => {
+    const d = deps();
+    const scheduledAt = '2026-11-20T09:00:00+01:00';
+    await quoteForRequest({ ...body, vehicleClass: 'VAN', scheduledAt }, d);
+    expect(d.quotableVehicles).toHaveBeenCalledWith({ pickup: prishtina, dropoff: prizren, vehicleClass: 'VAN', scheduledAt });
+  });
+
+  it('rejects a move date that is not a full ISO date and time', async () => {
+    for (const scheduledAt of ['2026-11-20', 'tomorrow', '2026-11-20 09:00', 1795000000000]) {
+      expect((await quoteForRequest({ ...body, scheduledAt }, deps())).ok).toBe(false);
+    }
+  });
+
   it('asks for one class only when told to', async () => {
     const d = deps();
     const r = await quoteForRequest({ ...body, vehicleClass: 'VAN' }, d);

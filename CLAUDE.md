@@ -75,7 +75,7 @@ movershub/
 - `profiles` — id (auth user), role (`customer` | `mover` | `admin`), name, phone, locale
 - `mover_companies` — legal_name, registration_no, tax_id, tax_residency_country (DAC7), address, country, is_business, verification_status, stripe_account_id, stripe_onboarding_complete, self_certification_at
 - `mover_documents` — company_id, type (`id`, `registration`, `insurance`, `cmr`, `licence`), file_path (private bucket), expires_at, verified_at
-- `vehicles` — company_id, class (`SMALL` | `VAN` | `LARGE_VAN` | `BOX` | `TRUCK`), plate, max_weight_kg, volume_m3, has_tail_lift, tachograph (bool), active
+- `vehicles` — company_id, class (`SMALL` | `VAN` | `LARGE_VAN` | `BOX` | `TRUCK`), plate, max_weight_kg, volume_m3, has_tail_lift, tachograph (bool), active, verified_at. **Vehicle verification:** `verified_at` is set only by the service role / admins (not in movers' column grants); new vehicles start unverified, and a change to class, plate, max_weight_kg or tachograph clears it unless the same update records a new check. Unverified vehicles are never quoted. The class must fit the weight: `BOX` ≤ 3500 kg, `TRUCK` > 3500 kg (or unknown)
 - `rate_cards` — vehicle_id, currency, base_fee, per_km, per_labor_minute_1_helper, per_labor_minute_2_helpers, per_labor_minute_3_helpers, min_price, floor_without_lift_fee, heavy_item_fee, assembly_per_item, long_distance_threshold_km, long_distance_per_km, confirmed_by_mover_at
 - `service_areas` — company_id, geography (PostGIS polygon or center + radius_km)
 - `jobs` — customer_id, type (`ITEM` | `SMALL_MOVE` | `FULL_MOVE` | `CROSS_BORDER`), vehicle_class, helpers, scheduled_at, status, pickup/dropoff (address + `geography(Point)`), floors + has_lift per stop, items (jsonb), distance_km, est_labor_min, chosen_mover_company_id, chosen_vehicle_id
@@ -89,7 +89,7 @@ movershub/
 - `reviews` — job_id (must be COMPLETED), rating, text, verified
 - `disputes`, `audit_log`
 - `waitlist` — email (unique, case-insensitive), locale, created_at. Insert-only via API (landing footer); read only via service role. Retention: `waitlist` in retention.config
-- `suspensions` — company_id, kind (`restriction` | `suspension` | `termination`), flagged_by (`algorithm` | `customer_report` | `admin`), reason_text (required), is_serious_violation, reviewed_by (human admin, required before effect), notice_sent_at, effective_at (≥ notice_sent_at + 30 days for termination unless serious violation), lifted_at
+- `suspensions` — company_id, kind (`restriction` | `suspension` | `termination`), flagged_by (`algorithm` | `customer_report` | `admin`), reason_text (required), is_serious_violation, reviewed_by (human admin, required before effect), notice_sent_at, effective_at (≥ notice_sent_at + 30 days for termination unless serious violation), lifted_at. Enforced in the database; written by the service role only; the mover reads their own once `notice_sent_at` is set. A reviewed suspension/termination in effect between now and the move date removes the company from quotes; a flag alone never does
 - `mover_appeals` — company_id, suspension_id (nullable), subject (`restriction` | `suspension` | `termination` | `document_rejection` | `other`), text, attachment_path, status (`open` | `under_review` | `upheld` | `rejected`), reviewed_by, decision_reason, created_at, resolved_at
 - `terms_versions` — audience (`mover` | `customer`), version, locale, document_path, published_at, effective_at (mover terms: ≥ published_at + 15 days)
 - `terms_notices` — company_id, terms_version_id, channel (`email` | `in_app`), sent_at
@@ -138,7 +138,7 @@ platform_commission = round(mover_price × take_rate)   // 20% domestic, 15% cro
 mover_payout        = mover_price − platform_commission
 ```
 
-**Vehicle-class screen:** for each class, run the engine for every eligible vehicle (class match, mover active + verified + Stripe ready, service area covers pickup, available at scheduled_at, insurance valid; cross-border also needs CMR + tachograph rules) → show `from €min` and the number of offers. Customer then picks a mover or "Book best offer". The quote is saved in `quotes` and expires (e.g., 15 min).
+**Vehicle-class screen:** for each class, run the engine for every eligible vehicle (class match, vehicle active + verified, mover verified + Stripe ready + not suspended, service area covers pickup, available at scheduled_at, insurance valid on the move date; cross-border also needs CMR + tachograph rules, documents valid on the move date) → show `from €min` and the number of offers. Customer then picks a mover or "Book best offer". The quote is saved in `quotes` and expires (e.g., 15 min).
 
 Distance = route distance between stops at quote time. Traffic/detours never change the price. Changes after booking go through `price_adjustments` (customer must approve).
 

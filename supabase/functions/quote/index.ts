@@ -1,5 +1,5 @@
 // `quote` — prices a job with every eligible mover's OWN rate card (CLAUDE.md §4, COMPLIANCE §1.1).
-//   POST { pickup, dropoff, pickupStop?, dropoffStop?, helpers, items?, vehicleClass? }
+//   POST { pickup, dropoff, pickupStop?, dropoffStop?, helpers, items?, vehicleClass?, scheduledAt? }
 //   → { distanceKm, scope, crossBorder, typicalLoad, testMovers, classes: [{ vehicleClass, count, from, offers, crews }] }
 // Without items each class is priced for its typical load (the landing's "from" prices).
 // Public: visitors see prices before signing in. The client never sends a price — the request
@@ -27,8 +27,13 @@ async function routeKm(a: Place, b: Place): Promise<number | null> {
   return metres === undefined ? null : metres / 1000;
 }
 
-/** Eligible vehicles for one class (`public.quotable_vehicles`, service role only). */
-async function quotableVehicles(args: { pickup: Place; dropoff: Place; vehicleClass: VehicleClass }): Promise<QuotableVehicleRow[]> {
+/** Eligible vehicles for one class on the move date (`public.quotable_vehicles`, service role only). */
+async function quotableVehicles(args: {
+  pickup: Place;
+  dropoff: Place;
+  vehicleClass: VehicleClass;
+  scheduledAt?: string;
+}): Promise<QuotableVehicleRow[]> {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/quotable_vehicles`, {
     method: 'POST',
     headers: { apikey: SERVICE_ROLE_KEY, Authorization: `Bearer ${SERVICE_ROLE_KEY}`, 'Content-Type': 'application/json' },
@@ -38,6 +43,8 @@ async function quotableVehicles(args: { pickup: Place; dropoff: Place; vehicleCl
       p_dropoff_country: args.dropoff.countryCode,
       p_class: args.vehicleClass,
       p_include_test: INCLUDE_TEST_MOVERS,
+      // Left out (undefined is not sent) = now: documents valid today.
+      p_scheduled_at: args.scheduledAt,
     }),
   });
   if (!res.ok) throw new Error(`quotable_vehicles ${res.status}: ${await res.text()}`);

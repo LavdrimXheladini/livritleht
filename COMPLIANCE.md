@@ -256,6 +256,8 @@ The customer experience is like Lugg: pick a vehicle class, see an upfront price
 
 **MUST**
 - Only offer cross-border jobs to movers with verified CMR insurance + licence + tachograph status (see section 5).
+- **Vehicle verification:** the vehicle facts these rules depend on (class, plate, max. weight, tachograph) are checked by an admin before the vehicle is quoted (`vehicles.verified_at`). Any change to them sends the vehicle back to verification — a mover can never declare their way under 2.5 t. The class must fit the weight (box van ≤ 3.5 t, truck > 3.5 t).
+- CMR insurance and operator licence must be valid **on the move date**, not only on the day of the quote.
 - Prefer/flag vans under 2.5 t for small cross-border loads.
 - For routes into non-EU Balkan countries: show customs documentation notice; customs help as a paid add-on.
 - Prices for corridor jobs in EUR.
