@@ -18,10 +18,11 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 | Area | Status |
 |---|---|
 | **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search (also within one city), real map and route, live "from" prices from movers' rate cards (test movers for now), mover section, FAQ, waitlist; live-moves dashboard demo; sign-in by email link |
-| **Customer app** (`mobile/customer`) | Expo app: sign-in screens and home (booking flow not built yet) |
-| **Mover app** (`mobile/mover`) | Expo app: sign-in screens and home (onboarding / jobs not built yet) |
+| **Customer app** (`mobile/customer`) | Expo app in the website's design: public home with address search and live "from" prices (like the website), sign-in screens (booking flow not built yet) |
+| **Mover app** (`mobile/mover`) | Expo app "Ranktrip Partner" (dark design): intro, example job request priced by the live quote, setup checklist after sign-in (onboarding / jobs not built yet) |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
-| **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first |
+| **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first; prices are shown exactly (to the cent; whole lek, denar and dinar) |
+| **Address search for the apps** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — visitors' IP addresses never reach the geocoder |
 | **Not built yet** | Booking a mover, Stripe payments, live GPS, mover onboarding screens, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
 
 Prices on the landing page come from each mover's own rate card via the server `quote` function — for now
@@ -101,14 +102,22 @@ On a machine with little free memory, run **one** app at a time.
 ```bash
 pnpm lint          # ESLint (2 packages at a time)
 pnpm typecheck     # TypeScript (2 packages at a time)
-pnpm test          # unit tests (Vitest), incl. the banned-wording check on all translations
+pnpm test          # unit tests (Vitest), incl. the banned-wording check, + the COMPLIANCE-TESTS.md check
 pnpm --filter @ranktrip/e2e install-browsers   # once
 pnpm e2e           # Playwright against a production build on port 3100 (offline test data)
+pnpm e2e:visual    # screenshots of the website (5 languages, phone + laptop) compared with the saved ones
+pnpm e2e:apps      # screenshots of both phone apps in their browser preview, one app at a time
 pnpm test:db:cloud # database tests on the linked cloud project — no Docker; everything is rolled back
 pnpm test:db       # the same tests on a local database (Docker + `supabase start`)
 ```
 
-API tests for the deployed `quote` function (skipped unless both variables are set):
+The screenshot tests are still and offline (no motion, maps show their drawn fallback, saved prices), so
+the same code gives the same pictures. After an intended design change, look at the new pictures in
+`web/e2e/test-results/` and accept them with `pnpm e2e:visual --update-snapshots` (or `pnpm e2e:apps
+--update-snapshots`). Saved pictures are per operating system (`-win32.png`); CI runs Linux and does not run
+them yet.
+
+API tests for the deployed `quote` and `places` functions (skipped unless both variables are set):
 
 ```bash
 QUOTE_API_URL=https://<project-ref>.supabase.co/functions/v1/quote QUOTE_API_KEY=<publishable key> pnpm e2e
@@ -123,8 +132,14 @@ pnpm functions:deploy   # copies the shared pricing code into supabase/functions
 The `quote` function quotes test movers only while the project secret `INCLUDE_TEST_MOVERS` is `true`
 (`supabase secrets set INCLUDE_TEST_MOVERS=false` before launch, and delete the test movers).
 
+`quote` and `places` are public. Browsers may call them only from the apps' local preview
+(`http://localhost` / `127.0.0.1`, see `supabase/functions/_shared/http.ts`); the website calls them from
+its server and the phone apps don't need CORS.
+
 ## Good to know
 
+- **Required tests:** [`COMPLIANCE-TESTS.md`](COMPLIANCE-TESTS.md) shows which test covers each rule of
+  COMPLIANCE.md §13; add the tests when you build a feature and update its row.
 - **Wording and pricing rules:** read [`COMPLIANCE.md`](COMPLIANCE.md) before changing pricing, jobs,
   payments, mover accounts, tracking or personal data. All user-facing text goes through
   `packages/i18n` (5 languages); the test suite blocks banned words (e.g. "our movers", "drivers").

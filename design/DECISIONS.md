@@ -17,6 +17,9 @@ these decisions apply:
 | 9 | Prices per country (2026-10-12) | Every country has its own price level and currency (EUR in Kosovo/Germany/Austria, lek, denar, złoty, franc). Researched reference rates live in `packages/shared/src/market-rates.ts` — information only (COMPLIANCE §1): they pre-fill a new mover's card, which the mover reviews and saves, and they price the test movers. Movers always set their own rates. |
 | 10 | Moves within one city (2026-10-12) | Local moves are first-class: same city, or ≤ 25 km in one country, shows as **Local**; neighbourhoods are shown instead of "Prishtina → Prishtina" ("Dardania → Velania"); popular routes include local ones. |
 | 11 | Home page prices (2026-10-12) | Before the visitor lists items, the "from" prices assume a **typical load per van size at ground floor** (a few boxes · sofa + 10 boxes · studio · 2–3 rooms · house) — the recommended option, taken when the owner said "continue". Easy to change: `TYPICAL_LOADS` in `packages/shared/src/items.ts`. The note under the prices says so, and says when they come from test movers. |
+| 12 | Phone apps, step 6 (2026-10-12) | Both apps open on a **public home**, like the website: prices are public and sign-in is needed only to book (and SMS/email codes on real phones still need Twilio / SMTP). Customer app: hero + quote card with address search (`places` function) and live "from" prices. Mover app "Ranktrip Partner" (dark): intro, an example request priced by the live quote, and after sign-in a setup checklist (company, documents, vans, rates, payouts — "coming next"). One UI kit in `mobile/core` mirrors the website's primitives and tokens. |
+| 13 | Prices to the cent (2026-10-12) | A "from" price must **equal** the lowest mover quote (COMPLIANCE §13), so prices and payouts are never rounded for display — on the website and in both apps ("from €149.42"; whole amounts stay "€162"). Decision #2 keeps its look. |
+| 14 | Whole lek, denar and dinar (2026-10-12) | Their hundredths are no longer used (no qindarka; deni coins withdrawn 2013; para gone since 2008), so the **server** prices them in whole units: every line of a quote, the commission, the payout and the booking fee (`roundToPriceStep` in `packages/shared/src/money.ts`, used by the pricing engine). The lines still add up exactly, and the shown price is the charged price. Euro, złoty and francs keep their cents. |
 
 ## Landing page status
 
@@ -80,6 +83,48 @@ Still open:
   (step 9, admin login) replace the simulation.
 - Speed on the job card is display-only: with real data it must never feed ratings, ranking or
   discipline of movers (§9.1).
+
+## Phone apps (step 6) status
+
+Done (2026-10-12) — both apps restyled to the design (customer light, mover dark), reviewed by five
+reviewers with every finding checked by three independent checkers; the 20 confirmed findings are fixed:
+- Errors on dark screens use `danger-on-dark` (#ef8a80, 8:1 on night) instead of the light-screen red (3.5:1).
+- Screen readers hear errors (sign-in fields, quote errors) through `useAnnouncement` — the web's
+  `role="alert"` does nothing on iOS / Android — and stale prices are marked busy while a new route is quoted.
+- One class per property in the UI kit (`cx` doesn't merge classes the way the website's `cn` does).
+- The apps get their own shadows (`nativeShadow` in tokens.json: one layer + Android elevation).
+- Address search: "Done" / Enter only takes a suggestion for what is typed now (also on the website).
+- The `places` function never logs the typed address.
+
+Still open:
+- Sign-in on real phones needs Twilio (SMS codes) or SMTP (email codes) on the cloud project.
+- ~~Lek, denar and dinar prices with decimals~~ — done: whole units on the server (decision #14).
+
+## Tests (step 7) status
+
+Done (2026-10-12):
+- **Screenshot tests**, still and offline (no motion, maps show their drawn fallback, a saved quote for the apps):
+  `pnpm e2e:visual` — the website: landing in all 5 languages on a phone, English on a laptop, the live
+  dashboard (phone + laptop), sign-in; `pnpm e2e:apps` — both apps in their browser preview: customer home and
+  sign-in error, mover home (English + Albanian), accepted example, dark sign-in error. Saved pictures are per
+  operating system (ours: Windows); CI (Linux) doesn't run them yet.
+- **COMPLIANCE.md §13 map**: [`COMPLIANCE-TESTS.md`](../COMPLIANCE-TESTS.md) names the tests for each required
+  rule, or the build step that brings the feature (today 4 covered, 7 partly, 12 not built yet). `pnpm test`
+  fails when a rule is missing there or a named test disappears.
+- **New tests where the features exist**, found by an audit of every §13 rule: each mover's offer comes from
+  their own card (no cap, rates read fresh, every line = rate × quantity live), price-like fields from the
+  client are rejected, insurance / CMR / tachograph / licence / Stripe each block on their own, the 2.5 t rule,
+  legal name on every offer, street never shown to movers before accepting, account deletion keeps a mover's
+  company records, and the banned-wording check now catches §12 in all five languages (and in the sign-in
+  email / SMS).
+
+Still open:
+- Linux pictures for CI: generate them once in CI (or Docker — ask first), then CI can run the screenshot tests.
+- Most of §13 waits for booking, job offers, GPS, payments, reviews, admin and DAC7 — see COMPLIANCE-TESTS.md.
+- **Vehicle weight is self-declared** (found by the audit): a mover can set `max_weight_kg` to 2,500 or less
+  without any check, and vans up to 2.5 t need no tachograph or operator licence for cross-border jobs
+  (COMPLIANCE §5, §11). To decide with mover onboarding (step 2): e.g. an admin checks the weight against
+  the vehicle registration document, and changing it sends the vehicle back to verification.
 
 ## Real prices (step 4) — open items
 
