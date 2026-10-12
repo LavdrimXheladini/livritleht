@@ -1,5 +1,5 @@
 begin;
-select plan(13);
+select plan(15);
 
 -- Fixtures: three users created the way GoTrue does it.
 insert into auth.users (id, phone, raw_user_meta_data)
@@ -53,6 +53,16 @@ select throws_ok(
 
 set local role anon;
 select throws_ok($$ select * from public.profiles $$, '42501', null, 'anon cannot read profiles');
+
+-- Account deletion (COMPLIANCE §9): the platform deletes the login, the profile goes with it.
+reset role;
+select set_config('request.jwt.claims', '', true);
+delete from auth.users where id = '00000000-0000-0000-0000-00000000c001';
+select is((select count(*)::int from public.profiles where id = '00000000-0000-0000-0000-00000000c001'),
+  0, 'deleting a customer''s account erases their profile (COMPLIANCE §9)');
+delete from auth.users where id = '00000000-0000-0000-0000-00000000d001';
+select is((select count(*)::int from public.profiles where id = '00000000-0000-0000-0000-00000000d001'),
+  0, 'deleting a mover''s account without a company erases their profile (COMPLIANCE §9)');
 
 select * from finish();
 rollback;

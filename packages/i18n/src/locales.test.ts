@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { resolveLocale, resources } from './index';
@@ -33,24 +36,43 @@ const word = (src: string) => new RegExp(`(?<!\\p{L})(?:${src})(?!\\p{L})`, 'iu'
 
 const BANNED: Record<string, RegExp[]> = {
   en: [
-    word('our (movers?|team|vans?|drivers?|price)'),
-    word('ranktrip (movers?|price)'),
+    word('our (movers?|team|vans?|drivers?|prices?)'),
+    word("ranktrip(?:['’]s)? (movers?|prices?|team|vans?)"),
     word('ranktrip will move'),
     word('hire ranktrip'),
     word('ranktrip (covers|guarantees)'),
     word('drivers?|workers?|staff|employees?|salary|salaries|wages?'),
     word('assigned to you'),
   ],
-  sq: [word('shoferë?t?|punëtor\\p{L}*|rrog\\p{L}*|pag[ëe]n?'), word('tanë')],
-  pl: [word('nasi|naszych|nasza|nasz'), word('kierowc\\p{L}*|pracowni\\p{L}*|pensj\\p{L}*')],
-  sr: [word('naši|naše|naših|naš'), word('vozač\\p{L}*|radnik\\p{L}*|zaposlen\\p{L}*|plat[aeu]')],
+  sq: [
+    // Forms of "pagë" (wage) only — "pagesa" (payment, payout) is fine.
+    word('shofer\\p{L}*|punëtor\\p{L}*|punonjës\\p{L}*|staf\\p{L}*|rrog\\p{L}*|pag(?:a|at|ave|ash|ë|ën|ës|e|en|es)'),
+    word('tanë'),
+    word('(transportues\\p{L}*|ekip\\p{L}*|çmim\\p{L}*|furgon\\p{L}*|kamion\\p{L}*) (ynë|jonë|tonë|tona)'),
+    word('ranktrip (garanton|mbulon)|çmim\\p{L}* (i|e) ranktrip\\p{L}*'),
+  ],
+  pl: [
+    word('nasz(?:a|e|ą|ego|ej|emu|ym|ymi|ych)?|nasi'),
+    // Forms of "płaca" (wage) only — "płacisz", "płacę" (you pay, I pay) are fine.
+    word('kierowc\\p{L}*|pracowni\\p{L}*|personel\\p{L}*|pensj\\p{L}*|wynagrodze\\p{L}*|płac(?:a|e|y|om|ami|ach)'),
+    word('ranktrip (gwarantuje|pokrywa)|cen(?:a|y|ę|ą|ie) ranktrip\\p{L}*'),
+  ],
+  sr: [
+    // Listed forms: a catch-all "naš…" would flag "našli" (found).
+    word('naš(?:a|e|eg|ega|em|emu|i|ih|im|ima|oj|om|u)?'),
+    // "plaća" is left out: it also means "pays".
+    word('vozač\\p{L}*|radni[kc]\\p{L}*|zaposlen\\p{L}*|osoblj\\p{L}*|plat[aeu]'),
+    word('ranktrip (garantuje|pokriva)|ranktrip cen\\p{L}*|cen(?:a|e|u) ranktrip\\p{L}*'),
+  ],
   de: [
     word('unser\\p{L}*'),
-    word('fahrer\\p{L}*|mitarbeiter\\p{L}*|angestellte\\p{L}*|gehalt|gehälter|lohn|löhne'),
-    word('ranktrip (garantiert|übernimmt|haftet)'),
+    word('fahrer\\p{L}*|mitarbeiter\\p{L}*|arbeiter\\p{L}*|angestellte\\p{L}*|beschäftigte\\p{L}*|personal|gehalt|gehälter|lohn|löhne'),
+    word('ranktrip (garantiert|übernimmt|haftet)|ranktrip-?preis\\p{L}*|preise? von ranktrip'),
     word('dir zugewiesen|ihnen zugewiesen'),
   ],
 };
+
+const banned = (lng: string, text: string) => (BANNED[lng] ?? []).filter((p) => p.test(text));
 
 describe('banned wording (COMPLIANCE §12)', () => {
   for (const [lng, patterns] of Object.entries(BANNED)) {
@@ -61,6 +83,39 @@ describe('banned wording (COMPLIANCE §12)', () => {
       expect(hits).toEqual([]);
     });
   }
+
+  // The patterns themselves: every §12 phrase is caught in each language, while words that only
+  // look alike — and are in the texts today — pass.
+  const MUST_CATCH: Record<string, string[]> = {
+    en: ['Our movers', "Ranktrip's movers", 'Ranktrip price', 'Hire Ranktrip', 'Ranktrip guarantees', 'Drivers', 'Staff', 'Salary', 'Assigned to you'],
+    sq: ['transportuesit tanë', 'ekipi ynë', 'çmimi ynë', 'shoferi', 'punonjësit', 'stafi', 'paga', 'rroga', 'Ranktrip garanton', 'Çmimi i Ranktrip'],
+    pl: ['nasi przewoźnicy', 'nasze ceny', 'naszą ekipę', 'kierowca', 'pracownicy', 'personel', 'wynagrodzenie', 'płaca', 'Ranktrip gwarantuje', 'cena Ranktrip'],
+    sr: ['naši prevoznici', 'naša cena', 'našu ekipu', 'vozači', 'radnici', 'osoblje', 'plata', 'Ranktrip garantuje', 'Ranktrip cena'],
+    de: ['unsere Umzugsunternehmen', 'Fahrer', 'Arbeiter', 'Mitarbeiter', 'Personal', 'Beschäftigte', 'Lohn', 'Ranktrip-Preis', 'Ranktrip garantiert', 'dir zugewiesen'],
+  };
+  const MUST_PASS: Record<string, string[]> = {
+    en: ['Movers on Ranktrip', "Mover's price", 'Payout', 'Accept job', "Mover's insurance covers"],
+    sq: ['Pagesa për ty', 'pagesën', 'paguhesh', 'kushton', 'çmimi i transportuesit'],
+    pl: ['Płacisz w aplikacji', 'Jak płacę?', 'Wypłata', 'cena przewoźnika'],
+    sr: ['našli', 'plaćanje', 'Isplata', 'radni sto', 'osiguranja pokrivaju'],
+    de: ['Arbeitszimmer', 'Personalausweis', 'Auszahlung', 'Preis des Umzugsunternehmens'],
+  };
+  for (const lng of Object.keys(BANNED)) {
+    it(`${lng} patterns catch every §12 phrase and nothing that only looks alike`, () => {
+      expect((MUST_CATCH[lng] ?? []).filter((phrase) => banned(lng, phrase).length === 0)).toEqual([]);
+      expect((MUST_PASS[lng] ?? []).filter((phrase) => banned(lng, phrase).length > 0)).toEqual([]);
+    });
+  }
+
+  it('texts outside the translation files (sign-in email and SMS) use marketplace wording too', () => {
+    const root = join(import.meta.dirname, '..', '..', '..', 'supabase');
+    const templates = readdirSync(join(root, 'templates'))
+      .filter((f) => f.endsWith('.html'))
+      .map((f) => readFileSync(join(root, 'templates', f), 'utf8').replace(/<[^>]+>/g, ' '));
+    const config = [...readFileSync(join(root, 'config.toml'), 'utf8').matchAll(/^\s*(?:subject|template)\s*=\s*"(.*)"/gm)].map((m) => m[1]!);
+    expect(templates.length + config.length).toBeGreaterThan(0);
+    expect([...templates, ...config].filter((text) => banned('en', text).length > 0)).toEqual([]);
+  });
 });
 
 describe('resolveLocale', () => {

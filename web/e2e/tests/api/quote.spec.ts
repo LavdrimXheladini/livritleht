@@ -12,7 +12,20 @@ const prizren = { label: 'Prizren', area: 'Prizren', lat: 42.2139, lon: 20.7397,
 const munich = { label: 'Munich', area: 'Munich', lat: 48.1351, lon: 11.582, countryCode: 'DE' };
 const job = { helpers: 2, items: [{ key: 'sofa3', qty: 1 }, { key: 'box', qty: 14 }] };
 
-type Offer = { companyName: string; quote: { currency: string; moverPrice: number; total: number } };
+type Line = { kind: string; amount: number; quantity?: number; unitAmount?: number };
+type Offer = {
+  companyName: string;
+  quote: {
+    currency: string;
+    moverPrice: number;
+    total: number;
+    lines: Line[];
+    bookingFee: number | null;
+    takeRatePct: number;
+    platformCommission: number;
+    moverPayout: number;
+  };
+};
 type ClassOffers = { vehicleClass: string; count: number; from: { currency: string; moverPrice: number }[]; offers: Offer[] };
 type QuoteResponse = { distanceKm: number; crossBorder: boolean; classes: ClassOffers[] };
 
@@ -34,6 +47,47 @@ test('"from" is the lowest mover quote in each class, from the server (COMPLIANC
       const prices = c.offers.filter((o) => o.quote.currency === f.currency).map((o) => o.quote.moverPrice);
       expect(f.moverPrice).toBe(Math.min(...prices));
     }
+  }
+});
+
+test('rejects any other price field a client sends (COMPLIANCE §1.1)', async ({ request }) => {
+  for (const extra of [{ moverPrice: 1 }, { total: 1 }, { distanceKm: 1 }, { crossBorder: true }]) {
+    const res = await request.post(url, { headers: { apikey: key }, data: { pickup: prishtina, dropoff: prizren, ...job, ...extra } });
+    expect(res.status()).toBe(400);
+    expect((await res.json()).error).toBe('invalid_request');
+  }
+});
+
+test('a live offer uses exactly its mover’s own card (COMPLIANCE §1.1)', async ({ request }) => {
+  // Test Movers Prishtina's van as saved by migrations 20261012120000 + 20261012130000 (test data).
+  const card = { baseFee: 2000, perKm: 50, perMinuteCrewOf2: 47, heavyItemFee: 400 };
+  const res = await request.post(url, { headers: { apikey: key }, data: { pickup: prishtina, dropoff: prizren, ...job, vehicleClass: 'VAN' } });
+  const body = (await res.json()) as QuoteResponse;
+  const offer = body.classes[0]!.offers.find((o) => o.companyName === 'Test Movers Prishtina')!;
+  const line = (kind: string) => offer.quote.lines.find((l) => l.kind === kind)!;
+  expect(line('base').amount).toBe(card.baseFee);
+  expect(line('distance').unitAmount).toBe(card.perKm);
+  expect(line('labor').unitAmount).toBe(card.perMinuteCrewOf2);
+  expect(line('heavyItems')).toMatchObject({ unitAmount: card.heavyItemFee, quantity: 1 }); // the sofa
+  const tenths = Math.round(body.distanceKm * 10);
+  expect(offer.quote.moverPrice).toBe(
+    card.baseFee + Math.round((card.perKm * tenths) / 10) + card.perMinuteCrewOf2 * line('labor').quantity! + card.heavyItemFee,
+  );
+});
+
+test('every live offer adds up line by line: rate × quantity, nothing added on top (COMPLIANCE §1)', async ({ request }) => {
+  const res = await request.post(url, { headers: { apikey: key }, data: { pickup: prishtina, dropoff: prizren, ...job } });
+  const offers = ((await res.json()) as QuoteResponse).classes.flatMap((c) => c.offers);
+  expect(offers.length).toBeGreaterThan(0);
+  for (const { quote } of offers) {
+    expect(quote.lines.reduce((sum, l) => sum + l.amount, 0)).toBe(quote.moverPrice);
+    for (const line of quote.lines) {
+      // Every line is the mover's rate × the quantity (km, minutes, floors, items) — nothing added by the platform.
+      if (line.unitAmount !== undefined) expect(line.amount).toBe(Math.round(line.unitAmount * line.quantity!));
+    }
+    expect(quote.total).toBe(quote.moverPrice + (quote.bookingFee ?? 0));
+    expect(quote.platformCommission).toBe(Math.round((quote.moverPrice * quote.takeRatePct) / 100));
+    expect(quote.moverPayout).toBe(quote.moverPrice - quote.platformCommission);
   }
 });
 
@@ -82,4 +136,29 @@ test('lek and denar prices are whole units (their hundredths are no longer used)
       expect(quote.total % 100).toBe(0);
     }
   }
+});
+
+test('every offer names its mover by the company’s legal name (COMPLIANCE §4)', async ({ request }) => {
+  const res = await request.post(url, { headers: { apikey: key }, data: { pickup: prishtina, dropoff: prizren, ...job } });
+  const offers = ((await res.json()) as QuoteResponse).classes.flatMap((c) => c.offers);
+  expect(offers.length).toBeGreaterThan(0);
+  for (const { companyName } of offers) {
+    expect(companyName.length).toBeGreaterThanOrEqual(2); // mover_companies.legal_name: 2–160 characters
+    expect(companyName).not.toMatch(/ranktrip/i); // the mover is the provider, never the platform
+  }
+  expect(offers.map((o) => o.companyName)).toContain('Test Movers Prishtina');
+});
+
+test('cross-border quotes leave out movers without CMR insurance (COMPLIANCE §5, §11)', async ({ request }) => {
+  const skopje = { label: 'Skopje', area: 'Skopje', lat: 41.9973, lon: 21.428, countryCode: 'MK' };
+  const movers = async (dropoff: typeof prizren) => {
+    const res = await request.post(url, { headers: { apikey: key }, data: { pickup: prishtina, dropoff, ...job } });
+    return ((await res.json()) as QuoteResponse).classes.flatMap((c) => c.offers.map((o) => o.companyName));
+  };
+  // At home both test movers take the job; neither has CMR insurance, so abroad neither is offered.
+  expect(await movers(prizren)).toEqual(expect.arrayContaining(['Test Movers Prishtina', 'Test Transport Prizren']));
+  const abroad = await movers(skopje);
+  expect(abroad.length).toBeGreaterThan(0);
+  expect(abroad).not.toContain('Test Movers Prishtina');
+  expect(abroad).not.toContain('Test Transport Prizren');
 });

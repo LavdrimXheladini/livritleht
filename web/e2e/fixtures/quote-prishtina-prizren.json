@@ -1,0 +1,543 @@
+{
+  "distanceKm": 83.2,
+  "distanceEstimated": false,
+  "scope": "domestic",
+  "crossBorder": false,
+  "bookingFeeDecided": false,
+  "typicalLoad": true,
+  "testMovers": true,
+  "classes": [
+    {
+      "vehicleClass": "SMALL",
+      "count": 1,
+      "from": [
+        {
+          "currency": "EUR",
+          "moverPrice": 5586,
+          "moverPayout": 4469,
+          "bookingFee": null,
+          "total": 5586
+        }
+      ],
+      "offers": [
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000101",
+          "companyId": "7e570000-0000-4000-8000-000000000001",
+          "companyName": "Test Movers Prishtina",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 22,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 1500
+              },
+              {
+                "kind": "distance",
+                "amount": 3162,
+                "quantity": 83.2,
+                "unitAmount": 38
+              },
+              {
+                "kind": "labor",
+                "amount": 924,
+                "quantity": 22,
+                "unitAmount": 42
+              }
+            ],
+            "moverPrice": 5586,
+            "bookingFee": null,
+            "total": 5586,
+            "takeRatePct": 20,
+            "platformCommission": 1117,
+            "moverPayout": 4469
+          }
+        }
+      ],
+      "crews": {
+        "1": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 5490,
+              "moverPayout": 4392,
+              "bookingFee": null,
+              "total": 5490
+            }
+          ]
+        },
+        "2": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 5586,
+              "moverPayout": 4469,
+              "bookingFee": null,
+              "total": 5586
+            }
+          ]
+        },
+        "3": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 5665,
+              "moverPayout": 4532,
+              "bookingFee": null,
+              "total": 5665
+            }
+          ]
+        }
+      }
+    },
+    {
+      "vehicleClass": "VAN",
+      "count": 2,
+      "from": [
+        {
+          "currency": "EUR",
+          "moverPrice": 7942,
+          "moverPayout": 6354,
+          "bookingFee": null,
+          "total": 7942
+        }
+      ],
+      "offers": [
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000201",
+          "companyId": "7e570000-0000-4000-8000-000000000002",
+          "companyName": "Test Transport Prizren",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 40,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 1900
+              },
+              {
+                "kind": "distance",
+                "amount": 3910,
+                "quantity": 83.2,
+                "unitAmount": 47
+              },
+              {
+                "kind": "labor",
+                "amount": 1760,
+                "quantity": 40,
+                "unitAmount": 44
+              },
+              {
+                "kind": "heavyItems",
+                "amount": 372,
+                "quantity": 1,
+                "unitAmount": 372
+              }
+            ],
+            "moverPrice": 7942,
+            "bookingFee": null,
+            "total": 7942,
+            "takeRatePct": 20,
+            "platformCommission": 1588,
+            "moverPayout": 6354
+          }
+        },
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000102",
+          "companyId": "7e570000-0000-4000-8000-000000000001",
+          "companyName": "Test Movers Prishtina",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 40,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 2000
+              },
+              {
+                "kind": "distance",
+                "amount": 4160,
+                "quantity": 83.2,
+                "unitAmount": 50
+              },
+              {
+                "kind": "labor",
+                "amount": 1880,
+                "quantity": 40,
+                "unitAmount": 47
+              },
+              {
+                "kind": "heavyItems",
+                "amount": 400,
+                "quantity": 1,
+                "unitAmount": 400
+              }
+            ],
+            "moverPrice": 8440,
+            "bookingFee": null,
+            "total": 8440,
+            "takeRatePct": 20,
+            "platformCommission": 1688,
+            "moverPayout": 6752
+          }
+        }
+      ],
+      "crews": {
+        "1": {
+          "count": 2,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 7700,
+              "moverPayout": 6160,
+              "bookingFee": null,
+              "total": 7700
+            }
+          ]
+        },
+        "2": {
+          "count": 2,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 7942,
+              "moverPayout": 6354,
+              "bookingFee": null,
+              "total": 7942
+            }
+          ]
+        },
+        "3": {
+          "count": 2,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 7982,
+              "moverPayout": 6386,
+              "bookingFee": null,
+              "total": 7982
+            }
+          ]
+        }
+      }
+    },
+    {
+      "vehicleClass": "LARGE_VAN",
+      "count": 2,
+      "from": [
+        {
+          "currency": "EUR",
+          "moverPrice": 15280,
+          "moverPayout": 12224,
+          "bookingFee": null,
+          "total": 15280
+        }
+      ],
+      "offers": [
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000103",
+          "companyId": "7e570000-0000-4000-8000-000000000001",
+          "companyName": "Test Movers Prishtina",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 106,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 2600
+              },
+              {
+                "kind": "distance",
+                "amount": 5408,
+                "quantity": 83.2,
+                "unitAmount": 65
+              },
+              {
+                "kind": "labor",
+                "amount": 5512,
+                "quantity": 106,
+                "unitAmount": 52
+              },
+              {
+                "kind": "heavyItems",
+                "amount": 1760,
+                "quantity": 4,
+                "unitAmount": 440
+              }
+            ],
+            "moverPrice": 15280,
+            "bookingFee": null,
+            "total": 15280,
+            "takeRatePct": 20,
+            "platformCommission": 3056,
+            "moverPayout": 12224
+          }
+        },
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000301",
+          "companyId": "7e570000-0000-4000-8000-000000000003",
+          "companyName": "Test Logistics Ferizaj",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 106,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 2800
+              },
+              {
+                "kind": "distance",
+                "amount": 5741,
+                "quantity": 83.2,
+                "unitAmount": 69
+              },
+              {
+                "kind": "labor",
+                "amount": 5830,
+                "quantity": 106,
+                "unitAmount": 55
+              },
+              {
+                "kind": "heavyItems",
+                "amount": 1864,
+                "quantity": 4,
+                "unitAmount": 466
+              }
+            ],
+            "moverPrice": 16235,
+            "bookingFee": null,
+            "total": 16235,
+            "takeRatePct": 20,
+            "platformCommission": 3247,
+            "moverPayout": 12988
+          }
+        }
+      ],
+      "crews": {
+        "1": {
+          "count": 2,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 14696,
+              "moverPayout": 11757,
+              "bookingFee": null,
+              "total": 14696
+            }
+          ]
+        },
+        "2": {
+          "count": 2,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 15280,
+              "moverPayout": 12224,
+              "bookingFee": null,
+              "total": 15280
+            }
+          ]
+        },
+        "3": {
+          "count": 2,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 15528,
+              "moverPayout": 12422,
+              "bookingFee": null,
+              "total": 15528
+            }
+          ]
+        }
+      }
+    },
+    {
+      "vehicleClass": "BOX",
+      "count": 1,
+      "from": [
+        {
+          "currency": "EUR",
+          "moverPrice": 21833,
+          "moverPayout": 17466,
+          "bookingFee": null,
+          "total": 21833
+        }
+      ],
+      "offers": [
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000202",
+          "companyId": "7e570000-0000-4000-8000-000000000002",
+          "companyName": "Test Transport Prizren",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 177,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 3200
+              },
+              {
+                "kind": "distance",
+                "amount": 6573,
+                "quantity": 83.2,
+                "unitAmount": 79
+              },
+              {
+                "kind": "labor",
+                "amount": 9735,
+                "quantity": 177,
+                "unitAmount": 55
+              },
+              {
+                "kind": "heavyItems",
+                "amount": 2325,
+                "quantity": 5,
+                "unitAmount": 465
+              }
+            ],
+            "moverPrice": 21833,
+            "bookingFee": null,
+            "total": 21833,
+            "takeRatePct": 20,
+            "platformCommission": 4367,
+            "moverPayout": 17466
+          }
+        }
+      ],
+      "crews": {
+        "1": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 20624,
+              "moverPayout": 16499,
+              "bookingFee": null,
+              "total": 20624
+            }
+          ]
+        },
+        "2": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 21833,
+              "moverPayout": 17466,
+              "bookingFee": null,
+              "total": 21833
+            }
+          ]
+        },
+        "3": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 22206,
+              "moverPayout": 17765,
+              "bookingFee": null,
+              "total": 22206
+            }
+          ]
+        }
+      }
+    },
+    {
+      "vehicleClass": "TRUCK",
+      "count": 1,
+      "from": [
+        {
+          "currency": "EUR",
+          "moverPrice": 42048,
+          "moverPayout": 33638,
+          "bookingFee": null,
+          "total": 42048
+        }
+      ],
+      "offers": [
+        {
+          "vehicleId": "7e57a000-0000-4000-8000-000000000302",
+          "companyId": "7e570000-0000-4000-8000-000000000003",
+          "companyName": "Test Logistics Ferizaj",
+          "quote": {
+            "currency": "EUR",
+            "estLaborMin": 309,
+            "lines": [
+              {
+                "kind": "base",
+                "amount": 5100
+              },
+              {
+                "kind": "distance",
+                "amount": 10566,
+                "quantity": 83.2,
+                "unitAmount": 127
+              },
+              {
+                "kind": "labor",
+                "amount": 21630,
+                "quantity": 309,
+                "unitAmount": 70
+              },
+              {
+                "kind": "heavyItems",
+                "amount": 4752,
+                "quantity": 8,
+                "unitAmount": 594
+              }
+            ],
+            "moverPrice": 42048,
+            "bookingFee": null,
+            "total": 42048,
+            "takeRatePct": 20,
+            "platformCommission": 8410,
+            "moverPayout": 33638
+          }
+        }
+      ],
+      "crews": {
+        "1": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 39473,
+              "moverPayout": 31578,
+              "bookingFee": null,
+              "total": 39473
+            }
+          ]
+        },
+        "2": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 42048,
+              "moverPayout": 33638,
+              "bookingFee": null,
+              "total": 42048
+            }
+          ]
+        },
+        "3": {
+          "count": 1,
+          "from": [
+            {
+              "currency": "EUR",
+              "moverPrice": 42690,
+              "moverPayout": 34152,
+              "bookingFee": null,
+              "total": 42690
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

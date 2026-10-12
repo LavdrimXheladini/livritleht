@@ -73,6 +73,19 @@ test('address search: type, pick a suggestion, the server re-prices the route', 
   await expect(page.locator('#movers')).not.toContainText('Tirana Centre');
 });
 
+test('accepting in the mover phone names the pickup area, never its street (COMPLIANCE §9.1)', async ({ page }) => {
+  await page.goto('/en');
+  const pickup = page.getByRole('combobox', { name: en.landing.quote.pickup });
+  await pickup.fill('Tirana');
+  await expect(page.getByRole('option', { name: /Tirana Centre/ })).toBeVisible();
+  await pickup.press('Enter');
+  await expect(pickup).toHaveValue(/Tirana Centre/);
+  const phone = page.locator('#movers');
+  await phone.getByRole('button', { name: en.landing.movers.phone.accept }).click();
+  await expect(phone.getByRole('status')).toContainText(en.landing.movers.phone.acceptedText.split('{{place}}')[0] + 'Tirana.');
+  await expect(phone).not.toContainText('Tirana Centre');
+});
+
 test('Enter never takes the suggestion of an older query', async ({ page }) => {
   await page.goto('/en');
   const dropoff = page.getByRole('combobox', { name: en.landing.quote.dropoff });
