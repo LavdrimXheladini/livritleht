@@ -160,7 +160,7 @@ site_url = "http://127.0.0.1:3000"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["http://127.0.0.1:3000", "http://localhost:3000", "movershub-customer://", "movershub-mover://"]
+additional_redirect_urls = ["http://127.0.0.1:3000", "http://localhost:3000", "movershub://"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -396,12 +396,13 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
-# Prices for visitors who haven't signed in (like the landing page): no JWT required.
+# Prices for visitors who haven't signed in (the website's server asks for the landing page): no JWT required.
 # Mover data is read inside the function with the service role; the request never carries a price.
 [functions.quote]
 verify_jwt = false
 
-# Address search for the apps (visitors search before signing in, like on the website).
+# Address search for the app. Only signed-in app users call it now (design/DECISIONS.md #15), but it
+# doesn't check the user yet: still public, limited per IP. Follow-up: require a user, limit per user.
 [functions.places]
 verify_jwt = false
 

@@ -18,11 +18,10 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 | Area | Status |
 |---|---|
 | **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search (also within one city), real map and route, live "from" prices from movers' rate cards (test movers for now), mover section, FAQ, waitlist; live-moves dashboard demo; sign-in by email link |
-| **Customer app** (`mobile/customer`) | Expo app in the website's design: public home with address search and live "from" prices (like the website), sign-in screens (booking flow not built yet) |
-| **Mover app** (`mobile/mover`) | Expo app "MoversHub Partner" (dark design): intro, example job request priced by the live quote, setup checklist after sign-in (onboarding / jobs not built yet) |
+| **App** (`mobile/app`) | One Expo app for customers and movers, in the website's design: opens on sign in / create account ("I need a mover" / "I'm a mover", email + 6-digit code). Customers then see address search and live "from" prices; movers the dark "Partner" side: setup checklist and an example job request priced by the live quote. The role is saved once the code has proven the email; people can switch sides from the home screen (mover requests only after the setup is filled in and verified). The app remembers the side on the device and opens offline. Sign-in works only against a local Supabase until the cloud project has email (a domain + SMTP). Booking, onboarding and jobs not built yet |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
 | **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first; prices are shown exactly (to the cent; whole lek, denar and dinar) |
-| **Address search for the apps** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — visitors' IP addresses never reach the geocoder |
+| **Address search for the app** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — visitors' IP addresses never reach the geocoder |
 | **Not built yet** | Booking a mover, Stripe payments, live GPS, mover onboarding screens, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
 
 Prices on the landing page come from each mover's own rate card via the server `quote` function — for now
@@ -39,7 +38,7 @@ Vitest, Playwright, pgTAP, Maestro. Full stack and the plan: [`CLAUDE.md`](CLAUD
 
 ```
 web/app        Next.js website            web/e2e        Playwright tests
-mobile/        customer + mover Expo apps, shared code (core), Maestro flows
+mobile/        the Expo app for customers and movers (app), shared code (core), Maestro flows
 packages/      shared (types, schemas), pricing (engine), i18n (translations), ui (design tokens + components)
 supabase/      database migrations and tests
 scripts/       dev-prep.mjs (runs before every dev/build), test-db-cloud.mjs (database tests),
@@ -55,7 +54,7 @@ design/        design handoff and decisions
 - **pnpm 10** — `npm install -g pnpm@10.18.0`
 - **Git**
 
-Optional: **Expo Go** on your phone (to open the mobile apps), the
+Optional: **Expo Go** on your phone (to open the app), the
 [Supabase CLI](https://supabase.com/docs/guides/cli) logged in and linked to the project (database
 tests and migrations).
 
@@ -68,8 +67,8 @@ git switch develop
 pnpm install
 ```
 
-In VS Code, open **`movershub.code-workspace`** (File → Open Workspace from File…): the three apps — website,
-customer app, mover app — show as separate folders, next to the shared code, database and tests.
+In VS Code, open **`movershub.code-workspace`** (File → Open Workspace from File…): the website and the app
+show as separate folders, next to the shared code, database and tests.
 
 ### 3. Add the environment files
 
@@ -79,7 +78,7 @@ publishable key — it is public by design; **never commit these files**):
 | File | Variables |
 |---|---|
 | `web/app/.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, optional `CONTACT_EMAIL`, optional `SUPABASE_SECRET_KEY` (server only — rate limits) |
-| `mobile/customer/.env` and `mobile/mover/.env` | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |
+| `mobile/app/.env` | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |
 
 Without them the website still opens, but sign-in won't work.
 
@@ -88,14 +87,29 @@ Without them the website still opens, but sign-in won't work.
 | Command | Opens |
 |---|---|
 | `pnpm dev:web` | Website → http://localhost:3000 |
-| `pnpm dev:customer` | Customer app (Expo, port 8081) — scan the QR code with Expo Go, or press `w` for a browser preview |
-| `pnpm dev:mover` | Mover app (Expo, port 8082) |
-| `pnpm dev` | All three at once (needs more memory) |
+| `pnpm dev:app` | The app (Expo, port 8081) — scan the QR code with Expo Go, or press `w` for a browser preview. Signing in needs the local Supabase for now — see 5 below |
+| `pnpm dev` | Both at once (needs more memory) |
 
 Every start runs `scripts/dev-prep.mjs` first: it regenerates the design-token CSS and clears stale
 caches when dependencies or tokens changed. Don't bypass it with raw `next dev` / `expo start`.
 
 On a machine with little free memory, run **one** app at a time.
+
+### 5. Sign in to the app (local Supabase, for now)
+
+The cloud project's email sends a sign-in **link**, not a code, so until it has its own email (a domain +
+SMTP) the app can sign in only against a local Supabase:
+
+1. Install **Docker Desktop** and the **Supabase CLI**, then run `supabase start` (the first start downloads
+   images and needs several GB of memory). `supabase status` prints the local URL and publishable key.
+2. Put that key in `mobile/app/.env`, with `EXPO_PUBLIC_SUPABASE_URL` set for where the app runs:
+   - `http://127.0.0.1:54321` — the browser preview (`w`) and the iOS simulator;
+   - `http://10.0.2.2:54321` — the Android emulator (or run `adb reverse tcp:54321 tcp:54321` and keep 127.0.0.1);
+   - `http://<your computer's address on the Wi-Fi>:54321` — a phone with Expo Go on the same Wi-Fi (allow
+     port 54321 through the firewall).
+3. Run `pnpm functions:build`, and put `INCLUDE_TEST_MOVERS=true` in `supabase/functions/.env` (git-ignored) so
+   the local `quote` function prices the test movers.
+4. Sign in with any email: the code arrives in Mailpit, http://127.0.0.1:54324.
 
 ## Checks and tests
 
@@ -106,7 +120,7 @@ pnpm test          # unit tests (Vitest), incl. the banned-wording check, + the 
 pnpm --filter @movershub/e2e install-browsers   # once
 pnpm e2e           # Playwright against a production build on port 3100 (offline test data)
 pnpm e2e:visual    # screenshots of the website (5 languages, phone + laptop) compared with the saved ones
-pnpm e2e:apps      # screenshots of both phone apps in their browser preview, one app at a time
+pnpm e2e:apps      # screenshots of the phone app in its browser preview (signed out, customer, mover)
 pnpm test:db:cloud # database tests on the linked cloud project — no Docker; everything is rolled back
 pnpm test:db       # the same tests on a local database (Docker + `supabase start`)
 ```
@@ -133,9 +147,10 @@ pnpm functions:deploy   # copies the shared pricing code into supabase/functions
 The `quote` function quotes test movers only while the project secret `INCLUDE_TEST_MOVERS` is `true`
 (`supabase secrets set INCLUDE_TEST_MOVERS=false` before launch, and delete the test movers).
 
-`quote` and `places` are public. Browsers may call them only from the apps' local preview
+`quote` and `places` are public. Browsers may call them only from the app's local preview
 (`http://localhost` / `127.0.0.1`, see `supabase/functions/_shared/http.ts`); the website calls them from
-its server and the phone apps don't need CORS.
+its server and the phone app doesn't need CORS. When the app's computer version is hosted (plan step 3),
+its address has to be allowed there too.
 
 Both are limited per IP (`RATE_LIMITS` in `packages/shared/src/rate-limit.ts`: 30 quotes per 10 minutes,
 60 address searches per minute → `429` + `Retry-After`), counted in the database by `hit_rate_limit`; the

@@ -1,13 +1,17 @@
 begin;
-select plan(63);
+select plan(64);
 
 -- Fixtures: two movers and a customer (profiles via the sign-up trigger). Service areas in Lisbon,
 -- far from every test mover, so the sample data never mixes into these results.
 insert into auth.users (id, phone, raw_user_meta_data)
 values
-  ('00000000-0000-0000-0000-00000000d201', '48500000201', '{"role":"mover","locale":"pl"}'),
-  ('00000000-0000-0000-0000-00000000d202', '48500000202', '{"role":"mover","locale":"pl"}'),
-  ('00000000-0000-0000-0000-00000000c201', '38344000201', '{"role":"customer","locale":"sq"}');
+  ('00000000-0000-0000-0000-00000000d201', '48500000201', '{"locale":"pl"}'),
+  ('00000000-0000-0000-0000-00000000d202', '48500000202', '{"locale":"pl"}'),
+  ('00000000-0000-0000-0000-00000000c201', '38344000201', '{"locale":"sq"}'),
+  ('00000000-0000-0000-0000-00000000a201', '38344000202', '{"locale":"sq"}');
+-- The role is chosen after the first sign-in (public.choose_role); set directly for the fixtures.
+update public.profiles set role = 'mover' where id in ('00000000-0000-0000-0000-00000000d201', '00000000-0000-0000-0000-00000000d202');
+update public.profiles set role = 'customer' where id in ('00000000-0000-0000-0000-00000000c201');
 
 -- Tables + RLS --------------------------------------------------------------
 select has_table('public', 'mover_companies', 'mover_companies table exists');
@@ -98,6 +102,13 @@ select throws_ok(
      values ('00000000-0000-0000-0000-00000000c201', 'Customer Co', 'XK') $$,
   '42501', null, 'a customer cannot register a mover company');
 select is((select count(*)::int from public.vehicles), 0, 'a customer cannot see vehicles');
+
+-- A new account that hasn't chosen its role yet (NULL) is no mover either.
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000a201","role":"authenticated"}', true);
+select throws_ok(
+  $$ insert into public.mover_companies (owner_id, legal_name, country)
+     values ('00000000-0000-0000-0000-00000000a201', 'No Role Co', 'XK') $$,
+  '42501', null, 'an account that has not chosen a role cannot register a mover company');
 
 set local role anon;
 select throws_ok($$ select * from public.rate_cards $$, '42501', null, 'visitors cannot read rate cards');

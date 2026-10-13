@@ -30,7 +30,7 @@ export const JOB_STATUSES = [
 ] as const;
 export type JobStatus = (typeof JOB_STATUSES)[number];
 
-/** Statuses during which the mover app shares GPS (COMPLIANCE §9.1). */
+/** Statuses during which the app (mover side) shares GPS (COMPLIANCE §9.1). */
 export const GPS_ACTIVE_STATUSES = [
   'EN_ROUTE_TO_PICKUP',
   'AT_PICKUP',

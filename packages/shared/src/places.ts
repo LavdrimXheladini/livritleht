@@ -1,4 +1,4 @@
-// Places shared by the website, the apps and the server functions: demo places (example routes,
+// Places shared by the website, the app and the server functions: demo places (example routes,
 // offline test fixtures) and the Photon address-search formatter. Pure, no I/O.
 import type { Place } from './schemas/geo';
 

@@ -1,0 +1,40 @@
+# Requires a dev build of the app + `supabase start`, with the app's EXPO_PUBLIC_SUPABASE_URL reachable from
+# the device: http://10.0.2.2:54321 on the Android emulator (or `adb reverse tcp:54321 tcp:54321`), see the
+# README "Sign in to the app". The code is read from Mailpit (email-code.js, runs on the computer).
+# A new address every run, so every run really creates an account.
+appId: com.movershub.app
+---
+- evalScript: ${output.email = 'e2e-mover-' + Date.now() + '@example.com'}
+- launchApp:
+    clearState: true
+# The app opens on sign in / create account; creating one asks customer or mover first.
+- tapOn:
+    id: auth-mode-register
+- tapOn:
+    id: role-mover
+- tapOn:
+    id: auth-email
+- inputText: ${output.email}
+- hideKeyboard
+- tapOn:
+    id: auth-send-code
+# The code screen shows once the server has sent the email.
+- extendedWaitUntil:
+    visible:
+      id: verify-code
+    timeout: 15000
+- runScript:
+    file: email-code.js
+    env:
+      EMAIL: ${output.email}
+- tapOn:
+    id: verify-code
+- inputText: ${output.code}
+- hideKeyboard
+- tapOn:
+    id: verify-submit
+# Signed in: the role chosen before the code is saved, and the mover side opens.
+- extendedWaitUntil:
+    visible:
+      id: mover-sign-out
+    timeout: 15000

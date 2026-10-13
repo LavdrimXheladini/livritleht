@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-const AUTH_ERRORS = ['invalid_phone', 'invalid_email', 'invalid_code', 'wrong_code'] as const;
+const AUTH_ERRORS = ['invalid_email', 'invalid_code', 'wrong_code', 'choose_role'] as const;
 type AuthError = (typeof AUTH_ERRORS)[number];
 
 const isAuthError = (m: string | undefined): m is AuthError =>

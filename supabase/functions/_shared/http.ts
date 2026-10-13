@@ -1,8 +1,8 @@
 // HTTP helpers for the public functions (`quote`, `places`).
 
 /**
- * Browsers may call the functions only from local development: the apps' browser preview (Expo
- * web, ports 8081 / 8082). The website calls them from its server and the phone apps don't use
+ * Browsers may call the functions only from local development: the app's browser preview (Expo
+ * web, port 8081). The website calls them from its server and the app on phones doesn't use
  * CORS, so no other origin needs them — and other sites can't build on our address search.
  */
 const DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?$/;

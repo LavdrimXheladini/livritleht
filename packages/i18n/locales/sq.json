@@ -5,6 +5,7 @@
     "back": "Kthehu",
     "loading": "Duke u ngarkuar…",
     "errorGeneric": "Diçka shkoi keq. Ju lutemi provoni përsëri.",
+    "retry": "Provo përsëri",
     "signOut": "Dil",
     "backToTop": "Kthehu në krye",
     "partner": "Partner"
@@ -12,6 +13,13 @@
   "auth": {
     "title": "Hyr",
     "subtitle": "Do t'ju dërgojmë një kod me 6 shifra.",
+    "registerTab": "Krijo llogari",
+    "registerTitle": "Krijoni llogarinë",
+    "roleLabel": "Si do ta përdorni MoversHub?",
+    "roleCustomer": "Më duhet një transportues",
+    "roleCustomerHint": "Rezervoni një furgon dhe ndihmës për zhvendosjen tuaj.",
+    "roleMover": "Jam transportues",
+    "roleMoverHint": "Merrni punë për furgonin tuaj. Tarifat i vendosni vetë.",
     "usePhone": "Telefoni",
     "useEmail": "Email",
     "phoneLabel": "Numri i telefonit",
@@ -20,17 +28,23 @@
     "emailPlaceholder": "ju@shembull.com",
     "sendCode": "Dërgo kodin",
     "codeLabel": "Kodi me 6 shifra",
+    "verifyTitle": "Shkruani kodin",
     "codeSentTo": "Ju dërguam një kod në {{target}}.",
     "linkSentTo": "Ju dërguam një lidhje hyrjeje në {{target}}. Hapeni në këtë pajisje për të hyrë.",
     "orEnterCode": "Keni marrë një kod me 6 shifra? Shkruajeni këtu.",
     "verify": "Verifiko",
     "resend": "Dërgo një kod të ri",
     "changeTarget": "Përdor një numër ose email tjetër",
+    "changeEmail": "Përdor një email tjetër",
+    "existingCustomer": "Ky email ka tashmë një llogari klienti, prandaj jeni kyçur në të. Për të ofruar transport, kaloni më poshtë në anën e transportuesit.",
+    "existingMover": "Ky email ka tashmë një llogari transportuesi, prandaj jeni kyçur në të. Për të rezervuar një zhvendosje, kaloni më poshtë në anën e klientit.",
+    "signedInAs": "Jeni kyçur si {{email}}. Jeni tashmë në MoversHub me një email tjetër? Dilni dhe përdorni atë.",
     "errors": {
       "invalid_phone": "Shkruani numrin me prefiksin e shtetit, p.sh. +383 44 123 456.",
       "invalid_email": "Shkruani një adresë email të vlefshme.",
       "invalid_code": "Kodi ka 6 shifra.",
       "wrong_code": "Kodi është i gabuar ose ka skaduar.",
+      "choose_role": "Zgjidhni si do ta përdorni MoversHub.",
       "link_invalid": "Kjo lidhje hyrjeje është e pavlefshme ose ka skaduar. Kërkoni një të re."
     }
   },
@@ -41,14 +55,17 @@
     "bookingSoon": "Para pagesës do të shohësh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit të shënuar veçmas.",
     "priceLoading": "Duke kërkuar transportues…",
     "retry": "Provo përsëri",
-    "noMoversHere": "Ende nuk ka transportues në MoversHub këtu."
+    "noMoversHere": "Ende nuk ka transportues në MoversHub këtu.",
+    "switchTitle": "Ke furgon?",
+    "switchText": "Ofro transport në MoversHub me tarifat e tua. Fillimisht plotëso kompaninë, dokumentet, furgonët, tarifat dhe pagesat; kërkesat vijnë pasi të verifikohen.",
+    "switchToMover": "Kalo në anën e transportuesit",
+    "nowHere": "Tani je në anën e klientit."
   },
   "mover": {
     "homeTitle": "Mirë se vjen, partner",
     "homeSubtitle": "Hapi tjetër: shto kompaninë, dokumentet, automjetet dhe tarifat e tua.",
     "trackingNotice": "Vendndodhjen tënde e ndajmë me klientin vetëm gjatë një pune aktive.",
     "exampleLabel": "Shembull kërkese — kërkesat e vërteta vijnë pasi të verifikohet kompania jote.",
-    "signInCta": "Hyr ose regjistrohu",
     "checklistTitle": "Bëhu gati për punë",
     "comingSoon": "Së shpejti",
     "steps": {
@@ -72,7 +89,10 @@
         "title": "Pagesat",
         "text": "Lidh Stripe për të marrë pagesën pas çdo zhvendosjeje të përfunduar."
       }
-    }
+    },
+    "switchTitle": "Të duhet vetë një zhvendosje?",
+    "switchToCustomer": "Kalo në anën e klientit",
+    "nowHere": "Tani je në anën e transportuesit."
   },
   "places": {
     "prishtina": "Prishtina",

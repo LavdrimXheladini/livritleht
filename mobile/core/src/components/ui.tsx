@@ -20,7 +20,7 @@ import { LogoMark } from './icons';
 
 // Mobile versions of the web primitives in packages/ui/src/web (same names, variants and tokens),
 // styled with NativeWind classes from packages/ui/tailwind-preset.js — never raw colour values.
-// `tone="dark"` = the night palette of the mover app and live screens.
+// `tone="dark"` = the night palette of the app's mover side and live screens.
 // Every element gets ONE class per property (one font, one border colour, one gap): `cx` doesn't
 // merge like the website's `cn`, and on the phone the stylesheet order decides, not the class order.
 
@@ -95,7 +95,7 @@ export function Display({
 }
 
 /**
- * Logo mark + MOVERSHUB wordmark; `partner` adds the mover app's "Partner" label. A screen reader
+ * Logo mark + MOVERSHUB wordmark; `partner` adds the mover side's "Partner" label. A screen reader
  * reads it as one logo image, "MoversHub Partner" (each screen's heading is its Display title).
  */
 export function Wordmark({ tone = 'light', partner }: { tone?: Tone; partner?: string }) {
@@ -304,6 +304,8 @@ export function ChipGroup<T extends string | number>({
         onPress={() => onChange(o.value)}
         accessibilityRole="radio"
         accessibilityState={{ selected: on, checked: on }}
+        // react-native-web ignores accessibilityState: the browser version needs the ARIA state.
+        aria-checked={on}
         className={cx('items-center justify-center', c.box(on))}
       >
         <Text className={cx('font-sans text-[13px]', c.text(on))}>{o.label}</Text>
@@ -352,7 +354,7 @@ export function CrewPills({
   );
 }
 
-/** Two or three equal options in one rounded bar (sign-in: Phone / Email). */
+/** Two or three equal options in one rounded bar (sign-in: Sign in / Create account). */
 export function SegmentedControl<T extends string>({
   value,
   options,
@@ -360,7 +362,7 @@ export function SegmentedControl<T extends string>({
   tone = 'light',
 }: {
   value: T;
-  options: readonly { value: T; label: string }[];
+  options: readonly { value: T; label: string; testID?: string }[];
   onChange: (value: T) => void;
   tone?: Tone;
 }) {
@@ -375,9 +377,11 @@ export function SegmentedControl<T extends string>({
         return (
           <Pressable
             key={o.value}
+            testID={o.testID}
             onPress={() => onChange(o.value)}
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
+            aria-selected={on}
             className={cx(
               'min-h-11 flex-1 items-center justify-center rounded-full px-3',
               on && (dark ? 'bg-night-50' : 'bg-brand-500'),
@@ -408,11 +412,19 @@ export function TextField({
   label,
   error,
   tone = 'light',
+  announceError = true,
   ref,
   ...props
-}: TextInputProps & { label: string; error?: string | undefined; tone?: Tone; ref?: Ref<TextInput> }) {
+}: TextInputProps & {
+  label: string;
+  error?: string | undefined;
+  tone?: Tone;
+  /** Off when the form reads all its errors out at once (two announcements cut each other off on iOS). */
+  announceError?: boolean;
+  ref?: Ref<TextInput>;
+}) {
   const dark = tone === 'dark';
-  useAnnouncement(error);
+  useAnnouncement(announceError ? error : null);
   return (
     <View className="gap-1.5">
       {/* The input says the label and the error itself, so these texts are not read twice. */}
@@ -526,6 +538,8 @@ export function VehicleClassTile({
       testID={testID}
       accessibilityRole="radio"
       accessibilityState={{ selected, checked: selected, disabled: noOffers, busy }}
+      aria-checked={selected}
+      aria-busy={busy}
       accessibilityLabel={[name, capacity, fits, noOffers ? unavailable : `${pricePrefix ?? ''} ${priceLabel}`, offersLabel]
         .filter(Boolean)
         .join(', ')}

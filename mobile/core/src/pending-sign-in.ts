@@ -1,0 +1,32 @@
+import type { SelfSignupRole } from '@movershub/shared';
+
+/** Sign in to an existing account, or create one as a customer or a mover. */
+export type AuthMode = 'login' | 'register';
+
+/**
+ * What the person asked for on the sign-in screen: the email the code went to, the tab, and (when
+ * creating an account) the role they picked. Kept in memory only — never in a route or URL, where
+ * the address would land in the browser's history and server logs (COMPLIANCE §9).
+ */
+export type PendingSignIn = { email: string; mode: AuthMode; role: SelfSignupRole | null };
+
+let pending: PendingSignIn | null = null;
+
+export const setPendingSignIn = (next: PendingSignIn | null) => {
+  pending = next;
+};
+export const getPendingSignIn = (): PendingSignIn | null => pending;
+
+/**
+ * The pending sign-in, but only if it belongs to the account that is now signed in — in the browser
+ * version another tab can sign in someone else. A pending sign-in for another email is dropped.
+ */
+export function pendingSignInFor(email: string | undefined): PendingSignIn | null {
+  if (pending && pending.email !== email) pending = null;
+  return pending;
+}
+
+/** The role the person asked for last (on the chooser too), for the "already has an account" notice. */
+export function rememberRequestedRole(role: SelfSignupRole) {
+  if (pending) pending = { ...pending, role };
+}

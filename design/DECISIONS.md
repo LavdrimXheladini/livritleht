@@ -13,13 +13,15 @@ these decisions apply:
 | 5 | Addresses & map (2026-10-11) | Pickup / drop-off are **address search** (not city lists); the hero shows a **real map** with the real road route. Free OpenStreetMap services for now (no Google billing yet); switch to Google later without UI changes. |
 | 6 | Booking fee (2026-10-11) | Amount **not decided yet**. Built as a setting (`BOOKING_FEE_RULE` in `packages/shared`: flat per currency or % of the mover's price), always shown as its own line; while it is `null` the line reads "to be announced" and nothing is charged. |
 | 7 | Real prices, step 4 (2026-10-11) | Built in four parts, each reviewed: 4a pricing engine → 4b database tables + test movers → 4c `quote` function → 4d landing shows real "from €X". Development database = the **cloud project** (no Docker), with clearly marked test movers that are removed before launch. |
-| 8 | Three apps, mandatory (2026-10-12) | Like Lugg, the market leader: the platform is **always three apps** — the **website** (`web/app`: booking, service pages, tracking links, admin), the **customer app** (`mobile/customer`) and a separate **mover app** (`mobile/mover`). Every customer feature exists on the website and in the customer app; mover features live in the mover app. Open `movershub.code-workspace` in VS Code to see them as separate folders. |
+| 8 | Three apps, mandatory (2026-10-12) — **replaced by #15** | Like Lugg, the market leader: the platform is **always three apps** — the **website** (`web/app`: booking, service pages, tracking links, admin), the **customer app** (`mobile/customer`) and a separate **mover app** (`mobile/mover`). Every customer feature exists on the website and in the customer app; mover features live in the mover app. Open `movershub.code-workspace` in VS Code to see them as separate folders. |
 | 9 | Prices per country (2026-10-12) | Every country has its own price level and currency (EUR in Kosovo/Germany/Austria, lek, denar, złoty, franc). Researched reference rates live in `packages/shared/src/market-rates.ts` — information only (COMPLIANCE §1): they pre-fill a new mover's card, which the mover reviews and saves, and they price the test movers. Movers always set their own rates. |
 | 10 | Moves within one city (2026-10-12) | Local moves are first-class: same city, or ≤ 25 km in one country, shows as **Local**; neighbourhoods are shown instead of "Prishtina → Prishtina" ("Dardania → Velania"); popular routes include local ones. |
 | 11 | Home page prices (2026-10-12) | Before the visitor lists items, the "from" prices assume a **typical load per van size at ground floor** (a few boxes · sofa + 10 boxes · studio · 2–3 rooms · house) — the recommended option, taken when the owner said "continue". Easy to change: `TYPICAL_LOADS` in `packages/shared/src/items.ts`. The note under the prices says so, and says when they come from test movers. |
-| 12 | Phone apps, step 6 (2026-10-12) | Both apps open on a **public home**, like the website: prices are public and sign-in is needed only to book (and SMS/email codes on real phones still need Twilio / SMTP). Customer app: hero + quote card with address search (`places` function) and live "from" prices. Mover app "MoversHub Partner" (dark): intro, an example request priced by the live quote, and after sign-in a setup checklist (company, documents, vans, rates, payouts — "coming next"). One UI kit in `mobile/core` mirrors the website's primitives and tokens. |
+| 12 | Phone apps, step 6 (2026-10-12) — **replaced by #15** | Both apps open on a **public home**, like the website: prices are public and sign-in is needed only to book (and SMS/email codes on real phones still need Twilio / SMTP). Customer app: hero + quote card with address search (`places` function) and live "from" prices. Mover app "MoversHub Partner" (dark): intro, an example request priced by the live quote, and after sign-in a setup checklist (company, documents, vans, rates, payouts — "coming next"). One UI kit in `mobile/core` mirrors the website's primitives and tokens. |
 | 13 | Prices to the cent (2026-10-12) | A "from" price must **equal** the lowest mover quote (COMPLIANCE §13), so prices and payouts are never rounded for display — on the website and in both apps ("from €149.42"; whole amounts stay "€162"). Decision #2 keeps its look. |
 | 14 | Whole lek, denar and dinar (2026-10-12) | Their hundredths are no longer used (no qindarka; deni coins withdrawn 2013; para gone since 2008), so the **server** prices them in whole units: every line of a quote, the commission, the payout and the booking fee (`roundToPriceStep` in `packages/shared/src/money.ts`, used by the pricing engine). The lines still add up exactly, and the shown price is the charged price. Euro, złoty and francs keep their cents. |
+| 15 | Website to inform, one app to use (2026-10-13) | Replaces #8 and #12. **The website** says what MoversHub is, lets people **create an account as a customer or a mover**, and has the **download buttons**: iPhone, Android and the computer version (the app's web build, installable from the browser). It keeps the price preview; its button says "Get the app". Booking, tracking and payment happen **in the app**. The website still hosts what must be on the web: the public tracking-link page (COMPLIANCE §9.1), legal pages and "How ranking works" (§3, §8), and the admin panel. **One app** (`mobile/app`, "MoversHub") for customers and movers — two apps were harder to explain and to get people to install. It opens on **sign in / create account**; creating an account asks "I need a mover" or "I'm a mover"; the role is saved once the code has proven the email (`choose_role`, never from sign-up data) — an account without one is asked after signing in, and an email that already had the other kind of account is told so (switching sides: #16). After sign-in the role picks the customer side (prices, booking) or the dark mover side (setup, jobs). Every email gets the same answer on the sign-in screen (no account check). Sign-in everywhere is **email + 6-digit code**: the cloud project needs a domain + custom SMTP with a code template before **anyone** can sign in to the app against it — its built-in email sends only a link (phone codes dropped, no Twilio for sign-in). Background location is declared in the one app but asked only from movers, when a job starts — the store listings must explain it. |
+| 16 | Switching sides (2026-10-13) | One account can be a customer and a mover: the home screen has **Switch to the mover side** / **Switch to the customer side** (`choose_role`; never to or from admin). Nothing is lost by switching. The mover side starts with the setup checklist: job requests come only once the company, documents, vans, rates and payouts are filled in and verified (COMPLIANCE §5, enforced in `quotable_vehicles`) — switching alone gives no work. An email that already had the other kind of account is told so after the code and pointed to the switch; the app never switches without being asked. The side is remembered on the device, so the app opens on it at once (and offline). |
 
 ## Landing page status
 
@@ -49,7 +51,7 @@ with a page per service, customer app, separate mover app. Plan:
 - Website: the grid on the landing page + one page per service under `/[lang]/services/[slug]` (SEO,
   5 languages). Each tile opens the booking with the job type / vehicle class / items pre-filled, so it
   comes **after the booking flow** (build order step 4).
-- Customer app: the same list as the "What are you moving?" start screen.
+- App, customer side: the same list as the "What are you moving?" start screen.
 - Adapt to our markets: diaspora moves (DE/AT/CH ↔ Balkans) and cross-border as their own tiles;
   marketplace pickups for the local sites (e.g. OLX, Merr, Facebook Marketplace).
 - Check before adding: junk removal (waste-transport permits), labour-only help without a vehicle (not
@@ -86,6 +88,9 @@ Still open:
 
 ## Phone apps (step 6) status
 
+Since 2026-10-13 the two apps are **one app**, `mobile/app` (decision #15): the customer app's screens and the mover app's
+screens behind one sign in / create account. The notes below are from when they were two.
+
 Done (2026-10-12) — both apps restyled to the design (customer light, mover dark), reviewed by five
 reviewers with every finding checked by three independent checkers; the 20 confirmed findings are fixed:
 - Errors on dark screens use `danger-on-dark` (#ef8a80, 8:1 on night) instead of the light-screen red (3.5:1).
@@ -97,7 +102,7 @@ reviewers with every finding checked by three independent checkers; the 20 confi
 - The `places` function never logs the typed address.
 
 Still open:
-- Sign-in on real phones needs Twilio (SMS codes) or SMTP (email codes) on the cloud project.
+- App sign-in against the cloud project needs SMTP with a code template (a domain + an email provider) — for everyone, not only on real phones. Until then: the local Supabase.
 - ~~Lek, denar and dinar prices with decimals~~ — done: whole units on the server (decision #14).
 
 ## Tests (step 7) status
@@ -105,9 +110,12 @@ Still open:
 Done (2026-10-12):
 - **Screenshot tests**, still and offline (no motion, maps show their drawn fallback, a saved quote for the apps):
   `pnpm e2e:visual` — the website: landing in all 5 languages on a phone, English on a laptop, the live
-  dashboard (phone + laptop), sign-in; `pnpm e2e:apps` — both apps in their browser preview: customer home and
-  sign-in error, mover home (English + Albanian), accepted example, dark sign-in error. Saved pictures are per
-  operating system (ours: Windows); CI (Linux) doesn't run them yet.
+  dashboard (phone + laptop), sign-in; `pnpm e2e:apps` — then both apps in their browser preview: customer home and
+  sign-in error, mover home (English + Albanian), accepted example, dark sign-in error. Since 2026-10-13 (#15) it
+  is the one app: sign in and its error, create account (role needed, kept out of the code request), the role
+  saved after the code or chosen after sign-in, an existing account told so, small phones, sign out, customer
+  home, mover home (English + Albanian), accepted example. Saved pictures are per operating system (ours:
+  Windows); CI (Linux) doesn't run them yet.
 - **COMPLIANCE.md §13 map**: [`COMPLIANCE-TESTS.md`](../COMPLIANCE-TESTS.md) names the tests for each required
   rule, or the build step that brings the feature (today 4 covered, 7 partly, 12 not built yet). `pnpm test`
   fails when a rule is missing there or a named test disappears.

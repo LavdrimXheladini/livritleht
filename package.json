@@ -7,8 +7,7 @@
   },
   "scripts": {
     "dev": "turbo run dev",
-    "dev:customer": "pnpm --filter @movershub/customer start",
-    "dev:mover": "pnpm --filter @movershub/mover start",
+    "dev:app": "pnpm --filter @movershub/app start",
     "dev:web": "pnpm --filter @movershub/web dev",
     "db:types": "supabase gen types typescript --local > packages/shared/src/database.types.ts",
     "test": "turbo run test && node scripts/check-compliance-tests.mjs",

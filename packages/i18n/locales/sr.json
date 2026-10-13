@@ -5,6 +5,7 @@
     "back": "Nazad",
     "loading": "Učitavanje…",
     "errorGeneric": "Nešto nije u redu. Pokušajte ponovo.",
+    "retry": "Pokušaj ponovo",
     "signOut": "Odjavi se",
     "backToTop": "Nazad na vrh",
     "partner": "Partner"
@@ -12,6 +13,13 @@
   "auth": {
     "title": "Prijava",
     "subtitle": "Poslaćemo vam kod od 6 cifara.",
+    "registerTab": "Napravi nalog",
+    "registerTitle": "Napravite nalog",
+    "roleLabel": "Kako ćete koristiti MoversHub?",
+    "roleCustomer": "Treba mi prevoznik",
+    "roleCustomerHint": "Rezervišite kombi i pomoćnike za selidbu.",
+    "roleMover": "Ja sam prevoznik",
+    "roleMoverHint": "Primajte poslove za svoj kombi. Cene određujete vi.",
     "usePhone": "Telefon",
     "useEmail": "Email",
     "phoneLabel": "Broj telefona",
@@ -20,17 +28,23 @@
     "emailPlaceholder": "vi@primer.com",
     "sendCode": "Pošalji kod",
     "codeLabel": "Kod od 6 cifara",
+    "verifyTitle": "Unesite kod",
     "codeSentTo": "Poslali smo kod na {{target}}.",
     "linkSentTo": "Poslali smo link za prijavu na {{target}}. Otvorite ga na ovom uređaju da biste se prijavili.",
     "orEnterCode": "Dobili ste kod od 6 cifara? Unesite ga ovde.",
     "verify": "Potvrdi",
     "resend": "Pošalji novi kod",
     "changeTarget": "Koristi drugi broj ili email",
+    "changeEmail": "Koristi drugi email",
+    "existingCustomer": "Ovaj email već ima nalog klijenta, pa ste prijavljeni na njega. Da biste nudili prevoz, pređite ispod na stranu prevoznika.",
+    "existingMover": "Ovaj email već ima nalog prevoznika, pa ste prijavljeni na njega. Da biste rezervisali selidbu, pređite ispod na stranu klijenta.",
+    "signedInAs": "Prijavljeni ste kao {{email}}. Već ste na MoversHubu sa drugim emailom? Odjavite se i koristite taj.",
     "errors": {
       "invalid_phone": "Unesite broj sa pozivnim brojem zemlje, npr. +381 64 123 4567.",
       "invalid_email": "Unesite ispravnu email adresu.",
       "invalid_code": "Kod ima 6 cifara.",
       "wrong_code": "Kod je pogrešan ili je istekao.",
+      "choose_role": "Izaberite kako ćete koristiti MoversHub.",
       "link_invalid": "Ovaj link za prijavu nije ispravan ili je istekao. Zatražite novi."
     }
   },
@@ -41,14 +55,17 @@
     "bookingSoon": "Pre plaćanja videćete prevoznika i njegovu fiksnu cenu, a naknada za rezervaciju biće navedena posebno.",
     "priceLoading": "Tražimo prevoznike…",
     "retry": "Pokušaj ponovo",
-    "noMoversHere": "Ovde još nema prevoznika na MoversHubu."
+    "noMoversHere": "Ovde još nema prevoznika na MoversHubu.",
+    "switchTitle": "Imate kombi?",
+    "switchText": "Nudite prevoz na MoversHubu po svojim cenama. Prvo unesite firmu, dokumente, vozila, cene i isplate; zahtevi stižu kada budu verifikovani.",
+    "switchToMover": "Pređi na stranu prevoznika",
+    "nowHere": "Sada ste na strani klijenta."
   },
   "mover": {
     "homeTitle": "Dobro došli, partneru",
     "homeSubtitle": "Sledeće: dodajte firmu, dokumente, vozila i svoje cene.",
     "trackingNotice": "Vašu lokaciju delimo sa klijentom samo tokom aktivnog posla.",
     "exampleLabel": "Primer zahteva — pravi zahtevi stižu kada vaša firma bude verifikovana.",
-    "signInCta": "Prijavi se ili registruj",
     "checklistTitle": "Pripremite se za poslove",
     "comingSoon": "Uskoro",
     "steps": {
@@ -72,7 +89,10 @@
         "title": "Isplate",
         "text": "Povežite Stripe da biste dobili isplatu posle svake završene selidbe."
       }
-    }
+    },
+    "switchTitle": "Treba vam selidba?",
+    "switchToCustomer": "Pređi na stranu klijenta",
+    "nowHere": "Sada ste na strani prevoznika."
   },
   "places": {
     "prishtina": "Priština",

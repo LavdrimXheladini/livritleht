@@ -25,6 +25,9 @@ export {
 } from './components/ui';
 export { useAppFonts } from './fonts';
 export { currentLocale, initI18n } from './i18n';
-export { LoginScreen, type OtpChannel, type OtpSent } from './screens/login-screen';
+export { getPendingSignIn, pendingSignInFor, setPendingSignIn, type AuthMode, type PendingSignIn } from './pending-sign-in';
+export { useChooseRole, useProfile, type SignedInProfile } from './profile';
+export { AuthScreen } from './screens/auth-screen';
+export { ChooseRoleScreen } from './screens/choose-role-screen';
 export { VerifyScreen } from './screens/verify-screen';
 export { createSupabaseClient } from './supabase';

@@ -106,7 +106,8 @@ function RequestForm({
 
   const onSubmit = form.handleSubmit(async ({ target }) => {
     const supabase = createClient();
-    // Web sign-ups are customers. Movers register in the mover app.
+    // The role is chosen in the app after the first sign-in (public.choose_role); a role sent here is
+    // ignored. Website step 2 drops it together with phone sign-in.
     const data: SignupMetadata = { role: 'customer', locale };
     const { error } =
       channel === 'phone'

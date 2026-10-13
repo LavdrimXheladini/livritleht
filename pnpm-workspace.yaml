@@ -1,7 +1,7 @@
 packages:
   # Web platform: Next.js app + Playwright tests
   - web/*
-  # Mobile platform: customer app, mover app, shared mobile code (maestro/ has no package.json)
+  # Mobile platform: the app (customers and movers), shared mobile code (maestro/ has no package.json)
   - mobile/*
   # Shared by both platforms
   - packages/*

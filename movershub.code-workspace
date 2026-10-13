@@ -1,10 +1,9 @@
 {
-  // MoversHub in VS Code: the three apps (design/DECISIONS.md #8) as separate folders, then the code
-  // they share. Open with File → Open Workspace from File… → movershub.code-workspace.
+  // MoversHub in VS Code: the website and the app (design/DECISIONS.md #15) as separate folders, then
+  // the code they share. Open with File → Open Workspace from File… → movershub.code-workspace.
   "folders": [
     { "name": "1 · Website (web/app)", "path": "web/app" },
-    { "name": "2 · Customer app (mobile/customer)", "path": "mobile/customer" },
-    { "name": "3 · Mover app (mobile/mover)", "path": "mobile/mover" },
+    { "name": "2 · App for customers and movers (mobile/app)", "path": "mobile/app" },
     { "name": "Shared · mobile code (mobile/core)", "path": "mobile/core" },
     { "name": "Shared · packages (pricing, shared, i18n, ui)", "path": "packages" },
     { "name": "Database + server functions (supabase)", "path": "supabase" },
@@ -16,8 +15,7 @@
     "files.exclude": {
       "web/app": true,
       "web/e2e": true,
-      "mobile/customer": true,
-      "mobile/mover": true,
+      "mobile/app": true,
       "mobile/core": true,
       "packages": true,
       "supabase": true

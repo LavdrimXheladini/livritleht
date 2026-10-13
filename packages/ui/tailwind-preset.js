@@ -4,7 +4,7 @@ const tokens = require('./tokens.json');
 const px = (n) => `${n}px`;
 const nf = tokens.nativeFonts;
 // React Native draws one shadow layer with no spread, and Android needs an elevation, so the web's
-// layered, negative-spread shadows would come out flat or far too heavy: the apps use their own.
+// layered, negative-spread shadows would come out flat or far too heavy: the app uses its own.
 const nativeShadow = (field) => Object.fromEntries(Object.entries(tokens.nativeShadow).map(([k, v]) => [k, String(v[field])]));
 
 /** @type {import('tailwindcss').Config} */

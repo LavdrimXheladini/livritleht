@@ -6,7 +6,7 @@ import { MARKET_RATES, type Currency, type GeoSuggestion, type Locale, type Plac
 
 import { useAuth } from './auth-provider';
 
-// The apps' server calls: the same Supabase edge functions the website uses. Prices are computed
+// The app's server calls: the same Supabase edge functions the website uses. Prices are computed
 // only on the server, from each mover's own rate card (COMPLIANCE §1.1) — the app never prices.
 
 /** Live quote for a route: no items = a typical load per class, "from" prices for every crew size. */

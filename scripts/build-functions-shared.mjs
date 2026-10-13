@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copies the pricing engine and shared code into supabase/functions/_shared/movershub/ so the Deno
-// edge functions use the SAME code as the apps and tests. Only import paths change: Deno needs file
+// edge functions use the SAME code as the website, the app and the tests. Only import paths change: Deno needs file
 // extensions (`./x` → `./x.ts`) and doesn't know our workspace names (`@movershub/shared` → relative
 // path). `zod` stays a bare import, mapped to npm:zod in each function's deno.json. The output is
 // git-ignored; `pnpm functions:deploy` runs this first.

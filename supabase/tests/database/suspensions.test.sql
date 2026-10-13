@@ -7,10 +7,13 @@ select plan(24);
 -- customer and an admin (the admin role is granted by the platform, never at sign-up).
 insert into auth.users (id, phone, raw_user_meta_data)
 values
-  ('00000000-0000-0000-0000-00000000d401', '48500000401', '{"role":"mover","locale":"pl"}'),
-  ('00000000-0000-0000-0000-00000000d402', '48500000402', '{"role":"mover","locale":"pl"}'),
-  ('00000000-0000-0000-0000-00000000c401', '38344000401', '{"role":"customer","locale":"sq"}'),
-  ('00000000-0000-0000-0000-00000000e401', '38344000402', '{"role":"customer","locale":"en"}');
+  ('00000000-0000-0000-0000-00000000d401', '48500000401', '{"locale":"pl"}'),
+  ('00000000-0000-0000-0000-00000000d402', '48500000402', '{"locale":"pl"}'),
+  ('00000000-0000-0000-0000-00000000c401', '38344000401', '{"locale":"sq"}'),
+  ('00000000-0000-0000-0000-00000000e401', '38344000402', '{"locale":"en"}');
+-- Roles are chosen after the first sign-in (public.choose_role); the admin role only by the platform.
+update public.profiles set role = 'mover' where id in ('00000000-0000-0000-0000-00000000d401', '00000000-0000-0000-0000-00000000d402');
+update public.profiles set role = 'customer' where id = '00000000-0000-0000-0000-00000000c401';
 update public.profiles set role = 'admin' where id = '00000000-0000-0000-0000-00000000e401';
 
 insert into public.mover_companies (id, owner_id, legal_name, country, verification_status, stripe_onboarding_complete)

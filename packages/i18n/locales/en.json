@@ -5,6 +5,7 @@
     "back": "Back",
     "loading": "Loading…",
     "errorGeneric": "Something went wrong. Please try again.",
+    "retry": "Try again",
     "signOut": "Sign out",
     "backToTop": "Back to top",
     "partner": "Partner"
@@ -12,6 +13,13 @@
   "auth": {
     "title": "Sign in",
     "subtitle": "We'll send you a 6-digit code.",
+    "registerTab": "Create account",
+    "registerTitle": "Create your account",
+    "roleLabel": "How will you use MoversHub?",
+    "roleCustomer": "I need a mover",
+    "roleCustomerHint": "Book a van and helpers for your move.",
+    "roleMover": "I'm a mover",
+    "roleMoverHint": "Get jobs for your van. You set your own rates.",
     "usePhone": "Phone",
     "useEmail": "Email",
     "phoneLabel": "Phone number",
@@ -20,17 +28,23 @@
     "emailPlaceholder": "you@example.com",
     "sendCode": "Send code",
     "codeLabel": "6-digit code",
+    "verifyTitle": "Enter your code",
     "codeSentTo": "We sent a code to {{target}}.",
     "linkSentTo": "We sent a sign-in link to {{target}}. Open it on this device to sign in.",
     "orEnterCode": "Got a 6-digit code instead? Enter it here.",
     "verify": "Verify",
     "resend": "Send a new code",
     "changeTarget": "Use a different number or email",
+    "changeEmail": "Use a different email",
+    "existingCustomer": "This email already has a customer account, so you're signed in to it. To offer moves, switch to the mover side below.",
+    "existingMover": "This email already has a mover account, so you're signed in to it. To book a move, switch to the customer side below.",
+    "signedInAs": "Signed in as {{email}}. Already on MoversHub with a different email? Sign out and use that one.",
     "errors": {
       "invalid_phone": "Enter your number with country code, e.g. +383 44 123 456.",
       "invalid_email": "Enter a valid email address.",
       "invalid_code": "The code has 6 digits.",
       "wrong_code": "That code is wrong or has expired.",
+      "choose_role": "Choose how you'll use MoversHub.",
       "link_invalid": "That sign-in link is invalid or has expired. Request a new one."
     }
   },
@@ -41,14 +55,17 @@
     "bookingSoon": "Before you pay, you'll see your mover and their fixed total, with the booking fee listed separately.",
     "priceLoading": "Finding movers…",
     "retry": "Try again",
-    "noMoversHere": "No movers on MoversHub here yet."
+    "noMoversHere": "No movers on MoversHub here yet.",
+    "switchTitle": "Have a van?",
+    "switchText": "Offer moves on MoversHub at your own rates. First you fill in your company, documents, vans, rates and payouts; requests come in once they're verified.",
+    "switchToMover": "Switch to the mover side",
+    "nowHere": "You're on the customer side now."
   },
   "mover": {
     "homeTitle": "Welcome, partner",
     "homeSubtitle": "Next: add your company, documents, vehicles and your own rates.",
     "trackingNotice": "We share your location with the customer only during an active job.",
     "exampleLabel": "Example request — real requests arrive once your company is verified.",
-    "signInCta": "Sign in or sign up",
     "checklistTitle": "Get ready to take jobs",
     "comingSoon": "Coming next",
     "steps": {
@@ -72,7 +89,10 @@
         "title": "Payouts",
         "text": "Connect Stripe to get paid after each completed move."
       }
-    }
+    },
+    "switchTitle": "Need a move yourself?",
+    "switchToCustomer": "Switch to the customer side",
+    "nowHere": "You're on the mover side now."
   },
   "places": {
     "prishtina": "Prishtina",

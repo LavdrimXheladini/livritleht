@@ -5,6 +5,7 @@
     "back": "Zurück",
     "loading": "Wird geladen…",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen",
     "signOut": "Abmelden",
     "backToTop": "Nach oben",
     "partner": "Partner"
@@ -12,6 +13,13 @@
   "auth": {
     "title": "Anmelden",
     "subtitle": "Wir schicken dir einen 6-stelligen Code.",
+    "registerTab": "Konto erstellen",
+    "registerTitle": "Konto erstellen",
+    "roleLabel": "Wie möchtest du MoversHub nutzen?",
+    "roleCustomer": "Ich brauche ein Umzugsunternehmen",
+    "roleCustomerHint": "Buche einen Transporter und Helfer für deinen Umzug.",
+    "roleMover": "Ich bin ein Umzugsunternehmen",
+    "roleMoverHint": "Erhalte Aufträge für deinen Transporter. Deine Preise legst du selbst fest.",
     "usePhone": "Telefon",
     "useEmail": "E-Mail",
     "phoneLabel": "Telefonnummer",
@@ -20,17 +28,23 @@
     "emailPlaceholder": "du@beispiel.de",
     "sendCode": "Code senden",
     "codeLabel": "6-stelliger Code",
+    "verifyTitle": "Code eingeben",
     "codeSentTo": "Wir haben einen Code an {{target}} gesendet.",
     "linkSentTo": "Wir haben einen Anmeldelink an {{target}} gesendet. Öffne ihn auf diesem Gerät, um dich anzumelden.",
     "orEnterCode": "Hast du stattdessen einen 6-stelligen Code? Gib ihn hier ein.",
     "verify": "Bestätigen",
     "resend": "Neuen Code senden",
     "changeTarget": "Andere Nummer oder E-Mail verwenden",
+    "changeEmail": "Andere E-Mail verwenden",
+    "existingCustomer": "Diese E-Mail hat schon ein Kundenkonto, deshalb bist du dort angemeldet. Um Umzüge anzubieten, wechsle unten zum Bereich für Umzugsunternehmen.",
+    "existingMover": "Diese E-Mail hat schon ein Konto als Umzugsunternehmen, deshalb bist du dort angemeldet. Um einen Umzug zu buchen, wechsle unten zum Kundenbereich.",
+    "signedInAs": "Angemeldet als {{email}}. Schon bei MoversHub mit einer anderen E-Mail? Melde dich ab und nutze diese.",
     "errors": {
       "invalid_phone": "Gib deine Nummer mit Ländervorwahl ein, z. B. +49 151 2345 6789.",
       "invalid_email": "Gib eine gültige E-Mail-Adresse ein.",
       "invalid_code": "Der Code hat 6 Ziffern.",
       "wrong_code": "Der Code ist falsch oder abgelaufen.",
+      "choose_role": "Wähle, wie du MoversHub nutzen möchtest.",
       "link_invalid": "Dieser Anmeldelink ist ungültig oder abgelaufen. Fordere einen neuen an."
     }
   },
@@ -41,14 +55,17 @@
     "bookingSoon": "Vor dem Bezahlen siehst du dein Umzugsunternehmen und seinen Festpreis, die Buchungsgebühr wird separat ausgewiesen.",
     "priceLoading": "Suche Umzugsunternehmen…",
     "retry": "Erneut versuchen",
-    "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf MoversHub."
+    "noMoversHere": "Hier gibt es noch keine Umzugsunternehmen auf MoversHub.",
+    "switchTitle": "Hast du einen Transporter?",
+    "switchText": "Biete Umzüge auf MoversHub zu deinen eigenen Preisen an. Zuerst trägst du Firma, Dokumente, Fahrzeuge, Preise und Auszahlungen ein; Anfragen kommen, sobald alles verifiziert ist.",
+    "switchToMover": "Zum Bereich für Umzugsunternehmen wechseln",
+    "nowHere": "Du bist jetzt im Kundenbereich."
   },
   "mover": {
     "homeTitle": "Willkommen, Partner",
     "homeSubtitle": "Als Nächstes: Firma, Dokumente, Fahrzeuge und deine eigenen Preise hinzufügen.",
     "trackingNotice": "Wir teilen deinen Standort nur während eines aktiven Auftrags mit dem Kunden.",
     "exampleLabel": "Beispielanfrage — echte Anfragen kommen, sobald dein Unternehmen verifiziert ist.",
-    "signInCta": "Anmelden oder registrieren",
     "checklistTitle": "Bereit für Aufträge",
     "comingSoon": "Kommt bald",
     "steps": {
@@ -72,7 +89,10 @@
         "title": "Auszahlungen",
         "text": "Verbinde Stripe, um nach jedem abgeschlossenen Umzug ausgezahlt zu werden."
       }
-    }
+    },
+    "switchTitle": "Brauchst du selbst einen Umzug?",
+    "switchToCustomer": "Zum Kundenbereich wechseln",
+    "nowHere": "Du bist jetzt im Bereich für Umzugsunternehmen."
   },
   "places": {
     "prishtina": "Prishtina",

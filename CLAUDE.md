@@ -13,9 +13,8 @@ One language end to end: **TypeScript (strict)**.
 | Layer | Choice | Why |
 |---|---|---|
 | Monorepo | **pnpm workspaces + Turborepo** | Shared types, one CI |
-| Customer app | **Expo (React Native) + Expo Router** | iOS + Android from one codebase, OTA updates |
-| Mover app | **Separate Expo app** | Background location permission only in this app (cleaner store review), different UX |
-| Web (booking site, tracking links, admin) | **Next.js (App Router)** | SEO for booking pages, public tracking page, admin panel |
+| App (customers + movers) | **One Expo (React Native) app + Expo Router** (`mobile/app`). Opens on sign in / create account; the role (customer or mover), chosen after the first sign-in and switchable later, picks its side. Its web build is the installable computer version | iOS + Android + computer from one codebase, OTA updates; one download (owner decision 2026-10-13, design/DECISIONS.md #15). Background location is declared in this app but asked only from movers, when a job starts |
+| Website (what MoversHub is, create an account, get the app, tracking links, admin) | **Next.js (App Router)** | SEO, a public tracking page anyone with the link can open, admin panel. Booking happens in the app |
 | Backend | **Supabase** (Postgres + PostGIS, Auth, Realtime, Storage, Edge Functions) — **EU region: Ireland (eu-west-1)**, project ref `nsczjynvatkfwmcnuaii` | Managed Postgres, row-level security, realtime for tracking, private storage for documents |
 | Server logic | **Supabase Edge Functions (Deno/TS)** + Postgres functions | Pricing engine, Stripe webhooks, job state machine — never in the client |
 | Validation | **Zod** in `packages/shared` | Same schemas on client and server |
@@ -27,7 +26,8 @@ One language end to end: **TypeScript (strict)**.
 | GPS tracking | `expo-location` + `expo-task-manager` (background updates, Android foreground service) → **Supabase Realtime Broadcast** | Live position without writing every ping to the DB |
 | Payments | **Stripe Connect (Express accounts)**, SetupIntent at booking, off-session PaymentIntent at completion, `application_fee_amount` | Licensed provider holds and splits money |
 | Push | **Expo Notifications** | |
-| SMS (tracking links, OTP) | **Twilio** | |
+| Sign-in | **Email + 6-digit code** (Supabase Auth OTP) on the website and in the app. Every email gets the same answer (no account check); the role is chosen after the code (`choose_role`) | The cloud project still uses Supabase's built-in email: it sends a sign-in **link**, no code, and its template can't change without custom SMTP. So until a MoversHub domain + SMTP exist, app sign-in works only against a local Supabase |
+| SMS (tracking links) | **Twilio** | |
 | i18n | **i18next** — `en`, `sq`, `pl`, `sr` (covers sr/hr/bs/me), `de` (diaspora corridors DE/AT/CH) | |
 | Errors | **Sentry** (mobile + web + edge functions) | |
 | Analytics | **PostHog EU cloud**, only after consent | GDPR |
@@ -45,12 +45,11 @@ Do not add new frameworks or replace any of these without asking.
 ```
 movershub/
 ├─ web/                # WEB PLATFORM
-│  ├─ app/             # Next.js: booking site under /[lang], /t/[token] tracking page, /admin  (@movershub/web)
+│  ├─ app/             # Next.js: what MoversHub is + create account + get the app under /[lang], /t/[token] tracking page, /admin  (@movershub/web)
 │  └─ e2e/             # Playwright tests (web + API)                                          (@movershub/e2e)
 ├─ mobile/             # MOBILE PLATFORM
-│  ├─ customer/        # Expo app: booking, payment, live tracking                              (@movershub/customer)
-│  ├─ mover/           # Expo app: onboarding, rate cards, jobs, GPS                            (@movershub/mover)
-│  ├─ core/            # Shared Expo code: Supabase client, auth, fonts, login/verify screens   (@movershub/mobile)
+│  ├─ app/             # The Expo app for customers (booking, payment, tracking) and movers (onboarding, rates, jobs, GPS)  (@movershub/app)
+│  ├─ core/            # Shared Expo code: Supabase client, auth, fonts, sign-in screens, UI kit (@movershub/mobile)
 │  └─ maestro/         # Mobile E2E flows
 ├─ packages/           # SHARED BY BOTH PLATFORMS
 │  ├─ shared/          # Zod schemas, types, constants (vehicle classes, job statuses), retention.config
@@ -72,7 +71,7 @@ movershub/
 
 ## 3. Core data model (Postgres)
 
-- `profiles` — id (auth user), role (`customer` | `mover` | `admin`), name, phone, locale
+- `profiles` — id (auth user), role (`customer` | `mover` | `admin`; NULL until the user chooses it after the first sign-in via `choose_role()`, which also switches between customer and mover later — never from sign-up metadata; admin only by the service role and can't be switched away). The role only picks the app's side: a mover gets job requests only once their company, documents, vans, rates and payouts are filled in and verified. Name, phone, locale
 - `mover_companies` — legal_name, registration_no, tax_id, tax_residency_country (DAC7), address, country, is_business, verification_status, stripe_account_id, stripe_onboarding_complete, self_certification_at
 - `mover_documents` — company_id, type (`id`, `registration`, `insurance`, `cmr`, `licence`), file_path (private bucket), expires_at, verified_at
 - `vehicles` — company_id, class (`SMALL` | `VAN` | `LARGE_VAN` | `BOX` | `TRUCK`), plate, max_weight_kg, volume_m3, has_tail_lift, tachograph (bool), active, verified_at. **Vehicle verification:** `verified_at` is set only by the service role / admins (not in movers' column grants); new vehicles start unverified, and a change to class, plate, max_weight_kg or tachograph clears it unless the same update records a new check. Unverified vehicles are never quoted. The class must fit the weight: `BOX` ≤ 3500 kg, `TRUCK` > 3500 kg (or unknown)
@@ -164,18 +163,18 @@ Transitions only via the `job-transition` edge function, which checks role, curr
 
 ## 6. Map and GPS tracking
 
-**Mover app**
+**App, mover side**
 - Request foreground permission, then background permission, with an explanation screen first.
 - On `EN_ROUTE_TO_PICKUP`: `Location.startLocationUpdatesAsync` (task via `expo-task-manager`), accuracy balanced, every ~5–10 s or 25 m, Android foreground service notification "Sharing location with customer for job #…".
 - Each update → Supabase Realtime **Broadcast** on channel `job:{jobId}` (`{lat, lng, heading, speed, ts}`). Every ~60 s also insert a row in `location_breadcrumbs`.
 - On `COMPLETED` / `CANCELLED`: `stopLocationUpdatesAsync`. Also stop if the app detects the job is no longer active.
 
-**Customer app + web**
+**App, customer side + public tracking page**
 - Map with pickup/drop-off pins, route polyline (from Routes API), mover marker animated between updates, ETA (Routes API from mover position, throttled to once per ~30 s).
 - Subscribe to `job:{jobId}`; RLS/authorization: only the job's customer, the assigned mover, and valid tracking-link holders.
 - Public tracking page `web/app/src/app/[lang]/t/[token]` — validates `tracking_links.token` + `expires_at`, shows map + ETA + mover company name only.
 
-**Job offers map (mover app):** shows pickup **district** area, not exact address, until accepted.
+**Job offers map (app, mover side):** shows pickup **district** area, not exact address, until accepted.
 
 ---
 
@@ -197,8 +196,7 @@ Use Stripe **test mode** + `stripe listen` locally. Never store card or bank dat
 ```
 pnpm install
 pnpm dev                 # all apps
-pnpm dev:customer        # Expo customer app
-pnpm dev:mover           # Expo mover app
+pnpm dev:app             # Expo app (customers + movers)
 pnpm dev:web             # Next.js
 supabase start           # local Postgres/Auth/Storage/Realtime
 supabase db reset        # apply migrations + seed
@@ -210,7 +208,7 @@ pnpm e2e:mobile          # Maestro
 pnpm lint && pnpm typecheck
 stripe listen --forward-to localhost:54321/functions/v1/stripe-webhook
 ```
-Local setup: copy `.env.example` → `web/app/.env.local` and `mobile/{customer,mover}/.env` with the Supabase URL + publishable key. Dev ports: web 3000, customer 8081, mover 8082. Every dev/start/build runs `scripts/dev-prep.mjs` first (regenerates `theme.css`, clears Next/Metro caches when the lockfile, tokens or configs changed) — don't bypass it with raw `next dev` / `expo start`. Local sign-in: test phones `+383 44 000 001` (customer) / `+48 500 000 001` (mover), code `123456`; email codes appear in Mailpit (http://127.0.0.1:54324). Playwright browsers: `pnpm --filter @movershub/e2e install-browsers`.
+Local setup: copy `.env.example` → `web/app/.env.local` and `mobile/app/.env` with the Supabase URL + publishable key. Dev ports: web 3000, app 8081. Every dev/start/build runs `scripts/dev-prep.mjs` first (regenerates `theme.css`, clears Next/Metro caches when the lockfile, tokens or configs changed) — don't bypass it with raw `next dev` / `expo start`. Local sign-in: email + 6-digit code; the codes appear in Mailpit (http://127.0.0.1:54324). **The app can sign in only against the local stack for now** (the cloud project's built-in email sends a link, not a code): `supabase start` (Docker), the key from `supabase status`, `pnpm functions:build`, `INCLUDE_TEST_MOVERS=true` in `supabase/functions/.env`, and `EXPO_PUBLIC_SUPABASE_URL` = `http://127.0.0.1:54321` (browser preview, iOS simulator), `http://10.0.2.2:54321` (Android emulator, or `adb reverse tcp:54321 tcp:54321`), or the computer's Wi-Fi address (a phone) — see README "Sign in to the app". (Until the website switches to email only, its phone sign-in still accepts the test phones `+383 44 000 001` / `+48 500 000 001`, code `123456`.) Playwright browsers: `pnpm --filter @movershub/e2e install-browsers`.
 
 Framework notes (newer than most training data — read the bundled docs before changing):
 - Next.js 16: `src/proxy.ts` replaces middleware; Cache Components are on, so anything reading cookies (Supabase session) must sit inside `<Suspense>`. Docs: `node_modules/next/dist/docs/`.
@@ -235,11 +233,11 @@ Framework notes (newer than most training data — read the bundled docs before 
 
 ## 10. Build order (MVP)
 
-1. Monorepo scaffold, Supabase local, auth (phone OTP + email), i18n.
+1. Monorepo scaffold, Supabase local, auth (email + 6-digit code), i18n.
 2. Mover onboarding: company, documents, vehicles, rate cards, Stripe Express.
 3. Pricing engine + `quote` function + tests.
-4. Customer booking flow: addresses (Places), items, vehicle classes, offers, SetupIntent.
-5. Job offers + accept/decline (mover app).
+4. Customer booking flow (in the app): addresses (Places), items, vehicle classes, offers, SetupIntent.
+5. Job offers + accept/decline (app, mover side).
 6. Job state machine + photos.
 7. GPS tracking + maps (customer, mover, public link).
 8. Completion charge, webhooks, payouts, receipts.

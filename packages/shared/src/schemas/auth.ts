@@ -25,9 +25,12 @@ export const otpVerifySchema = z.discriminatedUnion('channel', [
 ]);
 export type OtpVerify = z.infer<typeof otpVerifySchema>;
 
-/** Metadata sent with sign-up; read by the `handle_new_user` trigger. */
+/**
+ * Metadata sent with sign-up; the `handle_new_user` trigger reads the locale. A `role` sent here is
+ * ignored: the user chooses it after the first sign-in (`public.choose_role`), once the email is proven.
+ */
 export const signupMetadataSchema = z.object({
-  role: z.enum(SELF_SIGNUP_ROLES),
+  role: z.enum(SELF_SIGNUP_ROLES).optional(),
   locale: z.enum(LOCALES),
 });
 export type SignupMetadata = z.infer<typeof signupMetadataSchema>;

@@ -5,7 +5,9 @@ select plan(35);
 -- Fixtures: one mover whose company is verified, insured and has CMR insurance (no operator licence
 -- yet). Service area in Lisbon, far from every test mover, so the sample data never mixes in.
 insert into auth.users (id, phone, raw_user_meta_data)
-values ('00000000-0000-0000-0000-00000000d301', '48500000301', '{"role":"mover","locale":"pl"}');
+values ('00000000-0000-0000-0000-00000000d301', '48500000301', '{"locale":"pl"}');
+-- The role is chosen after the first sign-in (public.choose_role); set directly for the fixtures.
+update public.profiles set role = 'mover' where id in ('00000000-0000-0000-0000-00000000d301');
 
 select has_column('public', 'vehicles', 'verified_at', 'vehicles record when an admin verified them');
 

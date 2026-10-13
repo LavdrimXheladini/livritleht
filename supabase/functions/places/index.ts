@@ -1,9 +1,10 @@
-// `places` — address search for the apps (Photon / OpenStreetMap), on the server like the website's
+// `places` — address search for the app (Photon / OpenStreetMap), on the server like the website's
 // /api/geo/search: visitors' IP addresses never reach the geocoder (GDPR) and the provider can
 // change (Google Places later) without an app update.
 //   POST { q, locale, near? } → { suggestions: [{ id, label, area, district?, lat, lon, countryCode }] }
-// Public, like `quote`, and limited per IP (RATE_LIMITS.addressSearch → 429): Photon is fair-use
-// only. Shared code: run `pnpm functions:build` before serving or deploying.
+// Only the signed-in app calls it (the website has its own /api/geo/search), but it doesn't check
+// the user yet: public, limited per IP (RATE_LIMITS.addressSearch → 429) — Photon is fair-use only.
+// Follow-up: require a signed-in user and limit per user. Shared code: run `pnpm functions:build` before serving or deploying.
 
 import { z } from 'zod';
 

@@ -4,9 +4,8 @@ import { defineConfig, devices } from '@playwright/test';
 // dev server, and no clash with a `pnpm dev:web` already running on :3000.
 const PORT = 3100;
 const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${PORT}`;
-/** `customer` / `mover`: the phone apps' screenshot tests run against that app's browser preview. */
-const app = process.env.E2E_APP;
-const APP_PORTS: Record<string, number> = { customer: 8081, mover: 8082 };
+/** Set by `pnpm e2e:apps`: the phone app's screenshot tests run against its browser preview. */
+const app = !!process.env.E2E_APP;
 
 export default defineConfig({
   testDir: './tests',
@@ -23,7 +22,7 @@ export default defineConfig({
     { name: 'chromium', testIgnore: ['**/visual/**', '**/apps/**'], use: { ...devices['Desktop Chrome'] } },
     // `pnpm e2e:visual`: screenshots of the website, still and offline.
     { name: 'visual', testMatch: '**/visual/**/*.spec.ts', use: { ...devices['Desktop Chrome'], reducedMotion: 'reduce' } },
-    // `pnpm e2e:apps`: screenshots of the phone apps' browser preview, one app per run (E2E_APP).
+    // `pnpm e2e:apps`: screenshots of the phone app's browser preview (E2E_APP).
     {
       name: 'apps',
       testMatch: '**/apps/**/*.spec.ts',
@@ -39,8 +38,8 @@ export default defineConfig({
   webServer: app
     ? {
         // The app's browser preview; CI=1 keeps Expo from watching files or asking questions.
-        command: `pnpm --filter @movershub/${app} web`,
-        url: `http://localhost:${APP_PORTS[app]}`,
+        command: 'pnpm --filter @movershub/app web',
+        url: 'http://localhost:8081',
         reuseExistingServer: true,
         timeout: 300_000,
         env: { CI: '1', BROWSER: 'none' },

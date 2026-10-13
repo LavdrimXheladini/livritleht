@@ -4,7 +4,8 @@ import { LOCALES, USER_ROLES } from '../constants';
 
 export const profileSchema = z.object({
   id: z.uuid(),
-  role: z.enum(USER_ROLES),
+  /** Chosen after the first sign-in, then switchable between customer and mover (`public.choose_role`); admin only by the platform; null until chosen. */
+  role: z.enum(USER_ROLES).nullable(),
   name: z.string().nullable(),
   phone: z.string().nullable(),
   locale: z.enum(LOCALES),
