@@ -2,8 +2,9 @@ name: CI
 
 on:
   pull_request:
+  # develop is the default branch, and work is pushed to it directly.
   push:
-    branches: [main]
+    branches: [develop]
 
 jobs:
   checks:
