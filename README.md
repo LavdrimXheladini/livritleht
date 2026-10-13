@@ -114,7 +114,8 @@ pnpm test:db       # the same tests on a local database (Docker + `supabase star
 The screenshot tests are still and offline (no motion, maps show their drawn fallback, saved prices), so
 the same code gives the same pictures. After an intended design change, look at the new pictures in
 `web/e2e/test-results/` and accept them with `pnpm e2e:visual --update-snapshots` (or `pnpm e2e:apps
---update-snapshots`). Saved pictures are per operating system (`-win32.png`); CI runs Linux and does not run
+--update-snapshots`). That rewrites only pictures that fail; a small change, like a renamed label, can stay
+within the tolerance — use `--update-snapshots=all` to rewrite every picture. Saved pictures are per operating system (`-win32.png`); CI runs Linux and does not run
 them yet.
 
 API tests for the deployed `quote` and `places` functions (skipped unless both variables are set):
