@@ -72,7 +72,8 @@
     "hidePassword": "Sakrij lozinku",
     "savePassword": "Sačuvaj lozinku",
     "backToSignIn": "Nazad na prijavu",
-    "signIn": "Prijavi se"
+    "signIn": "Prijavi se",
+    "recoveryNoCode": "Nema emaila posle nekoliko minuta? Proverite spam ili pokušajte ponovo kasnije."
   },
   "customer": {
     "homeTitle": "Rezerviši selidbu kod prevoznika",

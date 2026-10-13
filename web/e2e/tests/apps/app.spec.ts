@@ -9,6 +9,7 @@ import {
   STAND_IN_ID,
   STAND_IN_PASSWORD,
   appUrl,
+  cors,
   fakeAccount,
   fitScreenToPage,
   noNetwork,
@@ -124,6 +125,7 @@ test.describe('signed out', () => {
     await expect(page.getByTestId('forgot-email')).toHaveValue('ana@example.com');
     await page.getByTestId('forgot-send-code').click();
     await expect(page.getByText(en.auth.recoveryCodeSentTo.replace('{{target}}', 'ana@example.com'))).toBeVisible();
+    await expect(page.getByText(en.auth.recoveryNoCode)).toBeVisible();
     expect(calls.recovered).toEqual(['ana@example.com']);
     await enterCode(page);
     await expect(page.getByText(en.auth.newPasswordTitle)).toBeVisible();
@@ -190,6 +192,84 @@ test.describe('signed out', () => {
     await page.goBack();
     await expect(page.getByTestId('auth-password')).toBeVisible();
     await expect(page.getByTestId('auth-email')).toHaveValue('ana@example.com');
+  });
+
+  test('an address corrected on "Forgot password?" comes back to the sign-in form', async ({ page }) => {
+    await page.goto(url);
+    await page.getByTestId('auth-email').fill('ana@example.con');
+    await page.getByTestId('auth-forgot').click();
+    await page.getByTestId('forgot-email').fill('ana@example.com');
+    await page.getByTestId('forgot-back').click();
+    await expect(page.getByTestId('auth-email')).toHaveValue('ana@example.com');
+  });
+
+  test('create account: a reload on "Create your password" keeps asking for it', async ({ page }) => {
+    await serveOtp(page);
+    await fakeAccount(page, { role: null });
+    await page.goto(url);
+    await page.getByTestId('auth-mode-register').click();
+    await page.getByTestId('role-customer').click();
+    await sendAndEnterCode(page);
+    await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
+    await page.reload();
+    await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
+    await expect(page.getByTestId('home-sign-out')).toHaveCount(0);
+  });
+
+  test('create account: a code asked for again within a minute still goes to the code screen', async ({ page }) => {
+    let requests = 0;
+    await page.route('**/auth/v1/otp*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      requests += 1;
+      // The second request: Supabase Auth's per-address limit (the first code still works).
+      return requests === 1
+        ? route.fulfill({ status: 200, contentType: 'application/json', headers: cors, body: '{}' })
+        : route.fulfill({
+            status: 429,
+            contentType: 'application/json',
+            headers: cors,
+            body: JSON.stringify({ code: 429, error_code: 'over_email_send_rate_limit', msg: 'For security purposes, you can only request this after 52 seconds.' }),
+          });
+    });
+    await page.goto(url);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await page.getByTestId('auth-mode-register').click();
+      await page.getByTestId('role-customer').click();
+      await page.getByTestId('auth-email').fill('new@example.com');
+      await page.getByTestId('auth-send-code').click();
+      await expect(page.getByText(codeSent('new@example.com'))).toBeVisible();
+      await page.getByTestId('verify-change-email').click();
+    }
+    expect(requests).toBe(2);
+  });
+
+  test('create account: when the hourly email budget is used up it says so, instead of "code sent"', async ({ page }) => {
+    await serveOtp(page, 429, JSON.stringify({ code: 429, error_code: 'over_email_send_rate_limit', msg: 'email rate limit exceeded' }));
+    await page.goto(url);
+    await page.getByTestId('auth-mode-register').click();
+    await page.getByTestId('role-customer').click();
+    await page.getByTestId('auth-email').fill('new@example.com');
+    await page.getByTestId('auth-send-code').click();
+    await expect(app(page).getByText(en.auth.errors.too_many_attempts)).toBeVisible();
+    await expect(page.getByTestId('verify-code')).toHaveCount(0);
+  });
+
+  test('a code used in one tab of the computer version: another open tab asks for the password too', async ({ page, context }) => {
+    await serveOtp(page);
+    await fakeAccount(page, { role: null });
+    const other = await context.newPage();
+    await serveFixtures(other);
+    await fakeAccount(other, { role: null });
+    await other.goto(url);
+    await expect(other.getByTestId('auth-email')).toBeVisible();
+    await page.goto(url);
+    await page.getByTestId('auth-mode-register').click();
+    await page.getByTestId('role-customer').click();
+    await sendAndEnterCode(page);
+    await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
+    // The other tab hears about the sign-in and shows the same step, not the home screen.
+    await expect(other.getByText(en.auth.createPasswordTitle)).toBeVisible();
+    await expect(other.getByTestId('home-sign-out')).toHaveCount(0);
   });
 
   test('forgot password: an address without an account gets the same answer, and back leads to sign in', async ({ page }) => {
@@ -296,11 +376,12 @@ test.describe('signed out', () => {
     await page.getByTestId('auth-mode-register').click();
     await page.getByTestId('role-mover').click();
     await sendAndEnterCode(page);
-    // A sign-in by code always ends with choosing a password — no endless sign-in by code.
-    await createPassword(page);
+    // A sign-in by code always ends with choosing a password — no endless sign-in by code. The
+    // account's current password is fine (Supabase Auth calls it same_password).
+    await createPassword(page, STAND_IN_PASSWORD);
     await expect(page.getByTestId('home-notice')).toHaveText(en.auth.existingCustomer);
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
-    expect(calls.updates).toEqual([{ password: 'movers2027' }]);
+    expect(calls.updates).toEqual([{ password: STAND_IN_PASSWORD }]);
     // Never switched without being asked.
     expect(calls.chosen).toEqual([]);
     await page.getByTestId('switch-to-mover').click();

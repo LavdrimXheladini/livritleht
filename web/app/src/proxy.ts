@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import { isLocale, resolveLocale } from '@movershub/shared';
 
-import { supabaseKey, supabaseUrl } from './lib/supabase/env';
+import { supabaseConfigured, supabaseKey, supabaseUrl } from './lib/supabase/env';
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -17,7 +17,9 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. Refresh the Supabase session cookie so Server Components see a valid token.
+  // 2. Refresh the Supabase session cookie so Server Components see a valid token — unless this copy
+  //    has no Supabase settings yet (nobody can be signed in then).
+  if (!supabaseConfigured) return NextResponse.next({ request });
   let response = NextResponse.next({ request });
   const supabase = createServerClient(supabaseUrl, supabaseKey, {
     cookies: {

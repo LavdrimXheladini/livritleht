@@ -31,7 +31,9 @@ export function PasswordScreen({ purpose, onSaved }: { purpose: 'create' | 'rese
 
   const submit = form.handleSubmit(async ({ password }) => {
     const { error } = await supabase.auth.updateUser({ password });
-    if (error) {
+    // "Create account" for an address that already has an account: typing its current password is
+    // fine (the person knows it, and a password planted before the address was proven is gone).
+    if (error && !(purpose === 'create' && error.code === 'same_password')) {
       form.setError('password', { message: passwordErrorKey(error) });
       return;
     }

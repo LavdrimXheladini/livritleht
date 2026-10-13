@@ -48,15 +48,23 @@ design/        design handoff and decisions
 
 ## Run it locally
 
+Works on Windows, macOS and Linux. There is no `npm run all`: `pnpm dev` starts everything (step 4).
+
 ### 1. Install the tools (once)
 
-- **Node.js 22 or newer** — https://nodejs.org
-- **pnpm 10** — `npm install -g pnpm@10.18.0`
+- **Node.js 24 LTS** (22.13 or newer also works) — https://nodejs.org. Check with `node -v`; with an older
+  version the start stops and says so. With nvm or fnm, `nvm use` picks the version in `.nvmrc`.
+- **pnpm 10** — the packages install only with pnpm (`npm install` and `yarn` stop with a message):
+  - Windows: `npm install -g pnpm@10`
+  - macOS / Linux: `corepack enable pnpm` (comes with Node 22 and 24) or `npm install -g pnpm@10`
+  - other ways: https://pnpm.io/installation
 - **Git**
 
-Optional: **Expo Go** on your phone (to open the app), the
-[Supabase CLI](https://supabase.com/docs/guides/cli) logged in and linked to the project (database
-tests and migrations).
+On Windows, if PowerShell answers *"pnpm.ps1 cannot be loaded because running scripts is disabled"*, run
+`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use Command Prompt or Git Bash.
+
+Optional: **Expo Go** on your phone (to open the app), and for creating accounts in the app (step 5)
+**Docker** and the **Supabase CLI** — also used for database tests and migrations.
 
 ### 2. Get the code and install packages
 
@@ -67,51 +75,100 @@ git switch develop
 pnpm install
 ```
 
+On Windows, clone into a short folder outside OneDrive (e.g. `C:\dev\livritleht`): OneDrive syncing
+`node_modules` slows the install down and can lock files.
+
 In VS Code, open **`movershub.code-workspace`** (File → Open Workspace from File…): the website and the app
 show as separate folders, next to the shared code, database and tests.
 
 ### 3. Add the environment files
 
-Copy [`.env.example`](.env.example) and fill in the values (ask the project owner for the Supabase
-publishable key — it is public by design; **never commit these files**):
+Copy [`.env.example`](.env.example) to these two files and fill in a Supabase URL with the publishable key
+**of the same project** (the key is public by design; **never commit these files**):
 
 | File | Variables |
 |---|---|
 | `web/app/.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, optional `CONTACT_EMAIL`, optional `SUPABASE_SECRET_KEY` (server only — rate limits) |
 | `mobile/app/.env` | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |
 
-Without them the website still opens, but sign-in won't work.
+Which project:
+
+- **The shared cloud project** — URL `https://nsczjynvatkfwmcnuaii.supabase.co`, key from the project owner.
+  The website shows live prices from it. Creating accounts in the app doesn't work there yet (step 5).
+- **Your own local Supabase** (step 5) — the URL and key that `supabase status` prints.
+
+**Accounts live in the database they were created in.** An account made on another computer's local
+Supabase doesn't exist on yours: create your own (step 5).
+
+Without the files both still open — the website with labelled sample prices, the app with a "Not
+connected" note — but signing in won't work. After changing `mobile/app/.env`, restart `pnpm dev:app`.
 
 ### 4. Start what you need
 
 | Command | Opens |
 |---|---|
 | `pnpm dev:web` | Website → http://localhost:3000 |
-| `pnpm dev:app` | The app (Expo, port 8081) — scan the QR code with Expo Go, or press `w` for a browser preview. Signing in needs the local Supabase for now — see 5 below |
-| `pnpm dev` | Both at once (needs more memory) |
+| `pnpm dev:app` | The app (Expo, port 8081) — scan the QR code with Expo Go, or press `w` for the computer version in the browser. Creating an account needs the local Supabase for now — see 5 below |
+| `pnpm dev` (or `pnpm start`) | Both at once (needs more memory) |
 
-Every start runs `scripts/dev-prep.mjs` first: it regenerates the design-token CSS and clears stale
-caches when dependencies or tokens changed. Don't bypass it with raw `next dev` / `expo start`.
+After `pnpm install`, `npm run dev:web` and the others work too. Every start runs `scripts/dev-prep.mjs`
+first: it checks the Node version and that the packages are installed, regenerates the design-token CSS and
+clears stale caches when dependencies or tokens changed. Don't bypass it with raw `next dev` / `expo start`.
 
 On a machine with little free memory, run **one** app at a time.
 
-### 5. Sign in to the app (local Supabase, for now)
+**On a phone with Expo Go:** update Expo Go first (it must support Expo SDK 57). The phone needs to reach
+the computer: same network, and the computer's firewall allows port 8081 (and 54321 for a local Supabase).
+Some routers keep Wi-Fi devices apart — then turn on the computer's hotspot (Windows: Settings → Network &
+internet → Mobile hotspot), connect the phone to it, and start the app with that address in the QR code:
+
+```bash
+REACT_NATIVE_PACKAGER_HOSTNAME=192.168.137.1 pnpm dev:app       # Git Bash, macOS, Linux
+$env:REACT_NATIVE_PACKAGER_HOSTNAME="192.168.137.1"; pnpm dev:app   # PowerShell
+```
+
+(`192.168.137.1` is the usual Windows hotspot address; `ipconfig` / `ifconfig` shows yours.)
+
+### 5. Create an account in the app (local Supabase, for now)
 
 The cloud project's email sends a sign-in **link**, not a code, so until it has its own email (a domain +
-SMTP) the app can sign in only against a local Supabase:
+SMTP) accounts can be created only against a local Supabase on your computer:
 
-1. Install **Docker Desktop** and the **Supabase CLI**, then run `supabase start` (the first start downloads
-   images and needs several GB of memory). `supabase status` prints the local URL and publishable key.
-2. Put that key in `mobile/app/.env`, with `EXPO_PUBLIC_SUPABASE_URL` set for where the app runs:
-   - `http://127.0.0.1:54321` — the browser preview (`w`) and the iOS simulator;
+1. Install **Docker** (Windows and macOS: Docker Desktop, on Windows with WSL 2; Linux: Docker Engine) and
+   the **Supabase CLI** (Windows: `scoop install supabase`; macOS and Linux: `brew install supabase/tap/supabase`;
+   any system: `npx supabase …` instead of `supabase …`). Start Docker, then run `supabase start` in the project
+   folder — the first start downloads images and needs several GB of memory. `supabase status` prints the
+   local URL and publishable key.
+2. Put that key in `mobile/app/.env` (and `web/app/.env.local`, for the website), with `EXPO_PUBLIC_SUPABASE_URL`
+   set for where the app runs:
+   - `http://127.0.0.1:54321` — the computer version in the browser (`w`) and the iOS simulator;
    - `http://10.0.2.2:54321` — the Android emulator (or run `adb reverse tcp:54321 tcp:54321` and keep 127.0.0.1);
-   - `http://<your computer's address on the Wi-Fi>:54321` — a phone with Expo Go on the same Wi-Fi (allow
-     port 54321 through the firewall).
+   - `http://<your computer's address>:54321` — a phone with Expo Go (step 4: same network or hotspot;
+     allow port 54321 through the firewall).
 3. Run `pnpm functions:build`, and put `INCLUDE_TEST_MOVERS=true` in `supabase/functions/.env` (git-ignored) so
    the local `quote` function prices the test movers.
-4. Create an account with any email: the code arrives in Mailpit, http://127.0.0.1:54324. Then choose a password
-   (8+ characters, with a letter a–z and a digit) and sign in with email + password from then on; "Forgot
-   password?" sends a code the same way, then asks for a new password.
+4. Create an account with any email: the code arrives in Mailpit, http://127.0.0.1:54324 (no real email is
+   sent). Then choose a password (8+ characters, with a letter a–z and a digit) and sign in with email +
+   password from then on; "Forgot password?" sends a code the same way, then asks for a new password.
+
+`supabase stop` stops it and keeps the data for the next `supabase start`.
+
+### When something doesn't work
+
+| What you see | What to do |
+|---|---|
+| `MoversHub needs Node.js 22.13+, 24.3+ or newer` or `Unsupported engine` | Install Node.js 24 LTS, open a new terminal, run `pnpm install` again |
+| `MoversHub installs with pnpm, not npm` or `Unsupported URL Type "workspace:"` | Install pnpm (step 1), then `pnpm install` |
+| `The packages are not installed` | `pnpm install` in the project folder |
+| `pnpm` not found / not recognized | Open a new terminal after installing it |
+| `pnpm.ps1 cannot be loaded because running scripts is disabled` | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or use Command Prompt / Git Bash |
+| Website: sample prices, and "Supabase env missing" in the terminal | Add `web/app/.env.local` (step 3) and restart |
+| App: "Not connected" | Add `mobile/app/.env` (step 3) and restart `pnpm dev:app` |
+| App: "Wrong email or password" with an account from another computer | Accounts exist only in the database they were made in — create your own (step 5) |
+| Sign-in and prices fail although both files are there | The URL and the key must come from the same project (step 3); restart after fixing |
+| Expo Go: the project is incompatible with this version | Update Expo Go from the app store |
+| Expo Go keeps loading, or can't connect | Same network or the hotspot, firewall port 8081 (step 4) |
+| Linux: `ENOSPC: System limit for number of file watchers reached` | `echo fs.inotify.max_user_watches=524288 \| sudo tee -a /etc/sysctl.conf && sudo sysctl -p` |
 
 ## Checks and tests
 

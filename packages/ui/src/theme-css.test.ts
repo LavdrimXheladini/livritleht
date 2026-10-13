@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import tokens from '../tokens.json';
-import { buildThemeCss } from './theme-css';
+import { buildThemeCss } from './theme-css.mjs';
 
 describe('theme.css', () => {
   it('is in sync with tokens.json (run `pnpm --filter @movershub/ui build:theme`)', () => {

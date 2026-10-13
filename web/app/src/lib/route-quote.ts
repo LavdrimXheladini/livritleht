@@ -6,6 +6,7 @@ import type { QuoteResponse } from '@movershub/pricing';
 import type { Place } from '@movershub/shared';
 
 import { sampleQuote } from './landing-example';
+import { supabaseConfigured } from './supabase/env';
 import type { RouteQuote } from './landing-types';
 import { fromLive, fromSample } from './quote-mapping';
 
@@ -38,7 +39,8 @@ async function liveQuote(pickup: Place, dropoff: Place): Promise<QuoteResponse> 
 
 export async function routeQuote(pickup: Place, dropoff: Place): Promise<RouteQuote> {
   const sample = await sampleQuote(pickup, dropoff);
-  if (process.env.QUOTE_SOURCE === 'sample') return fromSample(sample);
+  // Offline tests, or a copy without Supabase settings (nothing to ask): the labelled sample rates.
+  if (process.env.QUOTE_SOURCE === 'sample' || !supabaseConfigured) return fromSample(sample);
   try {
     return fromLive(sample, await liveQuote(pickup, dropoff), pickup);
   } catch (e) {

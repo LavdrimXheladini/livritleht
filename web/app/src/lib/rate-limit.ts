@@ -11,7 +11,7 @@ import {
   type RateLimitScope,
 } from '@movershub/shared';
 
-import { supabaseUrl } from './supabase/env';
+import { supabaseConfigured, supabaseUrl } from './supabase/env';
 
 // Per-IP limits for the website's anonymous endpoints (quote action, address search): the same
 // RATE_LIMITS and the same database count (`public.hit_rate_limit`) as the edge functions, shared by
@@ -21,7 +21,7 @@ import { supabaseUrl } from './supabase/env';
 
 const secretKey = process.env.SUPABASE_SECRET_KEY;
 const db =
-  secretKey && supabaseUrl && process.env.RATE_LIMIT_STORE !== 'memory'
+  secretKey && supabaseConfigured && process.env.RATE_LIMIT_STORE !== 'memory'
     ? createClient(supabaseUrl, secretKey, { auth: { persistSession: false, autoRefreshToken: false } })
     : null;
 const memory = memoryRateLimiter();

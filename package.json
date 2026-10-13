@@ -3,10 +3,12 @@
   "private": true,
   "packageManager": "pnpm@10.18.0",
   "engines": {
-    "node": ">=22"
+    "node": "^22.13.0 || ^24.3.0 || >=25.0.0"
   },
   "scripts": {
+    "preinstall": "node scripts/use-pnpm.mjs",
     "dev": "turbo run dev",
+    "start": "turbo run dev",
     "dev:app": "pnpm --filter @movershub/app start",
     "dev:web": "pnpm --filter @movershub/web dev",
     "db:types": "supabase gen types typescript --local > packages/shared/src/database.types.ts",

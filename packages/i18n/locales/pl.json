@@ -72,7 +72,8 @@
     "hidePassword": "Ukryj hasło",
     "savePassword": "Zapisz hasło",
     "backToSignIn": "Wróć do logowania",
-    "signIn": "Zaloguj się"
+    "signIn": "Zaloguj się",
+    "recoveryNoCode": "Nie ma e-maila po kilku minutach? Sprawdź folder spam albo spróbuj ponownie później."
   },
   "customer": {
     "homeTitle": "Zarezerwuj przewoźnika",

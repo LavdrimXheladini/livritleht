@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isAuthRetryableFetchError } from '@supabase/supabase-js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
@@ -8,8 +9,7 @@ import { emailSchema } from '@movershub/shared';
 
 import { useAuth } from '../auth-provider';
 import { Button } from '../components/ui';
-import { isEmailResendLimit } from '../password';
-import { getDraftEmail, setDraftEmail, type PendingSignIn } from '../pending-sign-in';
+import { adoptDraftEmail, getDraftEmail, type PendingSignIn } from '../pending-sign-in';
 import { useAuthErrorText } from './auth-errors';
 import { AuthFrame, AuthTitle, EmailInput, useAttemptAnnouncement } from './auth-screen';
 
@@ -33,8 +33,10 @@ export function ForgotPasswordScreen({ onCodeSent, onBack }: { onCodeSent: (sent
   const submit = form.handleSubmit(
     async ({ email }) => {
       const { error } = await supabase.auth.resetPasswordForEmail(email);
-      // Too many requests from this network: nothing was sent, for any address.
-      if (error && !isEmailResendLimit(error)) {
+      // Supabase Auth answers "sent" for an address without an account before it tries to send
+      // anything; every other answer concerns an existing account. So only "no answer at all" and the
+      // limit per network (the same for every address) are shown; anything else looks sent.
+      if (error && (isAuthRetryableFetchError(error) || error.code === 'over_request_rate_limit')) {
         const key = error.status === 429 ? 'too_many_attempts' : 'generic';
         form.setError('root', { message: key });
         say(errorText(key) ?? '');
@@ -58,7 +60,7 @@ export function ForgotPasswordScreen({ onCodeSent, onBack }: { onCodeSent: (sent
           testID="forgot-email"
           returnKeyType="send"
           onSubmitEditing={submit}
-          onEmailChange={setDraftEmail}
+          onEmailChange={adoptDraftEmail}
         />
         {rootText ? <Text className="font-sans text-sm text-danger">{rootText}</Text> : null}
         <Button testID="forgot-send-code" variant="primary" title={t('auth.sendCode')} onPress={submit} loading={form.formState.isSubmitting} />

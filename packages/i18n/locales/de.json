@@ -72,7 +72,8 @@
     "hidePassword": "Passwort verbergen",
     "savePassword": "Passwort speichern",
     "backToSignIn": "Zurück zur Anmeldung",
-    "signIn": "Anmelden"
+    "signIn": "Anmelden",
+    "recoveryNoCode": "Nach ein paar Minuten keine E-Mail? Sieh im Spam-Ordner nach oder versuche es später noch einmal."
   },
   "customer": {
     "homeTitle": "Mit einem Umzugsunternehmen buchen",

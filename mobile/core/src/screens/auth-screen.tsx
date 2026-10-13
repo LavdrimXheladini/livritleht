@@ -14,8 +14,9 @@ import { useAuth } from '../auth-provider';
 import { LanguageButton } from '../components/language-button';
 import { Button, Display, SegmentedControl, TextField, Wordmark } from '../components/ui';
 import { currentLocale } from '../i18n';
-import { isEmailResendLimit, passwordErrorKey } from '../password';
+import { isPerAddressResendLimit, passwordErrorKey, settlePassword } from '../password';
 import { getDraftEmail, setDraftEmail, setPendingSignIn, type AuthMode, type PendingSignIn } from '../pending-sign-in';
+import { isSupabaseConfigured } from '../supabase';
 import { useAuthErrorText } from './auth-errors';
 import { PasswordField } from './password-field';
 import { RoleChoice } from './role-choice';
@@ -84,6 +85,13 @@ export function AuthFrame({ children }: { children: ReactNode }) {
               <LanguageButton />
             </View>
           </View>
+          {isSupabaseConfigured() ? null : (
+            // For developers only (a released app always has its settings), so not translated.
+            <Text testID="not-configured" className="rounded-lg bg-stone-150 p-3 font-sans text-[13px] leading-5 text-ink-700">
+              {'Not connected: this copy of the app has no Supabase settings yet. Add mobile/app/.env (README, ' +
+                '"Run it locally", step 3) and start the app again.'}
+            </Text>
+          )}
           <View className="flex-1 justify-center gap-6">{children}</View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -180,6 +188,7 @@ function PasswordSignInForm({
     async ({ email, password }) => {
       // A code asked for earlier and never used is over: this sign-in needs no new password.
       setPendingSignIn(null);
+      await settlePassword();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         const key = passwordErrorKey(error);
@@ -251,7 +260,7 @@ function RegisterForm({
     resolver: zodResolver(registerSchema),
     defaultValues: { email: defaultEmail, role: null },
   });
-  const rootText = form.formState.errors.root ? t('common.errorGeneric') : null;
+  const rootText = errorText(form.formState.errors.root?.message);
 
   const submit = form.handleSubmit(
     async ({ email, role }) => {
@@ -261,9 +270,11 @@ function RegisterForm({
         email,
         options: { shouldCreateUser: true, data: { locale: currentLocale() } satisfies SignupMetadata },
       });
-      if (error && !isEmailResendLimit(error)) {
-        form.setError('root', { message: error.message });
-        say(t('common.errorGeneric'));
+      if (error && !isPerAddressResendLimit(error)) {
+        // Every address gets these answers (a new one sends an email too), so they can be shown.
+        const key = error.status === 429 ? 'too_many_attempts' : 'generic';
+        form.setError('root', { message: key });
+        say(errorText(key) ?? '');
         return;
       }
       onCodeSent({ email, purpose: 'register', role });

@@ -28,6 +28,7 @@ export { useAppFonts } from './fonts';
 export { currentLocale, initI18n, restoreLocale, setLocale } from './i18n';
 export { passwordOwedBy, restorePasswordOwed, settlePassword } from './password';
 export {
+  getDraftVersion,
   getPendingSignIn,
   pendingSignInFor,
   setPendingSignIn,

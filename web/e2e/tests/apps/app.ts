@@ -76,7 +76,7 @@ export type StandInCalls = {
   recovered: string[];
   /** Sign-ins with a password. */
   signIns: { email: string; password: string }[];
-  /** Account updates (a new password and the metadata that says it has one). */
+  /** Account updates (a new password). */
   updates: { password?: string; data?: Record<string, unknown> }[];
   /** Changes to the profile row (e.g. the language). */
   profileUpdates: Record<string, unknown>[];

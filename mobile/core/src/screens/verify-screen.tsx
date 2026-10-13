@@ -8,7 +8,7 @@ import { otpCodeSchema } from '@movershub/shared';
 
 import { useAuth } from '../auth-provider';
 import { Button, TextField } from '../components/ui';
-import { owePassword } from '../password';
+import { owePassword, settlePassword } from '../password';
 import type { PendingSignIn } from '../pending-sign-in';
 import { useAuthErrorText } from './auth-errors';
 import { AuthFrame, AuthTitle } from './auth-screen';
@@ -32,13 +32,14 @@ export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: ()
 
   const submit = form.handleSubmit(async ({ code }) => {
     const type = sent.purpose === 'recovery' ? 'recovery' : 'email';
+    // Owed before the sign-in happens: also if the app closes before the password is chosen, and in
+    // other tabs of the browser version, which hear about the sign-in.
+    await owePassword(sent.email, sent.purpose);
     const { error } = await supabase.auth.verifyOtp({ email: sent.email, token: code, type });
     if (error) {
+      await settlePassword();
       form.setError('code', { message: 'wrong_code' });
-      return;
     }
-    // Signed in by a code: a password is owed, also if the app closes before it is chosen.
-    owePassword(sent.email, sent.purpose);
   });
 
   return (
@@ -50,6 +51,9 @@ export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: ()
             ? t('auth.recoveryCodeSentTo', { target: sent.email })
             : t('auth.codeSentTo', { target: sent.email })}
         </Text>
+        {sent.purpose === 'recovery' ? (
+          <Text className="font-sans text-sm text-ink-600">{t('auth.recoveryNoCode')}</Text>
+        ) : null}
       </View>
       <Controller
         control={form.control}

@@ -72,7 +72,8 @@
     "hidePassword": "Fshih fjalëkalimin",
     "savePassword": "Ruaj fjalëkalimin",
     "backToSignIn": "Kthehu te hyrja",
-    "signIn": "Hyr"
+    "signIn": "Hyr",
+    "recoveryNoCode": "Nuk ju erdhi email pas disa minutash? Kontrolloni dosjen e spamit ose provoni përsëri më vonë."
   },
   "customer": {
     "homeTitle": "Rezervo me një transportues",

@@ -3,8 +3,8 @@ import { isAuthRetryableFetchError, type Session, type SupabaseClient } from '@s
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, use, useCallback, useEffect, useState, type ReactNode } from 'react';
 
-import { owePassword, settlePassword } from './password';
-import { setPendingSignIn } from './pending-sign-in';
+import { owePassword, restorePasswordOwed, settlePassword } from './password';
+import { clearDraftEmail, setPendingSignIn } from './pending-sign-in';
 import { forgetSavedRole } from './saved-role';
 import { SESSION_STORAGE_KEY } from './supabase';
 
@@ -50,7 +50,8 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
   const forgetPerson = useCallback(() => {
     forgetSavedRole();
     setPendingSignIn(null);
-    settlePassword();
+    clearDraftEmail();
+    void settlePassword();
     queryClient.removeQueries({ queryKey: ['profile'] });
     queryClient.removeQueries({ queryKey: ['saved-role'] });
   }, [queryClient]);
@@ -71,11 +72,22 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
       setSession(offline ? await storedSession() : data.session);
       setLoading(false);
     });
+    let latest = 0;
     const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      const seq = ++latest;
       if (event === 'SIGNED_OUT') forgetPerson();
       // A "Forgot password?" code (also when another tab of the browser version used it): a new
       // password is owed before anything else.
-      if (event === 'PASSWORD_RECOVERY' && next?.user.email) owePassword(next.user.email, 'recovery');
+      if (event === 'PASSWORD_RECOVERY' && next?.user.email) void owePassword(next.user.email, 'recovery');
+      // A sign-in, maybe by a code used in another tab, which stored the password it owes first:
+      // read that before the screens see the session.
+      if (event === 'SIGNED_IN') {
+        clearDraftEmail();
+        void restorePasswordOwed().then(() => {
+          if (seq === latest) setSession(next);
+        });
+        return;
+      }
       // A renewed session means the network is back: a side taken from the device while offline is
       // asked from the server again. Only that one, and never restarting a request already running —
       // that request itself may have renewed the session (e.g. on a phone whose clock is off).

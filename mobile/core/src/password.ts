@@ -32,10 +32,13 @@ export async function restorePasswordOwed(): Promise<void> {
   }
 }
 
-/** Signed in by a code: a password is owed before anything else. */
-export function owePassword(email: string, purpose: CodePurpose): void {
+/**
+ * A code is being used: a password is owed before anything else. Stored before the sign-in happens,
+ * so other tabs of the browser version (they hear about the sign-in) find it too.
+ */
+export async function owePassword(email: string, purpose: CodePurpose): Promise<void> {
   owed = { email, purpose };
-  if (hasStorage()) AsyncStorage.setItem(OWED_KEY, JSON.stringify(owed)).catch(() => undefined);
+  if (hasStorage()) await AsyncStorage.setItem(OWED_KEY, JSON.stringify(owed)).catch(() => undefined);
 }
 
 /** Why `email` still owes a password (null: it doesn't). */
@@ -43,10 +46,10 @@ export function passwordOwedBy(email: string | undefined): CodePurpose | null {
   return owed && email !== undefined && owed.email === email ? owed.purpose : null;
 }
 
-/** The password is chosen (or the person signed out): nothing is owed any more. */
-export function settlePassword(): void {
+/** The password is chosen (or the person signed out, or the code was wrong): nothing is owed any more. */
+export async function settlePassword(): Promise<void> {
   owed = null;
-  if (hasStorage()) AsyncStorage.removeItem(OWED_KEY).catch(() => undefined);
+  if (hasStorage()) await AsyncStorage.removeItem(OWED_KEY).catch(() => undefined);
 }
 
 /** The Supabase Auth error codes of password requests, as the app's error keys. */
@@ -59,8 +62,10 @@ export function passwordErrorKey(error: { code?: string | undefined; status?: nu
 }
 
 /**
- * Supabase Auth refuses a second email to the same existing address within a minute
- * (`over_email_send_rate_limit`) but never for an address without an account. Treated as sent: the
- * earlier code still works, and the answer stays the same for every address.
+ * Supabase Auth refuses a second email to the same address within a minute. Treated as sent: the
+ * earlier code still works, and the answer stays the same for every address. The same error code also
+ * means the project's hourly email budget is used up ("email rate limit exceeded"): then nothing was
+ * sent for anyone, so that one is not treated as sent.
  */
-export const isEmailResendLimit = (error: { code?: string | undefined }) => error.code === 'over_email_send_rate_limit';
+export const isPerAddressResendLimit = (error: { code?: string | undefined; message?: string | undefined }) =>
+  error.code === 'over_email_send_rate_limit' && !/email rate limit exceeded/i.test(error.message ?? '');

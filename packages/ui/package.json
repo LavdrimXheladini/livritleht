@@ -14,7 +14,7 @@
     "./assets/fonts/*": "./assets/fonts/*"
   },
   "scripts": {
-    "build:theme": "node scripts/build-theme.mts",
+    "build:theme": "node scripts/build-theme.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

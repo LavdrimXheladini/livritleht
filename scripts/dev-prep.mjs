@@ -11,24 +11,54 @@
 //    web-dev → .next/dev, web-build → .next/cache (Turbopack keeps failed lookups across
 //    restarts; dev and build are tracked separately so a build never wipes a running dev server),
 //    expo → `--clear` (Metro/NativeWind cache compiled CSS + resolutions).
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { buildThemeCss } from '../packages/ui/src/theme-css.mjs';
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const app = process.cwd();
 const [mode, ...rest] = process.argv.slice(2);
+
+// 0. The two most common setup slips get a clear message instead of a failure further on.
+const [major = 0, minor = 0] = process.versions.node.split('.').map(Number);
+if (!((major === 22 && minor >= 13) || (major === 24 && minor >= 3) || major >= 25)) {
+  console.error(
+    [
+      '',
+      `[dev-prep] MoversHub needs Node.js 22.13+, 24.3+ or newer — this computer has ${process.version}.`,
+      '           Install Node.js 24 LTS from https://nodejs.org, open a new terminal and try again (README "Run it locally").',
+      '',
+    ].join('\n'),
+  );
+  process.exit(1);
+}
+if (!existsSync(join(root, 'node_modules/.modules.yaml'))) {
+  console.error(
+    [
+      '',
+      "[dev-prep] The packages are not installed (or were installed with npm, which can't link this project).",
+      '           Run `pnpm install` in the project folder first (README "Run it locally").',
+      '',
+    ].join('\n'),
+  );
+  process.exit(1);
+}
 const MODES = ['web-dev', 'web-build', 'expo'];
 if (!MODES.includes(mode)) {
   console.error(`usage: dev-prep.mjs <${MODES.join('|')}> [expo args…]`);
   process.exit(1);
 }
 
-// 1. theme.css
-execFileSync(process.execPath, [join(root, 'packages/ui/scripts/build-theme.mts')], { stdio: 'ignore' });
+// 1. theme.css — in this process (plain JavaScript, so any supported Node runs it, and an error shows
+//    in full). Written only when it changed, so file watchers aren't woken for nothing.
+const themeFile = join(root, 'packages/ui/theme.css');
+const theme = buildThemeCss(JSON.parse(readFileSync(join(root, 'packages/ui/tokens.json'), 'utf8')));
+if (!existsSync(themeFile) || readFileSync(themeFile, 'utf8') !== theme) writeFileSync(themeFile, theme);
 
 // 1b. Web: MapLibre runs in a Web Worker that the bundler doesn't emit. Serve the installed
 //     version's worker as a static file (public/vendor, git-ignored) — see components/landing/route-map.tsx.

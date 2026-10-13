@@ -36,8 +36,18 @@ export function rememberRequestedRole(role: SelfSignupRole) {
 
 /** The address typed on the signed-out screens, carried between them (in memory, never in a URL). */
 let draftEmail = '';
+let draftVersion = 0;
 
+/** Typed on sign in / create account. */
 export const setDraftEmail = (email: string) => {
   draftEmail = email;
 };
+/** Typed on another screen ("Forgot password?"): the sign-in form takes it over when it shows again. */
+export const adoptDraftEmail = (email: string) => {
+  draftEmail = email;
+  draftVersion += 1;
+};
+/** Signed in or out: the next person on this device starts with an empty field. */
+export const clearDraftEmail = () => adoptDraftEmail('');
 export const getDraftEmail = (): string => draftEmail;
+export const getDraftVersion = (): number => draftVersion;

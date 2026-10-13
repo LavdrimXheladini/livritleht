@@ -3,6 +3,9 @@
   "compilerOptions": {
     "types": ["node"],
     "allowImportingTsExtensions": true,
+    // src/theme-css.mjs and scripts/*.mjs are plain JavaScript (any Node runs them), checked through JSDoc.
+    "allowJs": true,
+    "checkJs": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx"
   },

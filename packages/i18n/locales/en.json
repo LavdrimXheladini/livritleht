@@ -72,7 +72,8 @@
     "hidePassword": "Hide password",
     "savePassword": "Save password",
     "backToSignIn": "Back to sign in",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "recoveryNoCode": "No email after a few minutes? Check your spam folder, or ask again later."
   },
   "customer": {
     "homeTitle": "Book with a mover",

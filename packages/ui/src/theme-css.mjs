@@ -1,12 +1,19 @@
-// Generates packages/ui/theme.css (Tailwind 4 @theme) from tokens.json.
-// Run `pnpm --filter @movershub/ui build:theme` after editing tokens.json.
-import type tokensJson from '../tokens.json';
+// @ts-check
+// Generates packages/ui/theme.css (Tailwind 4 @theme) from tokens.json. Plain JavaScript (checked by
+// TypeScript through these comments), so every Node version the project supports runs it as is:
+// scripts/dev-prep.mjs does before every start. After editing tokens.json:
+// `pnpm --filter @movershub/ui build:theme`.
 
-type Tokens = typeof tokensJson;
+/** @typedef {typeof import('../tokens.json')} Tokens */
 
-const px = (n: number) => `${n}px`;
+/** @param {number} n */
+const px = (n) => `${n}px`;
 
-function colorVars(colors: Tokens['colors']): string[] {
+/**
+ * @param {Tokens['colors']} colors
+ * @returns {string[]}
+ */
+function colorVars(colors) {
   return Object.entries(colors).flatMap(([name, value]) =>
     typeof value === 'string'
       ? [`--color-${name}: ${value};`]
@@ -14,7 +21,11 @@ function colorVars(colors: Tokens['colors']): string[] {
   );
 }
 
-export function buildThemeCss(t: Tokens): string {
+/**
+ * @param {Tokens} t
+ * @returns {string}
+ */
+export function buildThemeCss(t) {
   const { display, wordmark, size } = t.typography;
   const theme = [
     ...colorVars(t.colors),
