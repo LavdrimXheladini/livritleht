@@ -29,11 +29,12 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
           <WaitlistForm locale={locale} />
         </div>
       </div>
-      <div
-        aria-hidden="true"
-        className="type-wordmark mt-20 mb-8 text-[clamp(64px,15vw,220px)] leading-[0.8] tracking-[-0.05em] whitespace-nowrap text-brand-400"
-      >
-        MOVERSHUB
+      {/* Sized to the footer's width (container units): the word is ~8× as wide as its font size,
+          so 12.3cqi fills ~98% of the width at every screen size without being cut off. */}
+      <div aria-hidden="true" className="@container mt-20 mb-8">
+        <div className="type-wordmark text-[min(12.3cqi,220px)] leading-[0.8] tracking-[-0.05em] whitespace-nowrap text-brand-400">
+          MOVERSHUB
+        </div>
       </div>
       <div className="flex flex-wrap justify-between gap-4 border-t border-brand-400 pt-5.5 text-[13px] text-sage-400">
         <span>{t('landing.footer.legal', { year })}</span>

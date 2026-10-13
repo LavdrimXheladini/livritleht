@@ -20,6 +20,25 @@ for (const lang of LOCALES) {
   });
 }
 
+// The footer's giant wordmark spans the footer like in the design, and is never cut off (it was
+// sized for the old 8-letter name; the footer hides whatever overflows).
+test('footer wordmark fits the footer at every screen width', async ({ page }) => {
+  await page.goto('/en');
+  const mark = page.locator('#join').getByText('MOVERSHUB', { exact: true });
+  for (const width of [320, 375, 768, 1280, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    const m = await mark.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      return { text: range.getBoundingClientRect().width, box: el.clientWidth, font: parseFloat(getComputedStyle(el).fontSize) };
+    });
+    const at = `${width}px wide: text ${m.text.toFixed(1)}px in ${m.box}px, font ${m.font}px`;
+    expect.soft(m.text, at).toBeLessThanOrEqual(m.box + 0.5);
+    // Below the size cap it fills the width, like the design.
+    if (width <= 1280) expect.soft(m.text / m.box, at).toBeGreaterThan(0.85);
+  }
+});
+
 test('quote widget: five classes, "from" prices, labelled as sample rates (COMPLIANCE §1.1, design/DECISIONS.md)', async ({ page }) => {
   await page.goto('/en');
   const quote = page.locator('#quote');
