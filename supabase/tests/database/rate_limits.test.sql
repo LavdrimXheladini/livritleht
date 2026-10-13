@@ -1,7 +1,8 @@
 begin;
 select plan(21);
 
--- Per-IP rate limits (public.hit_rate_limit): fixed windows, hashed keys, server only.
+-- Rate limits (public.hit_rate_limit): per IP for anonymous callers, per account (`scope:user:<id>`)
+-- for signed-in app users; fixed windows, hashed keys, server only.
 select has_table('public', 'rate_limits', 'rate_limits table exists');
 select is((select rowsecurity from pg_tables where schemaname = 'public' and tablename = 'rate_limits'),
   true, 'RLS is enabled on rate_limits');

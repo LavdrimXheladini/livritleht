@@ -1,6 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
-import { RATE_LIMITS, clientIp, isServerKey, memoryRateLimiter, rateLimitKey, rateLimitSubject, serverKeys } from './rate-limit';
+import {
+  RATE_LIMITS,
+  bearerUserClaims,
+  clientIp,
+  isServerKey,
+  memoryRateLimiter,
+  rateLimitKey,
+  rateLimitSubject,
+  rateLimitUserKey,
+  serverKeys,
+} from './rate-limit';
+
+declare const btoa: (data: string) => string;
 
 const headers = (values: Record<string, string>) => ({ get: (name: string) => values[name.toLowerCase()] ?? null });
 
@@ -54,6 +66,54 @@ describe('who a limit counts against', () => {
     expect(rateLimitKey('quote', '203.0.113.7')).toBe('quote:203.0.113.7');
     expect(rateLimitKey('addressSearch', '2001:db8:12:34::1')).toBe('addressSearch:2001:db8:12:34::/64');
     expect(rateLimitKey('quote', null)).toBe('quote:unknown');
+  });
+
+  it('keys a signed-in user by account, apart from every IP key', () => {
+    const id = '4b9f0c8e-1d2a-4c3b-9e8f-0123456789ab';
+    expect(rateLimitUserKey('addressSearch', id)).toBe(`addressSearch:user:${id}`);
+    expect(rateLimitUserKey('quote', id)).not.toBe(rateLimitUserKey('addressSearch', id));
+    expect(rateLimitUserKey('quote', id)).not.toBe(rateLimitKey('quote', 'user'));
+  });
+});
+
+describe('signed-in user token (unverified claims)', () => {
+  const now = Date.UTC(2026, 9, 13, 12);
+  // UTF-8 bytes, like a real token.
+  const b64url = (value: object) =>
+    btoa(unescape(encodeURIComponent(JSON.stringify(value))))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  const token = (claims: object) => `Bearer ${b64url({ alg: 'ES256', typ: 'JWT' })}.${b64url(claims)}.c2lnbmF0dXJl`;
+  const user = { sub: 'user-1', role: 'authenticated', exp: now / 1000 + 3600 };
+
+  it('reads the user and expiry of a signed-in user token', () => {
+    expect(bearerUserClaims(token(user), now)).toEqual({ sub: 'user-1', exp: user.exp });
+  });
+
+  it('decodes base64url: "-" and "_" (e.g. from "~", "?" or accented letters in the metadata)', () => {
+    const header = token({ ...user, user_metadata: { name: '>>>???', city: 'Prizrenë' } });
+    const payload = header.split('.')[1] ?? '';
+    expect(payload).toMatch(/-/);
+    expect(payload).toMatch(/_/);
+    expect(bearerUserClaims(header, now)).toEqual({ sub: 'user-1', exp: user.exp });
+  });
+
+  it('is null for anything that cannot be a signed-in user', () => {
+    for (const header of [
+      null,
+      '',
+      'Bearer sb_publishable_abc123',
+      token({ role: 'anon', exp: user.exp }),
+      token({ ...user, role: 'service_role' }),
+      token({ ...user, sub: '' }),
+      token({ ...user, exp: now / 1000 - 1 }),
+      token({ sub: 'user-1', role: 'authenticated' }),
+      'Bearer a.not-json.c',
+      `Basic ${b64url(user)}`,
+    ]) {
+      expect(bearerUserClaims(header, now)).toBeNull();
+    }
   });
 });
 

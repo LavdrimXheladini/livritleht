@@ -1,7 +1,9 @@
-// Per-IP limits for the anonymous endpoints: the `quote` and `places` edge functions, the website's
+// Request limits for the public endpoints: the `quote` and `places` edge functions, the website's
 // quote action and address search. They protect the free OpenStreetMap services behind them (OSRM
-// demo server, Photon — fair use only, abuse gets us banned) and our database. Counted in Postgres by
-// `public.hit_rate_limit` (service role only); the same rules everywhere come from here.
+// demo server, Photon — fair use only, abuse gets us banned) and our database. Anonymous callers are
+// counted per IP; signed-in app users per account, because many phones share one carrier IP.
+// Counted in Postgres by `public.hit_rate_limit` (service role only); the same rules everywhere come
+// from here.
 
 export type RateLimitRule = { limit: number; windowSeconds: number };
 
@@ -59,9 +61,36 @@ export function rateLimitSubject(ip: string): string {
     .join(':')}::/64`;
 }
 
-/** The key `hit_rate_limit` counts under (the database stores only its hash). */
+/** The key `hit_rate_limit` counts an anonymous caller under (the database stores only its hash). */
 export function rateLimitKey(scope: RateLimitScope, ip: string | null): string {
   return `${scope}:${ip ? rateLimitSubject(ip) : 'unknown'}`;
+}
+
+/** The key for a signed-in user: their account, wherever they are (never shared with an IP's key). */
+export function rateLimitUserKey(scope: RateLimitScope, userId: string): string {
+  return `${scope}:user:${userId}`;
+}
+
+/** Base64 decoding, built into Deno, Node and browsers (this package has no DOM or Node types). */
+declare const atob: (data: string) => string;
+
+/**
+ * The claims of a signed-in user's access token in an `Authorization: Bearer …` header — NOT
+ * verified: it only tells which requests are worth checking with Supabase Auth. Null for anything
+ * else: no header, the app's publishable key, the anonymous key, a malformed or expired token.
+ */
+export function bearerUserClaims(authorization: string | null, now: number = Date.now()): { sub: string; exp: number } | null {
+  const token = /^Bearer\s+(\S+)$/i.exec(authorization ?? '')?.[1];
+  const payload = token?.split('.')[1];
+  if (!payload) return null;
+  try {
+    const claims = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/'))) as { sub?: unknown; exp?: unknown; role?: unknown };
+    const { sub, exp, role } = claims;
+    if (role !== 'authenticated' || typeof sub !== 'string' || !sub || typeof exp !== 'number') return null;
+    return exp * 1000 > now ? { sub, exp } : null;
+  } catch {
+    return null;
+  }
 }
 
 /**

@@ -21,7 +21,7 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 | **App** (`mobile/app`) | One Expo app for customers and movers, in the website's design: opens on sign in / create account ("I need a mover" / "I'm a mover", email + 6-digit code). Customers then see address search and live "from" prices; movers the dark "Partner" side: setup checklist and an example job request priced by the live quote. The role is saved once the code has proven the email; people can switch sides from the home screen (mover requests only after the setup is filled in and verified). The app remembers the side on the device and opens offline. Sign-in works only against a local Supabase until the cloud project has email (a domain + SMTP). Booking, onboarding and jobs not built yet |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
 | **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first; prices are shown exactly (to the cent; whole lek, denar and dinar) |
-| **Address search for the app** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — visitors' IP addresses never reach the geocoder |
+| **Address search for the app** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — users' IP addresses never reach the geocoder; signed-in app users only |
 | **Not built yet** | Booking a mover, Stripe payments, live GPS, mover onboarding screens, admin panel — see [`CLAUDE.md`](CLAUDE.md) §10 |
 
 Prices on the landing page come from each mover's own rate card via the server `quote` function — for now
@@ -138,6 +138,10 @@ API tests for the deployed `quote` and `places` functions (skipped unless both v
 QUOTE_API_URL=https://<project-ref>.supabase.co/functions/v1/quote QUOTE_API_KEY=<publishable key> pnpm e2e
 ```
 
+Add `SUPABASE_SECRET_KEY=<the project's secret key>` for the signed-in address searches (the tests create
+a test user and delete it afterwards), and `APP_WEB_ORIGIN=<an origin from APP_WEB_ORIGINS>` for the
+hosted computer version's CORS check.
+
 ## Server functions
 
 ```bash
@@ -147,16 +151,23 @@ pnpm functions:deploy   # copies the shared pricing code into supabase/functions
 The `quote` function quotes test movers only while the project secret `INCLUDE_TEST_MOVERS` is `true`
 (`supabase secrets set INCLUDE_TEST_MOVERS=false` before launch, and delete the test movers).
 
-`quote` and `places` are public. Browsers may call them only from the app's local preview
-(`http://localhost` / `127.0.0.1`, see `supabase/functions/_shared/http.ts`); the website calls them from
-its server and the phone app doesn't need CORS. When the app's computer version is hosted (plan step 3),
-its address has to be allowed there too.
+`quote` is public; `places` answers signed-in app users only (`401` otherwise). Browsers may call them
+only from the app's own web build: the local preview (`http://localhost` / `127.0.0.1`) and the hosted
+computer version, whose exact origins go in the project secret `APP_WEB_ORIGINS`, comma-separated
+(`supabase secrets set APP_WEB_ORIGINS=https://app.example.com`; see `supabase/functions/_shared/http.ts`).
+The website calls them from its server and the phone app doesn't need CORS.
 
-Both are limited per IP (`RATE_LIMITS` in `packages/shared/src/rate-limit.ts`: 30 quotes per 10 minutes,
-60 address searches per minute → `429` + `Retry-After`), counted in the database by `hit_rate_limit`; the
+Both are limited (`RATE_LIMITS` in `packages/shared/src/rate-limit.ts`: 30 quotes per 10 minutes,
+60 address searches per minute → `429` + `Retry-After`): per account for signed-in app users (many phones
+share one carrier IP), per IP for everyone else — counted in the database by `hit_rate_limit`. The
 website's quote action and `/api/geo/search` use the same limits. The website calls `quote` with
 `SUPABASE_SECRET_KEY` so its visitors don't share one limit there — set that key on the website **before**
 deploying the functions, or every visitor counts against the website's single IP.
+
+Logins whose email code was never entered are deleted every night, 7 days after the last code
+(`delete_unconfirmed_accounts`, pg_cron). That needs **Confirm email** to stay on in the cloud project
+(Authentication → Sign In / Providers → Email): without it Supabase marks an address confirmed as soon
+as a code is asked for, and the cleanup finds nothing. The local stack has it on (`config.toml`).
 
 ## Good to know
 

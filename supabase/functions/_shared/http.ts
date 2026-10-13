@@ -1,27 +1,43 @@
 // HTTP helpers for the public functions (`quote`, `places`).
 
 /**
- * Browsers may call the functions only from local development: the app's browser preview (Expo
- * web, port 8081). The website calls them from its server and the app on phones doesn't use
- * CORS, so no other origin needs them — and other sites can't build on our address search.
+ * Browsers may call the functions only from the app's own web build: the local preview (Expo web,
+ * port 8081) and the hosted computer version — its exact origins in the APP_WEB_ORIGINS secret,
+ * comma-separated (e.g. "https://app.example.com"). The website calls them from its server and the
+ * app on phones doesn't use CORS, so no other origin needs them — and other sites can't build on our
+ * address search.
  */
 const DEV_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d{1,5})?$/;
+const APP_ORIGINS = new Set(
+  (Deno.env.get('APP_WEB_ORIGINS') ?? '')
+    .split(',')
+    .map((entry) => {
+      try {
+        // As browsers send it: lower case, no default port, no path, international names as punycode.
+        const url = new URL(entry.trim());
+        return url.protocol === 'https:' ? url.origin : '';
+      } catch {
+        return '';
+      }
+    })
+    .filter(Boolean),
+);
 
 function corsHeaders(req: Request): Record<string, string> {
   const origin = req.headers.get('Origin');
-  if (!origin || !DEV_ORIGIN.test(origin)) return { Vary: 'Origin' };
+  if (!origin || !(DEV_ORIGIN.test(origin) || APP_ORIGINS.has(origin))) return { Vary: 'Origin' };
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     // supabase-js sends authorization, apikey, x-client-info and content-type.
     'Access-Control-Allow-Headers': req.headers.get('Access-Control-Request-Headers') ?? 'authorization, apikey, x-client-info, content-type',
-    // The browser preview may read when to try again after a 429.
+    // The app's web build may read when to try again after a 429.
     'Access-Control-Expose-Headers': 'Retry-After',
     Vary: 'Origin',
   };
 }
 
-/** JSON answer, with CORS headers when the request comes from the local preview. */
+/** JSON answer, with CORS headers when the request comes from the app's web build. */
 export const json = (req: Request, body: unknown, status = 200, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...headers, ...corsHeaders(req) } });
 
