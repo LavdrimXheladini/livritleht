@@ -8,7 +8,7 @@ import { passwordSchema } from '@movershub/shared';
 
 import { useAuth } from '../auth-provider';
 import { Button } from '../components/ui';
-import { PASSWORD_SET, passwordErrorKey } from '../password';
+import { passwordErrorKey } from '../password';
 import { useAuthErrorText } from './auth-errors';
 import { AuthFrame, AuthTitle } from './auth-screen';
 import { PasswordField } from './password-field';
@@ -17,8 +17,8 @@ const schema = z.object({ password: passwordSchema });
 
 /**
  * Signed in by a code, the person sets their password before anything else: `create` after the code
- * that confirmed a new account (or an older account that never had one), `reset` after
- * "Forgot password?". From then on they sign in with email and password.
+ * of "Create account", `reset` after "Forgot password?". From then on they sign in with email and
+ * password. (A password set before the address was proven has already been cleared on the server.)
  */
 export function PasswordScreen({ purpose, onSaved }: { purpose: 'create' | 'reset'; onSaved: () => void }) {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export function PasswordScreen({ purpose, onSaved }: { purpose: 'create' | 'rese
   });
 
   const submit = form.handleSubmit(async ({ password }) => {
-    const { error } = await supabase.auth.updateUser({ password, data: { [PASSWORD_SET]: true } });
+    const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       form.setError('password', { message: passwordErrorKey(error) });
       return;

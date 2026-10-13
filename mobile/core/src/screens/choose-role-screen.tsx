@@ -61,7 +61,7 @@ export function ChooseRoleScreen({ preselected }: { preselected: SelfSignupRole 
     <AuthFrame>
       <View className="gap-2">
         <AuthTitle>{t('auth.roleLabel')}</AuthTitle>
-        {/* Which account this is: "Sign in" with an address that had no account creates one. */}
+        {/* Which account this is (e.g. one made on the website, or one whose side couldn't be saved). */}
         <Text className="font-sans text-base text-ink-600">{t('auth.signedInAs', { email: session?.user.email ?? '' })}</Text>
       </View>
       <RoleChoice value={role} onChange={setRole} error={missing} showLabel={false} />

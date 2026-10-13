@@ -411,6 +411,7 @@ export function SegmentedControl<T extends string>({
 export function TextField({
   label,
   error,
+  hint,
   tone = 'light',
   announceError = true,
   ref,
@@ -418,6 +419,8 @@ export function TextField({
 }: TextInputProps & {
   label: string;
   error?: string | undefined;
+  /** Help under the input (e.g. password rules), read with its name — on the web too. */
+  hint?: string | undefined;
   tone?: Tone;
   /** Off when the form reads all its errors out at once (two announcements cut each other off on iOS). */
   announceError?: boolean;
@@ -433,7 +436,7 @@ export function TextField({
       </Text>
       <TextInput
         ref={ref}
-        accessibilityLabel={error ? `${label}, ${error}` : label}
+        accessibilityLabel={[label, error, hint].filter(Boolean).join(', ')}
         placeholderTextColor={dark ? colors.sage[500] : colors.ink[500]}
         className={cx(
           'min-h-[52px] rounded-input border px-4 font-sans text-base',
@@ -445,6 +448,11 @@ export function TextField({
       {error ? (
         <Text aria-hidden className={cx('font-sans text-[13px]', dark ? 'text-danger-on-dark' : 'text-danger')}>
           {error}
+        </Text>
+      ) : null}
+      {hint ? (
+        <Text aria-hidden className={cx('font-sans text-[13px]', dark ? 'text-sage-400' : 'text-ink-600')}>
+          {hint}
         </Text>
       ) : null}
     </View>

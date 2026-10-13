@@ -1,19 +1,52 @@
-import type { Session } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 
-import { signedInWithPassword } from './pending-sign-in';
+import type { CodePurpose } from './pending-sign-in';
 
-/**
- * Set in the account's user metadata when the person saves a password in the app. The code is
- * needed once, to confirm the email; after that people sign in with email and password, so a
- * signed-in account without one is asked to create it first (design/DECISIONS.md #17). Only a
- * hint for the app's screens — what anyone may do is enforced on the server.
+/*
+ * Every sign-in by a code ends with choosing a password (design/DECISIONS.md #17): to confirm a new
+ * account, after "Forgot password?", and for "Create account" with an address that already has an
+ * account. Until it is chosen the app shows nothing else — also after a restart, so the requirement is
+ * kept on the device, not only in memory. The account's own data can't decide this: whoever creates a
+ * login can write its metadata. On the server, a password set before the address was proven is cleared
+ * when the owner confirms it (migration 20261013120000).
  */
-export const PASSWORD_SET = 'password_set';
+const OWED_KEY = 'movershub.passwordOwed';
+const owedSchema = z.object({ email: z.string(), purpose: z.enum(['register', 'recovery']) });
+type Owed = z.infer<typeof owedSchema>;
 
-/** Whether the signed-in account has a password: saved in the app, or just used to sign in. */
-export function hasPassword(session: Session | null): boolean {
-  if (!session) return false;
-  return session.user.user_metadata?.[PASSWORD_SET] === true || signedInWithPassword(session.user.email);
+let owed: Owed | null = null;
+
+/** No device storage while Expo web pre-renders in Node. */
+const hasStorage = () => typeof window !== 'undefined';
+
+/** At launch: a password still owed from before the app closed. */
+export async function restorePasswordOwed(): Promise<void> {
+  if (!hasStorage()) return;
+  try {
+    const raw = await AsyncStorage.getItem(OWED_KEY);
+    const saved = owedSchema.safeParse(raw ? JSON.parse(raw) : null);
+    owed = saved.success ? saved.data : null;
+  } catch {
+    owed = null;
+  }
+}
+
+/** Signed in by a code: a password is owed before anything else. */
+export function owePassword(email: string, purpose: CodePurpose): void {
+  owed = { email, purpose };
+  if (hasStorage()) AsyncStorage.setItem(OWED_KEY, JSON.stringify(owed)).catch(() => undefined);
+}
+
+/** Why `email` still owes a password (null: it doesn't). */
+export function passwordOwedBy(email: string | undefined): CodePurpose | null {
+  return owed && email !== undefined && owed.email === email ? owed.purpose : null;
+}
+
+/** The password is chosen (or the person signed out): nothing is owed any more. */
+export function settlePassword(): void {
+  owed = null;
+  if (hasStorage()) AsyncStorage.removeItem(OWED_KEY).catch(() => undefined);
 }
 
 /** The Supabase Auth error codes of password requests, as the app's error keys. */
@@ -24,3 +57,10 @@ export function passwordErrorKey(error: { code?: string | undefined; status?: nu
   if (error.status === 429) return 'too_many_attempts';
   return 'generic';
 }
+
+/**
+ * Supabase Auth refuses a second email to the same existing address within a minute
+ * (`over_email_send_rate_limit`) but never for an address without an account. Treated as sent: the
+ * earlier code still works, and the answer stays the same for every address.
+ */
+export const isEmailResendLimit = (error: { code?: string | undefined }) => error.code === 'over_email_send_rate_limit';

@@ -51,8 +51,8 @@
       "password_required": "Gib dein Passwort ein.",
       "wrong_credentials": "E-Mail oder Passwort ist falsch.",
       "password_too_short": "Verwende mindestens 8 Zeichen.",
-      "password_too_long": "Verwende höchstens 72 Zeichen.",
-      "password_weak": "Verwende Buchstaben und Zahlen.",
+      "password_too_long": "Dieses Passwort ist zu lang. Verwende ein kürzeres.",
+      "password_weak": "Verwende mindestens einen Buchstaben (a–z) und eine Zahl.",
       "same_password": "Wähle ein anderes Passwort als dein altes.",
       "too_many_attempts": "Zu viele Versuche. Versuche es in ein paar Minuten noch einmal."
     },
@@ -67,11 +67,12 @@
     "createPasswordSubtitle": "Ab jetzt meldest du dich mit deiner E-Mail und diesem Passwort an.",
     "newPasswordTitle": "Neues Passwort wählen",
     "newPasswordSubtitle": "Du meldest dich dann mit deiner E-Mail und diesem neuen Passwort an.",
-    "passwordHint": "Mindestens 8 Zeichen, mit Buchstaben und Zahlen.",
+    "passwordHint": "Mindestens 8 Zeichen, mit einem Buchstaben (a–z) und einer Zahl.",
     "showPassword": "Passwort anzeigen",
     "hidePassword": "Passwort verbergen",
     "savePassword": "Passwort speichern",
-    "backToSignIn": "Zurück zur Anmeldung"
+    "backToSignIn": "Zurück zur Anmeldung",
+    "signIn": "Anmelden"
   },
   "customer": {
     "homeTitle": "Mit einem Umzugsunternehmen buchen",

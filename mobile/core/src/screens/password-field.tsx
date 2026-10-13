@@ -1,6 +1,6 @@
 import { useState, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View, type TextInput } from 'react-native';
+import { View, type TextInput } from 'react-native';
 
 import { Button, TextField } from '../components/ui';
 
@@ -25,7 +25,7 @@ export function PasswordField({
   kind: 'current' | 'new';
   testID: string;
   label: string;
-  /** The rules for a new password, shown under the input (and given to screen readers as a hint). */
+  /** The rules for a new password, shown under the input and read with its name. */
   hint?: string;
   value: string;
   onChangeText: (value: string) => void;
@@ -48,7 +48,7 @@ export function PasswordField({
         autoCorrect={false}
         autoComplete={kind === 'new' ? 'new-password' : 'current-password'}
         textContentType={kind === 'new' ? 'newPassword' : 'password'}
-        accessibilityHint={hint}
+        hint={hint}
         passwordRules={kind === 'new' ? 'minlength: 8; maxlength: 72; required: lower, upper; required: digit;' : undefined}
         returnKeyType="done"
         onSubmitEditing={onSubmitEditing}
@@ -58,7 +58,6 @@ export function PasswordField({
         error={error}
         announceError={announceError}
       />
-      {hint ? <Text className="font-sans text-[13px] text-ink-600">{hint}</Text> : null}
       <Button
         testID={`${testID}-toggle`}
         variant="link"

@@ -10,6 +10,7 @@ export default function Login() {
         setPendingSignIn(sent);
         router.push('/verify');
       }}
+      onForgotPassword={() => router.push('/forgot')}
     />
   );
 }

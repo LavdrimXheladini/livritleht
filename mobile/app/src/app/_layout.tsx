@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { AppState, Platform, View } from 'react-native';
 
-import { AuthProvider, initI18n, restoreLocale, useAppFonts, useAuth, useProfile } from '@movershub/mobile';
+import { AuthProvider, initI18n, restoreLocale, restorePasswordOwed, useAppFonts, useAuth, useProfile } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
 import { supabase } from '@/lib/supabase';
@@ -39,10 +39,11 @@ function RootStack() {
   // Once launched it stays: after signing in, home shows its own spinner too.
   const [launched, setLaunched] = useState(false);
   const [waitedEnough, setWaitedEnough] = useState(false);
-  // The language chosen in the app earlier, before the first screen shows (no flash of another one).
+  // What this device remembers — the language chosen in the app, a password still owed — before the
+  // first screen shows (no flash of another language, no home before the password).
   const [localeReady, setLocaleReady] = useState(false);
   useEffect(() => {
-    void restoreLocale().finally(() => setLocaleReady(true));
+    void Promise.all([restoreLocale(), restorePasswordOwed()]).finally(() => setLocaleReady(true));
     const timer = setTimeout(() => setWaitedEnough(true), 2000);
     return () => clearTimeout(timer);
   }, []);
@@ -62,6 +63,7 @@ function RootStack() {
       {/* Signed out, the app opens on sign in / create account (as a customer or a mover). */}
       <Stack.Protected guard={!session}>
         <Stack.Screen name="login" />
+        <Stack.Screen name="forgot" />
         <Stack.Screen name="verify" />
       </Stack.Protected>
       {/* Signed in: the customer or the mover side, by the role chosen after the first sign-in (switchable). */}

@@ -51,8 +51,8 @@
       "password_required": "Shkruani fjalëkalimin.",
       "wrong_credentials": "Email-i ose fjalëkalimi është i gabuar.",
       "password_too_short": "Përdorni të paktën 8 karaktere.",
-      "password_too_long": "Përdorni më së shumti 72 karaktere.",
-      "password_weak": "Përdorni shkronja dhe numra.",
+      "password_too_long": "Ky fjalëkalim është shumë i gjatë. Përdorni një më të shkurtër.",
+      "password_weak": "Përdorni të paktën një shkronjë (a–z) dhe një numër.",
       "same_password": "Zgjidhni një fjalëkalim ndryshe nga i vjetri.",
       "too_many_attempts": "Shumë përpjekje. Provoni përsëri pas disa minutash."
     },
@@ -67,11 +67,12 @@
     "createPasswordSubtitle": "Tani e tutje hyni me email-in dhe këtë fjalëkalim.",
     "newPasswordTitle": "Zgjidhni një fjalëkalim të ri",
     "newPasswordSubtitle": "Do të hyni me email-in dhe këtë fjalëkalim të ri.",
-    "passwordHint": "Të paktën 8 karaktere, me shkronja dhe numra.",
+    "passwordHint": "Të paktën 8 karaktere, me një shkronjë (a–z) dhe një numër.",
     "showPassword": "Shfaq fjalëkalimin",
     "hidePassword": "Fshih fjalëkalimin",
     "savePassword": "Ruaj fjalëkalimin",
-    "backToSignIn": "Kthehu te hyrja"
+    "backToSignIn": "Kthehu te hyrja",
+    "signIn": "Hyr"
   },
   "customer": {
     "homeTitle": "Rezervo me një transportues",

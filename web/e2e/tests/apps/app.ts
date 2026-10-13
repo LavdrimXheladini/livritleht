@@ -35,6 +35,8 @@ export async function serveFixtures(page: Page) {
 /** Where the app keeps the session and the side it last showed (SESSION_STORAGE_KEY, mobile/core/src/saved-role.ts). */
 export const SESSION_KEY = 'movershub.auth';
 export const SAVED_ROLE_KEY = 'movershub.role';
+/** A password still owed after a sign-in by code (mobile/core/src/password.ts). */
+export const PASSWORD_OWED_KEY = 'movershub.passwordOwed';
 export const STAND_IN_ID = '00000000-0000-4000-8000-0000000e2e01';
 
 type Role = 'customer' | 'mover';
@@ -44,10 +46,9 @@ export const STAND_IN_PASSWORD = 'movers2026';
 
 /**
  * A session the app accepts without a server: valid for a year, so the client never refreshes it —
- * or `expired`, as on a phone opened after more than an hour. `passwordSet`: the account has a
- * password (saved in the app); without one the app asks for it first.
+ * or `expired`, as on a phone opened after more than an hour.
  */
-function standInSession(email: string, { expired = false, passwordSet = true } = {}) {
+function standInSession(email: string, { expired = false } = {}) {
   const id = STAND_IN_ID;
   const expiresAt = Math.floor(Date.now() / 1000) + (expired ? -2 * 3600 : 365 * 24 * 3600);
   const part = (o: object) => Buffer.from(JSON.stringify(o)).toString('base64url');
@@ -57,19 +58,12 @@ function standInSession(email: string, { expired = false, passwordSet = true } =
     expires_in: expiresAt - Math.floor(Date.now() / 1000),
     expires_at: expiresAt,
     refresh_token: 'e2e',
-    user: standInUser(email, passwordSet),
+    user: standInUser(email),
   };
 }
 
-function standInUser(email: string, passwordSet: boolean) {
-  return {
-    id: STAND_IN_ID,
-    aud: 'authenticated',
-    role: 'authenticated',
-    email,
-    app_metadata: {},
-    user_metadata: passwordSet ? { password_set: true } : {},
-  };
+function standInUser(email: string) {
+  return { id: STAND_IN_ID, aud: 'authenticated', role: 'authenticated', email, app_metadata: {}, user_metadata: {} };
 }
 
 /** What the app asked the stand-in server for. */
@@ -78,7 +72,7 @@ export type StandInCalls = {
   chosen: unknown[];
   /** Codes checked: the kind ("email" to confirm an account, "recovery" after "Forgot password?"). */
   verified: { type: string; email: string }[];
-  /** Addresses sent to "Forgot password?". */
+  /** Addresses sent to "Forgot password?" (also the ones Supabase Auth refused to email again). */
   recovered: string[];
   /** Sign-ins with a password. */
   signIns: { email: string; password: string }[];
@@ -90,10 +84,11 @@ export type StandInCalls = {
 
 /**
  * The account behind the stand-in session, without a server, answering like Supabase Auth:
- * - a code (/verify) signs in; `hasPassword` false (a new account) means the app asks for one;
- * - "Sign in" accepts `email` with STAND_IN_PASSWORD once the account has a password, otherwise
- *   it answers `invalid_credentials` — the same for a wrong password and an unknown address;
- * - "Forgot password?" (/recover) always answers 200;
+ * - a code (/verify) signs in;
+ * - "Sign in" accepts `email` with STAND_IN_PASSWORD once the account has a password (`hasPassword`),
+ *   otherwise it answers `invalid_credentials` — the same for a wrong password and an unknown address;
+ * - "Forgot password?" (/recover) answers 200, except a second email to `email` within a minute:
+ *   429 `over_email_send_rate_limit` (Supabase Auth's per-address limit; never for unknown addresses);
  * - a new password (PUT /user) is saved, unless it is the current one (`same_password`);
  * - the profile answers with `role` (null = not chosen yet) and `choose_role` sets it (the first
  *   `failChooseRole` calls answer 500); sign out works.
@@ -120,7 +115,7 @@ export async function fakeAccount(
   await page.route('**/auth/v1/verify*', (route) => {
     const sent = body(route);
     if (sent) calls.verified.push({ type: String(sent.type), email: String(sent.email) });
-    return json(route, standInSession(email, { passwordSet: state.password !== null }));
+    return json(route, standInSession(email));
   });
   await page.route(/\/auth\/v1\/token\?grant_type=password/, (route) => {
     const sent = body(route);
@@ -132,8 +127,10 @@ export async function fakeAccount(
   });
   await page.route('**/auth/v1/recover*', (route) => {
     const sent = body(route);
-    if (sent) calls.recovered.push(String(sent.email));
-    return json(route, {});
+    if (!sent) return json(route, null);
+    calls.recovered.push(String(sent.email));
+    const again = sent.email === email && calls.recovered.filter((e) => e === email).length > 1;
+    return again ? authError(route, 429, 'over_email_send_rate_limit') : json(route, {});
   });
   await page.route('**/auth/v1/user*', (route) => {
     const sent = body(route);
@@ -143,7 +140,7 @@ export async function fakeAccount(
       if (update.password !== undefined && update.password === state.password) return authError(route, 422, 'same_password');
       if (update.password !== undefined) state.password = update.password;
     }
-    return json(route, standInUser(email, state.password !== null));
+    return json(route, standInUser(email));
   });
   await page.route('**/auth/v1/logout*', (route) => json(route, {}, 204));
   await page.route('**/rest/v1/profiles*', (route) => {
@@ -169,15 +166,27 @@ export async function fakeAccount(
 
 /**
  * Opens the app already signed in as a customer or a mover (the session is in storage before it
- * starts); `hasPassword` false: an older account that never set a password. Returns what the app
- * asked the stand-in server for.
+ * starts); `passwordOwed`: it closed while a password was still owed after a code. Returns what the
+ * app asked the stand-in server for.
  */
-export async function signInAs(page: Page, role: Role, { failChooseRole = 0, hasPassword = true } = {}) {
-  await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), {
-    key: SESSION_KEY,
-    value: JSON.stringify(standInSession(`${role}@example.com`, { passwordSet: hasPassword })),
-  });
-  return fakeAccount(page, { role, email: `${role}@example.com`, failChooseRole, hasPassword });
+export async function signInAs(
+  page: Page,
+  role: Role,
+  { failChooseRole = 0, passwordOwed }: { failChooseRole?: number; passwordOwed?: 'register' | 'recovery' } = {},
+) {
+  const email = `${role}@example.com`;
+  await page.addInitScript(
+    ({ keys, session, owed }) => {
+      localStorage.setItem(keys.session, session);
+      if (owed) localStorage.setItem(keys.owed, owed);
+    },
+    {
+      keys: { session: SESSION_KEY, owed: PASSWORD_OWED_KEY },
+      session: JSON.stringify(standInSession(email)),
+      owed: passwordOwed ? JSON.stringify({ email, purpose: passwordOwed }) : null,
+    },
+  );
+  return fakeAccount(page, { role, email, failChooseRole });
 }
 
 /**

@@ -34,10 +34,10 @@ export function rememberRequestedRole(role: SelfSignupRole) {
   if (pending) pending = { ...pending, role };
 }
 
-/** The email that just signed in with its password on this device: that account has a password. */
-let passwordSignIn: string | null = null;
+/** The address typed on the signed-out screens, carried between them (in memory, never in a URL). */
+let draftEmail = '';
 
-export const rememberPasswordSignIn = (email: string | null) => {
-  passwordSignIn = email;
+export const setDraftEmail = (email: string) => {
+  draftEmail = email;
 };
-export const signedInWithPassword = (email: string | undefined): boolean => email !== undefined && passwordSignIn === email;
+export const getDraftEmail = (): string => draftEmail;

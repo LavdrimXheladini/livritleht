@@ -8,6 +8,7 @@ import { otpCodeSchema } from '@movershub/shared';
 
 import { useAuth } from '../auth-provider';
 import { Button, TextField } from '../components/ui';
+import { owePassword } from '../password';
 import type { PendingSignIn } from '../pending-sign-in';
 import { useAuthErrorText } from './auth-errors';
 import { AuthFrame, AuthTitle } from './auth-screen';
@@ -32,7 +33,12 @@ export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: ()
   const submit = form.handleSubmit(async ({ code }) => {
     const type = sent.purpose === 'recovery' ? 'recovery' : 'email';
     const { error } = await supabase.auth.verifyOtp({ email: sent.email, token: code, type });
-    if (error) form.setError('code', { message: 'wrong_code' });
+    if (error) {
+      form.setError('code', { message: 'wrong_code' });
+      return;
+    }
+    // Signed in by a code: a password is owed, also if the app closes before it is chosen.
+    owePassword(sent.email, sent.purpose);
   });
 
   return (

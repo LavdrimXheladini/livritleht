@@ -26,7 +26,7 @@ export {
 export { LanguageButton } from './components/language-button';
 export { useAppFonts } from './fonts';
 export { currentLocale, initI18n, restoreLocale, setLocale } from './i18n';
-export { hasPassword } from './password';
+export { passwordOwedBy, restorePasswordOwed, settlePassword } from './password';
 export {
   getPendingSignIn,
   pendingSignInFor,
@@ -38,6 +38,7 @@ export {
 export { useChooseRole, useProfile, type SignedInProfile } from './profile';
 export { AuthScreen } from './screens/auth-screen';
 export { ChooseRoleScreen } from './screens/choose-role-screen';
+export { ForgotPasswordScreen } from './screens/forgot-password-screen';
 export { PasswordScreen } from './screens/password-screen';
 export { VerifyScreen } from './screens/verify-screen';
 export { createSupabaseClient } from './supabase';

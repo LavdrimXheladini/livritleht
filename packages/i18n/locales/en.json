@@ -51,8 +51,8 @@
       "password_required": "Enter your password.",
       "wrong_credentials": "Wrong email or password.",
       "password_too_short": "Use at least 8 characters.",
-      "password_too_long": "Use at most 72 characters.",
-      "password_weak": "Use letters and numbers.",
+      "password_too_long": "This password is too long. Use a shorter one.",
+      "password_weak": "Use at least one letter (a–z) and one number.",
       "same_password": "Choose a password different from your old one.",
       "too_many_attempts": "Too many attempts. Try again in a few minutes."
     },
@@ -67,11 +67,12 @@
     "createPasswordSubtitle": "From now on you sign in with your email and this password.",
     "newPasswordTitle": "Choose a new password",
     "newPasswordSubtitle": "You'll sign in with your email and this new password.",
-    "passwordHint": "At least 8 characters, with letters and numbers.",
+    "passwordHint": "At least 8 characters, with a letter (a–z) and a number.",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "savePassword": "Save password",
-    "backToSignIn": "Back to sign in"
+    "backToSignIn": "Back to sign in",
+    "signIn": "Sign in"
   },
   "customer": {
     "homeTitle": "Book with a mover",

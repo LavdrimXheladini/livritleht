@@ -3,6 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { resources } from '@movershub/i18n';
 
 import {
+  PASSWORD_OWED_KEY,
   SAVED_ROLE_KEY,
   SESSION_KEY,
   STAND_IN_ID,
@@ -134,7 +135,61 @@ test.describe('signed out', () => {
     await page.getByTestId('password-save').click();
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
     expect(calls.verified).toEqual([{ type: 'recovery', email: 'ana@example.com' }]);
-    expect(calls.updates.at(-1)).toEqual({ password: 'movers2027', data: { password_set: true } });
+    expect(calls.updates.at(-1)).toEqual({ password: 'movers2027' });
+    // Nothing is owed any more: a reload opens home.
+    expect(await stored(page, PASSWORD_OWED_KEY)).toBeNull();
+  });
+
+  test('forgot password: a reload on "Choose a new password" keeps asking for it', async ({ page }) => {
+    await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
+    await page.goto(url);
+    await page.getByTestId('auth-forgot').click();
+    await page.getByTestId('forgot-email').fill('ana@example.com');
+    await page.getByTestId('forgot-send-code').click();
+    await enterCode(page);
+    await expect(page.getByText(en.auth.newPasswordTitle)).toBeVisible();
+    await page.reload();
+    await expect(page.getByText(en.auth.newPasswordTitle)).toBeVisible();
+    await expect(page.getByTestId('home-sign-out')).toHaveCount(0);
+  });
+
+  test('forgot password: asking twice gets the same answer for an address with and without an account', async ({ page }) => {
+    const calls = await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
+    await page.goto(url);
+    for (const address of ['ana@example.com', 'ana@example.com', 'nobody@example.com', 'nobody@example.com']) {
+      await page.getByTestId('auth-forgot').click();
+      await page.getByTestId('forgot-email').fill(address);
+      await page.getByTestId('forgot-send-code').click();
+      // The second request for Ana's address is refused by Supabase Auth's per-address limit: the
+      // earlier code still works, and the screen says exactly what it says for any address.
+      await expect(page.getByText(en.auth.recoveryCodeSentTo.replace('{{target}}', address))).toBeVisible();
+      await page.getByTestId('verify-change-email').click();
+      await page.getByTestId('forgot-back').click();
+    }
+    expect(calls.recovered).toEqual(['ana@example.com', 'ana@example.com', 'nobody@example.com', 'nobody@example.com']);
+  });
+
+  test('a code asked for and not used doesn\'t force a new password after signing in with the password', async ({ page }) => {
+    await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
+    await page.goto(url);
+    await page.getByTestId('auth-forgot').click();
+    await page.getByTestId('forgot-email').fill('ana@example.com');
+    await page.getByTestId('forgot-send-code').click();
+    await page.getByTestId('verify-change-email').click();
+    await page.getByTestId('forgot-back').click();
+    await signInWithPassword(page, 'ana@example.com');
+    await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    await expect(page.getByText(en.auth.newPasswordTitle)).toHaveCount(0);
+  });
+
+  test('"Forgot password?" is its own screen: Back returns to sign in with the address kept', async ({ page }) => {
+    await page.goto(url);
+    await page.getByTestId('auth-email').fill('ana@example.com');
+    await page.getByTestId('auth-forgot').click();
+    await expect(page.getByTestId('forgot-email')).toHaveValue('ana@example.com');
+    await page.goBack();
+    await expect(page.getByTestId('auth-password')).toBeVisible();
+    await expect(page.getByTestId('auth-email')).toHaveValue('ana@example.com');
   });
 
   test('forgot password: an address without an account gets the same answer, and back leads to sign in', async ({ page }) => {
@@ -213,7 +268,7 @@ test.describe('signed out', () => {
     await page.getByTestId('password-new').fill('movers2027');
     await page.getByTestId('password-save').click();
     await expect(page.getByText(en.mover.homeTitle)).toBeVisible();
-    expect(calls.updates).toEqual([{ password: 'movers2027', data: { password_set: true } }]);
+    expect(calls.updates).toEqual([{ password: 'movers2027' }]);
     expect(calls.chosen).toEqual(['mover']);
   });
 
@@ -241,10 +296,11 @@ test.describe('signed out', () => {
     await page.getByTestId('auth-mode-register').click();
     await page.getByTestId('role-mover').click();
     await sendAndEnterCode(page);
-    // It has a password already: no password screen.
+    // A sign-in by code always ends with choosing a password — no endless sign-in by code.
+    await createPassword(page);
     await expect(page.getByTestId('home-notice')).toHaveText(en.auth.existingCustomer);
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
-    expect(calls.updates).toEqual([]);
+    expect(calls.updates).toEqual([{ password: 'movers2027' }]);
     // Never switched without being asked.
     expect(calls.chosen).toEqual([]);
     await page.getByTestId('switch-to-mover').click();
@@ -291,21 +347,28 @@ test.describe('signed out', () => {
   });
 });
 
-test.describe('an older account without a password', () => {
-  test('creates one before anything else', async ({ page }) => {
-    const calls = await signInAs(page, 'customer', { hasPassword: false });
+test.describe('a password still owed when the app opens again (closed after the code)', () => {
+  test('a new account chooses it before anything else', async ({ page }) => {
+    const calls = await signInAs(page, 'customer', { passwordOwed: 'register' });
     await page.goto(url);
     await createPassword(page);
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
-    expect(calls.updates).toEqual([{ password: 'movers2027', data: { password_set: true } }]);
+    expect(calls.updates).toEqual([{ password: 'movers2027' }]);
   });
 
-  test('can sign out instead', async ({ page }) => {
-    await signInAs(page, 'mover', { hasPassword: false });
+  test('after "Forgot password?" it is a new password', async ({ page }) => {
+    await signInAs(page, 'customer', { passwordOwed: 'recovery' });
+    await page.goto(url);
+    await expect(page.getByText(en.auth.newPasswordTitle)).toBeVisible();
+  });
+
+  test('signing out instead forgets it', async ({ page }) => {
+    await signInAs(page, 'mover', { passwordOwed: 'register' });
     await page.goto(url);
     await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
     await page.getByTestId('password-sign-out').click();
     await expect(page.getByTestId('auth-password')).toBeVisible();
+    expect(await stored(page, PASSWORD_OWED_KEY)).toBeNull();
   });
 });
 

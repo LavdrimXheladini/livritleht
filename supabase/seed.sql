@@ -1,6 +1,6 @@
--- Local dev seed: two phone accounts with their roles set (the app signs in by email: any address,
--- code via Mailpit at http://127.0.0.1:54324; the website's phone sign-in takes the test numbers from
--- config.toml [auth.sms.test_otp], code 123456).
+-- Local dev seed: two phone accounts with their roles set. The app: create an account with any address
+-- (code via Mailpit at http://127.0.0.1:54324), then email + password. The website's phone sign-in takes
+-- the test numbers from config.toml [auth.sms.test_otp], code 123456.
 --   +383 44 000 001 → customer      +48 500 000 001 → mover
 -- Roles are normally chosen after the first sign-in (public.choose_role, which also switches sides); set directly here.
 -- Sample movers, vehicles and rate cards come from migration 20261012091000_test_movers.sql (is_test).

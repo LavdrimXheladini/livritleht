@@ -51,8 +51,8 @@
       "password_required": "Wpisz hasło.",
       "wrong_credentials": "Nieprawidłowy e-mail lub hasło.",
       "password_too_short": "Użyj co najmniej 8 znaków.",
-      "password_too_long": "Użyj najwyżej 72 znaków.",
-      "password_weak": "Użyj liter i cyfr.",
+      "password_too_long": "To hasło jest za długie. Użyj krótszego.",
+      "password_weak": "Użyj co najmniej jednej litery (a–z) i jednej cyfry.",
       "same_password": "Wybierz hasło inne niż poprzednie.",
       "too_many_attempts": "Zbyt wiele prób. Spróbuj ponownie za kilka minut."
     },
@@ -67,11 +67,12 @@
     "createPasswordSubtitle": "Od teraz logujesz się adresem e-mail i tym hasłem.",
     "newPasswordTitle": "Ustaw nowe hasło",
     "newPasswordSubtitle": "Będziesz logować się adresem e-mail i tym nowym hasłem.",
-    "passwordHint": "Co najmniej 8 znaków, litery i cyfry.",
+    "passwordHint": "Co najmniej 8 znaków, w tym litera (a–z) i cyfra.",
     "showPassword": "Pokaż hasło",
     "hidePassword": "Ukryj hasło",
     "savePassword": "Zapisz hasło",
-    "backToSignIn": "Wróć do logowania"
+    "backToSignIn": "Wróć do logowania",
+    "signIn": "Zaloguj się"
   },
   "customer": {
     "homeTitle": "Zarezerwuj przewoźnika",

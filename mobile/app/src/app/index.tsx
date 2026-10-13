@@ -3,14 +3,16 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
 import type { UserRole } from '@movershub/shared';
+import type { CodePurpose } from '@movershub/mobile';
 import {
   Button,
   ChooseRoleScreen,
   PasswordScreen,
   Screen,
-  hasPassword,
+  passwordOwedBy,
   pendingSignInFor,
   setPendingSignIn,
+  settlePassword,
   useAnnouncement,
   useAuth,
   useProfile,
@@ -22,27 +24,29 @@ import { MoverHome } from '@/components/mover/mover-home';
 
 /**
  * Home (signed in only): the customer or the mover side, by the account's role. Before that, an
- * account signed in by a code sets its password (the code is needed only once), and an account
- * without a role yet chooses it; later it can switch sides.
+ * account signed in by a code chooses its password, and an account without a role yet chooses it;
+ * later it can switch sides.
  */
 export default function Home() {
   const { t } = useTranslation();
   const { session, signOut, signingOut } = useAuth();
   const profile = useProfile();
   const email = session?.user.email;
-  // Signed in by the code from "Forgot password?": a new password first.
-  const [resetting, setResetting] = useState(() => pendingSignInFor(email)?.purpose === 'recovery');
-  const needsPassword = resetting || !hasPassword(session);
+  // Signed in by a code (to confirm a new account, after "Forgot password?", or "Create account" with an
+  // address that already had an account): a password before anything else — also after a restart.
+  const [owes, setOwes] = useState<CodePurpose | null>(() => pendingSignInFor(email)?.purpose ?? passwordOwedBy(email));
   const failed = profile.isError && !profile.data;
-  useAnnouncement(failed && !needsPassword ? t('common.errorGeneric') : null, profile.errorUpdatedAt);
+  useAnnouncement(failed && !owes ? t('common.errorGeneric') : null, profile.errorUpdatedAt);
 
-  if (needsPassword) {
+  if (owes) {
     return (
       <PasswordScreen
-        purpose={resetting ? 'reset' : 'create'}
+        purpose={owes === 'recovery' ? 'reset' : 'create'}
         onSaved={() => {
-          if (resetting) setPendingSignIn(null);
-          setResetting(false);
+          settlePassword();
+          // The role picked on "Create account" is still needed next; a reset has nothing more.
+          if (owes === 'recovery') setPendingSignIn(null);
+          setOwes(null);
         }}
       />
     );

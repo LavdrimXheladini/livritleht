@@ -3,7 +3,8 @@ import { isAuthRetryableFetchError, type Session, type SupabaseClient } from '@s
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, use, useCallback, useEffect, useState, type ReactNode } from 'react';
 
-import { rememberPasswordSignIn } from './pending-sign-in';
+import { owePassword, settlePassword } from './password';
+import { setPendingSignIn } from './pending-sign-in';
 import { forgetSavedRole } from './saved-role';
 import { SESSION_STORAGE_KEY } from './supabase';
 
@@ -48,7 +49,8 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
   /** What this device remembers about the person: their side and its cached copy. */
   const forgetPerson = useCallback(() => {
     forgetSavedRole();
-    rememberPasswordSignIn(null);
+    setPendingSignIn(null);
+    settlePassword();
     queryClient.removeQueries({ queryKey: ['profile'] });
     queryClient.removeQueries({ queryKey: ['saved-role'] });
   }, [queryClient]);
@@ -71,6 +73,9 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
     });
     const { data } = supabase.auth.onAuthStateChange((event, next) => {
       if (event === 'SIGNED_OUT') forgetPerson();
+      // A "Forgot password?" code (also when another tab of the browser version used it): a new
+      // password is owed before anything else.
+      if (event === 'PASSWORD_RECOVERY' && next?.user.email) owePassword(next.user.email, 'recovery');
       // A renewed session means the network is back: a side taken from the device while offline is
       // asked from the server again. Only that one, and never restarting a request already running —
       // that request itself may have renewed the session (e.g. on a phone whose clock is off).

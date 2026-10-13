@@ -238,14 +238,16 @@ otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 600
 
-# Sign-in is by 6-digit code (not magic link) — both templates show {{ .Token }}.
+# Codes, not links: every template shows {{ .Token }}. confirmation: a new account (app and website);
+# magic_link: a code for an address that already has an account ("Create account" in the app, the
+# website's sign-in); recovery: "Forgot password?".
 [auth.email.template.magic_link]
 subject = "Your MoversHub code"
 content_path = "./supabase/templates/otp.html"
 
 [auth.email.template.confirmation]
 subject = "Your MoversHub code"
-content_path = "./supabase/templates/otp.html"
+content_path = "./supabase/templates/confirmation.html"
 
 # "Forgot password?": a code, then a new password in the app.
 [auth.email.template.recovery]

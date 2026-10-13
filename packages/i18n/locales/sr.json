@@ -51,8 +51,8 @@
       "password_required": "Unesite lozinku.",
       "wrong_credentials": "Pogrešan email ili lozinka.",
       "password_too_short": "Koristite najmanje 8 znakova.",
-      "password_too_long": "Koristite najviše 72 znaka.",
-      "password_weak": "Koristite slova i brojeve.",
+      "password_too_long": "Ova lozinka je predugačka. Koristite kraću.",
+      "password_weak": "Koristite bar jedno latinično slovo (a–z) i jedan broj.",
       "same_password": "Izaberite lozinku drugačiju od stare.",
       "too_many_attempts": "Previše pokušaja. Pokušajte ponovo za nekoliko minuta."
     },
@@ -67,11 +67,12 @@
     "createPasswordSubtitle": "Od sada se prijavljujete emailom i ovom lozinkom.",
     "newPasswordTitle": "Izaberite novu lozinku",
     "newPasswordSubtitle": "Prijavljivaćete se emailom i ovom novom lozinkom.",
-    "passwordHint": "Najmanje 8 znakova, sa slovima i brojevima.",
+    "passwordHint": "Najmanje 8 znakova, sa latiničnim slovom (a–z) i brojem.",
     "showPassword": "Prikaži lozinku",
     "hidePassword": "Sakrij lozinku",
     "savePassword": "Sačuvaj lozinku",
-    "backToSignIn": "Nazad na prijavu"
+    "backToSignIn": "Nazad na prijavu",
+    "signIn": "Prijavi se"
   },
   "customer": {
     "homeTitle": "Rezerviši selidbu kod prevoznika",

@@ -110,8 +110,8 @@ SMTP) the app can sign in only against a local Supabase:
 3. Run `pnpm functions:build`, and put `INCLUDE_TEST_MOVERS=true` in `supabase/functions/.env` (git-ignored) so
    the local `quote` function prices the test movers.
 4. Create an account with any email: the code arrives in Mailpit, http://127.0.0.1:54324. Then choose a password
-   (8+ characters, letters and digits) and sign in with email + password from then on; "Forgot password?" sends
-   a code the same way.
+   (8+ characters, with a letter a–z and a digit) and sign in with email + password from then on; "Forgot
+   password?" sends a code the same way, then asks for a new password.
 
 ## Checks and tests
 
