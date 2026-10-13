@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Text, View, useWindowDimensions } from 'react-native';
 
-import { Button, Card, Display, Screen, Wordmark, useAnnouncement, useAuth } from '@movershub/mobile';
+import { Button, Card, Display, LanguageButton, Screen, Wordmark, useAnnouncement, useAuth } from '@movershub/mobile';
 
 import { SwitchSideButton } from '../switch-side';
 import { QuoteCard } from './quote-card';
@@ -22,15 +22,18 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
 
   return (
     <Screen>
-      <View className="min-h-14 flex-row items-center justify-between">
+      <View className="min-h-14 flex-row items-center">
         <Wordmark />
-        <Button
-          testID="home-sign-out"
-          variant="link"
-          title={t('common.signOut')}
-          loading={signingOut}
-          onPress={() => void signOut()}
-        />
+        <View className="ml-auto flex-row items-center">
+          <LanguageButton />
+          <Button
+            testID="home-sign-out"
+            variant="link"
+            title={t('common.signOut')}
+            loading={signingOut}
+            onPress={() => void signOut()}
+          />
+        </View>
       </View>
 
       {notice ? (

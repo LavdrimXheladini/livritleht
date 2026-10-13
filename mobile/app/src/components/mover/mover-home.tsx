@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { Button, DarkPanel, Screen, Wordmark, useAnnouncement, useAuth } from '@movershub/mobile';
+import { Button, DarkPanel, LanguageButton, Screen, Wordmark, useAnnouncement, useAuth } from '@movershub/mobile';
 
 import { SwitchSideButton } from '../switch-side';
 import { ExampleRequest } from './example-request';
@@ -24,15 +24,17 @@ export function MoverHome({ notice }: { notice: string | null }) {
       {/* Wraps (button below, right-aligned) when a long label does not fit a narrow phone. */}
       <View className="flex-row flex-wrap items-center gap-2">
         <Wordmark tone="dark" partner={t('common.partner')} />
-        {/* Copper link (readable on night), at least 44 x 44 pt. */}
-        <Button
-          testID="mover-sign-out"
-          variant="link-dark"
-          className="ml-auto"
-          title={t('common.signOut')}
-          loading={signingOut}
-          onPress={() => void signOut()}
-        />
+        <View className="ml-auto flex-row items-center">
+          <LanguageButton tone="dark" />
+          {/* Copper link (readable on night), at least 44 x 44 pt. */}
+          <Button
+            testID="mover-sign-out"
+            variant="link-dark"
+            title={t('common.signOut')}
+            loading={signingOut}
+            onPress={() => void signOut()}
+          />
+        </View>
       </View>
 
       {notice ? (

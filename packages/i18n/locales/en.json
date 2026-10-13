@@ -8,7 +8,9 @@
     "retry": "Try again",
     "signOut": "Sign out",
     "backToTop": "Back to top",
-    "partner": "Partner"
+    "partner": "Partner",
+    "language": "Language",
+    "close": "Close"
   },
   "auth": {
     "title": "Sign in",

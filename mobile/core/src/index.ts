@@ -23,8 +23,9 @@ export {
   type PillTone,
   type Tone,
 } from './components/ui';
+export { LanguageButton } from './components/language-button';
 export { useAppFonts } from './fonts';
-export { currentLocale, initI18n } from './i18n';
+export { currentLocale, initI18n, restoreLocale, setLocale } from './i18n';
 export { hasPassword } from './password';
 export {
   getPendingSignIn,

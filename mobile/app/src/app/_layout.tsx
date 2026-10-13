@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { AppState, Platform, View } from 'react-native';
 
-import { AuthProvider, initI18n, useAppFonts, useAuth, useProfile } from '@movershub/mobile';
+import { AuthProvider, initI18n, restoreLocale, useAppFonts, useAuth, useProfile } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
 import { supabase } from '@/lib/supabase';
@@ -39,11 +39,16 @@ function RootStack() {
   // Once launched it stays: after signing in, home shows its own spinner too.
   const [launched, setLaunched] = useState(false);
   const [waitedEnough, setWaitedEnough] = useState(false);
+  // The language chosen in the app earlier, before the first screen shows (no flash of another one).
+  const [localeReady, setLocaleReady] = useState(false);
   useEffect(() => {
+    void restoreLocale().finally(() => setLocaleReady(true));
     const timer = setTimeout(() => setWaitedEnough(true), 2000);
     return () => clearTimeout(timer);
   }, []);
-  if (!launched && !loading && fontsReady && (session === null || !profile.isPending || waitedEnough)) setLaunched(true);
+  if (!launched && localeReady && !loading && fontsReady && (session === null || !profile.isPending || waitedEnough)) {
+    setLaunched(true);
+  }
 
   useEffect(() => {
     if (launched) void SplashScreen.hideAsync();

@@ -84,6 +84,8 @@ export type StandInCalls = {
   signIns: { email: string; password: string }[];
   /** Account updates (a new password and the metadata that says it has one). */
   updates: { password?: string; data?: Record<string, unknown> }[];
+  /** Changes to the profile row (e.g. the language). */
+  profileUpdates: Record<string, unknown>[];
 };
 
 /**
@@ -106,7 +108,7 @@ export async function fakeAccount(
   }: { role: Role | null; email?: string; failChooseRole?: number; hasPassword?: boolean },
 ): Promise<StandInCalls> {
   const state = { role, failuresLeft: failChooseRole, password: hasPassword ? STAND_IN_PASSWORD : null };
-  const calls: StandInCalls = { chosen: [], verified: [], recovered: [], signIns: [], updates: [] };
+  const calls: StandInCalls = { chosen: [], verified: [], recovered: [], signIns: [], updates: [], profileUpdates: [] };
   const json = (route: Route, body: unknown, status = 200) =>
     route.request().method() === 'OPTIONS' || status === 204
       ? route.fulfill({ status: 204, headers: cors })
@@ -144,7 +146,13 @@ export async function fakeAccount(
     return json(route, standInUser(email, state.password !== null));
   });
   await page.route('**/auth/v1/logout*', (route) => json(route, {}, 204));
-  await page.route('**/rest/v1/profiles*', (route) => json(route, { role: state.role }));
+  await page.route('**/rest/v1/profiles*', (route) => {
+    if (route.request().method() === 'PATCH') {
+      calls.profileUpdates.push(route.request().postDataJSON() as Record<string, unknown>);
+      return json(route, null, 204);
+    }
+    return json(route, { role: state.role });
+  });
   await page.route('**/rest/v1/rpc/choose_role*', (route) => {
     if (route.request().method() === 'OPTIONS') return json(route, null);
     const { p_role } = route.request().postDataJSON() as { p_role: Role };

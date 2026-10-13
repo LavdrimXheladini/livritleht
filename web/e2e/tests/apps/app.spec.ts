@@ -309,6 +309,50 @@ test.describe('an older account without a password', () => {
   });
 });
 
+test.describe('language', () => {
+  const sq = resources.sq.translation;
+
+  test('signed out: switch to Albanian; the choice stays after a reload', async ({ page }) => {
+    await page.goto(url);
+    await expect(page.getByTestId('language-button')).toHaveAccessibleName(`${en.common.language}: English`);
+    await page.getByTestId('language-button').click();
+    await expect(page.getByRole('radio', { name: 'English' })).toBeChecked();
+    await expect(page).toHaveScreenshot('language-menu.png');
+    await page.getByTestId('language-sq').click();
+    await expect(page.getByText(sq.auth.passwordSubtitle)).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'sq');
+    await page.reload();
+    await expect(page.getByText(sq.auth.passwordSubtitle)).toBeVisible();
+    await expect(page.getByTestId('language-button')).toHaveAccessibleName(`${sq.common.language}: Shqip`);
+  });
+
+  test('closing the menu keeps the language', async ({ page }) => {
+    await page.goto(url);
+    await page.getByTestId('language-button').click();
+    await page.getByTestId('language-close').click();
+    await expect(page.getByTestId('language-sq')).toHaveCount(0);
+    await expect(page.getByText(en.auth.passwordSubtitle)).toBeVisible();
+  });
+
+  test('signed in: switching from the customer home is saved with the account', async ({ page }) => {
+    const calls = await signInAs(page, 'customer');
+    await page.goto(url);
+    await page.getByTestId('language-button').click();
+    await page.getByTestId('language-de').click();
+    await expect(page.getByText(resources.de.translation.landing.hero.subtitle)).toBeVisible();
+    await expect.poll(() => calls.profileUpdates).toEqual([{ locale: 'de' }]);
+  });
+
+  test('the mover side has it too', async ({ page }) => {
+    const calls = await signInAs(page, 'mover');
+    await page.goto(url);
+    await page.getByTestId('language-button').click();
+    await page.getByTestId('language-pl').click();
+    await expect(page.getByText(resources.pl.translation.mover.homeTitle)).toBeVisible();
+    await expect.poll(() => calls.profileUpdates).toEqual([{ locale: 'pl' }]);
+  });
+});
+
 test.describe('signed in as a customer', () => {
   test.beforeEach(async ({ page }) => {
     await signInAs(page, 'customer');

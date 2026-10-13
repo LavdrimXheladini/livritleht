@@ -11,6 +11,7 @@ import { emailSchema, signInPasswordSchema, type SelfSignupRole, type SignupMeta
 
 import { useAnnouncement } from '../a11y';
 import { useAuth } from '../auth-provider';
+import { LanguageButton } from '../components/language-button';
 import { Button, Display, SegmentedControl, TextField, Wordmark } from '../components/ui';
 import { currentLocale } from '../i18n';
 import { PASSWORD_SET, passwordErrorKey } from '../password';
@@ -72,7 +73,7 @@ export function AuthScreen({ onCodeSent }: { onCodeSent: (sent: PendingSignIn) =
 }
 
 /**
- * Shared frame of the sign-in screens: wordmark on top, content centred. It scrolls, so the form
+ * Shared frame of the sign-in screens: wordmark and language on top, content centred. It scrolls, so the form
  * stays reachable on small phones, with large text, and with the keyboard open. On iOS the scroll
  * view itself makes room for the keyboard and keeps the focused field above it (padding from the
  * keyboard-avoiding view as well would count the keyboard twice); on Android the padding does it.
@@ -88,6 +89,9 @@ export function AuthFrame({ children }: { children: ReactNode }) {
         >
           <View className="min-h-14 flex-row items-center">
             <Wordmark />
+            <View className="ml-auto">
+              <LanguageButton />
+            </View>
           </View>
           <View className="flex-1 justify-center gap-6">{children}</View>
         </ScrollView>

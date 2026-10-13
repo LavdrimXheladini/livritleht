@@ -8,7 +8,9 @@
     "retry": "Provo përsëri",
     "signOut": "Dil",
     "backToTop": "Kthehu në krye",
-    "partner": "Partner"
+    "partner": "Partner",
+    "language": "Gjuha",
+    "close": "Mbyll"
   },
   "auth": {
     "title": "Hyr",

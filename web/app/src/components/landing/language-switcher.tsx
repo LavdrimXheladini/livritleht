@@ -4,10 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { DropdownMenu } from 'radix-ui';
 
-import { LOCALES, type Locale } from '@movershub/i18n';
+import { LOCALES, LOCALE_NAMES as NAMES, type Locale } from '@movershub/i18n';
 import { Button } from '@movershub/ui/web';
-
-const NAMES: Record<Locale, string> = { en: 'English', sq: 'Shqip', pl: 'Polski', sr: 'Srpski', de: 'Deutsch' };
 
 /** "EN ▾" — switches the /[lang] segment, keeping the rest of the path. */
 export function LanguageSwitcher({ locale, label }: { locale: Locale; label: string }) {

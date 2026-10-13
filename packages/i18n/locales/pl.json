@@ -8,7 +8,9 @@
     "retry": "Spróbuj ponownie",
     "signOut": "Wyloguj się",
     "backToTop": "Wróć na górę",
-    "partner": "Partner"
+    "partner": "Partner",
+    "language": "Język",
+    "close": "Zamknij"
   },
   "auth": {
     "title": "Zaloguj się",

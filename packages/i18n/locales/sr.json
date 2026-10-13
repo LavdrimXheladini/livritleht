@@ -8,7 +8,9 @@
     "retry": "Pokušaj ponovo",
     "signOut": "Odjavi se",
     "backToTop": "Nazad na vrh",
-    "partner": "Partner"
+    "partner": "Partner",
+    "language": "Jezik",
+    "close": "Zatvori"
   },
   "auth": {
     "title": "Prijava",
