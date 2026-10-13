@@ -6,6 +6,7 @@ import {
   SAVED_ROLE_KEY,
   SESSION_KEY,
   STAND_IN_ID,
+  STAND_IN_PASSWORD,
   appUrl,
   fakeAccount,
   fitScreenToPage,
@@ -18,9 +19,10 @@ import {
   stored,
 } from './app';
 
-// The one MoversHub app (customers and movers): it opens on sign in / create account. The role is
-// saved only after the code has proven the email; then it picks the customer or the mover side, and
-// people can switch sides later.
+// The one MoversHub app (customers and movers): it opens on sign in (email and password) / create
+// account. A code is needed once, to confirm the email, then a password; "Forgot password?" sends a
+// code for a new one. The role is saved only after the code has proven the email; it picks the
+// customer or the mover side, and people can switch sides later.
 
 const url = appUrl();
 const en = resources.en.translation;
@@ -32,41 +34,120 @@ test.beforeEach(async ({ page }) => {
   await serveFixtures(page);
 });
 
+/** Enters the 6-digit code (the stand-in server accepts any). */
+async function enterCode(page: Page) {
+  await page.getByTestId('verify-code').fill('123456');
+  await page.getByTestId('verify-submit').click();
+}
+
 /** Requests a code on the current tab and enters it. */
 async function sendAndEnterCode(page: Page, email = 'new@example.com') {
   await page.getByTestId('auth-email').fill(email);
   await page.getByTestId('auth-send-code').click();
   await expect(page.getByText(codeSent(email))).toBeVisible();
-  await page.getByTestId('verify-code').fill('123456');
-  await page.getByTestId('verify-submit').click();
+  await enterCode(page);
+}
+
+/** The password asked for after the code. */
+async function createPassword(page: Page, password = 'movers2027') {
+  await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
+  await page.getByTestId('password-new').fill(password);
+  await page.getByTestId('password-save').click();
+}
+
+/** Signs in on the "Sign in" tab. */
+async function signInWithPassword(page: Page, email: string, password = STAND_IN_PASSWORD) {
+  await page.getByTestId('auth-email').fill(email);
+  await page.getByTestId('auth-password').fill(password);
+  await page.getByTestId('auth-sign-in').click();
 }
 
 test.describe('signed out', () => {
-  test('opens on sign in, with create account next to it', async ({ page }) => {
+  test('opens on sign in with email and password, with create account next to it', async ({ page }) => {
     await page.goto(url);
     await expect(page.getByTestId('auth-email')).toBeVisible();
+    await expect(page.getByTestId('auth-password')).toBeVisible();
+    await expect(page.getByTestId('auth-forgot')).toBeVisible();
     await expect(page.getByTestId('auth-mode-register')).toBeVisible();
     await expect(page).toHaveScreenshot('sign-in.png');
   });
 
-  test('sign in: a wrong email shows the error under the field', async ({ page }) => {
+  test('sign in: a wrong email and a missing password show under their fields, read out together', async ({ page }) => {
     await page.goto(url);
     await page.getByTestId('auth-email').fill('not-an-email');
-    await page.getByTestId('auth-send-code').click();
+    await page.getByTestId('auth-sign-in').click();
     await expect(app(page).getByText(en.auth.errors.invalid_email)).toBeVisible();
+    await expect(app(page).getByText(en.auth.errors.password_required)).toBeVisible();
+    await expect(page.locator('#a11y-announcer')).toHaveText(`${en.auth.errors.invalid_email} ${en.auth.errors.password_required}`);
     await expect(page).toHaveScreenshot('sign-in-error.png');
   });
 
-  test('sign in: every email gets the same answer, and nothing reveals whether it has an account', async ({ page }) => {
-    const sent = await serveOtp(page);
+  test('sign in with email and password: no code, straight home', async ({ page }) => {
+    const calls = await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
     await page.goto(url);
-    await page.getByTestId('auth-email').fill('new@example.com');
-    await page.getByTestId('auth-send-code').click();
-    await expect(page.getByText(en.auth.verifyTitle)).toBeVisible();
-    await expect(page.getByText(codeSent('new@example.com'))).toBeVisible();
-    expect(sent).toEqual([expect.objectContaining({ email: 'new@example.com', create_user: true, data: { locale: 'en' } })]);
-    // The address stays out of the URL (browser history, server logs — COMPLIANCE §9).
-    expect(decodeURIComponent(page.url())).not.toContain('new@example.com');
+    await signInWithPassword(page, 'ana@example.com');
+    await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    expect(calls.signIns).toEqual([{ email: 'ana@example.com', password: STAND_IN_PASSWORD }]);
+    expect(calls.verified).toEqual([]);
+  });
+
+  test('sign in: a wrong password and an unknown address get the same answer', async ({ page }) => {
+    const calls = await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
+    await page.goto(url);
+    await signInWithPassword(page, 'ana@example.com', 'wrongpass1');
+    await expect(page.getByTestId('auth-error')).toHaveText(en.auth.errors.wrong_credentials);
+    await signInWithPassword(page, 'nobody@example.com');
+    await expect(page.getByTestId('auth-error')).toHaveText(en.auth.errors.wrong_credentials);
+    await expect(page.locator('#a11y-announcer')).toHaveText(en.auth.errors.wrong_credentials);
+    expect(calls.signIns).toHaveLength(2);
+    // Addresses stay out of the URL (browser history, server logs — COMPLIANCE §9).
+    expect(decodeURIComponent(page.url())).not.toContain('example.com');
+  });
+
+  test('"Show password" shows what was typed, and hides it again', async ({ page }) => {
+    await page.goto(url);
+    await page.getByTestId('auth-password').fill('secret12');
+    await expect(page.getByTestId('auth-password')).toHaveAttribute('type', 'password');
+    await page.getByTestId('auth-password-toggle').click();
+    await expect(page.getByTestId('auth-password')).not.toHaveAttribute('type', 'password');
+    await page.getByRole('button', { name: en.auth.hidePassword }).click();
+    await expect(page.getByTestId('auth-password')).toHaveAttribute('type', 'password');
+  });
+
+  test('forgot password: a code by email, then a new password, then home', async ({ page }) => {
+    const calls = await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
+    await page.goto(url);
+    await page.getByTestId('auth-email').fill('ana@example.com');
+    await page.getByTestId('auth-forgot').click();
+    // The address typed on sign in comes along.
+    await expect(page.getByTestId('forgot-email')).toHaveValue('ana@example.com');
+    await page.getByTestId('forgot-send-code').click();
+    await expect(page.getByText(en.auth.recoveryCodeSentTo.replace('{{target}}', 'ana@example.com'))).toBeVisible();
+    expect(calls.recovered).toEqual(['ana@example.com']);
+    await enterCode(page);
+    await expect(page.getByText(en.auth.newPasswordTitle)).toBeVisible();
+    // The server refuses the old password again.
+    await page.getByTestId('password-new').fill(STAND_IN_PASSWORD);
+    await page.getByTestId('password-save').click();
+    await expect(app(page).getByText(en.auth.errors.same_password)).toBeVisible();
+    await page.getByTestId('password-new').fill('movers2027');
+    await page.getByTestId('password-save').click();
+    await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    expect(calls.verified).toEqual([{ type: 'recovery', email: 'ana@example.com' }]);
+    expect(calls.updates.at(-1)).toEqual({ password: 'movers2027', data: { password_set: true } });
+  });
+
+  test('forgot password: an address without an account gets the same answer, and back leads to sign in', async ({ page }) => {
+    const calls = await fakeAccount(page, { role: 'customer', email: 'ana@example.com' });
+    await page.goto(url);
+    await page.getByTestId('auth-forgot').click();
+    await page.getByTestId('forgot-back').click();
+    await expect(page.getByTestId('auth-password')).toBeVisible();
+    await page.getByTestId('auth-forgot').click();
+    await page.getByTestId('forgot-email').fill('nobody@example.com');
+    await page.getByTestId('forgot-send-code').click();
+    await expect(page.getByText(en.auth.recoveryCodeSentTo.replace('{{target}}', 'nobody@example.com'))).toBeVisible();
+    expect(calls.recovered).toEqual(['nobody@example.com']);
   });
 
   test('create account: the role and email errors are read out together, once per attempt', async ({ page }) => {
@@ -110,66 +191,83 @@ test.describe('signed out', () => {
     expect(sent).toEqual([expect.objectContaining({ email: 'new@example.com', create_user: true, data: { locale: 'en' } })]);
   });
 
-  test('after the code, a new account is saved as a mover and opens the mover side', async ({ page }) => {
+  test('after the code, a new account creates its password first, then opens the side it chose', async ({ page }) => {
     await serveOtp(page);
-    const chosen = await fakeAccount(page, { role: null });
+    const calls = await fakeAccount(page, { role: null });
     await page.goto(url);
     await page.getByTestId('auth-mode-register').click();
     await page.getByTestId('role-mover').click();
     await sendAndEnterCode(page);
+    await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
+    expect(calls.verified).toEqual([{ type: 'email', email: 'new@example.com' }]);
+    expect(calls.chosen).toEqual([]);
+    // The rules are checked before anything is sent.
+    await page.getByTestId('password-new').fill('short1');
+    await page.getByTestId('password-save').click();
+    await expect(app(page).getByText(en.auth.errors.password_too_short)).toBeVisible();
+    await page.getByTestId('password-new').fill('onlyletters');
+    await page.getByTestId('password-save').click();
+    await expect(app(page).getByText(en.auth.errors.password_weak)).toBeVisible();
+    expect(calls.updates).toEqual([]);
+    await expect(page).toHaveScreenshot('create-password.png');
+    await page.getByTestId('password-new').fill('movers2027');
+    await page.getByTestId('password-save').click();
     await expect(page.getByText(en.mover.homeTitle)).toBeVisible();
-    expect(chosen).toEqual(['mover']);
+    expect(calls.updates).toEqual([{ password: 'movers2027', data: { password_set: true } }]);
+    expect(calls.chosen).toEqual(['mover']);
   });
 
-  test('a new account that used sign in chooses its role after the code', async ({ page }) => {
-    await serveOtp(page);
-    const chosen = await fakeAccount(page, { role: null });
+  test('an account without a role (e.g. made on the website) chooses it after signing in', async ({ page }) => {
+    const calls = await fakeAccount(page, { role: null, email: 'web@example.com', hasPassword: true });
     await page.goto(url);
-    await sendAndEnterCode(page);
+    await signInWithPassword(page, 'web@example.com');
     await expect(page.getByTestId('role-continue')).toBeVisible();
-    // It says which account this is: "Sign in" with an address that had no account creates one.
-    await expect(page.getByText(en.auth.signedInAs.replace('{{email}}', 'new@example.com'))).toBeVisible();
+    // It says which account this is.
+    await expect(page.getByText(en.auth.signedInAs.replace('{{email}}', 'web@example.com'))).toBeVisible();
     await page.getByTestId('role-continue').click();
     await expect(app(page).getByText(en.auth.errors.choose_role)).toBeVisible();
-    expect(chosen).toEqual([]);
+    expect(calls.chosen).toEqual([]);
     await page.getByTestId('role-customer').click();
     await expect(page).toHaveScreenshot('choose-role.png');
     await page.getByTestId('role-continue').click();
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
-    expect(chosen).toEqual(['customer']);
+    expect(calls.chosen).toEqual(['customer']);
   });
 
   test('an email that already has a customer account: create account as a mover signs in, says so and points to the switch', async ({ page }) => {
     await serveOtp(page);
-    const chosen = await fakeAccount(page, { role: 'customer' });
+    const calls = await fakeAccount(page, { role: 'customer' });
     await page.goto(url);
     await page.getByTestId('auth-mode-register').click();
     await page.getByTestId('role-mover').click();
     await sendAndEnterCode(page);
+    // It has a password already: no password screen.
     await expect(page.getByTestId('home-notice')).toHaveText(en.auth.existingCustomer);
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    expect(calls.updates).toEqual([]);
     // Never switched without being asked.
-    expect(chosen).toEqual([]);
+    expect(calls.chosen).toEqual([]);
     await page.getByTestId('switch-to-mover').click();
     await expect(page.getByText(en.mover.checklistTitle)).toBeVisible();
     await expect(page.getByTestId('home-notice')).toHaveCount(0);
-    expect(chosen).toEqual(['mover']);
+    expect(calls.chosen).toEqual(['mover']);
   });
 
   test('if saving the role fails, the choice comes back with Retry; switching sides then shows no notice', async ({ page }) => {
     await serveOtp(page);
-    const chosen = await fakeAccount(page, { role: null, failChooseRole: 1 });
+    const calls = await fakeAccount(page, { role: null, failChooseRole: 1 });
     await page.goto(url);
     await page.getByTestId('auth-mode-register').click();
     await page.getByTestId('role-mover').click();
     await sendAndEnterCode(page);
+    await createPassword(page);
     await expect(app(page).getByText(en.common.errorGeneric)).toBeVisible();
     await expect(page.getByRole('radio', { name: new RegExp(`^${en.auth.roleMover}`) })).toBeChecked();
     await page.getByTestId('role-customer').click();
     await page.getByTestId('role-continue').click();
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
     await expect(page.getByTestId('home-notice')).toHaveCount(0);
-    expect(chosen).toEqual(['mover', 'customer']);
+    expect(calls.chosen).toEqual(['mover', 'customer']);
   });
 
   test('create account fits a small phone: a person can scroll to Send code', async ({ page }) => {
@@ -190,6 +288,24 @@ test.describe('signed out', () => {
   test('the code screen without a pending sign-in (e.g. after a reload) starts again at sign in', async ({ page }) => {
     await page.goto(`${url}verify`);
     await expect(page.getByTestId('auth-email')).toBeVisible();
+  });
+});
+
+test.describe('an older account without a password', () => {
+  test('creates one before anything else', async ({ page }) => {
+    const calls = await signInAs(page, 'customer', { hasPassword: false });
+    await page.goto(url);
+    await createPassword(page);
+    await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    expect(calls.updates).toEqual([{ password: 'movers2027', data: { password_set: true } }]);
+  });
+
+  test('can sign out instead', async ({ page }) => {
+    await signInAs(page, 'mover', { hasPassword: false });
+    await page.goto(url);
+    await expect(page.getByText(en.auth.createPasswordTitle)).toBeVisible();
+    await page.getByTestId('password-sign-out').click();
+    await expect(page.getByTestId('auth-password')).toBeVisible();
   });
 });
 
@@ -225,7 +341,7 @@ test.describe('signed in as a customer', () => {
 
 test.describe('switching sides', () => {
   test('a customer switches to the mover side, which starts with the setup, and back', async ({ page }) => {
-    const chosen = await signInAs(page, 'customer');
+    const { chosen } = await signInAs(page, 'customer');
     await page.goto(url);
     // The way to the mover side says what a mover fills in first.
     await expect(page.getByText(en.customer.switchText)).toBeVisible();
@@ -255,7 +371,7 @@ test.describe('switching sides', () => {
   });
 
   test('if switching fails, the person stays where they are and can try again', async ({ page }) => {
-    const chosen = await signInAs(page, 'customer', { failChooseRole: 1 });
+    const { chosen } = await signInAs(page, 'customer', { failChooseRole: 1 });
     await page.goto(url);
     await page.getByTestId('switch-to-mover').click();
     await expect(app(page).getByText(en.common.errorGeneric)).toBeVisible();

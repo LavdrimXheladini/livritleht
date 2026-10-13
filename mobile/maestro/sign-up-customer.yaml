@@ -33,6 +33,17 @@ appId: com.movershub.app
 - hideKeyboard
 - tapOn:
     id: verify-submit
+# The code is needed only this once: next comes the password for signing in from now on.
+- extendedWaitUntil:
+    visible:
+      id: password-new
+    timeout: 15000
+- tapOn:
+    id: password-new
+- inputText: movers2026
+- hideKeyboard
+- tapOn:
+    id: password-save
 # Signed in: the role chosen before the code is saved, and the customer side opens.
 - extendedWaitUntil:
     visible:

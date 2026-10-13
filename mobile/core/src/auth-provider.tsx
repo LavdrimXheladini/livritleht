@@ -3,6 +3,7 @@ import { isAuthRetryableFetchError, type Session, type SupabaseClient } from '@s
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, use, useCallback, useEffect, useState, type ReactNode } from 'react';
 
+import { rememberPasswordSignIn } from './pending-sign-in';
 import { forgetSavedRole } from './saved-role';
 import { SESSION_STORAGE_KEY } from './supabase';
 
@@ -47,6 +48,7 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
   /** What this device remembers about the person: their side and its cached copy. */
   const forgetPerson = useCallback(() => {
     forgetSavedRole();
+    rememberPasswordSignIn(null);
     queryClient.removeQueries({ queryKey: ['profile'] });
     queryClient.removeQueries({ queryKey: ['saved-role'] });
   }, [queryClient]);

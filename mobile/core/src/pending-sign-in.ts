@@ -1,14 +1,17 @@
 import type { SelfSignupRole } from '@movershub/shared';
 
-/** Sign in to an existing account, or create one as a customer or a mover. */
+/** The two tabs of the signed-out screen: sign in with a password, or create an account. */
 export type AuthMode = 'login' | 'register';
 
+/** Why a code was emailed: to confirm a new account (or open an existing one), or to set a new password. */
+export type CodePurpose = 'register' | 'recovery';
+
 /**
- * What the person asked for on the sign-in screen: the email the code went to, the tab, and (when
+ * What the person asked for on the signed-out screens: the email the code went to, why, and (when
  * creating an account) the role they picked. Kept in memory only — never in a route or URL, where
  * the address would land in the browser's history and server logs (COMPLIANCE §9).
  */
-export type PendingSignIn = { email: string; mode: AuthMode; role: SelfSignupRole | null };
+export type PendingSignIn = { email: string; purpose: CodePurpose; role: SelfSignupRole | null };
 
 let pending: PendingSignIn | null = null;
 
@@ -30,3 +33,11 @@ export function pendingSignInFor(email: string | undefined): PendingSignIn | nul
 export function rememberRequestedRole(role: SelfSignupRole) {
   if (pending) pending = { ...pending, role };
 }
+
+/** The email that just signed in with its password on this device: that account has a password. */
+let passwordSignIn: string | null = null;
+
+export const rememberPasswordSignIn = (email: string | null) => {
+  passwordSignIn = email;
+};
+export const signedInWithPassword = (email: string | undefined): boolean => email !== undefined && passwordSignIn === email;

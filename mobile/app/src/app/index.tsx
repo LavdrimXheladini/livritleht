@@ -6,7 +6,9 @@ import type { UserRole } from '@movershub/shared';
 import {
   Button,
   ChooseRoleScreen,
+  PasswordScreen,
   Screen,
+  hasPassword,
   pendingSignInFor,
   setPendingSignIn,
   useAnnouncement,
@@ -19,16 +21,32 @@ import { CustomerHome } from '@/components/customer/customer-home';
 import { MoverHome } from '@/components/mover/mover-home';
 
 /**
- * Home (signed in only): the customer or the mover side, by the account's role. An account without
- * a role yet (new, or created through "Sign in") chooses it first; later it can switch sides.
+ * Home (signed in only): the customer or the mover side, by the account's role. Before that, an
+ * account signed in by a code sets its password (the code is needed only once), and an account
+ * without a role yet chooses it; later it can switch sides.
  */
 export default function Home() {
   const { t } = useTranslation();
   const { session, signOut, signingOut } = useAuth();
   const profile = useProfile();
   const email = session?.user.email;
+  // Signed in by the code from "Forgot password?": a new password first.
+  const [resetting, setResetting] = useState(() => pendingSignInFor(email)?.purpose === 'recovery');
+  const needsPassword = resetting || !hasPassword(session);
   const failed = profile.isError && !profile.data;
-  useAnnouncement(failed ? t('common.errorGeneric') : null, profile.errorUpdatedAt);
+  useAnnouncement(failed && !needsPassword ? t('common.errorGeneric') : null, profile.errorUpdatedAt);
+
+  if (needsPassword) {
+    return (
+      <PasswordScreen
+        purpose={resetting ? 'reset' : 'create'}
+        onSaved={() => {
+          if (resetting) setPendingSignIn(null);
+          setResetting(false);
+        }}
+      />
+    );
+  }
 
   // A home that has loaded stays, even if a later refresh of the profile fails.
   if (profile.data) {

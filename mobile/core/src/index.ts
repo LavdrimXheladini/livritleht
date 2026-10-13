@@ -25,9 +25,18 @@ export {
 } from './components/ui';
 export { useAppFonts } from './fonts';
 export { currentLocale, initI18n } from './i18n';
-export { getPendingSignIn, pendingSignInFor, setPendingSignIn, type AuthMode, type PendingSignIn } from './pending-sign-in';
+export { hasPassword } from './password';
+export {
+  getPendingSignIn,
+  pendingSignInFor,
+  setPendingSignIn,
+  type AuthMode,
+  type CodePurpose,
+  type PendingSignIn,
+} from './pending-sign-in';
 export { useChooseRole, useProfile, type SignedInProfile } from './profile';
 export { AuthScreen } from './screens/auth-screen';
 export { ChooseRoleScreen } from './screens/choose-role-screen';
+export { PasswordScreen } from './screens/password-screen';
 export { VerifyScreen } from './screens/verify-screen';
 export { createSupabaseClient } from './supabase';

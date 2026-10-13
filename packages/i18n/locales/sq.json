@@ -45,8 +45,31 @@
       "invalid_code": "Kodi ka 6 shifra.",
       "wrong_code": "Kodi është i gabuar ose ka skaduar.",
       "choose_role": "Zgjidhni si do ta përdorni MoversHub.",
-      "link_invalid": "Kjo lidhje hyrjeje është e pavlefshme ose ka skaduar. Kërkoni një të re."
-    }
+      "link_invalid": "Kjo lidhje hyrjeje është e pavlefshme ose ka skaduar. Kërkoni një të re.",
+      "password_required": "Shkruani fjalëkalimin.",
+      "wrong_credentials": "Email-i ose fjalëkalimi është i gabuar.",
+      "password_too_short": "Përdorni të paktën 8 karaktere.",
+      "password_too_long": "Përdorni më së shumti 72 karaktere.",
+      "password_weak": "Përdorni shkronja dhe numra.",
+      "same_password": "Zgjidhni një fjalëkalim ndryshe nga i vjetri.",
+      "too_many_attempts": "Shumë përpjekje. Provoni përsëri pas disa minutash."
+    },
+    "passwordSubtitle": "Hyni me email-in dhe fjalëkalimin tuaj.",
+    "registerSubtitle": "Do t'ju dërgojmë një kod me 6 shifra për të konfirmuar email-in. Pastaj zgjidhni një fjalëkalim.",
+    "passwordLabel": "Fjalëkalimi",
+    "forgotPassword": "Keni harruar fjalëkalimin?",
+    "forgotTitle": "Rivendosni fjalëkalimin",
+    "forgotSubtitle": "Do t'ju dërgojmë me email një kod me 6 shifra. Pastaj zgjidhni një fjalëkalim të ri.",
+    "recoveryCodeSentTo": "Nëse {{target}} ka një llogari, i dërguam një kod.",
+    "createPasswordTitle": "Krijoni fjalëkalimin",
+    "createPasswordSubtitle": "Tani e tutje hyni me email-in dhe këtë fjalëkalim.",
+    "newPasswordTitle": "Zgjidhni një fjalëkalim të ri",
+    "newPasswordSubtitle": "Do të hyni me email-in dhe këtë fjalëkalim të ri.",
+    "passwordHint": "Të paktën 8 karaktere, me shkronja dhe numra.",
+    "showPassword": "Shfaq fjalëkalimin",
+    "hidePassword": "Fshih fjalëkalimin",
+    "savePassword": "Ruaj fjalëkalimin",
+    "backToSignIn": "Kthehu te hyrja"
   },
   "customer": {
     "homeTitle": "Rezervo me një transportues",

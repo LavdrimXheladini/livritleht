@@ -15,8 +15,10 @@ import { AuthFrame, AuthTitle } from './auth-screen';
 const schema = z.object({ code: otpCodeSchema });
 
 /**
- * The code from the email. A neutral title: whether the account already existed is known only
- * after the code. On success the auth session changes and the root layout opens the home screen.
+ * The code from the email: to confirm a new account (the only time a code is needed to get in), or
+ * after "Forgot password?" to set a new one. A neutral title: whether the account already existed is
+ * known only after the code. On success the auth session changes and the root layout opens home,
+ * which asks for the password first.
  */
 export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: () => void }) {
   const { t } = useTranslation();
@@ -28,7 +30,8 @@ export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: ()
   });
 
   const submit = form.handleSubmit(async ({ code }) => {
-    const { error } = await supabase.auth.verifyOtp({ email: sent.email, token: code, type: 'email' });
+    const type = sent.purpose === 'recovery' ? 'recovery' : 'email';
+    const { error } = await supabase.auth.verifyOtp({ email: sent.email, token: code, type });
     if (error) form.setError('code', { message: 'wrong_code' });
   });
 
@@ -36,7 +39,11 @@ export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: ()
     <AuthFrame>
       <View className="gap-2">
         <AuthTitle>{t('auth.verifyTitle')}</AuthTitle>
-        <Text className="font-sans text-base text-ink-600">{t('auth.codeSentTo', { target: sent.email })}</Text>
+        <Text className="font-sans text-base text-ink-600">
+          {sent.purpose === 'recovery'
+            ? t('auth.recoveryCodeSentTo', { target: sent.email })
+            : t('auth.codeSentTo', { target: sent.email })}
+        </Text>
       </View>
       <Controller
         control={form.control}

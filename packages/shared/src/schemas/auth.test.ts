@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { otpRequestSchema, phoneSchema, signupMetadataSchema } from './auth';
+import { otpRequestSchema, passwordSchema, phoneSchema, signupMetadataSchema } from './auth';
 
 describe('phoneSchema', () => {
   it('normalises spaces and dashes to E.164', () => {
@@ -19,6 +19,28 @@ describe('otpRequestSchema', () => {
       channel: 'email',
       email: 'ana@example.com',
     });
+  });
+});
+
+describe('passwordSchema (the same rules as Supabase Auth)', () => {
+  const error = (value: string) => passwordSchema.safeParse(value).error?.issues[0]?.message;
+
+  it('accepts 8+ characters with a letter and a digit', () => {
+    for (const ok of ['movers2026', 'Prishtina 2026!', 'łódź2026x', 'a1a1a1a1']) expect(error(ok)).toBeUndefined();
+  });
+
+  it('says what is missing', () => {
+    expect(error('abc12')).toBe('password_too_short');
+    expect(error('onlyletters')).toBe('password_weak');
+    expect(error('12345678')).toBe('password_weak');
+    // Non-ASCII letters don't count as letters for Supabase Auth.
+    expect(error('ëëëëëëë1')).toBe('password_weak');
+  });
+
+  it('counts bytes, not characters, against the 72-byte limit', () => {
+    expect(error(`a1${'x'.repeat(70)}`)).toBeUndefined();
+    expect(error(`a1${'x'.repeat(71)}`)).toBe('password_too_long');
+    expect(error(`a1${'ë'.repeat(36)}`)).toBe('password_too_long'); // 38 characters, 74 bytes
   });
 });
 

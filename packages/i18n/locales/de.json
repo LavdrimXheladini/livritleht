@@ -45,8 +45,31 @@
       "invalid_code": "Der Code hat 6 Ziffern.",
       "wrong_code": "Der Code ist falsch oder abgelaufen.",
       "choose_role": "Wähle, wie du MoversHub nutzen möchtest.",
-      "link_invalid": "Dieser Anmeldelink ist ungültig oder abgelaufen. Fordere einen neuen an."
-    }
+      "link_invalid": "Dieser Anmeldelink ist ungültig oder abgelaufen. Fordere einen neuen an.",
+      "password_required": "Gib dein Passwort ein.",
+      "wrong_credentials": "E-Mail oder Passwort ist falsch.",
+      "password_too_short": "Verwende mindestens 8 Zeichen.",
+      "password_too_long": "Verwende höchstens 72 Zeichen.",
+      "password_weak": "Verwende Buchstaben und Zahlen.",
+      "same_password": "Wähle ein anderes Passwort als dein altes.",
+      "too_many_attempts": "Zu viele Versuche. Versuche es in ein paar Minuten noch einmal."
+    },
+    "passwordSubtitle": "Melde dich mit deiner E-Mail und deinem Passwort an.",
+    "registerSubtitle": "Wir schicken dir einen 6-stelligen Code, um deine E-Mail zu bestätigen. Danach wählst du ein Passwort.",
+    "passwordLabel": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "forgotTitle": "Passwort zurücksetzen",
+    "forgotSubtitle": "Wir schicken dir per E-Mail einen 6-stelligen Code. Danach wählst du ein neues Passwort.",
+    "recoveryCodeSentTo": "Falls {{target}} ein Konto hat, haben wir einen Code dorthin gesendet.",
+    "createPasswordTitle": "Passwort erstellen",
+    "createPasswordSubtitle": "Ab jetzt meldest du dich mit deiner E-Mail und diesem Passwort an.",
+    "newPasswordTitle": "Neues Passwort wählen",
+    "newPasswordSubtitle": "Du meldest dich dann mit deiner E-Mail und diesem neuen Passwort an.",
+    "passwordHint": "Mindestens 8 Zeichen, mit Buchstaben und Zahlen.",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
+    "savePassword": "Passwort speichern",
+    "backToSignIn": "Zurück zur Anmeldung"
   },
   "customer": {
     "homeTitle": "Mit einem Umzugsunternehmen buchen",

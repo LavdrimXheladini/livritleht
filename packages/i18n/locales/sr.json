@@ -45,8 +45,31 @@
       "invalid_code": "Kod ima 6 cifara.",
       "wrong_code": "Kod je pogrešan ili je istekao.",
       "choose_role": "Izaberite kako ćete koristiti MoversHub.",
-      "link_invalid": "Ovaj link za prijavu nije ispravan ili je istekao. Zatražite novi."
-    }
+      "link_invalid": "Ovaj link za prijavu nije ispravan ili je istekao. Zatražite novi.",
+      "password_required": "Unesite lozinku.",
+      "wrong_credentials": "Pogrešan email ili lozinka.",
+      "password_too_short": "Koristite najmanje 8 znakova.",
+      "password_too_long": "Koristite najviše 72 znaka.",
+      "password_weak": "Koristite slova i brojeve.",
+      "same_password": "Izaberite lozinku drugačiju od stare.",
+      "too_many_attempts": "Previše pokušaja. Pokušajte ponovo za nekoliko minuta."
+    },
+    "passwordSubtitle": "Prijavite se emailom i lozinkom.",
+    "registerSubtitle": "Poslaćemo vam kod od 6 cifara da potvrdite email. Zatim birate lozinku.",
+    "passwordLabel": "Lozinka",
+    "forgotPassword": "Zaboravili ste lozinku?",
+    "forgotTitle": "Resetujte lozinku",
+    "forgotSubtitle": "Poslaćemo vam emailom kod od 6 cifara. Zatim birate novu lozinku.",
+    "recoveryCodeSentTo": "Ako {{target}} ima nalog, poslali smo kod na tu adresu.",
+    "createPasswordTitle": "Napravite lozinku",
+    "createPasswordSubtitle": "Od sada se prijavljujete emailom i ovom lozinkom.",
+    "newPasswordTitle": "Izaberite novu lozinku",
+    "newPasswordSubtitle": "Prijavljivaćete se emailom i ovom novom lozinkom.",
+    "passwordHint": "Najmanje 8 znakova, sa slovima i brojevima.",
+    "showPassword": "Prikaži lozinku",
+    "hidePassword": "Sakrij lozinku",
+    "savePassword": "Sačuvaj lozinku",
+    "backToSignIn": "Nazad na prijavu"
   },
   "customer": {
     "homeTitle": "Rezerviši selidbu kod prevoznika",

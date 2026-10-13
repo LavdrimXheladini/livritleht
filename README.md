@@ -18,7 +18,7 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 | Area | Status |
 |---|---|
 | **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search (also within one city), real map and route, live "from" prices from movers' rate cards (test movers for now), mover section, FAQ, waitlist; live-moves dashboard demo; sign-in by email link |
-| **App** (`mobile/app`) | One Expo app for customers and movers, in the website's design: opens on sign in / create account ("I need a mover" / "I'm a mover", email + 6-digit code). Customers then see address search and live "from" prices; movers the dark "Partner" side: setup checklist and an example job request priced by the live quote. The role is saved once the code has proven the email; people can switch sides from the home screen (mover requests only after the setup is filled in and verified). The app remembers the side on the device and opens offline. Sign-in works only against a local Supabase until the cloud project has email (a domain + SMTP). Booking, onboarding and jobs not built yet |
+| **App** (`mobile/app`) | One Expo app for customers and movers, in the website's design: opens on sign in (email + password) / create account ("I need a mover" / "I'm a mover"; a 6-digit code confirms the email once, then a password; "Forgot password?" sends a code for a new one). Customers then see address search and live "from" prices; movers the dark "Partner" side: setup checklist and an example job request priced by the live quote. The role is saved once the code has proven the email; people can switch sides from the home screen (mover requests only after the setup is filled in and verified). The app remembers the side on the device and opens offline. Sign-in works only against a local Supabase until the cloud project has email (a domain + SMTP). Booking, onboarding and jobs not built yet |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
 | **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first; prices are shown exactly (to the cent; whole lek, denar and dinar) |
 | **Address search for the app** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — users' IP addresses never reach the geocoder; signed-in app users only |
@@ -109,7 +109,9 @@ SMTP) the app can sign in only against a local Supabase:
      port 54321 through the firewall).
 3. Run `pnpm functions:build`, and put `INCLUDE_TEST_MOVERS=true` in `supabase/functions/.env` (git-ignored) so
    the local `quote` function prices the test movers.
-4. Sign in with any email: the code arrives in Mailpit, http://127.0.0.1:54324.
+4. Create an account with any email: the code arrives in Mailpit, http://127.0.0.1:54324. Then choose a password
+   (8+ characters, letters and digits) and sign in with email + password from then on; "Forgot password?" sends
+   a code the same way.
 
 ## Checks and tests
 

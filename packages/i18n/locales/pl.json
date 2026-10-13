@@ -45,8 +45,31 @@
       "invalid_code": "Kod ma 6 cyfr.",
       "wrong_code": "Kod jest nieprawidłowy lub wygasł.",
       "choose_role": "Wybierz, jak chcesz korzystać z MoversHub.",
-      "link_invalid": "Ten link do logowania jest nieprawidłowy lub wygasł. Poproś o nowy."
-    }
+      "link_invalid": "Ten link do logowania jest nieprawidłowy lub wygasł. Poproś o nowy.",
+      "password_required": "Wpisz hasło.",
+      "wrong_credentials": "Nieprawidłowy e-mail lub hasło.",
+      "password_too_short": "Użyj co najmniej 8 znaków.",
+      "password_too_long": "Użyj najwyżej 72 znaków.",
+      "password_weak": "Użyj liter i cyfr.",
+      "same_password": "Wybierz hasło inne niż poprzednie.",
+      "too_many_attempts": "Zbyt wiele prób. Spróbuj ponownie za kilka minut."
+    },
+    "passwordSubtitle": "Zaloguj się adresem e-mail i hasłem.",
+    "registerSubtitle": "Wyślemy Ci 6-cyfrowy kod, aby potwierdzić adres e-mail. Potem ustawisz hasło.",
+    "passwordLabel": "Hasło",
+    "forgotPassword": "Nie pamiętasz hasła?",
+    "forgotTitle": "Zresetuj hasło",
+    "forgotSubtitle": "Wyślemy Ci e-mailem 6-cyfrowy kod. Potem ustawisz nowe hasło.",
+    "recoveryCodeSentTo": "Jeśli {{target}} ma konto, wysłaliśmy na ten adres kod.",
+    "createPasswordTitle": "Utwórz hasło",
+    "createPasswordSubtitle": "Od teraz logujesz się adresem e-mail i tym hasłem.",
+    "newPasswordTitle": "Ustaw nowe hasło",
+    "newPasswordSubtitle": "Będziesz logować się adresem e-mail i tym nowym hasłem.",
+    "passwordHint": "Co najmniej 8 znaków, litery i cyfry.",
+    "showPassword": "Pokaż hasło",
+    "hidePassword": "Ukryj hasło",
+    "savePassword": "Zapisz hasło",
+    "backToSignIn": "Wróć do logowania"
   },
   "customer": {
     "homeTitle": "Zarezerwuj przewoźnika",

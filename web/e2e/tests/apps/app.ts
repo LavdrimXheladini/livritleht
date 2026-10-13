@@ -39,11 +39,15 @@ export const STAND_IN_ID = '00000000-0000-4000-8000-0000000e2e01';
 
 type Role = 'customer' | 'mover';
 
+/** The password the stand-in account accepts on "Sign in" (once it has one). */
+export const STAND_IN_PASSWORD = 'movers2026';
+
 /**
  * A session the app accepts without a server: valid for a year, so the client never refreshes it —
- * or `expired`, as on a phone opened after more than an hour.
+ * or `expired`, as on a phone opened after more than an hour. `passwordSet`: the account has a
+ * password (saved in the app); without one the app asks for it first.
  */
-function standInSession(email: string, { expired = false } = {}) {
+function standInSession(email: string, { expired = false, passwordSet = true } = {}) {
   const id = STAND_IN_ID;
   const expiresAt = Math.floor(Date.now() / 1000) + (expired ? -2 * 3600 : 365 * 24 * 3600);
   const part = (o: object) => Buffer.from(JSON.stringify(o)).toString('base64url');
@@ -53,33 +57,98 @@ function standInSession(email: string, { expired = false } = {}) {
     expires_in: expiresAt - Math.floor(Date.now() / 1000),
     expires_at: expiresAt,
     refresh_token: 'e2e',
-    user: { id, aud: 'authenticated', role: 'authenticated', email, app_metadata: {}, user_metadata: {} },
+    user: standInUser(email, passwordSet),
   };
 }
 
+function standInUser(email: string, passwordSet: boolean) {
+  return {
+    id: STAND_IN_ID,
+    aud: 'authenticated',
+    role: 'authenticated',
+    email,
+    app_metadata: {},
+    user_metadata: passwordSet ? { password_set: true } : {},
+  };
+}
+
+/** What the app asked the stand-in server for. */
+export type StandInCalls = {
+  /** Roles sent to `choose_role`. */
+  chosen: unknown[];
+  /** Codes checked: the kind ("email" to confirm an account, "recovery" after "Forgot password?"). */
+  verified: { type: string; email: string }[];
+  /** Addresses sent to "Forgot password?". */
+  recovered: string[];
+  /** Sign-ins with a password. */
+  signIns: { email: string; password: string }[];
+  /** Account updates (a new password and the metadata that says it has one). */
+  updates: { password?: string; data?: Record<string, unknown> }[];
+};
+
 /**
- * The account behind the stand-in session, without a server: the code check (/verify) signs in,
- * the profile answers with `role` (null = not chosen yet), `choose_role` sets it — first choice and
- * switching sides (the first `failChooseRole` calls answer 500) — and sign out works. Returns the
- * roles the app asked `choose_role` for.
+ * The account behind the stand-in session, without a server, answering like Supabase Auth:
+ * - a code (/verify) signs in; `hasPassword` false (a new account) means the app asks for one;
+ * - "Sign in" accepts `email` with STAND_IN_PASSWORD once the account has a password, otherwise
+ *   it answers `invalid_credentials` — the same for a wrong password and an unknown address;
+ * - "Forgot password?" (/recover) always answers 200;
+ * - a new password (PUT /user) is saved, unless it is the current one (`same_password`);
+ * - the profile answers with `role` (null = not chosen yet) and `choose_role` sets it (the first
+ *   `failChooseRole` calls answer 500); sign out works.
  */
 export async function fakeAccount(
   page: Page,
-  { role, email = 'new@example.com', failChooseRole = 0 }: { role: Role | null; email?: string; failChooseRole?: number },
-) {
-  const state = { role, failuresLeft: failChooseRole };
-  const chosen: unknown[] = [];
+  {
+    role,
+    email = 'new@example.com',
+    failChooseRole = 0,
+    hasPassword = role !== null,
+  }: { role: Role | null; email?: string; failChooseRole?: number; hasPassword?: boolean },
+): Promise<StandInCalls> {
+  const state = { role, failuresLeft: failChooseRole, password: hasPassword ? STAND_IN_PASSWORD : null };
+  const calls: StandInCalls = { chosen: [], verified: [], recovered: [], signIns: [], updates: [] };
   const json = (route: Route, body: unknown, status = 200) =>
     route.request().method() === 'OPTIONS' || status === 204
       ? route.fulfill({ status: 204, headers: cors })
       : route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
-  await page.route('**/auth/v1/verify*', (route) => json(route, standInSession(email)));
+  const authError = (route: Route, status: number, code: string) =>
+    json(route, { code: status, error_code: code, msg: code }, status);
+  const body = (route: Route) => (route.request().method() === 'OPTIONS' ? null : (route.request().postDataJSON() as Record<string, unknown>));
+
+  await page.route('**/auth/v1/verify*', (route) => {
+    const sent = body(route);
+    if (sent) calls.verified.push({ type: String(sent.type), email: String(sent.email) });
+    return json(route, standInSession(email, { passwordSet: state.password !== null }));
+  });
+  await page.route(/\/auth\/v1\/token\?grant_type=password/, (route) => {
+    const sent = body(route);
+    if (!sent) return json(route, null);
+    calls.signIns.push({ email: String(sent.email), password: String(sent.password) });
+    return sent.email === email && state.password !== null && sent.password === state.password
+      ? json(route, standInSession(email))
+      : authError(route, 400, 'invalid_credentials');
+  });
+  await page.route('**/auth/v1/recover*', (route) => {
+    const sent = body(route);
+    if (sent) calls.recovered.push(String(sent.email));
+    return json(route, {});
+  });
+  await page.route('**/auth/v1/user*', (route) => {
+    const sent = body(route);
+    if (route.request().method() === 'PUT' && sent) {
+      const update = { password: sent.password as string | undefined, data: sent.data as Record<string, unknown> | undefined };
+      calls.updates.push(update);
+      if (update.password !== undefined && update.password === state.password) return authError(route, 422, 'same_password');
+      if (update.password !== undefined) state.password = update.password;
+    }
+    return json(route, standInUser(email, state.password !== null));
+  });
   await page.route('**/auth/v1/logout*', (route) => json(route, {}, 204));
   await page.route('**/rest/v1/profiles*', (route) => json(route, { role: state.role }));
   await page.route('**/rest/v1/rpc/choose_role*', (route) => {
     if (route.request().method() === 'OPTIONS') return json(route, null);
     const { p_role } = route.request().postDataJSON() as { p_role: Role };
-    chosen.push(p_role);
+    calls.chosen.push(p_role);
     if (state.failuresLeft > 0) {
       state.failuresLeft--;
       return json(route, { code: 'XX000', message: 'stand-in failure' }, 500);
@@ -87,19 +156,20 @@ export async function fakeAccount(
     state.role = p_role;
     return json(route, state.role);
   });
-  return chosen;
+  return calls;
 }
 
 /**
  * Opens the app already signed in as a customer or a mover (the session is in storage before it
- * starts). Returns the roles the app asked `choose_role` for.
+ * starts); `hasPassword` false: an older account that never set a password. Returns what the app
+ * asked the stand-in server for.
  */
-export async function signInAs(page: Page, role: Role, { failChooseRole = 0 } = {}) {
+export async function signInAs(page: Page, role: Role, { failChooseRole = 0, hasPassword = true } = {}) {
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), {
     key: SESSION_KEY,
-    value: JSON.stringify(standInSession(`${role}@example.com`)),
+    value: JSON.stringify(standInSession(`${role}@example.com`, { passwordSet: hasPassword })),
   });
-  return fakeAccount(page, { role, email: `${role}@example.com`, failChooseRole });
+  return fakeAccount(page, { role, email: `${role}@example.com`, failChooseRole, hasPassword });
 }
 
 /**

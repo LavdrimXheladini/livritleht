@@ -45,8 +45,31 @@
       "invalid_code": "The code has 6 digits.",
       "wrong_code": "That code is wrong or has expired.",
       "choose_role": "Choose how you'll use MoversHub.",
-      "link_invalid": "That sign-in link is invalid or has expired. Request a new one."
-    }
+      "link_invalid": "That sign-in link is invalid or has expired. Request a new one.",
+      "password_required": "Enter your password.",
+      "wrong_credentials": "Wrong email or password.",
+      "password_too_short": "Use at least 8 characters.",
+      "password_too_long": "Use at most 72 characters.",
+      "password_weak": "Use letters and numbers.",
+      "same_password": "Choose a password different from your old one.",
+      "too_many_attempts": "Too many attempts. Try again in a few minutes."
+    },
+    "passwordSubtitle": "Sign in with your email and password.",
+    "registerSubtitle": "We'll send you a 6-digit code to confirm your email. Then you choose a password.",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotSubtitle": "We'll email you a 6-digit code. Then you choose a new password.",
+    "recoveryCodeSentTo": "If {{target}} has an account, we sent a code to it.",
+    "createPasswordTitle": "Create your password",
+    "createPasswordSubtitle": "From now on you sign in with your email and this password.",
+    "newPasswordTitle": "Choose a new password",
+    "newPasswordSubtitle": "You'll sign in with your email and this new password.",
+    "passwordHint": "At least 8 characters, with letters and numbers.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "savePassword": "Save password",
+    "backToSignIn": "Back to sign in"
   },
   "customer": {
     "homeTitle": "Book with a mover",
