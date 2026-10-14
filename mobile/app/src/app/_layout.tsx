@@ -69,6 +69,8 @@ function RootStack() {
       {/* Signed in: the customer or the mover side, by the role chosen after the first sign-in (switchable). */}
       <Stack.Protected guard={session !== null}>
         <Stack.Screen name="index" />
+        {/* The mover's setup, step by step. */}
+        <Stack.Screen name="mover/company" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
       </Stack.Protected>
     </Stack>
   );

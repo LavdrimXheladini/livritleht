@@ -11,6 +11,8 @@ import {
   appUrl,
   cors,
   fakeAccount,
+  fakeCompanyChecks,
+  fakeMoverCompany,
   fitScreenToPage,
   noNetwork,
   offlineWithSavedSide,
@@ -527,6 +529,13 @@ test.describe('signed in as a customer', () => {
   });
 });
 
+test("a customer who opens the mover's company form is sent home", async ({ page }) => {
+  await signInAs(page, 'customer');
+  await page.goto(`${url}mover/company`);
+  await expect(page.getByTestId('home-sign-out')).toBeVisible();
+  await expect(page.getByText(en.mover.company.title, { exact: true })).toHaveCount(0);
+});
+
 test.describe('switching sides', () => {
   test('a customer switches to the mover side, which starts with the setup, and back', async ({ page }) => {
     const { chosen } = await signInAs(page, 'customer');
@@ -621,9 +630,30 @@ test.describe('without network', () => {
   });
 });
 
+const prishtinaDetails = { street: 'Rr. Agim Ramadani', houseNumber: '12', postcode: '10000', city: 'Prishtinë', countryCode: 'XK', lat: 42.6629, lon: 21.1655 };
+
+/** A company already saved by the form (Kosovo, waiting for verification), with `changes`. */
+const savedCompany = (changes: Record<string, unknown> = {}) => ({
+  id: '00000000-0000-4000-8000-0000000c0002',
+  is_business: true,
+  legal_name: 'Lëvizje Shpk',
+  registration_no: '810123456',
+  tax_id: '601234567',
+  country: 'XK',
+  tax_residency_country: 'XK',
+  address: 'Rr. Agim Ramadani 12, 10000 Prishtinë',
+  address_details: prishtinaDetails,
+  contact_phone: '+38344123456',
+  contact_email: 'info@levizje.example',
+  verification_status: 'pending',
+  self_certification_at: '2026-10-01T09:00:00.000Z',
+  ...changes,
+});
+
 test.describe('signed in as a mover', () => {
   test.beforeEach(async ({ page }) => {
     await signInAs(page, 'mover');
+    await fakeMoverCompany(page); // no company saved yet
   });
 
   test('home: setup checklist and an example request with the payout', async ({ page }) => {
@@ -642,6 +672,175 @@ test.describe('signed in as a mover', () => {
     await expect(page.getByText(en.landing.movers.phone.acceptedTitle)).toBeVisible();
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('mover-example-accepted.png');
+  });
+
+  test('company: the setup opens "Your company"; a first save sends only what movers may write', async ({ page }) => {
+    const writes = await fakeMoverCompany(page);
+    const checks = await fakeCompanyChecks(page);
+    const c = en.mover.company;
+    await page.goto(url);
+    await expect(page.getByTestId('step-company')).toContainText(en.mover.stepStatus.todo);
+    await page.getByTestId('step-company').click();
+    await expect(page.getByRole('heading', { name: c.title })).toBeVisible();
+    await expect(page.getByTestId('company-email')).toHaveValue('mover@example.com');
+
+    // Nothing filled in: every missing field says so, nothing is sent. (Whether a registration number
+    // is needed depends on the country.)
+    await page.getByTestId('company-save').click();
+    for (const text of [
+      c.errors.legal_name_required,
+      c.errors.tax_id_required,
+      c.errors.address_required,
+      c.errors.self_certification_required,
+      en.auth.errors.invalid_phone,
+    ])
+      await expect(app(page).getByText(text, { exact: true })).toBeVisible();
+    await expect(app(page).getByText(c.errors.country_required, { exact: true })).toHaveCount(2);
+    expect(writes).toEqual([]);
+
+    // The country first: the number fields then say what its numbers look like.
+    await page.getByRole('radiogroup', { name: c.country }).getByRole('radio', { name: en.common.countries.XK }).click();
+    await expect(page.getByText('Numri fiskal / NUI — e.g. 601234567')).toBeVisible();
+    // Taxed where registered, unless changed.
+    await expect(
+      page.getByRole('radiogroup', { name: c.taxResidency }).getByRole('radio', { name: en.common.countries.XK }),
+    ).toHaveAttribute('aria-checked', 'true');
+    await page.getByTestId('company-legal-name').fill('Lëvizje Shpk');
+    await page.getByTestId('company-registration').fill('810123456');
+    await page.getByTestId('company-tax-id').fill('601 234 567');
+
+    // The address: found on the map, then confirmed.
+    await page.getByTestId('company-address-search').fill('Agim Ramadani');
+    await page.getByTestId('company-address-suggestion').first().click();
+    await expect(page.getByTestId('company-address-text')).toHaveText('Rr. Agim Ramadani 12, 10000 Prishtinë, Kosovo');
+    await expect(page.getByTestId('company-address-house-number')).toHaveValue('12');
+    await page.getByTestId('company-address-confirm').click();
+    await expect(page.getByTestId('company-address-confirmed')).toBeVisible();
+
+    // The phone: a code by WhatsApp.
+    await page.getByTestId('company-phone').fill('+383 44 123 456');
+    await page.getByRole('radio', { name: c.channelWhatsapp }).click();
+    await page.getByTestId('company-phone-send').click();
+    await expect(page.getByText(c.codeSent.replace('{{phone}}', '+38344123456'))).toBeVisible();
+    await page.getByTestId('company-phone-code').fill('123456');
+    await page.getByTestId('company-phone-confirm').click();
+    await expect(page.getByTestId('company-phone-confirmed')).toBeVisible();
+    expect(checks.phone).toEqual([
+      { action: 'send', phone: '+38344123456', channel: 'whatsapp', locale: 'en' },
+      { action: 'check', phone: '+38344123456', code: '123456' },
+    ]);
+
+    await page.getByTestId('company-self-certification').click();
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-company.png');
+    await page.getByTestId('company-save').click();
+
+    // Back on the checklist, saved (not verified: MoversHub checks it with the documents).
+    await expect(page.getByTestId('step-company')).toContainText(en.mover.stepStatus.saved);
+    expect(checks.registry).toEqual([{ country: 'XK', isBusiness: true, taxId: '601234567', legalName: 'Lëvizje Shpk' }]);
+    expect(writes).toHaveLength(1);
+    expect(writes[0]?.method).toBe('POST');
+    const { self_certification_at, ...sent } = writes[0]?.body ?? {};
+    expect(self_certification_at).toEqual(expect.any(String));
+    expect(sent).toEqual({
+      owner_id: STAND_IN_ID,
+      is_business: true,
+      legal_name: 'Lëvizje Shpk',
+      registration_no: '810123456',
+      tax_id: '601234567',
+      country: 'XK',
+      tax_residency_country: 'XK',
+      address: 'Rr. Agim Ramadani 12, 10000 Prishtinë',
+      address_details: { street: 'Rr. Agim Ramadani', houseNumber: '12', postcode: '10000', city: 'Prishtinë', countryCode: 'XK', lat: 42.6629, lon: 21.1655 },
+      address_point: 'SRID=4326;POINT(21.1655 42.6629)',
+      contact_phone: '+38344123456',
+      contact_email: 'mover@example.com',
+    });
+  });
+
+  test('company: a wrong phone code says so; a number not confirmed is not saved', async ({ page }) => {
+    const writes = await fakeMoverCompany(page, { initial: savedCompany({ contact_phone: null }) });
+    await fakeCompanyChecks(page);
+    await page.goto(url);
+    await page.getByTestId('step-company').click();
+    await page.getByTestId('company-phone').fill('+383 49 765 432');
+    await page.getByTestId('company-phone-send').click();
+    await page.getByTestId('company-phone-code').fill('000000');
+    await page.getByTestId('company-phone-confirm').click();
+    await expect(app(page).getByText(en.mover.company.errors.phone_code_wrong, { exact: true })).toBeVisible();
+    await page.getByTestId('company-save').click();
+    await expect(app(page).getByText(en.mover.company.errors.phone_not_confirmed, { exact: true })).toBeVisible();
+    expect(writes).toEqual([]);
+  });
+
+  test('company: a tax number the register gives to another company is refused, with that name', async ({ page }) => {
+    const writes = await fakeMoverCompany(page, {
+      initial: savedCompany({ country: 'PL', tax_residency_country: 'PL', registration_no: '0000028860', tax_id: '5260250995', address_details: { ...prishtinaDetails, countryCode: 'PL' } }),
+    });
+    const checks = await fakeCompanyChecks(page, {
+      confirmedPhones: ['+38344123456'],
+      registry: { result: 'mismatch', register: 'pl-white-list', registeredName: 'ORLEN SPÓŁKA AKCYJNA', authoritative: false },
+    });
+    await page.goto(url);
+    await page.getByTestId('step-company').click();
+    await expect(page.getByText('NIP — e.g. 5260250995')).toBeVisible();
+    // A wrong check digit never reaches the register.
+    await page.getByTestId('company-tax-id').fill('7740001455');
+    await page.getByTestId('company-save').click();
+    await expect(app(page).getByText(en.mover.company.errors.tax_id_format, { exact: true })).toBeVisible();
+    expect(checks.registry).toEqual([]);
+
+    await page.getByTestId('company-tax-id').fill('PL 774-000-14-54');
+    await page.getByTestId('company-save').click();
+    await expect(
+      app(page).getByText(en.mover.company.errors.tax_id_mismatch.replace('{{name}}', 'ORLEN SPÓŁKA AKCYJNA'), { exact: true }),
+    ).toBeVisible();
+    expect(checks.registry).toEqual([{ country: 'PL', isBusiness: true, taxId: '7740001454', legalName: 'Lëvizje Shpk' }]);
+    expect(writes).toEqual([]);
+  });
+
+  test('company: a verified company says changes go back for a check; a private person has no registration number', async ({ page }) => {
+    const writes = await fakeMoverCompany(page, { initial: savedCompany({ verification_status: 'verified' }) });
+    await fakeCompanyChecks(page, { confirmedPhones: ['+38344123456'] });
+    await page.goto(url);
+    await expect(page.getByTestId('step-company')).toContainText(en.mover.stepStatus.verified);
+    await page.getByTestId('step-company').click();
+    await expect(page.getByTestId('company-reverify')).toHaveText(en.mover.company.reverifyNotice);
+    await expect(page.getByTestId('company-legal-name')).toHaveValue('Lëvizje Shpk');
+    await expect(page.getByTestId('company-address-confirmed')).toBeVisible();
+    await expect(page.getByTestId('company-phone-confirmed')).toBeVisible();
+    await expect(page.getByTestId('company-self-certification')).toHaveAttribute('aria-checked', 'true');
+
+    await page.getByRole('radio', { name: en.mover.company.kindIndividual }).click();
+    await expect(page.getByTestId('company-registration')).toHaveCount(0);
+    await expect(page.getByText(en.mover.company.legalNameIndividual, { exact: true })).toBeVisible();
+    await page.getByTestId('company-legal-name').fill('Arben Krasniqi');
+    await page.getByTestId('company-tax-id').fill('1234567890');
+    await page.getByTestId('company-save').click();
+
+    await expect(page.getByTestId('step-company')).toContainText(en.mover.stepStatus.saved);
+    expect(writes.map((w) => w.method)).toEqual(['PATCH']);
+    expect(writes[0]?.body).toMatchObject({ is_business: false, registration_no: null, legal_name: 'Arben Krasniqi', tax_id: '1234567890' });
+    expect(writes[0]?.body).not.toHaveProperty('verification_status');
+    expect(writes[0]?.body).not.toHaveProperty('owner_id');
+  });
+
+  test('company: when saving fails, the form stays with what was typed and says so', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany({ tax_residency_country: 'DE' }), failWrites: true });
+    await fakeCompanyChecks(page, { confirmedPhones: ['+38344123456'] });
+    await page.goto(url);
+    await page.getByTestId('step-company').click();
+    // Taxed elsewhere: changing the country of registration leaves the tax country as chosen.
+    await page.getByRole('radiogroup', { name: en.mover.company.country }).getByRole('radio', { name: en.common.countries.AL }).click();
+    await expect(
+      page.getByRole('radiogroup', { name: en.mover.company.taxResidency }).getByRole('radio', { name: en.common.countries.DE }),
+    ).toHaveAttribute('aria-checked', 'true');
+    // Albania's NIPT is the registration number too; the address must now be in Albania.
+    await expect(page.getByTestId('company-registration-same')).toBeVisible();
+    await page.getByRole('radiogroup', { name: en.mover.company.country }).getByRole('radio', { name: en.common.countries.XK }).click();
+    await page.getByTestId('company-save').click();
+    await expect(page.getByTestId('company-error')).toHaveText(en.mover.company.errorSave);
+    await expect(page.getByTestId('company-legal-name')).toHaveValue('Lëvizje Shpk');
   });
 
   test.describe('in Albanian', () => {

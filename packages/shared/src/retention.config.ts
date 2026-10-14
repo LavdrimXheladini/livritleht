@@ -23,6 +23,8 @@ export const RETENTION_CATEGORIES = [
   'rate_limits',
   'unconfirmed_accounts',
   'auth_audit_log',
+  'phone_verifications',
+  'company_registry_checks',
 ] as const;
 export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
@@ -50,4 +52,10 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   unconfirmed_accounts: { keepDays: 7, from: 'last_code_sent', holdIfDisputeOpen: false },
   // Supabase Auth's own audit log (auth.audit_log_entries: sign-ins, code requests, with the email).
   auth_audit_log: { keepDays: null, from: 'created', holdIfDisputeOpen: true },
+  // Phone numbers a mover confirmed with a code (public.phone_verifications): needed while the
+  // account exists (the company's contact phone); deleted with the account (on delete cascade).
+  phone_verifications: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: false },
+  // Answers of the official company registers (public.company_registry_checks): evidence for the
+  // mover's verification (COMPLIANCE §5); kept like the mover's documents.
+  company_registry_checks: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
 };

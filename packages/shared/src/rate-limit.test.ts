@@ -17,8 +17,14 @@ declare const btoa: (data: string) => string;
 const headers = (values: Record<string, string>) => ({ get: (name: string) => values[name.toLowerCase()] ?? null });
 
 describe('rate limits', () => {
-  it('are the agreed budgets: 30 quotes per 10 minutes, 60 address searches per minute', () => {
-    expect(RATE_LIMITS).toEqual({ quote: { limit: 30, windowSeconds: 600 }, addressSearch: { limit: 60, windowSeconds: 60 } });
+  it('are the agreed budgets: 30 quotes per 10 minutes, 60 address searches per minute, few phone codes', () => {
+    expect(RATE_LIMITS).toEqual({
+      quote: { limit: 30, windowSeconds: 600 },
+      addressSearch: { limit: 60, windowSeconds: 60 },
+      phoneCodeSend: { limit: 5, windowSeconds: 3600 },
+      phoneCodeCheck: { limit: 10, windowSeconds: 600 },
+      companyRegistry: { limit: 20, windowSeconds: 600 },
+    });
   });
 });
 

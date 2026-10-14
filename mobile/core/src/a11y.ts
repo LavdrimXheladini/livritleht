@@ -8,10 +8,14 @@ import { AccessibilityInfo, Platform } from 'react-native';
  */
 export function useAnnouncement(message: string | null | undefined, repeatKey?: unknown) {
   useEffect(() => {
-    if (!message) return;
-    if (Platform.OS === 'web') announceOnWeb(message);
-    else AccessibilityInfo.announceForAccessibility(message);
+    if (message) announce(message);
   }, [message, repeatKey]);
+}
+
+/** Reads `message` out now — e.g. "Saved" just before the screen closes (a hook would unmount with it). */
+export function announce(message: string) {
+  if (Platform.OS === 'web') announceOnWeb(message);
+  else AccessibilityInfo.announceForAccessibility(message);
 }
 
 /*

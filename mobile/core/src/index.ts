@@ -1,4 +1,4 @@
-export { useAnnouncement } from './a11y';
+export { announce, useAnnouncement } from './a11y';
 export { classFrom, fetchQuote, searchPlaces, useQuote, type ClassFrom } from './api';
 export { AuthProvider, useAuth } from './auth-provider';
 export { cx } from './components/cx';
@@ -6,6 +6,7 @@ export * from './components/icons';
 export {
   Button,
   Card,
+  Checkbox,
   ChipGroup,
   CrewPills,
   DarkPanel,

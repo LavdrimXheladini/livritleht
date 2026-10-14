@@ -2,8 +2,17 @@
 // offline test fixtures) and the Photon address-search formatter. Pure, no I/O.
 import type { Place } from './schemas/geo';
 
-/** An address-search suggestion: a Place plus a stable id for lists. */
-export type GeoSuggestion = Place & { id: string };
+/**
+ * An address-search suggestion: a Place plus a stable id for lists, and the address parts the map
+ * data has (a mover's company address is stored by parts — street, number, postcode, city).
+ */
+export type GeoSuggestion = Place & {
+  id: string;
+  street?: string;
+  houseNumber?: string;
+  postcode?: string;
+  city?: string;
+};
 
 /** Demo city centres (corridor pills, fixture provider). Names are translated via i18n `places.<id>`. */
 export const DEMO_CITIES = [
@@ -109,6 +118,10 @@ export function formatPhotonFeature(f: PhotonFeature): GeoSuggestion | null {
     lat,
     lon,
     countryCode,
+    ...(p.street ? { street: p.street } : {}),
+    ...(p.housenumber ? { houseNumber: p.housenumber } : {}),
+    ...(p.postcode ? { postcode: p.postcode } : {}),
+    ...(p.city ? { city: p.city } : {}),
   };
 }
 

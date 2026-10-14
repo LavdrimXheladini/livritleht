@@ -18,7 +18,7 @@ in [`COMPLIANCE.md`](COMPLIANCE.md) and are product requirements.
 | Area | Status |
 |---|---|
 | **Website** (`web/app`) | Landing page in 5 languages (en, sq, pl, sr, de) with address search (also within one city), real map and route, live "from" prices from movers' rate cards (test movers for now), mover section, FAQ, waitlist; live-moves dashboard demo; sign-in by email link |
-| **App** (`mobile/app`) | One Expo app for customers and movers, in the website's design: opens on sign in (email + password) / create account ("I need a mover" / "I'm a mover"; a 6-digit code confirms the email once, then a password; "Forgot password?" sends a code for a new one). Customers then see address search and live "from" prices; movers the dark "Partner" side: setup checklist and an example job request priced by the live quote. The role is saved once the code has proven the email; people can switch sides from the home screen (mover requests only after the setup is filled in and verified). The app remembers the side on the device and opens offline. Language: the phone's, or chosen with "EN ▾" in the top bar (kept on the device and saved with the account). Creating an account and resetting a password (both need an emailed code) work only against a local Supabase until the cloud project has email (a domain + SMTP). Booking, onboarding and jobs not built yet |
+| **App** (`mobile/app`) | One Expo app for customers and movers, in the website's design: opens on sign in (email + password) / create account ("I need a mover" / "I'm a mover"; a 6-digit code confirms the email once, then a password; "Forgot password?" sends a code for a new one). Customers then see address search and live "from" prices; movers the dark "Partner" side: setup checklist — its first step, **Your company** (business or private person; registration and tax numbers checked per country and in the official registers where they have an API; the address found on the map and confirmed; the phone confirmed with a code by SMS or WhatsApp; self-certification), is built — and an example job request priced by the live quote. The role is saved once the code has proven the email; people can switch sides from the home screen (mover requests only after the setup is filled in and verified). The app remembers the side on the device and opens offline. Language: the phone's, or chosen with "EN ▾" in the top bar (kept on the device and saved with the account). Creating an account and resetting a password (both need an emailed code) work only against a local Supabase until the cloud project has email (a domain + SMTP). Booking, onboarding and jobs not built yet |
 | **Database** | Supabase (cloud, Ireland): `profiles`, `waitlist`, mover companies, documents, vehicles, rate cards and service areas (+ clearly marked test movers), all with row-level security |
 | **Pricing** (`packages/pricing`, `supabase/functions/quote`) | Pricing engine + the live `quote` server function: real offers per vehicle class from each mover's own rate card (test movers for now), itemised, cheapest first; prices are shown exactly (to the cent; whole lek, denar and dinar) |
 | **Address search for the app** (`supabase/functions/places`) | Photon (OpenStreetMap) on the server, like the website's own search — users' IP addresses never reach the geocoder; signed-in app users only |
@@ -206,6 +206,13 @@ hosted computer version's CORS check.
 ```bash
 pnpm functions:deploy   # copies the shared pricing code into supabase/functions, then deploys (no Docker)
 ```
+
+`phone-verification` sends and checks a mover's phone code with Twilio Verify — project secrets `TWILIO_ACCOUNT_SID`,
+`TWILIO_AUTH_TOKEN`, `TWILIO_VERIFY_SERVICE_SID` (a Verify service with SMS and WhatsApp). Without them it answers `503`, except for
+the numbers in `PHONE_TEST_NUMBERS` (`+38344000001=123456,…`): those take that fixed code and get no message — for local work
+(`supabase/functions/.env`) and testing; never list a number someone could own, and remove it before launch.
+`company-registry` asks VIES, the Polish VAT white list and the Swiss UID register about a mover's tax number (no keys needed).
+Both answer signed-in users only and are limited per account (`RATE_LIMITS`).
 
 The `quote` function quotes test movers only while the project secret `INCLUDE_TEST_MOVERS` is `true`
 (`supabase secrets set INCLUDE_TEST_MOVERS=false` before launch, and delete the test movers).

@@ -54,6 +54,9 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
     void settlePassword();
     queryClient.removeQueries({ queryKey: ['profile'] });
     queryClient.removeQueries({ queryKey: ['saved-role'] });
+    // The mover's company details (personal data) leave the device's memory too.
+    queryClient.removeQueries({ queryKey: ['mover-company'] });
+    queryClient.removeQueries({ queryKey: ['confirmed-phones'] });
   }, [queryClient]);
 
   useEffect(() => {

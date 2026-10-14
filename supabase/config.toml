@@ -418,6 +418,14 @@ verify_jwt = false
 [functions.places]
 verify_jwt = false
 
+# A mover's phone code (Twilio Verify, or the PHONE_TEST_NUMBERS) and the official register look-up for
+# their tax number. Signed-in users only, checked in the functions (like `places`).
+[functions.phone-verification]
+verify_jwt = false
+
+[functions.company-registry]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

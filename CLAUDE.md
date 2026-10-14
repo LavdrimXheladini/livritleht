@@ -58,7 +58,7 @@ movershub/
 │  └─ i18n/            # Translation files
 ├─ supabase/
 │  ├─ migrations/      # SQL migrations (only way to change schema)
-│  ├─ functions/       # Edge functions: quote, book, job-transition, stripe-webhook, tracking-token
+│  ├─ functions/       # Edge functions: quote, places, phone-verification, company-registry (later: book, job-transition, stripe-webhook, tracking-token)
 │  ├─ seed.sql         # Test data: movers, vehicles, rate cards, customers
 │  └─ tests/           # pgTAP tests for RLS and DB functions
 ├─ scripts/            # dev-prep.mjs: regenerates theme.css + clears stale bundler caches before dev/build
@@ -72,7 +72,9 @@ movershub/
 ## 3. Core data model (Postgres)
 
 - `profiles` — id (auth user), role (`customer` | `mover` | `admin`; NULL until the user chooses it after the first sign-in via `choose_role()`, which also switches between customer and mover later — never from sign-up metadata; admin only by the service role and can't be switched away). The role only picks the app's side: a mover gets job requests only once their company, documents, vans, rates and payouts are filled in and verified. Name, phone, locale
-- `mover_companies` — legal_name, registration_no, tax_id, tax_residency_country (DAC7), address, country, is_business, verification_status, stripe_account_id, stripe_onboarding_complete, self_certification_at
+- `mover_companies` — legal_name, registration_no, tax_id, tax_residency_country (DAC7), address, country, is_business, verification_status, stripe_account_id, stripe_onboarding_complete, self_certification_at. One per mover (`owner_id` unique), written by the app's "Your company" form (`moverCompanyFormSchema` in packages/shared). Movers never set verification or Stripe columns; the server dates `self_certification_at` once; a change to name, numbers, countries or is_business sends a verified company back to `pending`. Numbers are checked per country (`packages/shared/src/company-ids.ts`) and in the official registers (`company-registry` function); `address` comes with `address_point` + `address_details` from the map search (Postgres refuses it otherwise); `contact_phone` must be in `phone_verifications`
+- `phone_verifications` — user_id, phone, channel (`sms` | `whatsapp` | `test`), verified_at. Written only by the `phone-verification` function (Twilio Verify, or `PHONE_TEST_NUMBERS`); the owner reads their own
+- `company_registry_checks` — user_id, country, tax_id, register (`vies` | `pl-white-list` | `ch-uid`), result (`match` | `mismatch` | `valid` | `not_found` | `unavailable`), typed_name, registered_name, registered_address, checked_at. Written only by the `company-registry` function; evidence for the admin's verification
 - `mover_documents` — company_id, type (`id`, `registration`, `insurance`, `cmr`, `licence`), file_path (private bucket), expires_at, verified_at
 - `vehicles` — company_id, class (`SMALL` | `VAN` | `LARGE_VAN` | `BOX` | `TRUCK`), plate, max_weight_kg, volume_m3, has_tail_lift, tachograph (bool), active, verified_at. **Vehicle verification:** `verified_at` is set only by the service role / admins (not in movers' column grants); new vehicles start unverified, and a change to class, plate, max_weight_kg or tachograph clears it unless the same update records a new check. Unverified vehicles are never quoted. The class must fit the weight: `BOX` ≤ 3500 kg, `TRUCK` > 3500 kg (or unknown)
 - `rate_cards` — vehicle_id, currency, base_fee, per_km, per_labor_minute_1_helper, per_labor_minute_2_helpers, per_labor_minute_3_helpers, min_price, floor_without_lift_fee, heavy_item_fee, assembly_per_item, long_distance_threshold_km, long_distance_per_km, confirmed_by_mover_at

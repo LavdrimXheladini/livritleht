@@ -164,6 +164,100 @@ export async function fakeAccount(
   return calls;
 }
 
+/** What the stand-in database recorded for `mover_companies`: each write, as the app sent it. */
+export type CompanyWrites = { method: 'POST' | 'PATCH'; body: Record<string, unknown> }[];
+
+/**
+ * The signed-in mover's own company (rest/v1/mover_companies), answering like PostgREST and the
+ * database's rules: a new company waits for verification, the self-certification gets the server's
+ * time once, and a change to the legal identity sends a verified company back to verification.
+ * `initial`: the saved row (null = none yet); `failWrites`: saving answers 500.
+ */
+export async function fakeMoverCompany(
+  page: Page,
+  { initial = null, failWrites = false }: { initial?: Record<string, unknown> | null; failWrites?: boolean } = {},
+) {
+  let row = initial;
+  const writes: CompanyWrites = [];
+  await page.route('**/rest/v1/mover_companies*', async (route) => {
+    const request = route.request();
+    const method = request.method();
+    const reply = (body: unknown, status = 200) =>
+      route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+    if (method === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+    if (method === 'GET') return reply(row ? [row] : []);
+    const body = request.postDataJSON() as Record<string, unknown>;
+    writes.push({ method: method as 'POST' | 'PATCH', body });
+    if (failWrites) return reply({ code: 'XX000', message: 'stand-in failure' }, 500);
+    const identity = ['legal_name', 'registration_no', 'tax_id', 'country', 'tax_residency_country', 'is_business'];
+    const identityChanged = row !== null && identity.some((k) => k in body && body[k] !== row?.[k]);
+    row = {
+      id: '00000000-0000-4000-8000-0000000c0001',
+      verification_status: 'pending',
+      ...row,
+      ...body,
+      self_certification_at: row?.self_certification_at ?? (body.self_certification_at ? '2026-10-14T09:00:00.000Z' : null),
+      ...(identityChanged ? { verification_status: 'pending' } : {}),
+    };
+    return reply(row, method === 'POST' ? 201 : 200);
+  });
+  return writes;
+}
+
+/** A register's answer (`company-registry` function), as the app gets it. */
+export type RegistryAnswer = Record<string, unknown>;
+
+/**
+ * The checks behind "Your company": confirmed phone numbers (rest/v1/phone_verifications), the
+ * `phone-verification` function (any number gets a code; 123456 is right), the `company-registry`
+ * function (`registry`: its answer, default "checked by hand") and the address search (`places`: one
+ * street address in Prishtina, with its parts). Returns what the app sent to the functions.
+ */
+export async function fakeCompanyChecks(
+  page: Page,
+  { confirmedPhones = [], registry = { result: 'manual' } }: { confirmedPhones?: string[]; registry?: RegistryAnswer } = {},
+) {
+  const phones = [...confirmedPhones];
+  const calls = { phone: [] as Record<string, unknown>[], registry: [] as Record<string, unknown>[] };
+  const reply = (route: Route, body: unknown, status = 200) =>
+    route.request().method() === 'OPTIONS'
+      ? route.fulfill({ status: 204, headers: cors })
+      : route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+  await page.route('**/rest/v1/phone_verifications*', (route) => reply(route, phones.map((phone) => ({ phone }))));
+  await page.route('**/functions/v1/phone-verification', (route) => {
+    if (route.request().method() === 'OPTIONS') return reply(route, null);
+    const sent = route.request().postDataJSON() as { action: string; phone: string; code?: string };
+    calls.phone.push(sent);
+    if (sent.action === 'send') return reply(route, { status: 'sent' });
+    if (sent.code !== '123456') return reply(route, { status: 'wrong_code' });
+    phones.push(sent.phone);
+    return reply(route, { status: 'approved' });
+  });
+  await page.route('**/functions/v1/company-registry', (route) => {
+    if (route.request().method() !== 'OPTIONS') calls.registry.push(route.request().postDataJSON() as Record<string, unknown>);
+    return reply(route, registry);
+  });
+  await page.route('**/functions/v1/places', (route) =>
+    reply(route, {
+      suggestions: [
+        {
+          id: 'W100',
+          label: 'Rr. Agim Ramadani 12, Prishtinë, Kosovo',
+          area: 'Prishtinë',
+          lat: 42.6629,
+          lon: 21.1655,
+          countryCode: 'XK',
+          street: 'Rr. Agim Ramadani',
+          houseNumber: '12',
+          postcode: '10000',
+          city: 'Prishtinë',
+        },
+      ],
+    }),
+  );
+  return calls;
+}
+
 /**
  * Opens the app already signed in as a customer or a mover (the session is in storage before it
  * starts); `passwordOwed`: it closed while a password was still owed after a code. Returns what the

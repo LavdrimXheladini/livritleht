@@ -16,7 +16,7 @@ import { colors, tokens } from '@movershub/ui';
 
 import { useAnnouncement } from '../a11y';
 import { cx } from './cx';
-import { LogoMark } from './icons';
+import { CheckIcon, LogoMark } from './icons';
 
 // Mobile versions of the web primitives in packages/ui/src/web (same names, variants and tokens),
 // styled with NativeWind classes from packages/ui/tailwind-preset.js — never raw colour values.
@@ -252,7 +252,7 @@ export function Pill({
 
 /* ── Chips (single choice) ────────────────────────────────────────────── */
 
-export type ChipVariant = 'pill' | 'tile' | 'dark';
+export type ChipVariant = 'pill' | 'tile' | 'dark' | 'dark-pill';
 
 const CHIP: Record<ChipVariant, { box: (on: boolean) => string; text: (on: boolean) => string }> = {
   /** Crew pills, class tabs: green when selected. */
@@ -269,6 +269,11 @@ const CHIP: Record<ChipVariant, { box: (on: boolean) => string; text: (on: boole
   dark: {
     box: (on) => cx('min-h-11 rounded-full px-4', on && 'bg-night-50'),
     text: (on) => (on ? 'text-ink-900' : 'text-sage-400'),
+  },
+  /** Separate pills on dark (e.g. countries): light when selected. */
+  'dark-pill': {
+    box: (on) => cx('min-h-11 rounded-full border px-3.5', on ? 'border-night-50 bg-night-50' : 'border-night-600 bg-night-800'),
+    text: (on) => (on ? 'text-ink-900' : 'text-night-50'),
   },
 };
 
@@ -318,7 +323,11 @@ export function ChipGroup<T extends string | number>({
   );
   return (
     <View accessibilityRole="radiogroup" accessibilityLabel={accessibilityLabel} className="gap-2">
-      {label ? <Text className="font-sans text-[13px] text-ink-600">{label}</Text> : null}
+      {label ? (
+        <Text className={cx('font-sans text-[13px]', variant === 'dark' || variant === 'dark-pill' ? 'text-sage-400' : 'text-ink-600')}>
+          {label}
+        </Text>
+      ) : null}
       {wrap ? (
         <View className={cx(box, 'flex-wrap')}>{chips}</View>
       ) : (
@@ -453,6 +462,69 @@ export function TextField({
       {hint ? (
         <Text aria-hidden className={cx('font-sans text-[13px]', dark ? 'text-sage-400' : 'text-ink-600')}>
           {hint}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+/* ── Checkbox ─────────────────────────────────────────────────────────── */
+
+/**
+ * A box to tick with its text (e.g. a confirmation). An error shows under it and is read out when
+ * it appears, like TextField's; the whole row is the touch target.
+ */
+export function Checkbox({
+  checked,
+  onChange,
+  label,
+  error,
+  tone = 'light',
+  announceError = true,
+  testID,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+  error?: string | undefined;
+  tone?: Tone;
+  /** Off when the form reads all its errors out at once. */
+  announceError?: boolean;
+  testID?: string;
+}) {
+  const dark = tone === 'dark';
+  useAnnouncement(announceError ? error : null);
+  const box = checked
+    ? dark
+      ? 'border-accent-300 bg-accent-300'
+      : 'border-brand-500 bg-brand-500'
+    : error
+      ? dark
+        ? 'border-danger-on-dark bg-night-800'
+        : 'border-danger bg-stone-50'
+      : dark
+        ? 'border-night-500 bg-night-800'
+        : 'border-stone-400 bg-stone-50';
+  return (
+    <View className="gap-1.5">
+      <Pressable
+        testID={testID}
+        onPress={() => onChange(!checked)}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked }}
+        // react-native-web ignores accessibilityState: the browser version needs the ARIA state.
+        aria-checked={checked}
+        accessibilityLabel={[label, error].filter(Boolean).join(', ')}
+        className="min-h-11 flex-row items-start gap-3 py-1"
+      >
+        <View className={cx('mt-px h-[22px] w-[22px] items-center justify-center rounded-md border-[1.5px]', box)}>
+          {checked ? <CheckIcon size={14} strokeWidth={2.6} color={dark ? colors.ink[900] : colors.stone[50]} /> : null}
+        </View>
+        <Text className={cx('flex-1 font-sans text-[14px] leading-5', dark ? 'text-night-50' : 'text-ink-900')}>{label}</Text>
+      </Pressable>
+      {error ? (
+        <Text aria-hidden className={cx('font-sans text-[13px]', dark ? 'text-danger-on-dark' : 'text-danger')}>
+          {error}
         </Text>
       ) : null}
     </View>

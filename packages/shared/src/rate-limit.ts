@@ -12,6 +12,12 @@ export const RATE_LIMITS = {
   quote: { limit: 30, windowSeconds: 600 },
   /** An address search costs one Photon request. */
   addressSearch: { limit: 60, windowSeconds: 60 },
+  /** A phone code costs an SMS or WhatsApp message (Twilio Verify): per account, and per phone number. */
+  phoneCodeSend: { limit: 5, windowSeconds: 3600 },
+  /** Trying a phone code. */
+  phoneCodeCheck: { limit: 10, windowSeconds: 600 },
+  /** A look-up in an official company register (VIES, the Polish white list, the Swiss UID register). */
+  companyRegistry: { limit: 20, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 export type RateLimitScope = keyof typeof RATE_LIMITS;
 
