@@ -9,6 +9,7 @@ export * from './places';
 export * from './rate-limit';
 export * from './retention.config';
 export * from './schemas/auth';
+export * from './schemas/booking';
 export * from './schemas/geo';
 export * from './schemas/mover-company';
 export * from './schemas/mover-documents';

@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { pickFrom, type QuoteResponse } from '@movershub/pricing';
-import { MARKET_RATES, type Currency, type GeoSuggestion, type Locale, type Place, type VehicleClass } from '@movershub/shared';
+import { MARKET_RATES, type Currency, type GeoSuggestion, type Locale, type Place, type QuoteRequest, type VehicleClass } from '@movershub/shared';
 
 import { useAuth } from './auth-provider';
 
@@ -12,6 +12,13 @@ import { useAuth } from './auth-provider';
 /** Live quote for a route: no items = a typical load per class, "from" prices for every crew size. */
 export async function fetchQuote(supabase: SupabaseClient, pickup: Place, dropoff: Place): Promise<QuoteResponse> {
   const { data, error } = await supabase.functions.invoke<QuoteResponse>('quote', { body: { pickup, dropoff, helpers: 2 } });
+  if (error || !data) throw error ?? new Error('Empty quote');
+  return data;
+}
+
+/** Live quote for the customer's own move: their stops, items, crew and day. */
+export async function fetchMoveQuote(supabase: SupabaseClient, request: QuoteRequest): Promise<QuoteResponse> {
+  const { data, error } = await supabase.functions.invoke<QuoteResponse>('quote', { body: request });
   if (error || !data) throw error ?? new Error('Empty quote');
   return data;
 }
@@ -36,6 +43,21 @@ export function useQuote(pickup: Place | null, dropoff: Place | null) {
     queryKey: ['quote', pickup, dropoff],
     queryFn: () => fetchQuote(supabase, pickup!, dropoff!),
     enabled: pickup !== null && dropoff !== null,
+    staleTime: 5 * 60_000,
+    placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * Quote for the move being booked (null = not ready). Kept a few minutes like `useQuote`; the
+ * previous answer stays, marked as placeholder, while a changed move is priced.
+ */
+export function useMoveQuote(request: QuoteRequest | null) {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryKey: ['quote', 'move', request],
+    queryFn: () => fetchMoveQuote(supabase, request!),
+    enabled: request !== null,
     staleTime: 5 * 60_000,
     placeholderData: keepPreviousData,
   });

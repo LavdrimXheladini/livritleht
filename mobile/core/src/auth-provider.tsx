@@ -3,6 +3,7 @@ import { isAuthRetryableFetchError, type Session, type SupabaseClient } from '@s
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, use, useCallback, useEffect, useState, type ReactNode } from 'react';
 
+import { clearBookingDraft } from './booking-draft';
 import { owePassword, restorePasswordOwed, settlePassword } from './password';
 import { clearDraftEmail, setPendingSignIn } from './pending-sign-in';
 import { forgetSavedRole } from './saved-role';
@@ -52,6 +53,8 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
     setPendingSignIn(null);
     clearDraftEmail();
     void settlePassword();
+    // The move being put together (addresses) stays with the account, not on the device.
+    clearBookingDraft();
     queryClient.removeQueries({ queryKey: ['profile'] });
     queryClient.removeQueries({ queryKey: ['saved-role'] });
     // The mover's company details (personal data) leave the device's memory too.

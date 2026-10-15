@@ -16,6 +16,7 @@ export function VehicleClasses({
   onSelect,
   locale,
   updating,
+  testIDPrefix = 'class',
 }: {
   offers: ClassOffers;
   selected: VehicleClass;
@@ -23,6 +24,8 @@ export function VehicleClasses({
   locale: Locale;
   /** The prices are still the last route's (a screen reader says "busy"). */
   updating: boolean;
+  /** Tiles get `${testIDPrefix}-${class}` (the browser version keeps the home in the page under the booking). */
+  testIDPrefix?: string;
 }) {
   const { t } = useTranslation();
   return (
@@ -32,7 +35,7 @@ export function VehicleClasses({
         return (
           <VehicleClassTile
             key={k}
-            testID={`class-${k}`}
+            testID={`${testIDPrefix}-${k}`}
             name={t(`vehicles.${k}.name`)}
             capacity={VEHICLE_CLASS_INFO[k].capacity}
             fits={t(`vehicles.${k}.fits`)}

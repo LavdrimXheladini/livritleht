@@ -17,7 +17,8 @@ type Answer = { q: string; items: GeoSuggestion[] | null };
 /**
  * Address search (phone version of the website's address field). Suggestions come from the
  * `places` function (Photon on the server), biased towards the other address. Choosing one reports
- * a Place; typing alone never does — leaving the field shows the chosen address again.
+ * a Place, and the street and house number when the map has them; typing alone never does — leaving
+ * the field shows the chosen address again.
  */
 export function AddressField({
   label,
@@ -32,7 +33,7 @@ export function AddressField({
   value: Place;
   /** Bias results towards this point (the other address). */
   near?: Pick<Place, 'lat' | 'lon'>;
-  onSelect: (place: Place) => void;
+  onSelect: (place: Place, parts: { street?: string | undefined; houseNumber?: string | undefined }) => void;
   testID?: string;
 }) {
   const { t } = useTranslation();
@@ -89,14 +90,17 @@ export function AddressField({
     clearTimeout(closeTimer.current);
     close();
     Keyboard.dismiss();
-    onSelect({
-      label: s.label,
-      area: s.area,
-      ...(s.district ? { district: s.district } : {}),
-      lat: s.lat,
-      lon: s.lon,
-      countryCode: s.countryCode,
-    });
+    onSelect(
+      {
+        label: s.label,
+        area: s.area,
+        ...(s.district ? { district: s.district } : {}),
+        lat: s.lat,
+        lon: s.lon,
+        countryCode: s.countryCode,
+      },
+      { street: s.street, houseNumber: s.houseNumber },
+    );
   };
 
   // Only the answer to what is typed NOW is listed or taken by "Done" — while a newer query is

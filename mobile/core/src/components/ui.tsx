@@ -279,7 +279,7 @@ const CHIP: Record<ChipVariant, { box: (on: boolean) => string; text: (on: boole
 
 export type ChipOption<T extends string | number> = { value: T; label: string };
 
-/** Single-choice row with radio semantics (accessibilityRole "radio" + selected state). */
+/** Single-choice row with radio semantics (accessibilityRole "radio" + selected state); `null` = nothing chosen yet. */
 export function ChipGroup<T extends string | number>({
   value,
   onChange,
@@ -288,8 +288,9 @@ export function ChipGroup<T extends string | number>({
   label,
   variant = 'pill',
   wrap = true,
+  testID,
 }: {
-  value: T;
+  value: T | null;
   onChange: (value: T) => void;
   options: readonly ChipOption<T>[];
   /** Name of the group for screen readers. */
@@ -299,6 +300,8 @@ export function ChipGroup<T extends string | number>({
   variant?: ChipVariant;
   /** Wrap onto more lines (default) or scroll sideways. */
   wrap?: boolean;
+  /** Each chip gets `${testID}-${value}`. */
+  testID?: string;
 }) {
   const chips = options.map((o) => {
     const on = o.value === value;
@@ -306,6 +309,7 @@ export function ChipGroup<T extends string | number>({
     return (
       <Pressable
         key={String(o.value)}
+        testID={testID ? `${testID}-${o.value}` : undefined}
         onPress={() => onChange(o.value)}
         accessibilityRole="radio"
         accessibilityState={{ selected: on, checked: on }}
@@ -360,6 +364,66 @@ export function CrewPills({
       label={groupLabel}
       options={([1, 2, 3] as const).map((n) => ({ value: n, label: labels[n] }))}
     />
+  );
+}
+
+/* ── Stepper ──────────────────────────────────────────────────────────── */
+
+/**
+ * A count with − and + (e.g. how many sofas, which floor). The buttons say what they change ("Fewer:
+ * Sofa"); the count is read out when it changes. `valueText` replaces the number (e.g. "Ground floor").
+ */
+export function Stepper({
+  value,
+  onChange,
+  min = 0,
+  max,
+  label,
+  decreaseLabel,
+  increaseLabel,
+  valueText,
+  testID,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max: number;
+  /** What is counted ("Sofa"), for the buttons' names. */
+  label: string;
+  decreaseLabel: string;
+  increaseLabel: string;
+  valueText?: string;
+  testID?: string;
+}) {
+  const button = (sign: '−' | '+', name: string, next: number, disabled: boolean, id: string) => (
+    <Pressable
+      testID={testID ? `${testID}-${id}` : undefined}
+      onPress={() => onChange(next)}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={`${name}: ${label}`}
+      accessibilityState={{ disabled }}
+      className={cx(
+        'size-11 items-center justify-center rounded-full border',
+        disabled ? 'border-stone-300 bg-stone-100' : 'border-stone-400 bg-stone-50 active:border-ink-300',
+      )}
+    >
+      <Text className={cx('font-sans-medium text-xl leading-6', disabled ? 'text-ink-300' : 'text-ink-900')}>{sign}</Text>
+    </Pressable>
+  );
+  return (
+    <View className="flex-row items-center gap-2">
+      {button('−', decreaseLabel, value - 1, value <= min, 'less')}
+      <Text
+        testID={testID ? `${testID}-value` : undefined}
+        accessibilityLiveRegion="polite"
+        accessibilityLabel={`${label}: ${valueText ?? value}`}
+        className={cx('text-center font-sans-semibold text-[15px] text-ink-900', valueText ? 'min-w-[88px]' : 'min-w-7')}
+      >
+        {valueText ?? value}
+      </Text>
+      {button('+', increaseLabel, value + 1, value >= max, 'more')}
+    </View>
   );
 }
 
@@ -482,10 +546,13 @@ export function Checkbox({
   tone = 'light',
   announceError = true,
   testID,
+  accessibilityLabel,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label: string;
+  /** The spoken name when the visible label needs its context (e.g. which item it is about). */
+  accessibilityLabel?: string;
   error?: string | undefined;
   tone?: Tone;
   /** Off when the form reads all its errors out at once. */
@@ -514,7 +581,7 @@ export function Checkbox({
         accessibilityState={{ checked }}
         // react-native-web ignores accessibilityState: the browser version needs the ARIA state.
         aria-checked={checked}
-        accessibilityLabel={[label, error].filter(Boolean).join(', ')}
+        accessibilityLabel={[accessibilityLabel ?? label, error].filter(Boolean).join(', ')}
         className="min-h-11 flex-row items-start gap-3 py-1"
       >
         <View className={cx('mt-px h-[22px] w-[22px] items-center justify-center rounded-md border-[1.5px]', box)}>

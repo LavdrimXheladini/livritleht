@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { expect, test, type Page } from '@playwright/test';
 
 import { resources } from '@movershub/i18n';
@@ -529,6 +531,173 @@ test.describe('signed in as a customer', () => {
     await expect(page.getByTestId('auth-email')).toBeVisible();
     expect(await stored(page, SAVED_ROLE_KEY)).toBeNull();
     expect(await stored(page, SESSION_KEY)).toBeNull();
+  });
+});
+
+test.describe('booking a move', () => {
+  const b = en.booking;
+  /** What the address search finds: one street address in Prizren. */
+  const street = {
+    id: 'osm:w1',
+    label: 'Rruga Remzi Ademaj 5, Prizren',
+    area: 'Prizren',
+    lat: 42.2093,
+    lon: 20.7415,
+    countryCode: 'XK',
+    street: 'Rruga Remzi Ademaj',
+    houseNumber: '5',
+    city: 'Prizren',
+  };
+  /** The saved quote's lowest price for a class and crew size. */
+  const fromPrice = (cls: string, crew: 1 | 2 | 3) =>
+    (JSON.parse(readFileSync(new URL('../../fixtures/quote-prishtina-prizren.json', import.meta.url), 'utf8')) as {
+      classes: { vehicleClass: string; crews: Record<string, { from: { moverPrice: number }[] }> }[];
+    }).classes.find((c) => c.vehicleClass === cls)!.crews[crew]!.from[0]!.moverPrice;
+  const euros = (cents: number) => `€${cents % 100 ? (cents / 100).toFixed(2) : cents / 100}`;
+
+  test.beforeEach(async ({ page }) => {
+    // A fixed day, so the days offered (from tomorrow) and the screenshots stay the same.
+    await page.clock.setFixedTime(new Date(2026, 9, 15, 10));
+    await signInAs(page, 'customer');
+    await page.route('**/functions/v1/places', (route) =>
+      route.request().method() === 'OPTIONS'
+        ? route.fulfill({ status: 204, headers: cors })
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ suggestions: [street] }) }),
+    );
+    await page.goto(url);
+  });
+
+  /** Records every `quote` request the app sends; the saved quote answers them. */
+  async function quoteRequests(page: Page) {
+    const sent: Record<string, unknown>[] = [];
+    await page.route('**/functions/v1/quote', (route) => {
+      if (route.request().method() === 'POST') sent.push(route.request().postDataJSON() as Record<string, unknown>);
+      return route.fallback();
+    });
+    return sent;
+  }
+
+  test('where, what and when, then the van sizes priced for exactly this move', async ({ page }) => {
+    const sent = await quoteRequests(page);
+    await page.getByTestId('see-movers').click();
+
+    // 1. Where. The home's places are towns only: say how to find the place, or search the street.
+    await expect(page.getByText(b.stops.title)).toBeVisible();
+    await expect(page.getByTestId('stop-pickup-only-area')).toBeVisible();
+    await page.getByTestId('stops-next').click();
+    await expect(app(page).getByText(b.stops.detailsRequired)).toHaveCount(2);
+    await page.getByTestId('stop-pickup-details').fill('Block B, entrance 2, flat 14');
+    await page.getByTestId('stop-dropoff').fill('Rruga Remzi');
+    await page.getByRole('button', { name: street.label }).click();
+    await expect(page.getByTestId('stop-dropoff-only-area')).toHaveCount(0);
+    await expect(app(page).getByText(b.stops.detailsRequired)).toHaveCount(0);
+    // Third floor: is there a lift?
+    for (let i = 0; i < 3; i++) await page.getByTestId('stop-pickup-floor-more').click();
+    await expect(page.getByTestId('stop-pickup-floor-value')).toHaveText(b.stops.floorN.replace('{{n}}', '3'));
+    await page.getByTestId('stops-next').click();
+    await expect(app(page).getByText(b.stops.liftRequired)).toBeVisible();
+    await page.getByTestId('stop-pickup-lift-no').click();
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('booking-stops.png');
+    await page.getByTestId('stops-next').click();
+
+    // 2. What: at least one thing; the volume suggests a size.
+    await expect(page.getByText(b.items.title)).toBeVisible();
+    await page.getByTestId('items-next').click();
+    await expect(page.getByTestId('items-none')).toBeVisible();
+    await page.getByTestId('item-sofa3-more').click();
+    await page.getByTestId('item-wardrobe-more').click();
+    await page.getByTestId('item-wardrobe-assembly').click();
+    for (let i = 0; i < 10; i++) await page.getByTestId('item-box-more').click();
+    await expect(page.getByTestId('item-box-value')).toHaveText('10');
+    await expect(page.getByTestId('items-load')).toHaveText(b.items.load.replace('{{m3}}', '4.3'));
+    await expect(page.getByTestId('items-fits')).toHaveText(b.items.fits.replace('{{vehicle}}', en.vehicles.VAN.name));
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('booking-items.png');
+    await page.getByTestId('items-next').click();
+
+    // 3. When: from tomorrow; the arrival time; three people.
+    await page.getByTestId('when-next').click();
+    await expect(app(page).getByText(b.when.dayRequired)).toBeVisible();
+    // The first day offered is tomorrow.
+    await expect(page.locator('[data-testid^="when-day-"]').first()).toHaveAttribute('data-testid', 'when-day-2026-10-16');
+    await page.getByTestId('when-day-2026-10-16').click();
+    await page.getByTestId('when-hour-9').click();
+    await page.getByRole('radio', { name: en.landing.quote.crew3 }).click();
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('booking-when.png');
+    await page.getByTestId('when-next').click();
+
+    // 4. The sizes, priced on the server for this move: its stops, floors, items, crew and day.
+    await expect(page.getByText(b.size.title)).toBeVisible();
+    await expect(page.getByTestId('size-class-VAN')).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByTestId('size-class-VAN')).toContainText(euros(fromPrice('VAN', 3)));
+    expect(sent.at(-1)).toEqual({
+      pickup: expect.objectContaining({ countryCode: 'XK' }),
+      dropoff: { label: street.label, area: 'Prizren', lat: street.lat, lon: street.lon, countryCode: 'XK' },
+      pickupStop: { floor: 3, hasLift: false },
+      dropoffStop: { floor: 0, hasLift: false },
+      helpers: 3,
+      items: [
+        { key: 'sofa3', qty: 1, assembly: false },
+        { key: 'wardrobe', qty: 1, assembly: true },
+        { key: 'box', qty: 10, assembly: false },
+      ],
+      // 09:00 on the device's clock (every market is on Central European Time), sent as UTC.
+      scheduledAt: new Date(2026, 9, 16, 9).toISOString(),
+    });
+    // How to find the place is for the mover who accepts — never sent to price the move.
+    expect(JSON.stringify(sent)).not.toContain('Block B');
+    await expect(page.getByTestId('size-summary-2')).toHaveText(en.landing.quote.crew3);
+    await expect(page.getByTestId('size-summary-3')).toHaveText(b.size.things.replace('{{n}}', '12').replace('{{m3}}', '4.3'));
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('booking-size.png');
+
+    // A smaller size may be picked, with a warning.
+    await page.getByTestId('size-class-SMALL').click();
+    await expect(page.getByTestId('size-too-small')).toHaveText(b.size.tooSmall.replace('{{vehicle}}', en.vehicles.SMALL.name));
+    await page.getByTestId('size-see-movers').click();
+    await expect(page.getByText(en.landing.quote.soonTitle)).toBeVisible();
+
+    // Home remembers the move and goes back to where it was left.
+    await page.goto(url);
+    await expect(page.getByTestId('current-move')).toContainText('→');
+    await page.getByTestId('booking-continue').click();
+    await expect(page.getByText(b.size.title)).toBeVisible();
+    await expect(page.getByTestId('size-class-SMALL')).toHaveAttribute('aria-checked', 'true');
+  });
+
+  test('the move stays on the device after a reload, and is forgotten on sign out', async ({ page }) => {
+    await page.getByTestId('see-movers').click();
+    await page.getByTestId('stop-pickup-details').fill('Block B, entrance 2');
+    await page.getByTestId('stop-dropoff-details').fill('Behind the school');
+    await page.getByTestId('stops-next').click();
+    await page.getByTestId('item-box-more').click();
+    await page.reload();
+    await expect(page.getByTestId('item-box-value')).toHaveText('1');
+    expect(await stored(page, 'movershub.booking')).toContain('Behind the school');
+    // Back after a reload (no history): the step before.
+    await page.getByTestId('items-back').click();
+    await expect(page.getByTestId('stop-dropoff-details')).toHaveValue('Behind the school');
+    await page.goto(url);
+    await page.getByTestId('home-sign-out').click();
+    await expect(page.getByTestId('auth-email')).toBeVisible();
+    expect(await stored(page, 'movershub.booking')).toBeNull();
+  });
+
+  test('a step opened before the earlier ones are done shows the first open one', async ({ page }) => {
+    await page.getByTestId('see-movers').click();
+    await expect(page.getByText(b.stops.title)).toBeVisible();
+    await page.goto(`${url}book/size`);
+    await expect(page.getByText(b.stops.title)).toBeVisible();
+  });
+
+  test('the mover side has no booking: it goes home', async ({ page }) => {
+    await page.getByTestId('see-movers').click();
+    await expect(page.getByText(b.stops.title)).toBeVisible();
+    await signInAs(page, 'mover');
+    await page.goto(`${url}book/stops`);
+    await expect(page.getByTestId('step-company')).toBeVisible();
   });
 });
 

@@ -1,6 +1,7 @@
 export { announce, useAnnouncement } from './a11y';
-export { classFrom, fetchQuote, searchPlaces, useQuote, type ClassFrom } from './api';
+export { classFrom, fetchMoveQuote, fetchQuote, searchPlaces, useMoveQuote, useQuote, type ClassFrom } from './api';
 export { AuthProvider, useAuth } from './auth-provider';
+export { clearBookingDraft, restoreBookingDraft, startBooking, updateBooking, useBookingDraft } from './booking-draft';
 export { cx } from './components/cx';
 export * from './components/icons';
 export {
@@ -15,6 +16,7 @@ export {
   ProgressBar,
   Screen,
   SegmentedControl,
+  Stepper,
   TextField,
   VehicleClassTile,
   Wordmark,
@@ -26,7 +28,7 @@ export {
 } from './components/ui';
 export { LanguageButton } from './components/language-button';
 export { useAppFonts } from './fonts';
-export { currentLocale, initI18n, restoreLocale, setLocale } from './i18n';
+export { currentLocale, formatMoveDay, initI18n, restoreLocale, setLocale } from './i18n';
 export { passwordOwedBy, restorePasswordOwed, settlePassword } from './password';
 export {
   getDraftVersion,

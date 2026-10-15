@@ -1,7 +1,11 @@
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Text, View, useWindowDimensions } from 'react-native';
 
 import { Button, Card, Display, LanguageButton, Screen, Wordmark, useAnnouncement, useAuth } from '@movershub/mobile';
+import { routeLabel } from '@movershub/shared';
+
+import { BOOKING_STEPS, firstOpenStep, useBooking } from '../booking/booking-frame';
 
 import { SwitchSideButton } from '../switch-side';
 import { QuoteCard } from './quote-card';
@@ -49,6 +53,7 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
         <Text className="font-sans text-base leading-6 text-ink-600">{t('landing.hero.subtitle')}</Text>
       </View>
 
+      <CurrentMove />
       <QuoteCard />
 
       {canSwitch ? (
@@ -61,5 +66,31 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
         </Card>
       ) : null}
     </Screen>
+  );
+}
+
+/** A move being put together (kept on the device): where it goes, and back to where it was left. */
+function CurrentMove() {
+  const { t } = useTranslation();
+  const { draft } = useBooking();
+  if (!draft) return null;
+  return (
+    <Card variant="inset" className="gap-3">
+      <View className="gap-1">
+        <Text accessibilityRole="header" className="font-sans-medium text-base text-ink-900">
+          {t('booking.current')}
+        </Text>
+        <Text testID="current-move" className="font-sans text-sm text-ink-700">
+          {routeLabel(draft.pickup.place, draft.dropoff.place, (city) => t('landing.quote.withinCity', { city }))}
+        </Text>
+      </View>
+      <Button
+        testID="booking-continue"
+        variant="outline"
+        size="md"
+        title={t('booking.continueMove')}
+        onPress={() => router.push(BOOKING_STEPS[firstOpenStep(draft)]!)}
+      />
+    </Card>
   );
 }

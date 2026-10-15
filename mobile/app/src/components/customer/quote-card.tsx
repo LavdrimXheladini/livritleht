@@ -1,6 +1,7 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AccessibilityInfo, ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import {
   Button,
@@ -10,11 +11,13 @@ import {
   SwapIcon,
   currentLocale,
   cx,
+  startBooking,
   useAnnouncement,
+  useAuth,
   useQuote,
   type ClassFrom,
 } from '@movershub/mobile';
-import { VEHICLE_CLASSES, demoPlace, formatNumber, type CrewSize, type Locale, type Place, type VehicleClass } from '@movershub/shared';
+import { VEHICLE_CLASSES, demoPlace, formatNumber, newStop, type CrewSize, type Locale, type Place, type VehicleClass } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
 import { AddressField } from './address-field';
@@ -26,8 +29,10 @@ import { VehicleClasses } from './vehicle-classes';
  * Phone version of the website's quote widget: pickup + drop-off → per vehicle class the lowest
  * mover's price ("from") and the number of offers, live from movers' own rate cards for a typical
  * load (the `quote` function, design/DECISIONS.md #11). Nothing is priced in the app (COMPLIANCE
- * §1.1). Booking — a specific mover and their fixed total before payment — comes later.
+ * §1.1). "Book with a mover" starts the booking with these addresses, size and crew.
  */
+type Parts = { street?: string | undefined; houseNumber?: string | undefined };
+
 export function QuoteCard() {
   const { t } = useTranslation();
   const locale = currentLocale();
@@ -36,9 +41,11 @@ export function QuoteCard() {
     demoPlace('prishtina', t('places.prishtina')),
     demoPlace('prizren', t('places.prizren')),
   ]);
+  // The street and house number of each address found by search (the booking needs the exact place).
+  const [[pickupParts, dropoffParts], setParts] = useState<[Parts, Parts]>([{}, {}]);
   const [cls, setCls] = useState<VehicleClass>('LARGE_VAN');
   const [crew, setCrew] = useState<CrewSize>(2);
-  const [submitted, setSubmitted] = useState(false);
+  const { session } = useAuth();
 
   // One place twice: nothing to quote (the server refuses it too).
   const samePlace = pickup.lat === dropoff.lat && pickup.lon === dropoff.lon;
@@ -51,13 +58,22 @@ export function QuoteCard() {
   // The chosen class — or, when no mover offers it on this route for this crew, the first class one does.
   const shownCls = offers && !offers[cls] ? (VEHICLE_CLASSES.find((k) => offers[k]) ?? cls) : cls;
 
-  const setPlaces = (nextPickup: Place, nextDropoff: Place) => {
+  const setPlaces = (nextPickup: Place, nextDropoff: Place, parts: [Parts, Parts] = [{}, {}]) => {
     setPair([nextPickup, nextDropoff]);
-    setSubmitted(false);
+    setParts(parts);
   };
-  const seeMovers = () => {
-    setSubmitted(true);
-    AccessibilityInfo.announceForAccessibility(`${t('landing.quote.soonTitle')} ${t('customer.bookingSoon')}`);
+  const book = () => {
+    if (!session) return;
+    startBooking(session.user.id, {
+      pickup: newStop(pickup, pickupParts),
+      dropoff: newStop(dropoff, dropoffParts),
+      items: {},
+      day: null,
+      hour: null,
+      crew,
+      vehicleClass: shownCls,
+    });
+    router.push('/book/stops');
   };
 
   return (
@@ -69,16 +85,16 @@ export function QuoteCard() {
           placeholder={t('landing.quote.addressPlaceholder')}
           value={pickup}
           near={dropoff}
-          onSelect={(p) => setPlaces(p, dropoff)}
+          onSelect={(p, parts) => setPlaces(p, dropoff, [parts, dropoffParts])}
         />
-        <SwapButton label={t('landing.quote.swap')} onPress={() => setPlaces(dropoff, pickup)} />
+        <SwapButton label={t('landing.quote.swap')} onPress={() => setPlaces(dropoff, pickup, [dropoffParts, pickupParts])} />
         <AddressField
           testID="quote-dropoff"
           label={t('landing.quote.dropoff')}
           placeholder={t('landing.quote.addressPlaceholder')}
           value={dropoff}
           near={pickup}
-          onSelect={(d) => setPlaces(pickup, d)}
+          onSelect={(d, parts) => setPlaces(pickup, d, [pickupParts, parts])}
         />
       </View>
       {samePlace ? <Text className="font-sans text-[13px] text-danger">{t('landing.quote.samePlace')}</Text> : null}
@@ -96,8 +112,7 @@ export function QuoteCard() {
                 labels={{ 1: t('landing.quote.crew1'), 2: t('landing.quote.crew2'), 3: t('landing.quote.crew3') }}
               />
               <PriceSummary quote={data} offer={offers[shownCls]} locale={locale} updating={updating} />
-              <Button testID="see-movers" title={t('landing.quote.seeMovers')} onPress={seeMovers} />
-              {submitted ? <BookingSoon /> : null}
+              <Button testID="see-movers" title={t('booking.start')} onPress={book} />
               <Text className="font-sans text-xs leading-[18px] text-ink-500">
                 {t('landing.quote.liveNote')}
                 {data.testMovers ? ` ${t('landing.quote.testNote')}` : null}
@@ -171,8 +186,8 @@ function PriceSummary({
   );
 }
 
-/** After "See movers", until booking exists in the app. */
-function BookingSoon() {
+/** After "See movers", until choosing a mover exists in the app. */
+export function BookingSoon() {
   const { t } = useTranslation();
   return (
     <View className="flex-row gap-3 rounded-input bg-brand-500 px-[18px] py-3.5">
@@ -184,7 +199,7 @@ function BookingSoon() {
   );
 }
 
-function PricesLoading() {
+export function PricesLoading() {
   const { t } = useTranslation();
   return (
     <View accessibilityLiveRegion="polite" className="min-h-[120px] flex-row items-center justify-center gap-3">
@@ -195,7 +210,7 @@ function PricesLoading() {
 }
 
 /** The route couldn't be quoted (routing or the server unavailable). */
-function PricesError({ retrying, onRetry }: { retrying: boolean; onRetry: () => void }) {
+export function PricesError({ retrying, onRetry }: { retrying: boolean; onRetry: () => void }) {
   const { t } = useTranslation();
   useAnnouncement(t('landing.quote.routeError'));
   return (

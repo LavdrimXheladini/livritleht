@@ -430,6 +430,9 @@ export const stored = (page: Page, key: string) => page.evaluate((k) => localSto
 
 /** Makes the screen as tall as the page, so one screenshot shows all of it (the app scrolls inside the screen). */
 export async function fitScreenToPage(page: Page) {
+  // Back to the phone's height first (playwright.config.ts): the page itself is as tall as the window,
+  // so a window grown for an earlier, longer screen would keep that height.
+  await page.setViewportSize({ width: page.viewportSize()!.width, height: 844 });
   const height = await page.evaluate(() => Math.max(...[...document.querySelectorAll('div')].map((el) => el.scrollHeight)));
   await page.setViewportSize({ width: page.viewportSize()!.width, height: Math.min(height, 4000) });
   await page.evaluate(() => document.fonts.ready.then(() => undefined));

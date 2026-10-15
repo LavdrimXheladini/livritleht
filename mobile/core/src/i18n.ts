@@ -28,6 +28,16 @@ export function currentLocale(): Locale {
   return resolveLocale(i18next.language);
 }
 
+/** Intl's name for each app language: British English dates ("Tue 20 Oct"), Serbian in the Latin script like the app's texts. */
+const INTL_LOCALE: Record<Locale, string> = { en: 'en-GB', sq: 'sq', pl: 'pl', sr: 'sr-Latn', de: 'de' };
+
+/** A move day (YYYY-MM-DD, local) as "Tue 20 Oct" — or "Tuesday 20 October" with `long`. */
+export function formatMoveDay(day: string, locale: Locale, { long = false }: { long?: boolean } = {}): string {
+  const [y, m, d] = day.split('-').map(Number) as [number, number, number];
+  const style = long ? 'long' : 'short';
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale], { weekday: style, day: 'numeric', month: style }).format(new Date(y, m - 1, d));
+}
+
 /** At launch: the language chosen in the app earlier, if any (else the device's stays). */
 export async function restoreLocale(): Promise<void> {
   if (typeof window === 'undefined') return; // Expo web pre-rendering in Node
