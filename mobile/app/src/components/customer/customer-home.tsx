@@ -8,6 +8,7 @@ import { routeLabel } from '@movershub/shared';
 import { BOOKING_STEPS, firstOpenStep, useBooking } from '../booking/booking-frame';
 
 import { SwitchSideButton } from '../switch-side';
+import { MyMoves } from './my-moves';
 import { QuoteCard } from './quote-card';
 
 /**
@@ -54,6 +55,7 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
       </View>
 
       <CurrentMove />
+      <MyMoves />
       <QuoteCard />
 
       {canSwitch ? (

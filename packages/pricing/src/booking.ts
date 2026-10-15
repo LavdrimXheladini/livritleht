@@ -2,7 +2,16 @@
 // mover's own rate card (COMPLIANCE §1.1, §13) — the same distance and engine as the quote they saw.
 // Pure, with the I/O passed in (like quoteForRequest); the Deno function saves the result.
 
-import { BOOKING_DAYS_AHEAD, bookRequestSchema, jobType, type BookRequest, type BookingStop, type JobType, type QuoteJob } from '@movershub/shared';
+import {
+  BOOKING_DAYS_AHEAD,
+  bookRequestSchema,
+  jobType,
+  type BookRequest,
+  type BookedMover,
+  type BookingStop,
+  type JobType,
+  type QuoteJob,
+} from '@movershub/shared';
 
 import { quoteVehicle, type Quote } from './engine';
 import { moverFactsFromRow, rateCardFromRow, type QuotableVehicleRow } from './offers';
@@ -109,8 +118,11 @@ export function jobColumns({ request, distanceKm, type, row, quote }: PricedBook
   };
 }
 
-/** The `quotes` row: the mover's price as the server computed it, and their terms as the customer saw them. */
-export function quoteColumns({ row, quote }: PricedBooking, jobId: string, expiresAt: Date) {
+/**
+ * The `quotes` row: the mover's price as the server computed it, their terms, and the mover as the
+ * customer saw them before booking (COMPLIANCE §4) — kept with the quote.
+ */
+export function quoteColumns({ row, quote }: PricedBooking, jobId: string, expiresAt: Date, mover: BookedMover) {
   const terms = moverFactsFromRow(row).cancellation;
   if (!terms) throw new Error('a quotable mover has cancellation terms');
   return {
@@ -128,5 +140,6 @@ export function quoteColumns({ row, quote }: PricedBooking, jobId: string, expir
     cancel_free_hours: terms.freeHours,
     cancel_late_pct: terms.latePct,
     expires_at: expiresAt.toISOString(),
+    mover,
   };
 }

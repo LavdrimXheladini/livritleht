@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { bookRequestFromDraft, type BookResponse, type BookingDraft } from '@movershub/shared';
 import { updateBooking, useAuth } from '@movershub/mobile';
@@ -23,6 +23,7 @@ export class BookError extends Error {
  */
 export function useBookRequest(draft: BookingDraft) {
   const { supabase, session } = useAuth();
+  const queryClient = useQueryClient();
   const userId = session?.user.id;
   const request = bookRequestFromDraft(draft);
   const { jobId: _jobId, ...move } = request ?? {};
@@ -37,6 +38,8 @@ export function useBookRequest(draft: BookingDraft) {
       if (!answer.ok) throw new BookError(answer.error, answer.status);
       const { jobId } = answer.data;
       if (userId) updateBooking(userId, (d) => (d.jobId === jobId ? d : { ...d, jobId }));
+      // "My moves" shows the saved request and its new price.
+      void queryClient.invalidateQueries({ queryKey: ['my-moves'] });
       return answer.data;
     },
   });

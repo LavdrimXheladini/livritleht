@@ -140,7 +140,19 @@ describe('saved booking request', () => {
       chosen_vehicle_id: VAN_A,
       chosen_mover_company_id: `c-${VAN_A}`,
     });
-    const quote = quoteColumns(r.booking, 'job-1', new Date('2026-10-15T10:15:00Z'));
+    const mover = {
+      companyId: `c-${VAN_A}`,
+      name: 'Mover a1',
+      isBusiness: true,
+      registrationNo: 'reg',
+      address: 'Rr. Agim Ramadani 12, Prishtinë',
+      country: 'XK',
+      phone: '+38344000001',
+      email: 'mover@example.com',
+      insuranceUntil: '2027-12-31T23:59:59+00:00',
+      cancellation: { freeHours: 48, latePct: 50 },
+    } as const;
+    const quote = quoteColumns(r.booking, 'job-1', new Date('2026-10-15T10:15:00Z'), mover);
     expect(quote).toMatchObject({
       job_id: 'job-1',
       mover_price: r.booking.quote.moverPrice,
@@ -149,6 +161,7 @@ describe('saved booking request', () => {
       cancel_free_hours: 48,
       cancel_late_pct: 50,
       expires_at: '2026-10-15T10:15:00.000Z',
+      mover,
     });
     expect(quote.line_items.reduce((sum, l) => sum + l.amount, 0)).toBe(quote.mover_price);
   });

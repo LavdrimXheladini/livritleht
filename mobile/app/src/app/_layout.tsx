@@ -92,6 +92,8 @@ function RootStack() {
         <Stack.Screen name="book/size" />
         <Stack.Screen name="book/movers" />
         <Stack.Screen name="book/review" />
+        {/* The customer's own moves. */}
+        <Stack.Screen name="moves/[id]" />
       </Stack.Protected>
     </Stack>
   );

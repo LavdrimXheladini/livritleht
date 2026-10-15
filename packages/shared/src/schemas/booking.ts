@@ -250,18 +250,19 @@ export function bookRequestFromDraft(draft: BookingDraft): BookRequest | null {
 export const BOOKING_QUOTE_MINUTES = 15;
 
 /** The mover as the customer about to book sees them: everything COMPLIANCE §4 lists. */
-export type BookedMover = {
-  companyId: string;
-  name: string;
-  isBusiness: boolean;
-  registrationNo: string | null;
-  address: string | null;
-  country: string;
-  phone: string | null;
-  email: string | null;
-  insuranceUntil: string | null;
-  cancellation: CancellationTerms;
-};
+export const bookedMoverSchema = z.object({
+  companyId: z.string(),
+  name: z.string(),
+  isBusiness: z.boolean(),
+  registrationNo: z.string().nullable(),
+  address: z.string().nullable(),
+  country: z.string(),
+  phone: z.string().nullable(),
+  email: z.string().nullable(),
+  insuranceUntil: z.string().nullable(),
+  cancellation: cancellationTermsSchema,
+});
+export type BookedMover = z.infer<typeof bookedMoverSchema>;
 
 /** The `book` function's answer: the saved request, its quote (priced on the server) and the mover. */
 export type BookResponse = {

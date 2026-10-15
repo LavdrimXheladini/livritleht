@@ -11,8 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@playwright/test": "^1.64.0",
     "@movershub/i18n": "workspace:*",
+    "@movershub/shared": "workspace:*",
+    "@playwright/test": "^1.64.0",
     "@types/node": "^22",
     "typescript": "~6.0.3"
   }

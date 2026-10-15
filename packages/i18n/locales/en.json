@@ -95,7 +95,31 @@
     "switchTitle": "Have a van?",
     "switchText": "Offer moves on MoversHub at your own rates. First you fill in your company, documents, vans, rates and payouts; requests come in once they're verified.",
     "switchToMover": "Switch to the mover side",
-    "nowHere": "You're on the customer side now."
+    "nowHere": "You're on the customer side now.",
+    "moves": {
+      "title": "Your moves",
+      "quotedNote": "Not booked yet: paying by card opens soon. Nothing is charged, and your mover doesn't get the request yet.",
+      "detailTitle": "Your move",
+      "stopsTitle": "Addresses",
+      "itemsTitle": "Things to move",
+      "priceChecked": "This price was checked on {{date}} at {{time}}. Continue booking to check it again.",
+      "notFound": "This move isn't in your list any more.",
+      "open": "Open",
+      "status": {
+        "DRAFT": "Draft",
+        "QUOTED": "Saved, not booked",
+        "BOOKED": "Booked",
+        "OFFERED": "Sent to your mover",
+        "ACCEPTED": "Accepted by your mover",
+        "EN_ROUTE_TO_PICKUP": "Your mover is on the way",
+        "AT_PICKUP": "At the pickup",
+        "IN_TRANSIT": "On the way to the drop-off",
+        "AT_DROPOFF": "At the drop-off",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled",
+        "DISPUTED": "In dispute"
+      }
+    }
   },
   "booking": {
     "start": "Book with a mover",

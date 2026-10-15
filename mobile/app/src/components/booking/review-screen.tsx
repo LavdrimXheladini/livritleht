@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
 import { Button, Card, CheckIcon, Display, Pill, currentLocale, formatClockTime, useAnnouncement } from '@movershub/mobile';
-import { formatExpiryDate, formatMoney, type BookResponse, type BookingDraft } from '@movershub/shared';
+import { formatExpiryDate, formatMoney, type BookResponse, type BookedMover, type BookingDraft } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
 import { BookError, useBookRequest } from '@/lib/booking';
@@ -113,34 +113,7 @@ function Booked({ answer, expired, onPriceAgain }: { answer: BookResponse; expir
         </Text>
       </Card>
 
-      <Card variant="widget" className="gap-1.5">
-        <Text accessibilityRole="header" className="font-sans text-[12.5px] text-ink-600">
-          {t('booking.review.moverTitle')}
-        </Text>
-        <View className="flex-row flex-wrap items-center gap-2">
-          <Text testID="review-mover" className="font-sans-semibold text-base text-ink-900">
-            {mover.name}
-          </Text>
-          <Pill size="sm" tone={mover.isBusiness ? 'brand' : 'neutral'}>
-            {mover.isBusiness ? t('booking.movers.business') : t('booking.movers.private')}
-          </Pill>
-        </View>
-        {mover.isBusiness ? null : <Text className="font-sans text-[12.5px] leading-[18px] text-ink-600">{t('booking.movers.privateNote')}</Text>}
-        <View testID="review-mover-details" className="gap-1">
-          {mover.registrationNo ? <Detail text={t('booking.movers.regNo', { no: mover.registrationNo })} /> : null}
-          {mover.address ? <Detail text={t('booking.review.address', { address: mover.address })} /> : null}
-          {mover.phone ? <Detail text={t('booking.review.phone', { phone: mover.phone })} /> : null}
-          {mover.email ? <Detail text={t('booking.review.email', { email: mover.email })} /> : null}
-        </View>
-        {mover.insuranceUntil ? (
-          <View className="flex-row items-center gap-1.5">
-            <CheckIcon size={14} strokeWidth={2.4} color={colors.brand[500]} />
-            <Text className="flex-1 font-sans text-[13px] text-ink-700">
-              {t('booking.movers.insurance', { date: formatExpiryDate(mover.insuranceUntil) })}
-            </Text>
-          </View>
-        ) : null}
-      </Card>
+      <MoverCard mover={mover} testIDPrefix="review" />
 
       <Card variant="widget" className="gap-3">
         <Text accessibilityRole="header" className="font-sans-semibold text-base text-ink-900">
@@ -184,7 +157,7 @@ function Detail({ text }: { text: string }) {
   return <Text className="font-sans text-[13px] leading-[18px] text-ink-700">{text}</Text>;
 }
 
-function Row({ label, value, strong, testID }: { label: string; value: string; strong?: boolean; testID?: string }) {
+export function Row({ label, value, strong, testID }: { label: string; value: string; strong?: boolean; testID?: string }) {
   return (
     <View testID={testID} className="flex-row items-baseline justify-between gap-3">
       <Text className={strong ? 'flex-1 font-sans-semibold text-[15px] text-ink-900' : 'flex-1 font-sans text-[13.5px] text-ink-700'}>{label}</Text>
@@ -196,5 +169,40 @@ function Row({ label, value, strong, testID }: { label: string; value: string; s
         <Text className="font-sans-medium text-[13.5px] text-ink-900">{value}</Text>
       )}
     </View>
+  );
+}
+
+/** Who the mover is (COMPLIANCE §4): name, business or private person, registration number, address, contact, insurance. */
+export function MoverCard({ mover, testIDPrefix }: { mover: BookedMover; testIDPrefix: string }) {
+  const { t } = useTranslation();
+  return (
+    <Card variant="widget" className="gap-1.5">
+      <Text accessibilityRole="header" className="font-sans text-[12.5px] text-ink-600">
+        {t('booking.review.moverTitle')}
+      </Text>
+      <View className="flex-row flex-wrap items-center gap-2">
+        <Text testID={`${testIDPrefix}-mover`} className="font-sans-semibold text-base text-ink-900">
+          {mover.name}
+        </Text>
+        <Pill size="sm" tone={mover.isBusiness ? 'brand' : 'neutral'}>
+          {mover.isBusiness ? t('booking.movers.business') : t('booking.movers.private')}
+        </Pill>
+      </View>
+      {mover.isBusiness ? null : <Text className="font-sans text-[12.5px] leading-[18px] text-ink-600">{t('booking.movers.privateNote')}</Text>}
+      <View testID={`${testIDPrefix}-mover-details`} className="gap-1">
+        {mover.registrationNo ? <Detail text={t('booking.movers.regNo', { no: mover.registrationNo })} /> : null}
+        {mover.address ? <Detail text={t('booking.review.address', { address: mover.address })} /> : null}
+        {mover.phone ? <Detail text={t('booking.review.phone', { phone: mover.phone })} /> : null}
+        {mover.email ? <Detail text={t('booking.review.email', { email: mover.email })} /> : null}
+      </View>
+      {mover.insuranceUntil ? (
+        <View className="flex-row items-center gap-1.5">
+          <CheckIcon size={14} strokeWidth={2.4} color={colors.brand[500]} />
+          <Text className="flex-1 font-sans text-[13px] text-ink-700">
+            {t('booking.movers.insurance', { date: formatExpiryDate(mover.insuranceUntil) })}
+          </Text>
+        </View>
+      ) : null}
+    </Card>
   );
 }

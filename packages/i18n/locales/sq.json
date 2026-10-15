@@ -95,7 +95,31 @@
     "switchTitle": "Ke furgon?",
     "switchText": "Ofro transport në MoversHub me tarifat e tua. Fillimisht plotëso kompaninë, dokumentet, furgonët, tarifat dhe pagesat; kërkesat vijnë pasi të verifikohen.",
     "switchToMover": "Kalo në anën e transportuesit",
-    "nowHere": "Tani je në anën e klientit."
+    "nowHere": "Tani je në anën e klientit.",
+    "moves": {
+      "title": "Shpërnguljet e tua",
+      "quotedNote": "Ende e parezervuar: pagesa me kartë hapet së shpejti. Asgjë nuk tarifohet dhe transportuesi ende nuk e merr kërkesën.",
+      "detailTitle": "Shpërngulja jote",
+      "stopsTitle": "Adresat",
+      "itemsTitle": "Sendet për të zhvendosur",
+      "priceChecked": "Ky çmim u kontrollua më {{date}} në {{time}}. Vazhdo rezervimin për ta kontrolluar sërish.",
+      "notFound": "Kjo shpërngulje nuk është më në listën tënde.",
+      "open": "Hap",
+      "status": {
+        "DRAFT": "Draft",
+        "QUOTED": "E ruajtur, e parezervuar",
+        "BOOKED": "E rezervuar",
+        "OFFERED": "I dërguar transportuesit",
+        "ACCEPTED": "E pranuar nga transportuesi",
+        "EN_ROUTE_TO_PICKUP": "Transportuesi është në rrugë",
+        "AT_PICKUP": "Te vendi i marrjes",
+        "IN_TRANSIT": "Në rrugë për te dorëzimi",
+        "AT_DROPOFF": "Te vendi i dorëzimit",
+        "COMPLETED": "E përfunduar",
+        "CANCELLED": "E anuluar",
+        "DISPUTED": "Në mosmarrëveshje"
+      }
+    }
   },
   "booking": {
     "start": "Rezervo me një transportues",

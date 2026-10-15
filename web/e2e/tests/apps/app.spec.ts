@@ -874,6 +874,100 @@ test.describe('booking a move', () => {
     expect(JSON.parse((await stored(page, 'movershub.booking'))!).draft.choice).toBeNull();
   });
 
+  test('my moves: saved requests on the home; a move shows its addresses, mover and price, and can be continued', async ({ page }) => {
+    const answer = bookAnswer();
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    const job = {
+      id: answer.jobId,
+      status: 'QUOTED',
+      type: 'SMALL_MOVE',
+      vehicle_class: 'VAN',
+      helpers: 2,
+      scheduled_at: new Date(2026, 9, 16, 9).toISOString(),
+      pickup_area: 'Prishtina',
+      pickup_district: null,
+      pickup_country: 'XK',
+      pickup_label: 'Prishtina',
+      pickup_street: null,
+      pickup_house_number: null,
+      pickup_details: 'Block B, entrance 2',
+      pickup_floor: 2,
+      pickup_has_lift: false,
+      pickup_lat: 42.6629,
+      pickup_lon: 21.1655,
+      dropoff_area: street.area,
+      dropoff_district: null,
+      dropoff_country: 'XK',
+      dropoff_label: street.label,
+      dropoff_street: street.street,
+      dropoff_house_number: street.houseNumber,
+      dropoff_details: '',
+      dropoff_floor: 0,
+      dropoff_has_lift: false,
+      dropoff_lat: street.lat,
+      dropoff_lon: street.lon,
+      items: [
+        { key: 'sofa3', qty: 1, assembly: false },
+        { key: 'box', qty: 10, assembly: false },
+      ],
+      distance_km: 83.2,
+      chosen_mover_company_id: prizren.companyId,
+      chosen_vehicle_id: prizren.vehicleId,
+      created_at: new Date(2026, 9, 15, 9, 50).toISOString(),
+      quotes: [
+        {
+          id: answer.quote.id,
+          currency: 'EUR',
+          line_items: answer.quote.lines,
+          mover_price: answer.quote.moverPrice,
+          booking_fee: null,
+          total: answer.quote.total,
+          cancel_free_hours: 24,
+          cancel_late_pct: 50,
+          expires_at: new Date(2026, 9, 15, 10, 5).toISOString(),
+          created_at: new Date(2026, 9, 15, 9, 50).toISOString(),
+          mover: answer.mover,
+        },
+      ],
+    };
+    await page.route('**/rest/v1/jobs*', (route) =>
+      route.request().method() === 'OPTIONS'
+        ? route.fulfill({ status: 204, headers: cors })
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify([job]) }),
+    );
+    const sent = await fakeBook(page, { body: answer });
+    await page.goto(url);
+    const m = en.customer.moves;
+
+    // On the home: route, day and time, size, mover and price, where it stands.
+    const row = page.getByTestId(`move-${job.id}`);
+    await expect(row).toContainText('Prishtina → Prizren');
+    await expect(row).toContainText(`Fri 16 Oct, 09:00 · ${en.vehicles.VAN.name}`);
+    await expect(row).toContainText(`${prizren.companyName} · ${euros(prizren.quote.moverPrice)}`);
+    await expect(row).toContainText(m.status.QUOTED);
+
+    // Its own screen: everything agreed, as the customer saw it (COMPLIANCE §4).
+    await row.click();
+    await expect(page.getByTestId('move-quoted-note')).toHaveText(m.quotedNote);
+    await expect(page.getByTestId('move-pickup')).toContainText('Block B, entrance 2');
+    await expect(page.getByTestId('move-pickup')).toContainText(`${b.stops.floorN.replace('{{n}}', '2')} · ${b.stops.liftNo}`);
+    await expect(page.getByTestId('move-items')).toContainText(`${en.items.sofa3} × 1`);
+    await expect(page.getByTestId('move-contract')).toHaveText(b.review.contract.replace('{{name}}', prizren.companyName));
+    await expect(page.getByTestId('move-mover-details')).toContainText(b.review.phone.replace('{{phone}}', '+38344000902'));
+    await expect(page.getByTestId('move-mover-price')).toContainText(euros(prizren.quote.moverPrice));
+    await expect(page.getByTestId('move-cancellation')).toHaveText(`${b.cancel.free24} ${b.cancel.late.replace('{{pct}}', '50')}`);
+    await expect(page.getByTestId('move-price-checked')).toHaveText(
+      m.priceChecked.replace('{{date}}', 'Thursday 15 October').replace('{{time}}', '09:50'),
+    );
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('customer-move.png');
+
+    // Continue booking: the same request, reviewed again on the server.
+    await page.getByTestId('move-continue').click();
+    await expect(page.getByText(b.review.title)).toBeVisible();
+    expect(sent.at(-1)).toMatchObject({ jobId: job.id, vehicleId: prizren.vehicleId, helpers: 2, scheduledAt: job.scheduled_at });
+  });
+
   test('the move stays on the device after a reload, and is forgotten on sign out', async ({ page }) => {
     await page.getByTestId('see-movers').click();
     await page.getByTestId('stop-pickup-details').fill('Block B, entrance 2');

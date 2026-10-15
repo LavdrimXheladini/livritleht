@@ -95,7 +95,31 @@
     "switchTitle": "Imate kombi?",
     "switchText": "Nudite prevoz na MoversHubu po svojim cenama. Prvo unesite firmu, dokumente, vozila, cene i isplate; zahtevi stižu kada budu verifikovani.",
     "switchToMover": "Pređi na stranu prevoznika",
-    "nowHere": "Sada ste na strani klijenta."
+    "nowHere": "Sada ste na strani klijenta.",
+    "moves": {
+      "title": "Vaše selidbe",
+      "quotedNote": "Još nije rezervisana: plaćanje karticom uskoro. Ništa se ne naplaćuje i prevoznik još ne dobija zahtev.",
+      "detailTitle": "Vaša selidba",
+      "stopsTitle": "Adrese",
+      "itemsTitle": "Stvari za selidbu",
+      "priceChecked": "Ova cena je proverena {{date}} u {{time}}. Nastavite rezervaciju da je ponovo proverite.",
+      "notFound": "Ova selidba više nije na vašoj listi.",
+      "open": "Otvori",
+      "status": {
+        "DRAFT": "Nacrt",
+        "QUOTED": "Sačuvana, nije rezervisana",
+        "BOOKED": "Rezervisana",
+        "OFFERED": "Poslata prevozniku",
+        "ACCEPTED": "Prihvaćena od prevoznika",
+        "EN_ROUTE_TO_PICKUP": "Prevoznik je na putu",
+        "AT_PICKUP": "Na mestu preuzimanja",
+        "IN_TRANSIT": "Na putu do dostave",
+        "AT_DROPOFF": "Na mestu dostave",
+        "COMPLETED": "Završena",
+        "CANCELLED": "Otkazana",
+        "DISPUTED": "U sporu"
+      }
+    }
   },
   "booking": {
     "start": "Rezerviši selidbu kod prevoznika",

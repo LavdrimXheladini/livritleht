@@ -1,5 +1,7 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
 
+import { JOB_COLUMNS, jobRowSchema } from '@movershub/shared';
+
 // API tests for the deployed `book` function (design/DECISIONS.md #26). Skipped unless:
 //   QUOTE_API_URL=https://<ref>.supabase.co/functions/v1/quote QUOTE_API_KEY=<publishable key> pnpm e2e
 // The signed-in tests also need SUPABASE_SECRET_KEY: they create a customer and a mover account and
@@ -103,9 +105,20 @@ test.describe('signed in', () => {
     const quotes = await serviceGet(request, `quotes?job_id=eq.${answer.jobId}&select=mover_price`);
     expect(quotes).toEqual([{ mover_price: offer.quote.moverPrice }, { mover_price: offer.quote.moverPrice }]);
 
-    // The customer reads their own request (RLS).
-    const own = await request.get(`${projectUrl}/rest/v1/jobs?select=id`, { headers: { apikey: key, Authorization: `Bearer ${customer.token}` } });
-    expect(await own.json()).toEqual([{ id: answer.jobId }]);
+    // The customer reads their own request (RLS) as "My moves" does: the coordinates and the latest
+    // quote, with the mover as they saw them (COMPLIANCE §4) — the company record itself stays private.
+    const own = await request.get(
+      `${projectUrl}/rest/v1/jobs?select=${encodeURIComponent(JOB_COLUMNS)}&order=created_at.desc&quotes.order=created_at.desc&quotes.limit=1`,
+      { headers: { apikey: key, Authorization: `Bearer ${customer.token}` } },
+    );
+    expect(own.ok(), await own.text()).toBe(true);
+    const [mine, ...others] = jobRowSchema.array().parse(await own.json());
+    expect(others).toEqual([]);
+    expect(mine).toMatchObject({ id: answer.jobId, pickup_lat: prishtina.lat, pickup_lon: prishtina.lon, dropoff_lat: prizren.lat });
+    expect(mine!.quotes).toHaveLength(1);
+    expect(mine!.quotes[0]!.mover).toMatchObject({ name: offer.companyName, cancellation: { freeHours: 24, latePct: 50 } });
+    const company = await request.get(`${projectUrl}/rest/v1/mover_companies?select=id`, { headers: { apikey: key, Authorization: `Bearer ${customer.token}` } });
+    expect(await company.json()).toEqual([]);
   });
 
   test('never takes a price from the client', async ({ request }) => {

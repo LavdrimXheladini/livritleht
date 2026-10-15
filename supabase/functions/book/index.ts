@@ -10,7 +10,7 @@
 // later), then offered. Run `pnpm functions:build` before serving or deploying.
 
 import { jobColumns, moverFactsFromRow, priceBooking, quoteColumns } from '../_shared/movershub/pricing/index.ts';
-import { BOOKING_FEE_RULE, BOOKING_QUOTE_MINUTES, type BookResponse } from '../_shared/movershub/shared/index.ts';
+import { BOOKING_FEE_RULE, BOOKING_QUOTE_MINUTES, type BookResponse, type BookedMover } from '../_shared/movershub/shared/index.ts';
 import { caller, type Caller } from '../_shared/auth.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
 import { quotableVehicles, routeKm } from '../_shared/quote-data.ts';
@@ -71,15 +71,32 @@ Deno.serve(async (req) => {
     const [job] = updated.length ? updated : await serviceRows<{ id: string }>('POST', 'jobs?select=id', columns);
     if (!job) throw new Error('jobs: no row returned');
 
-    const expiresAt = new Date(Date.now() + BOOKING_QUOTE_MINUTES * 60_000);
-    const [quote] = await serviceRows<{ id: string; expires_at: string }>('POST', 'quotes?select=id,expires_at', quoteColumns(booking, job.id, expiresAt));
-    if (!quote) throw new Error('quotes: no row returned');
-
+    // The mover as the customer sees them now (COMPLIANCE §4) — kept with the quote.
     const [company] = await serviceRows<CompanyRow>(
       'GET',
       `mover_companies?id=eq.${booking.row.company_id}&select=legal_name,is_business,registration_no,address,country,contact_phone,contact_email`,
     );
     if (!company) throw new Error('mover_companies: no row');
+    const mover: BookedMover = {
+      companyId: booking.row.company_id,
+      name: company.legal_name,
+      isBusiness: company.is_business,
+      registrationNo: company.is_business ? company.registration_no : null,
+      address: company.address,
+      country: company.country,
+      phone: company.contact_phone,
+      email: company.contact_email,
+      insuranceUntil: booking.row.insurance_until,
+      cancellation,
+    };
+
+    const expiresAt = new Date(Date.now() + BOOKING_QUOTE_MINUTES * 60_000);
+    const [quote] = await serviceRows<{ id: string; expires_at: string }>(
+      'POST',
+      'quotes?select=id,expires_at',
+      quoteColumns(booking, job.id, expiresAt, mover),
+    );
+    if (!quote) throw new Error('quotes: no row returned');
 
     const q = booking.quote;
     const answer: BookResponse = {
@@ -95,18 +112,7 @@ Deno.serve(async (req) => {
         bookingFee: q.bookingFee,
         total: q.total,
       },
-      mover: {
-        companyId: booking.row.company_id,
-        name: company.legal_name,
-        isBusiness: company.is_business,
-        registrationNo: company.is_business ? company.registration_no : null,
-        address: company.address,
-        country: company.country,
-        phone: company.contact_phone,
-        email: company.contact_email,
-        insuranceUntil: booking.row.insurance_until,
-        cancellation,
-      },
+      mover,
     };
     return json(req, answer);
   } catch (e) {

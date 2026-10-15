@@ -95,7 +95,31 @@
     "switchTitle": "Hast du einen Transporter?",
     "switchText": "Biete Umzüge auf MoversHub zu deinen eigenen Preisen an. Zuerst trägst du Firma, Dokumente, Fahrzeuge, Preise und Auszahlungen ein; Anfragen kommen, sobald alles verifiziert ist.",
     "switchToMover": "Zum Bereich für Umzugsunternehmen wechseln",
-    "nowHere": "Du bist jetzt im Kundenbereich."
+    "nowHere": "Du bist jetzt im Kundenbereich.",
+    "moves": {
+      "title": "Deine Umzüge",
+      "quotedNote": "Noch nicht gebucht: Bezahlen per Karte kommt bald. Nichts wird berechnet, und dein Umzugsunternehmen bekommt die Anfrage noch nicht.",
+      "detailTitle": "Dein Umzug",
+      "stopsTitle": "Adressen",
+      "itemsTitle": "Was mitkommt",
+      "priceChecked": "Dieser Preis wurde am {{date}} um {{time}} geprüft. Setz die Buchung fort, um ihn erneut zu prüfen.",
+      "notFound": "Dieser Umzug ist nicht mehr in deiner Liste.",
+      "open": "Öffnen",
+      "status": {
+        "DRAFT": "Entwurf",
+        "QUOTED": "Gespeichert, nicht gebucht",
+        "BOOKED": "Gebucht",
+        "OFFERED": "An dein Umzugsunternehmen gesendet",
+        "ACCEPTED": "Vom Unternehmen angenommen",
+        "EN_ROUTE_TO_PICKUP": "Dein Umzugsunternehmen ist unterwegs",
+        "AT_PICKUP": "An der Abholadresse",
+        "IN_TRANSIT": "Unterwegs zur Lieferadresse",
+        "AT_DROPOFF": "An der Lieferadresse",
+        "COMPLETED": "Abgeschlossen",
+        "CANCELLED": "Storniert",
+        "DISPUTED": "Im Streitfall"
+      }
+    }
   },
   "booking": {
     "start": "Mit einem Umzugsunternehmen buchen",

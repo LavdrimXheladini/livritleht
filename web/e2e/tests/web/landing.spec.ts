@@ -154,8 +154,9 @@ test('menu links glide to their section; the arrow brings you back to the top', 
   const toTop = page.getByRole('button', { name: en.common.backToTop });
   await expect(toTop).toHaveCount(0); // hidden from everyone while at the top
 
-  // Record the scroll position every frame after clicking "Markets": a glide passes through many
-  // positions and only goes forward; a jump would show one or two.
+  // Record the scroll position every frame after clicking "Markets": a glide passes through positions
+  // between the start and the section, only going forward; a jump shows none in between. Counted by
+  // positions in between, not by frames: a busy machine (tests in parallel) draws fewer frames.
   const positions = await page.evaluate(async () => {
     const seen: number[] = [];
     document.querySelector<HTMLAnchorElement>('nav a[href="#markets"]')!.click();
@@ -166,7 +167,8 @@ test('menu links glide to their section; the arrow brings you back to the top', 
     }
     return seen;
   });
-  expect(new Set(positions).size).toBeGreaterThan(20);
+  const end = positions.at(-1)!;
+  expect(new Set(positions.filter((y) => y > 0 && y < end)).size).toBeGreaterThanOrEqual(5);
   expect(positions.every((y, i) => i === 0 || y >= positions[i - 1]!)).toBe(true);
   await expect(page).toHaveURL(/#markets$/);
   await expect(page.locator('#markets')).toBeInViewport();

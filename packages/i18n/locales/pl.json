@@ -95,7 +95,31 @@
     "switchTitle": "Masz busa?",
     "switchText": "Oferuj przewozy w MoversHub po własnych stawkach. Najpierw uzupełnij firmę, dokumenty, auta, stawki i wypłaty; zlecenia pojawią się po ich weryfikacji.",
     "switchToMover": "Przełącz na tryb przewoźnika",
-    "nowHere": "Jesteś teraz w trybie klienta."
+    "nowHere": "Jesteś teraz w trybie klienta.",
+    "moves": {
+      "title": "Twoje przeprowadzki",
+      "quotedNote": "Jeszcze niezarezerwowana: płatność kartą wkrótce. Nic nie jest pobierane, a przewoźnik nie dostaje jeszcze prośby.",
+      "detailTitle": "Twoja przeprowadzka",
+      "stopsTitle": "Adresy",
+      "itemsTitle": "Rzeczy do przewiezienia",
+      "priceChecked": "Ta cena została sprawdzona {{date}} o {{time}}. Kontynuuj rezerwację, aby sprawdzić ją ponownie.",
+      "notFound": "Tej przeprowadzki nie ma już na twojej liście.",
+      "open": "Otwórz",
+      "status": {
+        "DRAFT": "Szkic",
+        "QUOTED": "Zapisana, niezarezerwowana",
+        "BOOKED": "Zarezerwowana",
+        "OFFERED": "Wysłana do przewoźnika",
+        "ACCEPTED": "Przyjęta przez przewoźnika",
+        "EN_ROUTE_TO_PICKUP": "Przewoźnik jest w drodze",
+        "AT_PICKUP": "Na miejscu odbioru",
+        "IN_TRANSIT": "W drodze do miejsca dostawy",
+        "AT_DROPOFF": "Na miejscu dostawy",
+        "COMPLETED": "Zakończona",
+        "CANCELLED": "Anulowana",
+        "DISPUTED": "Sporna"
+      }
+    }
   },
   "booking": {
     "start": "Zarezerwuj przewoźnika",
