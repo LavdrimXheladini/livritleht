@@ -831,7 +831,38 @@
       "consent": "Vaš email koristimo samo za ovo obaveštenje o početku rada.",
       "invalid": "Unesite ispravnu email adresu.",
       "error": "Nešto nije u redu. Pokušajte ponovo.",
-      "legal": "© {{year}} MoversHub. Prevoznici su nezavisne firme."
+      "legal": "© {{year}} MoversHub. Prevoznici su nezavisne firme.",
+      "ranking": "Kako funkcioniše redosled"
+    }
+  },
+  "ranking": {
+    "title": "Kako funkcioniše redosled",
+    "subtitle": "Koje prevoznike vidite za svoju selidbu i kojim redom. Ista pravila važe za svakog prevoznika.",
+    "updated": "Poslednja izmena: {{date}}",
+    "whoTitle": "Koga vidite",
+    "whoText": "Prevoznici na MoversHubu su nezavisne firme. Za vašu selidbu vidite svakog prevoznika za koga važi sve od sledećeg:",
+    "orderTitle": "Kojim redom",
+    "orderText": "Po sopstvenoj ceni svakog prevoznika za vašu selidbu, od najniže. Kada prevoznici koriste različite valute, prvo idu cene u valuti zemlje preuzimanja. \"Rezerviši najbolju ponudu\" bira najnižu cenu.",
+    "neverTitle": "Šta nikada ne menja redosled",
+    "reviewsTitle": "Ocene",
+    "reviewsText": "Za sada nema ocena. Pre nego što ocene klijenata utiču na redosled, ova stranica će objasniti kako se računaju.",
+    "contact": "Pitanja o ovoj stranici:",
+    "who": {
+      "verified": "MoversHub je proverio podatke i dokumente njegove firme.",
+      "van": "Ima vozilo veličine koju ste izabrali, a MoversHub ga je proverio.",
+      "area": "Mesto preuzimanja je u jednom od njegovih područja rada.",
+      "country": "Registrovan je u zemlji selidbe — preko granice, u zemlji na jednom njenom kraju.",
+      "insurance": "Njegovo osiguranje prevoznika važi na dan selidbe.",
+      "crossBorder": "Preko granice: njegovo CMR osiguranje važi na dan selidbe, cene su u evrima, a teža vozila imaju tahograf i važeću licencu.",
+      "terms": "Sam je odredio svoje cene i uslove otkazivanja.",
+      "payouts": "Podesio je isplate kod MoversHub dobavljača plaćanja.",
+      "standing": "Njegov nalog nije suspendovan."
+    },
+    "never": {
+      "paid": "Plaćanje: nijedan prevoznik ne može da kupi bolje mesto. Ako se ikada uvede plaćeno isticanje, biće jasno označeno.",
+      "declining": "Odbijanje: prevoznik koji odbija poslove ne pada niže.",
+      "location": "Lokacija: gde prevoznik vozi tokom poslova nikada se ne koristi za redosled.",
+      "commission": "Provizija MoversHuba: ista je za svakog prevoznika — 20% unutar jedne zemlje, 15% preko granice — pa nikoga ne favorizuje."
     }
   },
   "dashboard": {

@@ -49,3 +49,11 @@ test('sign-in (en) on a phone', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(resources.en.translation.auth.title);
   await expect(page).toHaveScreenshot('sign-in-en-phone.png', { fullPage: true });
 });
+
+for (const [name, viewport] of [['phone', PHONE], ['laptop', LAPTOP]] as const) {
+  test(`how ranking works (en) on a ${name}`, async ({ page }) => {
+    await open(page, '/en/ranking', viewport);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(resources.en.translation.ranking.title);
+    await expect(page).toHaveScreenshot(`ranking-en-${name}.png`, { fullPage: true, mask: [year(page)] });
+  });
+}

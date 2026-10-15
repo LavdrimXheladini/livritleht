@@ -831,7 +831,38 @@
       "consent": "Wir nutzen deine E-Mail nur für diese Startankündigung.",
       "invalid": "Gib eine gültige E-Mail-Adresse ein.",
       "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-      "legal": "© {{year}} MoversHub. Umzugsunternehmen sind unabhängige Betriebe."
+      "legal": "© {{year}} MoversHub. Umzugsunternehmen sind unabhängige Betriebe.",
+      "ranking": "So funktioniert die Reihenfolge"
+    }
+  },
+  "ranking": {
+    "title": "So funktioniert die Reihenfolge",
+    "subtitle": "Welche Umzugsunternehmen du für deinen Umzug siehst und in welcher Reihenfolge. Für jedes Unternehmen gelten dieselben Regeln.",
+    "updated": "Zuletzt aktualisiert: {{date}}",
+    "whoTitle": "Wen du siehst",
+    "whoText": "Umzugsunternehmen auf MoversHub sind unabhängige Firmen. Für deinen Umzug siehst du jedes Unternehmen, für das all das gilt:",
+    "orderTitle": "In welcher Reihenfolge",
+    "orderText": "Nach dem eigenen Preis jedes Unternehmens für deinen Umzug, der niedrigste zuerst. Verwenden Unternehmen verschiedene Währungen, kommen Preise in der Währung deines Abholortes zuerst. \"Bestes Angebot buchen\" wählt den niedrigsten Preis.",
+    "neverTitle": "Was die Reihenfolge nie ändert",
+    "reviewsTitle": "Bewertungen",
+    "reviewsText": "Es gibt noch keine Bewertungen. Bevor Kundenbewertungen die Reihenfolge beeinflussen, erklärt diese Seite, wie sie zählen.",
+    "contact": "Fragen zu dieser Seite:",
+    "who": {
+      "verified": "MoversHub hat die Firmendaten und Dokumente geprüft.",
+      "van": "Es hat ein Fahrzeug der gewählten Größe, von MoversHub geprüft.",
+      "area": "Deine Abholadresse liegt in einem seiner Einsatzgebiete.",
+      "country": "Es ist im Land deines Umzugs registriert — über eine Grenze im Land an einem Ende davon.",
+      "insurance": "Seine Verkehrshaftungsversicherung gilt am Umzugstag.",
+      "crossBorder": "Über eine Grenze: Seine CMR-Versicherung gilt am Umzugstag, die Preise sind in Euro, und schwerere Fahrzeuge haben einen Fahrtenschreiber und eine gültige Lizenz.",
+      "terms": "Es hat seine eigenen Preise und Stornobedingungen festgelegt.",
+      "payouts": "Es hat Auszahlungen beim Zahlungsdienstleister von MoversHub eingerichtet.",
+      "standing": "Sein Konto ist nicht gesperrt."
+    },
+    "never": {
+      "paid": "Bezahlung: Kein Unternehmen kann für einen besseren Platz bezahlen. Sollte es je bezahlte Platzierungen geben, werden sie klar gekennzeichnet.",
+      "declining": "Ablehnen: Ein Unternehmen, das Aufträge ablehnt, rutscht nicht nach unten.",
+      "location": "Standort: Wo ein Unternehmen während Aufträgen fährt, wird nie für die Reihenfolge verwendet.",
+      "commission": "Die Provision von MoversHub: Sie ist für jedes Unternehmen gleich — 20 % innerhalb eines Landes, 15 % über eine Grenze — und bevorzugt daher niemanden."
     }
   },
   "dashboard": {

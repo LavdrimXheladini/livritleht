@@ -1,4 +1,5 @@
 import { cacheLife } from 'next/cache';
+import Link from 'next/link';
 
 import type { Locale } from '@movershub/i18n';
 import { Sheet } from '@movershub/ui/web';
@@ -14,8 +15,10 @@ async function currentYear() {
   return new Date().getFullYear();
 }
 
-export async function SiteFooter({ locale }: { locale: Locale }) {
+/** The site's footer. `onHome` false (another page): the section links lead to the landing page's sections. */
+export async function SiteFooter({ locale, onHome = true }: { locale: Locale; onHome?: boolean }) {
   const t = getT(locale);
+  const base = onHome ? '' : `/${locale}`;
   const year = await currentYear();
 
   return (
@@ -39,12 +42,16 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
       <div className="flex flex-wrap justify-between gap-4 border-t border-brand-400 pt-5.5 text-[13px] text-sage-400">
         <span>{t('landing.footer.legal', { year })}</span>
         <span className="flex flex-wrap gap-5.5">
-          <a href="#how" className="text-sage-400 underline hover:text-night-50">
+          <a href={`${base}#how`} className="text-sage-400 underline hover:text-night-50">
             {t('landing.nav.how')}
           </a>
-          <a href="#movers" className="text-sage-400 underline hover:text-night-50">
+          <a href={`${base}#movers`} className="text-sage-400 underline hover:text-night-50">
             {t('landing.nav.movers')}
           </a>
+          {/* COMPLIANCE §3: the main ranking parameters, public. */}
+          <Link href={`/${locale}/ranking`} className="text-sage-400 underline hover:text-night-50">
+            {t('landing.footer.ranking')}
+          </Link>
         </span>
       </div>
     </Sheet>

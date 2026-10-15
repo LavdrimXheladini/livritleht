@@ -831,7 +831,38 @@
       "consent": "Email-in tënd e përdorim vetëm për këtë njoftim nisjeje.",
       "invalid": "Shkruaj një adresë email të vlefshme.",
       "error": "Diçka shkoi keq. Provo përsëri.",
-      "legal": "© {{year}} MoversHub. Transportuesit janë biznese të pavarura."
+      "legal": "© {{year}} MoversHub. Transportuesit janë biznese të pavarura.",
+      "ranking": "Si funksionon renditja"
+    }
+  },
+  "ranking": {
+    "title": "Si funksionon renditja",
+    "subtitle": "Cilët transportues sheh për shpërnguljen tënde dhe në çfarë radhe. Të njëjtat rregulla vlejnë për çdo transportues.",
+    "updated": "Përditësuar më: {{date}}",
+    "whoTitle": "Kë sheh",
+    "whoText": "Transportuesit në MoversHub janë biznese të pavarura. Për shpërnguljen tënde sheh çdo transportues për të cilin vlejnë të gjitha këto:",
+    "orderTitle": "Në çfarë radhe",
+    "orderText": "Sipas çmimit të vetë secilit transportues për shpërnguljen tënde, nga më i ulëti. Kur transportuesit përdorin monedha të ndryshme, çmimet në monedhën e vendit të marrjes dalin të parat. \"Rezervo ofertën më të mirë\" zgjedh çmimin më të ulët.",
+    "neverTitle": "Çfarë nuk e ndryshon kurrë radhën",
+    "reviewsTitle": "Vlerësimet",
+    "reviewsText": "Ende nuk ka vlerësime. Para se vlerësimet e klientëve të ndikojnë në radhë, kjo faqe do të tregojë si llogariten.",
+    "contact": "Pyetje për këtë faqe:",
+    "who": {
+      "verified": "MoversHub ka kontrolluar të dhënat dhe dokumentet e kompanisë së tij.",
+      "van": "Ka një furgon të madhësisë që zgjodhe dhe MoversHub e ka kontrolluar.",
+      "area": "Vendi i marrjes është brenda njërës prej zonave të tij të punës.",
+      "country": "Është i regjistruar në vendin e shpërnguljes — kur kalohet kufiri, në vendin në njërin skaj të saj.",
+      "insurance": "Sigurimi i tij i transportuesit është i vlefshëm në ditën e shpërnguljes.",
+      "crossBorder": "Kur kalohet kufiri: sigurimi i tij CMR është i vlefshëm në ditën e shpërnguljes, çmimet janë në euro dhe furgonët më të rëndë kanë tahograf dhe licencë operatori të vlefshme.",
+      "terms": "Ka vendosur vetë çmimet dhe kushtet e anulimit.",
+      "payouts": "Ka konfiguruar pagesat te ofruesi i pagesave i MoversHub.",
+      "standing": "Llogaria e tij nuk është pezulluar."
+    },
+    "never": {
+      "paid": "Pagesa: asnjë transportues nuk mund të paguajë për një vend më të mirë. Nëse ndonjëherë ofrohet vendosje me pagesë, ajo do të shënohet qartë.",
+      "declining": "Refuzimi: një transportues që refuzon punë nuk zbret më poshtë.",
+      "location": "Vendndodhja: ku lëviz transportuesi gjatë punëve nuk përdoret kurrë për renditje.",
+      "commission": "Komisioni i MoversHub: është i njëjtë për çdo transportues — 20% brenda një vendi, 15% përtej kufirit — kështu që nuk favorizon askënd."
     }
   },
   "dashboard": {

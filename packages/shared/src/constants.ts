@@ -43,6 +43,9 @@ export const LOCALES = ['en', 'sq', 'pl', 'sr', 'de'] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = 'en';
 
+/** Each app language for Intl (dates, times): British English ("Tue 20 Oct"), Serbian in the Latin script like the texts. */
+export const INTL_LOCALES: Record<Locale, string> = { en: 'en-GB', sq: 'sq', pl: 'pl', sr: 'sr-Latn', de: 'de' };
+
 /** Map any BCP-47 tag (e.g. `sq-XK`, `hr-HR`, `bs`) to a supported locale. */
 export function resolveLocale(tag: string | null | undefined): Locale {
   const lang = tag?.toLowerCase().split(/[-_]/)[0];

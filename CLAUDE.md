@@ -45,7 +45,7 @@ Do not add new frameworks or replace any of these without asking.
 ```
 movershub/
 ├─ web/                # WEB PLATFORM
-│  ├─ app/             # Next.js: what MoversHub is + create account + get the app under /[lang], /t/[token] tracking page, /admin  (@movershub/web)
+│  ├─ app/             # Next.js: what MoversHub is + create account + get the app under /[lang], /[lang]/ranking ("How ranking works", COMPLIANCE §3), /t/[token] tracking page, /admin  (@movershub/web)
 │  └─ e2e/             # Playwright tests (web + API)                                          (@movershub/e2e)
 ├─ mobile/             # MOBILE PLATFORM
 │  ├─ app/             # The Expo app for customers (booking, payment, tracking) and movers (onboarding, rates, jobs, GPS)  (@movershub/app)

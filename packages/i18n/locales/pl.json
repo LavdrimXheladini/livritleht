@@ -831,7 +831,38 @@
       "consent": "Twój e-mail wykorzystamy wyłącznie do tej informacji o starcie.",
       "invalid": "Podaj prawidłowy adres e-mail.",
       "error": "Coś poszło nie tak. Spróbuj ponownie.",
-      "legal": "© {{year}} MoversHub. Przewoźnicy to niezależne firmy."
+      "legal": "© {{year}} MoversHub. Przewoźnicy to niezależne firmy.",
+      "ranking": "Jak działa kolejność ofert"
+    }
+  },
+  "ranking": {
+    "title": "Jak działa kolejność ofert",
+    "subtitle": "Których przewoźników widzisz przy swojej przeprowadzce i w jakiej kolejności. Te same zasady dotyczą każdego przewoźnika.",
+    "updated": "Ostatnia aktualizacja: {{date}}",
+    "whoTitle": "Kogo widzisz",
+    "whoText": "Przewoźnicy w MoversHub to niezależne firmy. Przy twojej przeprowadzce widzisz każdego przewoźnika, dla którego spełnione jest wszystko poniżej:",
+    "orderTitle": "W jakiej kolejności",
+    "orderText": "Według własnej ceny każdego przewoźnika za twoją przeprowadzkę, od najniższej. Gdy przewoźnicy podają ceny w różnych walutach, najpierw są ceny w walucie kraju odbioru. \"Zarezerwuj najlepszą ofertę\" wybiera najniższą cenę.",
+    "neverTitle": "Co nigdy nie zmienia kolejności",
+    "reviewsTitle": "Opinie",
+    "reviewsText": "Na razie nie ma opinii. Zanim oceny klientów wpłyną na kolejność, ta strona opisze, jak są liczone.",
+    "contact": "Pytania dotyczące tej strony:",
+    "who": {
+      "verified": "MoversHub sprawdził dane i dokumenty jego firmy.",
+      "van": "Ma auto wybranej przez ciebie wielkości, sprawdzone przez MoversHub.",
+      "area": "Miejsce odbioru leży w jednym z jego obszarów działania.",
+      "country": "Jest zarejestrowany w kraju przeprowadzki — przy przeprowadzce za granicę w kraju na jednym z jej końców.",
+      "insurance": "Jego ubezpieczenie OC przewoźnika jest ważne w dniu przeprowadzki.",
+      "crossBorder": "Za granicę: jego ubezpieczenie CMR jest ważne w dniu przeprowadzki, ceny są w euro, a cięższe auta mają tachograf i ważną licencję.",
+      "terms": "Sam ustalił swoje ceny i warunki anulowania.",
+      "payouts": "Skonfigurował wypłaty u dostawcy płatności MoversHub.",
+      "standing": "Jego konto nie jest zawieszone."
+    },
+    "never": {
+      "paid": "Płatność: żaden przewoźnik nie może zapłacić za lepsze miejsce. Jeśli kiedyś pojawi się płatne wyróżnienie, będzie wyraźnie oznaczone.",
+      "declining": "Odmowa: przewoźnik, który odrzuca zlecenia, nie spada niżej.",
+      "location": "Lokalizacja: to, gdzie przewoźnik jeździ podczas zleceń, nigdy nie wpływa na kolejność.",
+      "commission": "Prowizja MoversHub: jest taka sama dla każdego przewoźnika — 20% w kraju, 15% za granicę — więc nikogo nie faworyzuje."
     }
   },
   "dashboard": {

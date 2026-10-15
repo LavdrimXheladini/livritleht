@@ -831,7 +831,38 @@
       "consent": "We use your email only for this launch announcement.",
       "invalid": "Enter a valid email address.",
       "error": "Something went wrong. Please try again.",
-      "legal": "© {{year}} MoversHub. Movers are independent businesses."
+      "legal": "© {{year}} MoversHub. Movers are independent businesses.",
+      "ranking": "How ranking works"
+    }
+  },
+  "ranking": {
+    "title": "How ranking works",
+    "subtitle": "Which movers you see for your move, and in what order. The same rules apply to every mover.",
+    "updated": "Last updated: {{date}}",
+    "whoTitle": "Who you see",
+    "whoText": "Movers on MoversHub are independent businesses. For your move you see every mover for whom all of this is true:",
+    "orderTitle": "In what order",
+    "orderText": "By each mover's own price for your move, lowest first. Where movers use different currencies, prices in your pickup country's currency come first. \"Book best offer\" chooses the lowest price.",
+    "neverTitle": "What never changes the order",
+    "reviewsTitle": "Reviews",
+    "reviewsText": "There are no reviews yet. Before customer ratings affect the order, this page will say how they count.",
+    "contact": "Questions about this page:",
+    "who": {
+      "verified": "MoversHub has checked their company details and documents.",
+      "van": "They have a van of the size you chose, and MoversHub has checked it.",
+      "area": "Your pickup is inside one of their work areas.",
+      "country": "They are registered in the country of your move — across a border, in the country at one end of it.",
+      "insurance": "Their carrier insurance is valid on your move day.",
+      "crossBorder": "Across a border: their CMR insurance is valid on your move day, their prices are in euros, and heavier vans have a tachograph and a valid operator licence.",
+      "terms": "They have set their own prices and cancellation terms.",
+      "payouts": "They have set up payouts with MoversHub's payment provider.",
+      "standing": "Their account is not suspended."
+    },
+    "never": {
+      "paid": "Payment: no mover can pay for a better place. If paid placement is ever offered, it will be clearly marked.",
+      "declining": "Saying no: a mover who declines jobs is not moved down.",
+      "location": "Location: where movers drive during jobs is never used to rank them.",
+      "commission": "MoversHub's commission: it is the same for every mover — 20% within one country, 15% across a border — so it favours no one."
     }
   },
   "dashboard": {

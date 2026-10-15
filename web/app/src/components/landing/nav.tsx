@@ -7,13 +7,15 @@ import { getT } from '@/lib/i18n';
 
 import { LanguageSwitcher } from './language-switcher';
 
-export function Nav({ locale }: { locale: Locale }) {
+/** The site's top bar. `onHome` false (another page): the section links lead to the landing page's sections. */
+export function Nav({ locale, onHome = true }: { locale: Locale; onHome?: boolean }) {
   const t = getT(locale);
+  const base = onHome ? '' : `/${locale}`;
   const links = [
-    ['#how', t('landing.nav.how')],
-    ['#movers', t('landing.nav.movers')],
-    ['#markets', t('landing.nav.markets')],
-    ['#live', t('landing.nav.demo')],
+    [`${base}#how`, t('landing.nav.how')],
+    [`${base}#movers`, t('landing.nav.movers')],
+    [`${base}#markets`, t('landing.nav.markets')],
+    [`${base}#live`, t('landing.nav.demo')],
   ] as const;
 
   return (
@@ -36,7 +38,7 @@ export function Nav({ locale }: { locale: Locale }) {
       <div className="flex flex-[1_1_200px] items-center justify-end gap-2.5">
         <LanguageSwitcher locale={locale} label={t('landing.nav.language')} />
         <Button asChild size="md">
-          <a href="#quote">{t('landing.nav.getPrice')}</a>
+          <a href={`${base}#quote`}>{t('landing.nav.getPrice')}</a>
         </Button>
       </div>
     </nav>
