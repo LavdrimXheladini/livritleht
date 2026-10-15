@@ -20,10 +20,10 @@ values ('00000000-0000-0000-0000-0000000aa301', 'SRID=4326;POINT(-9.1393 38.7223
 
 -- The mover adds vehicles: they start unverified, and the mover can't verify them ----------
 select lives_ok(
-  $$ insert into public.vehicles (id, company_id, class, plate, max_weight_kg)
-     values ('00000000-0000-0000-0000-0000000bb301', '00000000-0000-0000-0000-0000000aa301', 'VAN', 'TEST-VV-1', 2800),
-            ('00000000-0000-0000-0000-0000000bb302', '00000000-0000-0000-0000-0000000aa301', 'TRUCK', 'TEST-VV-2', 7500),
-            ('00000000-0000-0000-0000-0000000bb303', '00000000-0000-0000-0000-0000000aa301', 'LARGE_VAN', 'TEST-VV-3', 3500) $$,
+  $$ insert into public.vehicles (id, company_id, class, plate, max_weight_kg, volume_m3)
+     values ('00000000-0000-0000-0000-0000000bb301', '00000000-0000-0000-0000-0000000aa301', 'VAN', 'TEST-VV-1', 2800, 6),
+            ('00000000-0000-0000-0000-0000000bb302', '00000000-0000-0000-0000-0000000aa301', 'TRUCK', 'TEST-VV-2', 7500, 35),
+            ('00000000-0000-0000-0000-0000000bb303', '00000000-0000-0000-0000-0000000aa301', 'LARGE_VAN', 'TEST-VV-3', 3500, 13) $$,
   'a mover can add vehicles');
 select is((select count(*)::int from public.vehicles where company_id = '00000000-0000-0000-0000-0000000aa301' and verified_at is null),
   3, 'new vehicles start unverified');
@@ -37,17 +37,18 @@ select throws_ok(
 
 -- The class must fit the weight (COMPLIANCE §1.1) ----------------------------------------
 select throws_ok(
-  $$ insert into public.vehicles (company_id, class, plate, max_weight_kg)
-     values ('00000000-0000-0000-0000-0000000aa301', 'TRUCK', 'TEST-VV-4', 2000) $$,
+  $$ insert into public.vehicles (company_id, class, plate, max_weight_kg, volume_m3)
+     values ('00000000-0000-0000-0000-0000000aa301', 'TRUCK', 'TEST-VV-4', 2000, 30) $$,
   '23514', null, 'a truck of 2000 kg is rejected: trucks are over 3.5 t');
 select throws_ok(
-  $$ insert into public.vehicles (company_id, class, plate, max_weight_kg)
-     values ('00000000-0000-0000-0000-0000000aa301', 'BOX', 'TEST-VV-5', 4200) $$,
+  $$ insert into public.vehicles (company_id, class, plate, max_weight_kg, volume_m3)
+     values ('00000000-0000-0000-0000-0000000aa301', 'BOX', 'TEST-VV-5', 4200, 20) $$,
   '23514', null, 'a box van over 3.5 t is rejected');
-select lives_ok(
+-- Unknown weight is left only for admin tools and test data (it counts as heavy cross-border).
+select throws_ok(
   $$ insert into public.vehicles (company_id, class, plate)
      values ('00000000-0000-0000-0000-0000000aa301', 'TRUCK', 'TEST-VV-6') $$,
-  'a truck of unknown weight may be added (it counts as heavy)');
+  '22023', 'vehicle_weight_required', 'a mover gives the weight of every vehicle');
 
 -- The platform verifies the company and its documents, not yet the vehicles ---------------
 reset role;
@@ -128,7 +129,8 @@ select is((select verified_at from public.vehicles where id = '00000000-0000-000
   null, 'changing the plate sends the vehicle back to verification');
 reset role;
 select set_config('request.jwt.claims', '', true);
-update public.vehicles set verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb301';
+-- The admin's check also corrects the weight back to 2.8 t (a tachograph only counts over 2.5 t).
+update public.vehicles set max_weight_kg = 2800, verified_at = clock_timestamp() where id = '00000000-0000-0000-0000-0000000bb301';
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000d301","role":"authenticated"}', true);
 update public.vehicles set tachograph = true where id = '00000000-0000-0000-0000-0000000bb301';

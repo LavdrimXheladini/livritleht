@@ -301,6 +301,37 @@ export async function fakeMoverDocuments(page: Page, { initial = [] }: { initial
 }
 
 /**
+ * The company's vans (rest/v1/vehicles), answering like PostgREST and the database: a new van waits for
+ * the check, a second van with the same plate is refused (23505), and a change to class, plate, weight
+ * or tachograph clears the check. Records each write.
+ */
+export async function fakeVehicles(page: Page, { initial = [] }: { initial?: Record<string, unknown>[] } = {}) {
+  let rows = [...initial];
+  const writes: { method: string; body: Record<string, unknown> }[] = [];
+  const reply = (route: Route, body: unknown, status = 200) =>
+    route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+  await page.route('**/rest/v1/vehicles*', async (route) => {
+    const request = route.request();
+    const method = request.method();
+    if (method === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': '*' } });
+    if (method === 'GET') return reply(route, rows);
+    const body = request.postDataJSON() as Record<string, unknown>;
+    writes.push({ method, body });
+    const id = method === 'POST' ? `00000000-0000-4000-8000-0000000be${String(rows.length + 1).padStart(3, '0')}` : new URL(request.url()).searchParams.get('id')?.replace('eq.', '');
+    if (rows.some((r) => r.id !== id && body.plate !== undefined && r.plate === body.plate)) {
+      return reply(route, { code: '23505', message: 'duplicate key value violates unique constraint "vehicles_company_id_plate_key"' }, 409);
+    }
+    const before = rows.find((r) => r.id === id);
+    const checked = ['class', 'plate', 'max_weight_kg', 'tachograph'];
+    const recheck = !before || checked.some((k) => k in body && body[k] !== before[k]);
+    const row = { active: true, created_at: '2026-10-15T10:00:00.000Z', ...before, ...body, id, verified_at: recheck ? null : (before?.verified_at ?? null) };
+    rows = [...rows.filter((r) => r.id !== id), row];
+    return reply(route, row, method === 'POST' ? 201 : 200);
+  });
+  return writes;
+}
+
+/**
  * Opens the app already signed in as a customer or a mover (the session is in storage before it
  * starts); `passwordOwed`: it closed while a password was still owed after a code. Returns what the
  * app asked the stand-in server for.

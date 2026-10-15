@@ -58,6 +58,7 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
     queryClient.removeQueries({ queryKey: ['mover-company'] });
     queryClient.removeQueries({ queryKey: ['confirmed-phones'] });
     queryClient.removeQueries({ queryKey: ['mover-documents'] });
+    queryClient.removeQueries({ queryKey: ['vehicles'] });
   }, [queryClient]);
 
   useEffect(() => {

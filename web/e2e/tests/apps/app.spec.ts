@@ -14,6 +14,7 @@ import {
   fakeCompanyChecks,
   fakeMoverCompany,
   fakeMoverDocuments,
+  fakeVehicles,
   fitScreenToPage,
   noNetwork,
   offlineWithSavedSide,
@@ -929,6 +930,101 @@ test.describe('signed in as a mover', () => {
     expect(calls.uploads[0]?.path).toMatch(/\/registration\/[a-z0-9]+\.jpg$/);
     expect(calls.writes).toEqual([{ method: 'PATCH', body: { file_path: calls.uploads[0]?.path, expires_at: null } }]);
     expect(calls.removed).toEqual([extract.file_path]);
+  });
+
+  test('vans: a van is added with its class, plate, weight and volume, and waits for the check', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    const writes = await fakeVehicles(page);
+    const v = en.mover.vehicles;
+    await page.goto(url);
+    await expect(page.getByTestId('step-vehicles')).toContainText(en.mover.stepStatus.todo);
+    await page.getByTestId('step-vehicles').click();
+    await expect(page.getByText(v.none)).toBeVisible();
+    await page.getByTestId('vehicles-add').click();
+    await expect(page.getByRole('heading', { name: v.addTitle })).toBeVisible();
+
+    await page.getByTestId('vehicle-save').click();
+    for (const text of [v.errors.class_required, v.errors.plate_required, v.errors.weight_required, v.errors.volume_required])
+      await expect(app(page).getByText(text, { exact: true })).toBeVisible();
+
+    await page.getByRole('radio', { name: en.vehicles.LARGE_VAN.name }).click();
+    await page.getByTestId('vehicle-plate').fill('01-234 ab');
+    await page.getByTestId('vehicle-weight').fill('4200');
+    await page.getByTestId('vehicle-volume').fill('13,5');
+    await page.getByTestId('vehicle-save').click();
+    await expect(app(page).getByText(v.errors.weight_too_heavy_for_class, { exact: true })).toBeVisible();
+    expect(writes).toEqual([]);
+
+    await page.getByTestId('vehicle-weight').fill('3500');
+    // Over 2.5 t: the tachograph question appears.
+    await page.getByTestId('vehicle-tachograph').click();
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-vehicle-form.png');
+    await page.getByTestId('vehicle-save').click();
+
+    await expect(page.getByTestId('vehicle-01-234 AB')).toContainText(`${en.vehicles.LARGE_VAN.name} · 01-234 AB`);
+    await expect(page.getByTestId('vehicle-01-234 AB')).toContainText('3.5 t · 13.5 m³ · Tachograph');
+    await expect(page.getByTestId('vehicle-01-234 AB')).toContainText(v.status.checking);
+    expect(writes).toEqual([
+      {
+        method: 'POST',
+        body: {
+          class: 'LARGE_VAN',
+          plate: '01-234 AB',
+          max_weight_kg: 3500,
+          volume_m3: 13.5,
+          has_tail_lift: false,
+          tachograph: true,
+          company_id: '00000000-0000-4000-8000-0000000c0002',
+        },
+      },
+    ]);
+    await page.getByTestId('vehicles-back').click();
+    await expect(page.getByTestId('step-vehicles')).toContainText(en.mover.stepStatus.saved);
+  });
+
+  test('vans: changing a checked van says it goes back to the check; a van is taken out of use, never deleted', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    const van = {
+      id: '00000000-0000-4000-8000-0000000be100',
+      class: 'VAN',
+      plate: '01-111 AA',
+      max_weight_kg: 2800,
+      volume_m3: 6,
+      has_tail_lift: false,
+      tachograph: false,
+      active: true,
+      verified_at: '2026-10-10T09:00:00.000Z',
+      created_at: '2026-10-01T09:00:00.000Z',
+    };
+    const box = { ...van, id: '00000000-0000-4000-8000-0000000be101', class: 'BOX', plate: '01-222 BB', max_weight_kg: 3500, volume_m3: 20, verified_at: null };
+    const writes = await fakeVehicles(page, { initial: [van, box] });
+    const v = en.mover.vehicles;
+    await page.goto(url);
+    await expect(page.getByTestId('step-vehicles')).toContainText(en.mover.stepStatus.verified);
+    await page.getByTestId('step-vehicles').click();
+    await expect(page.getByTestId('vehicle-01-111 AA')).toContainText(v.status.verified);
+
+    await page.getByTestId('vehicle-01-111 AA-edit').click();
+    await expect(page.getByTestId('vehicle-reverify')).toHaveText(v.reverifyNotice);
+    await expect(page.getByTestId('vehicle-weight')).toHaveValue('2800');
+    // The other van's plate is taken.
+    await page.getByTestId('vehicle-plate').fill('01-222 BB');
+    await page.getByTestId('vehicle-save').click();
+    await expect(app(page).getByText(v.errors.plate_taken, { exact: true })).toBeVisible();
+    await page.getByTestId('vehicle-plate').fill('01-111 AA');
+    await page.getByTestId('vehicle-weight').fill('3100');
+    await page.getByTestId('vehicle-save').click();
+    await expect(page.getByTestId('vehicle-01-111 AA')).toContainText(v.status.checking);
+
+    await page.getByTestId('vehicle-01-111 AA-toggle').click();
+    await expect(page.getByTestId('vehicle-01-111 AA')).toContainText(v.status.inactive);
+    await expect(page.getByTestId('vehicle-01-111 AA-toggle')).toHaveText(v.useAgain);
+    expect(writes.map((w) => [w.method, w.body])).toEqual([
+      ['PATCH', expect.objectContaining({ plate: '01-222 BB' })],
+      ['PATCH', expect.objectContaining({ plate: '01-111 AA', max_weight_kg: 3100 })],
+      ['PATCH', { active: false }],
+    ]);
   });
 
   test.describe('in Albanian', () => {

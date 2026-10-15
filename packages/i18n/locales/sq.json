@@ -267,6 +267,51 @@
         "expiry_past": "Kjo datë ka kaluar: ngarko një dokument që është ende i vlefshëm."
       }
     },
+    "vehicles": {
+      "title": "Furgonët e tu",
+      "subtitle": "Çdo furgon merr çmimet e veta në hapin tjetër. MoversHub e kontrollon furgonin para se të marrë kërkesa për punë.",
+      "needCompany": "Plotëso së pari kompaninë: furgonët i përkasin asaj.",
+      "none": "Ende asnjë furgon.",
+      "add": "Shto një furgon",
+      "addTitle": "Shto një furgon",
+      "editTitle": "Ndrysho furgonin",
+      "edit": "Ndrysho",
+      "takeOutOfUse": "Hiqe nga përdorimi",
+      "useAgain": "Përdore përsëri",
+      "tailLift": "Platformë ngritëse",
+      "tachographShort": "Tahograf",
+      "class": "Klasa e madhësisë",
+      "plate": "Targa",
+      "plateHint": "Si në automjet, p.sh. 01-234-AB.",
+      "weight": "Pesha maksimale (kg)",
+      "weightHint": "Pesha maksimale e lejuar në librezën e qarkullimit (F.2), p.sh. 3500.",
+      "volume": "Hapësira e ngarkesës (m³)",
+      "volumeHint": "p.sh. 6 për Transit Custom, 13 për Sprinter.",
+      "tailLiftQuestion": "Furgoni ka platformë ngritëse",
+      "tachographQuestion": "Ka tahograf inteligjent",
+      "tachographHint": "I nevojshëm për punë ndërkombëtare me automjete mbi 2,5 t.",
+      "reverifyNotice": "Nëse ndryshon klasën, targën, peshën ose tahografin, furgoni kthehet për kontroll.",
+      "save": "Ruaj furgonin",
+      "saved": "Furgoni u ruajt. MoversHub do ta kontrollojë.",
+      "errorSave": "Furgoni nuk u ruajt. Kontrollo lidhjen dhe provo përsëri.",
+      "status": {
+        "verified": "Verifikuar",
+        "checking": "Në kontroll",
+        "inactive": "Jo në përdorim"
+      },
+      "errors": {
+        "class_required": "Zgjidh një klasë madhësie.",
+        "plate_required": "Shkruaj targën.",
+        "plate_invalid": "Përdor vetëm shkronja, shifra, hapësira dhe viza.",
+        "plate_taken": "Ke tashmë një furgon me këtë targë.",
+        "weight_required": "Shkruaj peshën maksimale.",
+        "weight_invalid": "Shkruaj peshën në kilogramë, p.sh. 3500.",
+        "weight_too_heavy_for_class": "Vetëm Kamioni është mbi 3,5 t: zgjidh Kamion për këtë peshë.",
+        "weight_too_light_for_truck": "Kamioni është mbi 3,5 t: zgjidh një nga klasat më të vogla.",
+        "volume_required": "Shkruaj hapësirën e ngarkesës.",
+        "volume_invalid": "Shkruaj metra kub, p.sh. 6 ose 13.5."
+      }
+    },
     "switchTitle": "Të duhet vetë një zhvendosje?",
     "switchToCustomer": "Kalo në anën e klientit",
     "nowHere": "Tani je në anën e transportuesit."

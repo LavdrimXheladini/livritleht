@@ -2,19 +2,19 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { documentsStepStatus } from '@movershub/shared';
+import { documentsStepStatus, vehiclesStepStatus } from '@movershub/shared';
 import { BuildingIcon, CardIcon, DarkPanel, Display, DocumentIcon, PinIcon, TagIcon, VanIcon, type PillTone } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
 import { useMoverCompany } from '@/lib/mover-company';
 import { useMoverDocuments } from '@/lib/mover-documents';
+import { useVehicles } from '@/lib/vehicles';
 
 import { IconRow } from './icon-row';
 
-// What a mover sets up before taking jobs (COMPLIANCE §5). The company and documents steps are built;
-// the others follow one by one ("Coming next").
+// What a mover sets up before taking jobs (COMPLIANCE §5). The company, documents and vans steps are
+// built; the others follow one by one ("Coming next").
 const LATER_STEPS = [
-  ['vehicles', VanIcon],
   ['rates', TagIcon],
   ['payouts', CardIcon],
 ] as const;
@@ -45,6 +45,7 @@ export function SetupChecklist() {
         <View accessibilityRole="list" className="gap-4">
           <CompanyStep />
           <DocumentsStep />
+          <VehiclesStep />
           {LATER_STEPS.map(([key, icon]) => (
             <IconRow
               key={key}
@@ -105,6 +106,32 @@ function DocumentsStep() {
       badge={status ? t(`mover.stepStatus.${status}`) : undefined}
       badgeTone={status ? STATUS_TONE[status] : undefined}
       onPress={() => router.push('/mover/documents')}
+    />
+  );
+}
+
+/** "Your vans": opens the list; its badge says whether a van is in use and checked (none while they load). */
+function VehiclesStep() {
+  const { t } = useTranslation();
+  const company = useMoverCompany();
+  const vehicles = useVehicles(company.data?.id);
+  const status: StepStatus | undefined =
+    company.data === undefined
+      ? undefined
+      : company.data === null
+        ? 'todo'
+        : vehicles.data === undefined
+          ? undefined
+          : vehiclesStepStatus(vehicles.data);
+  return (
+    <IconRow
+      testID="step-vehicles"
+      icon={VanIcon}
+      title={t('mover.steps.vehicles.title')}
+      text={t('mover.steps.vehicles.text')}
+      badge={status ? t(`mover.stepStatus.${status}`) : undefined}
+      badgeTone={status ? STATUS_TONE[status] : undefined}
+      onPress={() => router.push('/mover/vehicles')}
     />
   );
 }

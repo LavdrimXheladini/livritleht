@@ -267,6 +267,51 @@
         "expiry_past": "Ovaj datum je prošao: pošaljite dokument koji još važi."
       }
     },
+    "vehicles": {
+      "title": "Vaša vozila",
+      "subtitle": "Svako vozilo dobija svoje cene u sledećem koraku. MoversHub proverava vozilo pre nego što dobije zahteve za posao.",
+      "needCompany": "Prvo popunite podatke o firmi: vozila pripadaju njoj.",
+      "none": "Još nema vozila.",
+      "add": "Dodaj vozilo",
+      "addTitle": "Dodaj vozilo",
+      "editTitle": "Izmeni vozilo",
+      "edit": "Izmeni",
+      "takeOutOfUse": "Isključi iz upotrebe",
+      "useAgain": "Ponovo koristi",
+      "tailLift": "Rampa",
+      "tachographShort": "Tahograf",
+      "class": "Klasa veličine",
+      "plate": "Registarska oznaka",
+      "plateHint": "Kao na vozilu, npr. BG 123-AB.",
+      "weight": "Najveća dozvoljena masa (kg)",
+      "weightHint": "Iz saobraćajne dozvole (F.2), npr. 3500.",
+      "volume": "Tovarni prostor (m³)",
+      "volumeHint": "npr. 6 za Transit Custom, 13 za Sprinter.",
+      "tailLiftQuestion": "Vozilo ima podiznu rampu",
+      "tachographQuestion": "Ugrađen je pametni tahograf",
+      "tachographHint": "Potreban za međunarodne poslove vozilima preko 2,5 t.",
+      "reverifyNotice": "Ako promenite klasu, registarsku oznaku, masu ili tahograf, vozilo se ponovo proverava.",
+      "save": "Sačuvaj vozilo",
+      "saved": "Vozilo je sačuvano. MoversHub će ga proveriti.",
+      "errorSave": "Vozilo nije sačuvano. Proverite vezu i pokušajte ponovo.",
+      "status": {
+        "verified": "Provereno",
+        "checking": "Na proveri",
+        "inactive": "Nije u upotrebi"
+      },
+      "errors": {
+        "class_required": "Izaberite klasu veličine.",
+        "plate_required": "Unesite registarsku oznaku.",
+        "plate_invalid": "Koristite samo slova, cifre, razmake i crtice.",
+        "plate_taken": "Već imate vozilo sa ovom oznakom.",
+        "weight_required": "Unesite najveću dozvoljenu masu.",
+        "weight_invalid": "Unesite masu u kilogramima, npr. 3500.",
+        "weight_too_heavy_for_class": "Samo Kamion ima preko 3,5 t: za ovu masu izaberite Kamion.",
+        "weight_too_light_for_truck": "Kamion ima preko 3,5 t: izaberite jednu od manjih klasa.",
+        "volume_required": "Unesite tovarni prostor.",
+        "volume_invalid": "Unesite kubne metre, npr. 6 ili 13,5."
+      }
+    },
     "switchTitle": "Treba vam selidba?",
     "switchToCustomer": "Pređi na stranu klijenta",
     "nowHere": "Sada ste na strani prevoznika."

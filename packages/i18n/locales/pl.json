@@ -267,6 +267,51 @@
         "expiry_past": "Ta data już minęła: prześlij dokument, który jest nadal ważny."
       }
     },
+    "vehicles": {
+      "title": "Twoje pojazdy",
+      "subtitle": "Każdy pojazd dostaje własne ceny w następnym kroku. MoversHub sprawdza pojazd, zanim dostanie zlecenia.",
+      "needCompany": "Najpierw uzupełnij dane firmy: pojazdy należą do niej.",
+      "none": "Brak pojazdów.",
+      "add": "Dodaj pojazd",
+      "addTitle": "Dodaj pojazd",
+      "editTitle": "Zmień pojazd",
+      "edit": "Zmień",
+      "takeOutOfUse": "Wyłącz z użycia",
+      "useAgain": "Używaj ponownie",
+      "tailLift": "Winda",
+      "tachographShort": "Tachograf",
+      "class": "Klasa wielkości",
+      "plate": "Numer rejestracyjny",
+      "plateHint": "Jak na pojeździe, np. WA 12345.",
+      "weight": "Dopuszczalna masa całkowita (kg)",
+      "weightHint": "Z dowodu rejestracyjnego (F.2), np. 3500.",
+      "volume": "Przestrzeń ładunkowa (m³)",
+      "volumeHint": "np. 6 dla Transit Custom, 13 dla Sprintera.",
+      "tailLiftQuestion": "Pojazd ma windę załadowczą",
+      "tachographQuestion": "Zamontowany jest inteligentny tachograf",
+      "tachographHint": "Potrzebny w zleceniach międzynarodowych pojazdami powyżej 2,5 t.",
+      "reverifyNotice": "Zmiana klasy, numeru rejestracyjnego, masy lub tachografu oznacza ponowne sprawdzenie pojazdu.",
+      "save": "Zapisz pojazd",
+      "saved": "Pojazd zapisany. MoversHub go sprawdzi.",
+      "errorSave": "Nie udało się zapisać pojazdu. Sprawdź połączenie i spróbuj ponownie.",
+      "status": {
+        "verified": "Zweryfikowany",
+        "checking": "Sprawdzany",
+        "inactive": "Nieużywany"
+      },
+      "errors": {
+        "class_required": "Wybierz klasę wielkości.",
+        "plate_required": "Wpisz numer rejestracyjny.",
+        "plate_invalid": "Używaj tylko liter, cyfr, spacji i myślników.",
+        "plate_taken": "Masz już pojazd z tym numerem.",
+        "weight_required": "Wpisz dopuszczalną masę.",
+        "weight_invalid": "Wpisz masę w kilogramach, np. 3500.",
+        "weight_too_heavy_for_class": "Tylko Ciężarówka ma ponad 3,5 t: wybierz Ciężarówkę dla tej masy.",
+        "weight_too_light_for_truck": "Ciężarówka ma ponad 3,5 t: wybierz jedną z mniejszych klas.",
+        "volume_required": "Wpisz przestrzeń ładunkową.",
+        "volume_invalid": "Wpisz metry sześcienne, np. 6 lub 13,5."
+      }
+    },
     "switchTitle": "Sam potrzebujesz przeprowadzki?",
     "switchToCustomer": "Przełącz na tryb klienta",
     "nowHere": "Jesteś teraz w trybie przewoźnika."

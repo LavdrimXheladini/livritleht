@@ -58,8 +58,8 @@ select throws_ok(
   '42501', null, 'a mover cannot register a company with their own payout account');
 
 select lives_ok(
-  $$ insert into public.vehicles (id, company_id, class, plate, max_weight_kg)
-     values ('00000000-0000-0000-0000-0000000bb001', '00000000-0000-0000-0000-0000000aa001', 'VAN', 'TEST-AA-1', 2800) $$,
+  $$ insert into public.vehicles (id, company_id, class, plate, max_weight_kg, volume_m3)
+     values ('00000000-0000-0000-0000-0000000bb001', '00000000-0000-0000-0000-0000000aa001', 'VAN', 'TEST-AA-1', 2800, 6) $$,
   'a mover can add a vehicle to their company');
 
 select lives_ok(
@@ -94,8 +94,8 @@ select is((select count(*)::int from public.mover_companies), 0, 'another mover 
 select is((select count(*)::int from public.rate_cards), 0, 'another mover cannot see the rate card');
 
 select throws_ok(
-  $$ insert into public.vehicles (company_id, class, plate)
-     values ('00000000-0000-0000-0000-0000000aa001', 'BOX', 'TEST-HACK') $$,
+  $$ insert into public.vehicles (company_id, class, plate, max_weight_kg, volume_m3)
+     values ('00000000-0000-0000-0000-0000000aa001', 'BOX', 'TEST-HACK', 3500, 20) $$,
   '42501', null, 'another mover cannot add vehicles to the company');
 
 update public.rate_cards set base_fee = 1 where vehicle_id = '00000000-0000-0000-0000-0000000bb001';

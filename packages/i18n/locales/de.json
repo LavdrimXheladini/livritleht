@@ -267,6 +267,51 @@
         "expiry_past": "Dieses Datum ist vorbei: Lade ein Dokument hoch, das noch gültig ist."
       }
     },
+    "vehicles": {
+      "title": "Deine Fahrzeuge",
+      "subtitle": "Jedes Fahrzeug bekommt im nächsten Schritt eigene Preise. MoversHub prüft ein Fahrzeug, bevor es Auftragsanfragen bekommt.",
+      "needCompany": "Fülle zuerst dein Unternehmen aus: Die Fahrzeuge gehören dazu.",
+      "none": "Noch keine Fahrzeuge.",
+      "add": "Fahrzeug hinzufügen",
+      "addTitle": "Fahrzeug hinzufügen",
+      "editTitle": "Fahrzeug ändern",
+      "edit": "Ändern",
+      "takeOutOfUse": "Nicht mehr nutzen",
+      "useAgain": "Wieder nutzen",
+      "tailLift": "Ladebordwand",
+      "tachographShort": "Tachograf",
+      "class": "Größenklasse",
+      "plate": "Kennzeichen",
+      "plateHint": "Wie am Fahrzeug, z. B. M-AB 1234.",
+      "weight": "Zulässige Gesamtmasse (kg)",
+      "weightHint": "Aus dem Fahrzeugschein (F.2), z. B. 3500.",
+      "volume": "Laderaum (m³)",
+      "volumeHint": "z. B. 6 für einen Transit Custom, 13 für einen Sprinter.",
+      "tailLiftQuestion": "Das Fahrzeug hat eine Ladebordwand",
+      "tachographQuestion": "Ein intelligenter Tachograf ist eingebaut",
+      "tachographHint": "Nötig für internationale Aufträge mit Fahrzeugen über 2,5 t.",
+      "reverifyNotice": "Wenn du Klasse, Kennzeichen, Gewicht oder Tachograf änderst, wird das Fahrzeug erneut geprüft.",
+      "save": "Fahrzeug speichern",
+      "saved": "Fahrzeug gespeichert. MoversHub prüft es.",
+      "errorSave": "Das Fahrzeug konnte nicht gespeichert werden. Prüfe deine Verbindung und versuche es erneut.",
+      "status": {
+        "verified": "Geprüft",
+        "checking": "Wird geprüft",
+        "inactive": "Nicht in Nutzung"
+      },
+      "errors": {
+        "class_required": "Wähle eine Größenklasse.",
+        "plate_required": "Gib das Kennzeichen ein.",
+        "plate_invalid": "Nur Buchstaben, Ziffern, Leerzeichen und Bindestriche.",
+        "plate_taken": "Du hast schon ein Fahrzeug mit diesem Kennzeichen.",
+        "weight_required": "Gib die zulässige Gesamtmasse ein.",
+        "weight_invalid": "Gib das Gewicht in Kilogramm ein, z. B. 3500.",
+        "weight_too_heavy_for_class": "Nur ein LKW hat über 3,5 t: Wähle für dieses Gewicht LKW.",
+        "weight_too_light_for_truck": "Ein LKW hat über 3,5 t: Wähle eine der kleineren Klassen.",
+        "volume_required": "Gib den Laderaum ein.",
+        "volume_invalid": "Gib Kubikmeter ein, z. B. 6 oder 13,5."
+      }
+    },
     "switchTitle": "Brauchst du selbst einen Umzug?",
     "switchToCustomer": "Zum Kundenbereich wechseln",
     "nowHere": "Du bist jetzt im Bereich für Umzugsunternehmen."

@@ -267,6 +267,51 @@
         "expiry_past": "This date has passed: upload a document that is still valid."
       }
     },
+    "vehicles": {
+      "title": "Your vans",
+      "subtitle": "Each van gets its own prices in the next step. MoversHub checks a van before it gets job requests.",
+      "needCompany": "Fill in your company first: the vans belong to it.",
+      "none": "No vans yet.",
+      "add": "Add a van",
+      "addTitle": "Add a van",
+      "editTitle": "Change van",
+      "edit": "Change",
+      "takeOutOfUse": "Take out of use",
+      "useAgain": "Use again",
+      "tailLift": "Tail lift",
+      "tachographShort": "Tachograph",
+      "class": "Size class",
+      "plate": "Number plate",
+      "plateHint": "As on the vehicle, e.g. 01-234-AB.",
+      "weight": "Maximum weight (kg)",
+      "weightHint": "The permissible maximum weight on the registration certificate (F.2), e.g. 3500.",
+      "volume": "Load space (m³)",
+      "volumeHint": "e.g. 6 for a Transit Custom, 13 for a Sprinter.",
+      "tailLiftQuestion": "The van has a tail lift",
+      "tachographQuestion": "A smart tachograph is fitted",
+      "tachographHint": "Needed for international jobs with vehicles over 2.5 t.",
+      "reverifyNotice": "Changing the class, plate, weight or tachograph sends this van back to the check.",
+      "save": "Save van",
+      "saved": "Van saved. MoversHub will check it.",
+      "errorSave": "The van couldn't be saved. Check your connection and try again.",
+      "status": {
+        "verified": "Verified",
+        "checking": "Being checked",
+        "inactive": "Not in use"
+      },
+      "errors": {
+        "class_required": "Choose a size class.",
+        "plate_required": "Enter the number plate.",
+        "plate_invalid": "Use letters, digits, spaces and dashes only.",
+        "plate_taken": "You already have a van with this plate.",
+        "weight_required": "Enter the maximum weight.",
+        "weight_invalid": "Enter the weight in kilograms, e.g. 3500.",
+        "weight_too_heavy_for_class": "Only a Truck is over 3.5 t: choose Truck for this weight.",
+        "weight_too_light_for_truck": "A Truck is over 3.5 t: choose one of the smaller classes.",
+        "volume_required": "Enter the load space.",
+        "volume_invalid": "Enter cubic metres, e.g. 6 or 13.5."
+      }
+    },
     "switchTitle": "Need a move yourself?",
     "switchToCustomer": "Switch to the customer side",
     "nowHere": "You're on the mover side now."
