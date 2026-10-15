@@ -183,6 +183,41 @@
         "longDistance": "Long distance, {{km}} km",
         "minimumPrice": "Topped up to the mover's minimum price"
       }
+    },
+    "cancel": {
+      "free24": "Free cancellation until 24 hours before the arrival time.",
+      "free48": "Free cancellation until 48 hours before the arrival time.",
+      "free72": "Free cancellation until 72 hours before the arrival time.",
+      "free168": "Free cancellation until 7 days before the arrival time.",
+      "late0": "Later cancellations are free too.",
+      "late": "Later: {{pct}}% of the mover's price.",
+      "late100": "Later: the mover's full price."
+    },
+    "review": {
+      "title": "Check your booking",
+      "subtitle": "Your mover's price for this move, worked out again just now from their own rates.",
+      "contract": "Your contract for this move is with {{name}}. MoversHub is the booking platform.",
+      "moverTitle": "Your mover",
+      "address": "Address: {{address}}",
+      "phone": "Phone: {{phone}}",
+      "email": "Email: {{email}}",
+      "priceTitle": "Price",
+      "fee": "MoversHub booking fee",
+      "feeTba": "not decided yet",
+      "feeNote": "The booking fee's amount isn't decided yet: you'll see it, and the total, before you pay.",
+      "total": "Total",
+      "validUntil": "This price holds until {{time}}.",
+      "expired": "This price has expired. Price it again to continue.",
+      "priceAgain": "Price again",
+      "cancelTitle": "Cancellation",
+      "withdrawal": "A move booked for a set date generally has no 14-day right of withdrawal; the mover's cancellation terms apply.",
+      "pay": "Save card and book",
+      "payNote": "Paying by card opens soon. Your request is saved — nothing is charged, and it isn't sent to the mover yet.",
+      "unavailable": "This mover can no longer take this move (their documents, area or days changed). Choose another mover.",
+      "chooseAnother": "Choose another mover",
+      "invalidDate": "The move day has passed. Choose another day.",
+      "chooseDay": "Choose another day",
+      "error": "We couldn't check the price right now."
     }
   },
   "items": {
@@ -485,7 +520,28 @@
         "whole_units": "This currency has no cents: use whole amounts.",
         "km_invalid": "Enter whole kilometres, e.g. 150.",
         "long_distance_both": "Fill in both, or leave both empty."
-      }
+      },
+      "cancelTitle": "Cancellation terms",
+      "cancelText": "Your own terms. Customers see them before they book; a change applies to moves booked afterwards.",
+      "cancelFree": "Free cancellation until",
+      "cancelHours": {
+        "h24": "1 day before",
+        "h48": "2 days before",
+        "h72": "3 days before",
+        "h168": "7 days before"
+      },
+      "cancelLateLabel": "A later cancellation costs the customer",
+      "cancelLate": {
+        "p0": "Nothing",
+        "p25": "25% of your price",
+        "p50": "50% of your price",
+        "p100": "Your full price"
+      },
+      "cancelNotSet": "Not set — customers can't book you yet",
+      "cancelSave": "Save cancellation terms",
+      "cancelSaved": "Cancellation terms saved.",
+      "cancelMissing": "Choose both: until when it's free, and what a later cancellation costs.",
+      "cancelCustomersSee": "Customers see: {{text}}"
     },
     "switchTitle": "Need a move yourself?",
     "switchToCustomer": "Switch to the customer side",

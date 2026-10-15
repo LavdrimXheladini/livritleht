@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { VEHICLE_CLASSES, type VehicleClass } from '../constants';
+import { VEHICLE_CLASSES, type Currency, type JobType, type VehicleClass } from '../constants';
 import { ITEM_CATALOGUE, ITEM_KEYS, type ItemKey } from '../items';
 import { placeSchema, type Place } from './geo';
-import type { JobItem, QuoteRequest } from './pricing';
+import { jobItemSchema, type JobItem, type QuoteRequest } from './pricing';
 
 // The customer's move request, as the app's booking screens build it (CLAUDE.md §10 step 4): the
 // exact stops, what to move, when, how many people and the van size. It stays on the customer's
@@ -147,6 +147,8 @@ export const bookingDraftSchema = z.object({
   vehicleClass: z.enum(VEHICLE_CLASSES),
   /** Null until a mover is chosen (also in moves saved before choosing existed). */
   choice: bookingChoiceSchema.nullable().default(null),
+  /** The booking request saved on the server for this move (the `book` function), once the customer reviewed it. */
+  jobId: z.string().min(1).max(64).nullable().default(null),
 });
 export type BookingDraft = z.infer<typeof bookingDraftSchema>;
 
@@ -163,3 +165,118 @@ export function moveQuoteRequest(draft: BookingDraft): QuoteRequest {
     ...(draft.day !== null && draft.hour !== null ? { scheduledAt: scheduledAt(draft.day, draft.hour) } : {}),
   };
 }
+
+/* ── Cancellation terms ──────────────────────────────────────────────────────── */
+
+/**
+ * Each mover's own cancellation terms (owner decision 2026-10-15, design/DECISIONS.md #26), from fixed
+ * choices so customers can compare them: free cancellation until this many hours before the arrival
+ * time, and what a later cancellation costs, in percent of the mover's price. Mirrors the checks on
+ * `mover_companies.cancel_free_hours` / `cancel_late_pct`.
+ */
+export const CANCEL_FREE_HOURS = [24, 48, 72, 168] as const;
+export type CancelFreeHours = (typeof CANCEL_FREE_HOURS)[number];
+export const CANCEL_LATE_PCT = [0, 25, 50, 100] as const;
+export type CancelLatePct = (typeof CANCEL_LATE_PCT)[number];
+
+export const cancellationTermsSchema = z.object({
+  freeHours: z.literal(CANCEL_FREE_HOURS),
+  latePct: z.literal(CANCEL_LATE_PCT),
+});
+export type CancellationTerms = z.infer<typeof cancellationTermsSchema>;
+
+/** The terms from a company row (null while the mover hasn't chosen them, or the row holds something else). */
+export function cancellationTerms(row: { cancel_free_hours?: number | null; cancel_late_pct?: number | null }): CancellationTerms | null {
+  const parsed = cancellationTermsSchema.safeParse({ freeHours: row.cancel_free_hours, latePct: row.cancel_late_pct });
+  return parsed.success ? parsed.data : null;
+}
+
+/* ── Booking request (the `book` function) ───────────────────────────────────── */
+
+/**
+ * The kind of move, from what the customer listed: across a border; a few things (at most 3, up to
+ * 2 m³); a home (a box van or truck, or 12 m³ and more); else a small move. Only a label for the job —
+ * it never changes a price.
+ */
+export function jobType({ crossBorder, vehicleClass, items }: { crossBorder: boolean; vehicleClass: VehicleClass; items: readonly JobItem[] }): JobType {
+  if (crossBorder) return 'CROSS_BORDER';
+  const count = items.reduce((n, it) => n + it.qty, 0);
+  const tenths = loadTenthsM3(items);
+  if (count <= 3 && tenths <= 20) return 'ITEM';
+  if (vehicleClass === 'BOX' || vehicleClass === 'TRUCK' || tenths >= 120) return 'FULL_MOVE';
+  return 'SMALL_MOVE';
+}
+
+/** A stop as the booking request sends it: complete (the place found, the lift answered above the ground floor). */
+const requestStopSchema = bookingStopSchema.refine((s) => stopProblems(s).length === 0, { message: 'stop_incomplete' });
+
+/**
+ * Body of the `book` function: the customer's move and the mover's van they chose. There is no price
+ * field — the server prices the van again from the mover's own card — and `.strict()` rejects
+ * anything extra (COMPLIANCE §1.1, §13). `jobId` = the request saved earlier for this move: it is
+ * updated (the customer changed something, or the price expired) instead of saved twice.
+ */
+export const bookRequestSchema = z
+  .object({
+    jobId: z.uuid().optional(),
+    pickup: requestStopSchema,
+    dropoff: requestStopSchema,
+    items: z.array(jobItemSchema).min(1).max(100),
+    helpers: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+    scheduledAt: z.iso.datetime({ offset: true }),
+    vehicleClass: z.enum(VEHICLE_CLASSES),
+    vehicleId: z.uuid(),
+  })
+  .strict()
+  .refine((r) => r.pickup.place.lat !== r.dropoff.place.lat || r.pickup.place.lon !== r.dropoff.place.lon, { message: 'same_place' });
+export type BookRequest = z.infer<typeof bookRequestSchema>;
+
+/** The booking request for this move and the chosen mover (null until a mover and a day are chosen). */
+export function bookRequestFromDraft(draft: BookingDraft): BookRequest | null {
+  if (draft.choice === null || draft.day === null || draft.hour === null) return null;
+  return {
+    ...(draft.jobId ? { jobId: draft.jobId } : {}),
+    pickup: draft.pickup,
+    dropoff: draft.dropoff,
+    items: jobItems(draft.items),
+    helpers: draft.crew,
+    scheduledAt: scheduledAt(draft.day, draft.hour),
+    vehicleClass: draft.vehicleClass,
+    vehicleId: draft.choice.vehicleId,
+  };
+}
+
+/** How long a saved quote stays valid; after that the customer sees the price again (priced anew). */
+export const BOOKING_QUOTE_MINUTES = 15;
+
+/** The mover as the customer about to book sees them: everything COMPLIANCE §4 lists. */
+export type BookedMover = {
+  companyId: string;
+  name: string;
+  isBusiness: boolean;
+  registrationNo: string | null;
+  address: string | null;
+  country: string;
+  phone: string | null;
+  email: string | null;
+  insuranceUntil: string | null;
+  cancellation: CancellationTerms;
+};
+
+/** The `book` function's answer: the saved request, its quote (priced on the server) and the mover. */
+export type BookResponse = {
+  jobId: string;
+  distanceKm: number;
+  quote: {
+    id: string;
+    expiresAt: string;
+    currency: Currency;
+    lines: { kind: string; amount: number; quantity?: number; unitAmount?: number }[];
+    estLaborMin: number;
+    moverPrice: number;
+    bookingFee: number | null;
+    total: number;
+  };
+  mover: BookedMover;
+};
+

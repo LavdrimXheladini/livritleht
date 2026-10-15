@@ -183,6 +183,41 @@
         "longDistance": "Langstrecke, {{km}} km",
         "minimumPrice": "Aufgerundet auf den Mindestpreis des Unternehmens"
       }
+    },
+    "cancel": {
+      "free24": "Kostenlos stornierbar bis 24 Stunden vor der Ankunftszeit.",
+      "free48": "Kostenlos stornierbar bis 48 Stunden vor der Ankunftszeit.",
+      "free72": "Kostenlos stornierbar bis 72 Stunden vor der Ankunftszeit.",
+      "free168": "Kostenlos stornierbar bis 7 Tage vor der Ankunftszeit.",
+      "late0": "Auch spätere Stornierungen sind kostenlos.",
+      "late": "Später: {{pct}} % des Preises des Unternehmens.",
+      "late100": "Später: der volle Preis des Unternehmens."
+    },
+    "review": {
+      "title": "Buchung prüfen",
+      "subtitle": "Der Preis deines Umzugsunternehmens für diesen Umzug, gerade neu aus seinen eigenen Tarifen berechnet.",
+      "contract": "Dein Vertrag für diesen Umzug besteht mit {{name}}. MoversHub ist die Buchungsplattform.",
+      "moverTitle": "Dein Umzugsunternehmen",
+      "address": "Adresse: {{address}}",
+      "phone": "Telefon: {{phone}}",
+      "email": "E-Mail: {{email}}",
+      "priceTitle": "Preis",
+      "fee": "MoversHub-Buchungsgebühr",
+      "feeTba": "noch nicht festgelegt",
+      "feeNote": "Der Betrag der Buchungsgebühr ist noch nicht festgelegt: Du siehst ihn und den Gesamtpreis vor dem Bezahlen.",
+      "total": "Gesamt",
+      "validUntil": "Dieser Preis gilt bis {{time}}.",
+      "expired": "Dieser Preis ist abgelaufen. Berechne ihn neu, um fortzufahren.",
+      "priceAgain": "Neu berechnen",
+      "cancelTitle": "Stornierung",
+      "withdrawal": "Für einen Umzug an einem festen Termin gibt es in der Regel kein 14-tägiges Widerrufsrecht; es gelten die Stornobedingungen des Unternehmens.",
+      "pay": "Karte speichern und buchen",
+      "payNote": "Bezahlen per Karte kommt bald. Deine Anfrage ist gespeichert — nichts wird berechnet, und sie geht noch nicht an das Unternehmen.",
+      "unavailable": "Dieses Unternehmen kann diesen Umzug nicht mehr übernehmen (Dokumente, Gebiet oder Tage haben sich geändert). Wähle ein anderes Unternehmen.",
+      "chooseAnother": "Anderes Unternehmen wählen",
+      "invalidDate": "Der Umzugstag ist vorbei. Wähle einen anderen Tag.",
+      "chooseDay": "Anderen Tag wählen",
+      "error": "Wir konnten den Preis gerade nicht prüfen."
     }
   },
   "items": {
@@ -485,7 +520,28 @@
         "whole_units": "Diese Währung hat keine Cents: Nutze ganze Beträge.",
         "km_invalid": "Gib ganze Kilometer ein, z. B. 150.",
         "long_distance_both": "Fülle beide Felder aus oder lass beide leer."
-      }
+      },
+      "cancelTitle": "Stornobedingungen",
+      "cancelText": "Deine eigenen Bedingungen. Kunden sehen sie vor der Buchung; eine Änderung gilt für Umzüge, die danach gebucht werden.",
+      "cancelFree": "Kostenlos stornierbar bis",
+      "cancelHours": {
+        "h24": "1 Tag vorher",
+        "h48": "2 Tage vorher",
+        "h72": "3 Tage vorher",
+        "h168": "7 Tage vorher"
+      },
+      "cancelLateLabel": "Eine spätere Stornierung kostet den Kunden",
+      "cancelLate": {
+        "p0": "Nichts",
+        "p25": "25 % deines Preises",
+        "p50": "50 % deines Preises",
+        "p100": "Deinen vollen Preis"
+      },
+      "cancelNotSet": "Nicht festgelegt — Kunden können dich noch nicht buchen",
+      "cancelSave": "Stornobedingungen speichern",
+      "cancelSaved": "Stornobedingungen gespeichert.",
+      "cancelMissing": "Wähle beides: bis wann es kostenlos ist und was eine spätere Stornierung kostet.",
+      "cancelCustomersSee": "Kunden sehen: {{text}}"
     },
     "switchTitle": "Brauchst du selbst einen Umzug?",
     "switchToCustomer": "Zum Kundenbereich wechseln",

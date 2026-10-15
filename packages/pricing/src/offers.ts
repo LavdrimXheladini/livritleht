@@ -2,7 +2,7 @@
 // mover (their cheapest van in the class), cheapest first, plus the "from" price the vehicle-class
 // screen shows (COMPLIANCE §1.1). Pure, no I/O.
 
-import type { BookingFeeRule, Currency, QuoteJob, RateCard, VehicleClass } from '@movershub/shared';
+import { cancellationTerms, type BookingFeeRule, type CancellationTerms, type Currency, type QuoteJob, type RateCard, type VehicleClass } from '@movershub/shared';
 
 import { quoteVehicle, type Quote } from './engine';
 
@@ -30,6 +30,9 @@ export type QuotableVehicleRow = {
   town: string | null;
   /** End of the checked carrier insurance (ISO 8601). */
   insurance_until: string | null;
+  /** The mover's cancellation terms (every quotable mover has them, COMPLIANCE §8). */
+  cancel_free_hours: number | null;
+  cancel_late_pct: number | null;
 };
 
 export function rateCardFromRow(row: QuotableVehicleRow): RateCard {
@@ -48,7 +51,23 @@ export function rateCardFromRow(row: QuotableVehicleRow): RateCard {
 }
 
 /** Who the mover is, as customers see it on an offer (COMPLIANCE §4); address and contact come at booking. */
-export type MoverFacts = { isBusiness: boolean; registrationNo: string | null; town: string | null; insuranceUntil: string | null };
+export type MoverFacts = {
+  isBusiness: boolean;
+  registrationNo: string | null;
+  town: string | null;
+  insuranceUntil: string | null;
+  cancellation: CancellationTerms | null;
+};
+
+export function moverFactsFromRow(row: QuotableVehicleRow): MoverFacts {
+  return {
+    isBusiness: row.is_business,
+    registrationNo: row.registration_no,
+    town: row.town,
+    insuranceUntil: row.insurance_until,
+    cancellation: cancellationTerms(row),
+  };
+}
 
 /** A specific mover's vehicle and its fixed price for this job — what the customer books. */
 export type Offer = { vehicleId: string; companyId: string; companyName: string; mover: MoverFacts; quote: Quote };
@@ -86,7 +105,7 @@ export function buildClassOffers(
         vehicleId: row.vehicle_id,
         companyId: row.company_id,
         companyName: row.company_name,
-        mover: { isBusiness: row.is_business, registrationNo: row.registration_no, town: row.town, insuranceUntil: row.insurance_until },
+        mover: moverFactsFromRow(row),
         quote: result.quote,
       });
     }

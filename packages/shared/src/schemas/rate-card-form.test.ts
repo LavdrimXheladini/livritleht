@@ -109,15 +109,17 @@ describe('work area and the checklist', () => {
     });
   });
 
-  it('is done once every van in use has saved prices and there is a work area', () => {
+  it('is done once every van in use has saved prices, there is a work area and the cancellation terms are chosen', () => {
     const vans = [
       { id: 'a', active: true },
       { id: 'b', active: false },
     ];
     const card = { vehicle_id: 'a', confirmed_by_mover_at: '2026-10-15T09:00:00Z' };
-    expect(ratesStepStatus([], [], [{}])).toBe('todo');
-    expect(ratesStepStatus(vans, [card], [])).toBe('todo');
-    expect(ratesStepStatus(vans, [{ ...card, confirmed_by_mover_at: null }], [{}])).toBe('todo');
-    expect(ratesStepStatus(vans, [card], [{}])).toBe('saved');
+    const terms = { freeHours: 48, latePct: 50 } as const;
+    expect(ratesStepStatus([], [], [{}], terms)).toBe('todo');
+    expect(ratesStepStatus(vans, [card], [], terms)).toBe('todo');
+    expect(ratesStepStatus(vans, [{ ...card, confirmed_by_mover_at: null }], [{}], terms)).toBe('todo');
+    expect(ratesStepStatus(vans, [card], [{}], null)).toBe('todo');
+    expect(ratesStepStatus(vans, [card], [{}], terms)).toBe('saved');
   });
 });

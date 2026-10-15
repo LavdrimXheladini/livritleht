@@ -38,6 +38,11 @@ export function formatMoveDay(day: string, locale: Locale, { long = false }: { l
   return new Intl.DateTimeFormat(INTL_LOCALE[locale], { weekday: style, day: 'numeric', month: style }).format(new Date(y, m - 1, d));
 }
 
+/** A moment's time of day on the device's clock, as "10:15". */
+export function formatClockTime(iso: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale], { hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso));
+}
+
 /** At launch: the language chosen in the app earlier, if any (else the device's stays). */
 export async function restoreLocale(): Promise<void> {
   if (typeof window === 'undefined') return; // Expo web pre-rendering in Node

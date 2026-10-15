@@ -1,9 +1,10 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { Button, Card, CheckIcon, Display, Pill, announce, currentLocale, cx, useMoveQuote } from '@movershub/mobile';
-import type { Offer, Quote } from '@movershub/pricing';
+import { Button, Card, CheckIcon, Display, Pill, currentLocale, cx, useMoveQuote } from '@movershub/mobile';
+import type { Offer } from '@movershub/pricing';
 import {
   MARKET_RATES,
   formatExpiryDate,
@@ -17,16 +18,17 @@ import {
 } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
-import { BookingSoon, PricesError, PricesLoading } from '../customer/quote-card';
+import { PricesError, PricesLoading } from '../customer/quote-card';
 import { BookingFrame, type UpdateBooking } from './booking-frame';
+import { useCancellationText } from './cancellation';
 import { MoveSummary } from './size-screen';
 
 /**
  * Step 5: the movers in the chosen size, each with their own fixed price for this move (from their
  * rate card, on the server — COMPLIANCE §1.1) and who they are: name, business or private person,
  * registration number, town, checked insurance (§4). Sorted by price, lowest first; nobody pays for a
- * better place (§3). "Book best offer" chooses the lowest. Next: the booking request with the mover's
- * full details and "Your contract is with…", before any payment.
+ * better place (§3), with their own cancellation terms (§8). Choosing one — or "Book best offer", the
+ * lowest — opens the review: the request priced again on the server, "Your contract is with…".
  */
 export function MoversScreen() {
   const { t } = useTranslation();
@@ -54,7 +56,7 @@ function Movers({ draft, update }: { draft: BookingDraft; update: UpdateBooking 
 
   const choose = (offer: Offer) => {
     update((d) => ({ ...d, choice: { vehicleId: offer.vehicleId, companyId: offer.companyId } }));
-    announce(`${t('booking.movers.yourMover', { name: offer.companyName })}. ${t('landing.quote.soonTitle')} ${t('customer.bookingSoon')}`);
+    router.push('/book/review');
   };
 
   return (
@@ -87,6 +89,7 @@ function Movers({ draft, update }: { draft: BookingDraft; update: UpdateBooking 
 /** One mover's offer: who they are, their price for this move (itemised on demand), and Choose. */
 function MoverOffer({ offer, chosen, onChoose, locale }: { offer: Offer; chosen: boolean; onChoose: () => void; locale: Locale }) {
   const { t } = useTranslation();
+  const describeCancellation = useCancellationText();
   const [open, setOpen] = useState(false);
   const { mover, quote } = offer;
   const id = `offer-${offer.companyId}`;
@@ -118,6 +121,11 @@ function MoverOffer({ offer, chosen, onChoose, locale }: { offer: Offer; chosen:
           </View>
         ) : null}
         {mover.isBusiness ? null : <Text className="font-sans text-[12.5px] leading-[18px] text-ink-600">{t('booking.movers.privateNote')}</Text>}
+        {mover.cancellation ? (
+          <Text testID={`${id}-cancellation`} className="font-sans text-[12.5px] leading-[18px] text-ink-600">
+            {describeCancellation(mover.cancellation)}
+          </Text>
+        ) : null}
       </View>
 
       <View className="gap-0.5">
@@ -142,7 +150,7 @@ function MoverOffer({ offer, chosen, onChoose, locale }: { offer: Offer; chosen:
         title={open ? t('booking.movers.hideDetails') : t('booking.movers.details')}
         onPress={() => setOpen((o) => !o)}
       />
-      {open ? <PriceLines quote={quote} locale={locale} testID={`${id}-lines`} /> : null}
+      {open ? <PriceLines lines={quote.lines} currency={quote.currency} locale={locale} testID={`${id}-lines`} /> : null}
 
       <Button
         testID={`${id}-choose`}
@@ -152,19 +160,28 @@ function MoverOffer({ offer, chosen, onChoose, locale }: { offer: Offer; chosen:
         accessibilityLabel={`${t('booking.movers.choose')}: ${offer.companyName}`}
         onPress={onChoose}
       />
-      {chosen ? <BookingSoon /> : null}
     </Card>
   );
 }
 
 /** The mover's price line by line, as their rate card produced it; the lines add up to the price. */
-function PriceLines({ quote, locale, testID }: { quote: Quote; locale: Locale; testID: string }) {
+export function PriceLines({
+  lines,
+  currency,
+  locale,
+  testID,
+}: {
+  lines: readonly { kind: string; amount: number; quantity?: number | undefined }[];
+  currency: Currency;
+  locale: Locale;
+  testID: string;
+}) {
   const { t } = useTranslation();
   const km = (q: number | undefined) => formatTenths(Math.round((q ?? 0) * 10), locale);
   const n = (q: number | undefined) => formatNumber(q ?? 0, locale);
   return (
     <View testID={testID} className="gap-1.5 rounded-input bg-stone-150 p-3">
-      {quote.lines.map((line) => {
+      {lines.map((line) => {
         const label =
           line.kind === 'base'
             ? t('booking.movers.lines.base')
@@ -184,7 +201,7 @@ function PriceLines({ quote, locale, testID }: { quote: Quote; locale: Locale; t
         return (
           <View key={line.kind} className="flex-row items-start justify-between gap-3">
             <Text className="flex-1 font-sans text-[13px] leading-[18px] text-ink-700">{label}</Text>
-            <Text className="font-sans-medium text-[13px] text-ink-900">{formatMoney(line.amount, quote.currency, locale)}</Text>
+            <Text className="font-sans-medium text-[13px] text-ink-900">{formatMoney(line.amount, currency, locale)}</Text>
           </View>
         );
       })}

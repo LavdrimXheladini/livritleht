@@ -30,6 +30,8 @@ const card = (vehicleId: string): QuotableVehicleRow => ({
   registration_no: `reg-${vehicleId}`,
   town: null,
   insurance_until: null,
+  cancel_free_hours: 24,
+  cancel_late_pct: 50,
 });
 
 function deps(over: Partial<QuoteDeps> = {}): QuoteDeps {

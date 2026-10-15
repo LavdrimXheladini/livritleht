@@ -123,7 +123,9 @@ select is((select base_fee from public.rate_cards where vehicle_id = '00000000-0
   2500, 'another mover cannot change the rate card');
 
 -- Admin (service role) verifies; quotable_vehicles -----------------------------------
-update public.mover_companies set verification_status = 'verified', stripe_onboarding_complete = true
+-- With cancellation terms (customers see them before booking, migration 20261015130000).
+update public.mover_companies set verification_status = 'verified', stripe_onboarding_complete = true,
+  cancel_free_hours = 48, cancel_late_pct = 50
 where id = '00000000-0000-0000-0000-0000000aa001';
 update public.mover_documents set verified_at = now() where id = '00000000-0000-0000-0000-0000000dd001';
 update public.vehicles set verified_at = now() where id = '00000000-0000-0000-0000-0000000bb001';
@@ -298,8 +300,8 @@ select is(
   1, 'test movers are quoted when enabled');
 
 -- A second mover with everything except insurance (COMPLIANCE §5).
-insert into public.mover_companies (id, owner_id, legal_name, country, verification_status, stripe_onboarding_complete)
-values ('00000000-0000-0000-0000-0000000aa002', '00000000-0000-0000-0000-00000000d202', 'Lisboa Transportes Lda', 'PT', 'verified', true);
+insert into public.mover_companies (id, owner_id, legal_name, country, verification_status, stripe_onboarding_complete, cancel_free_hours, cancel_late_pct)
+values ('00000000-0000-0000-0000-0000000aa002', '00000000-0000-0000-0000-00000000d202', 'Lisboa Transportes Lda', 'PT', 'verified', true, 48, 50);
 insert into public.vehicles (id, company_id, class, plate, verified_at)
 values ('00000000-0000-0000-0000-0000000bb002', '00000000-0000-0000-0000-0000000aa002', 'VAN', 'TEST-AA-2', now());
 insert into public.rate_cards (vehicle_id, currency, base_fee, per_km, per_labor_minute_1_helper, confirmed_by_mover_at)

@@ -28,7 +28,7 @@ export {
 } from './components/ui';
 export { LanguageButton } from './components/language-button';
 export { useAppFonts } from './fonts';
-export { currentLocale, formatMoveDay, initI18n, restoreLocale, setLocale } from './i18n';
+export { currentLocale, formatClockTime, formatMoveDay, initI18n, restoreLocale, setLocale } from './i18n';
 export { passwordOwedBy, restorePasswordOwed, settlePassword } from './password';
 export {
   getDraftVersion,

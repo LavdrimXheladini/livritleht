@@ -25,6 +25,7 @@ export const RETENTION_CATEGORIES = [
   'auth_audit_log',
   'phone_verifications',
   'company_registry_checks',
+  'booking_requests',
 ] as const;
 export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
@@ -58,4 +59,7 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   // Answers of the official company registers (public.company_registry_checks): evidence for the
   // mover's verification (COMPLIANCE §5); kept like the mover's documents.
   company_registry_checks: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
+  // Booking requests never booked (public.jobs still QUOTED, with their quotes): the customer's
+  // addresses for a move that didn't happen — delete some time after the last quote expired.
+  booking_requests: { keepDays: null, from: 'expired', holdIfDisputeOpen: false },
 };

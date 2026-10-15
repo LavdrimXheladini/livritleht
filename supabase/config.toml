@@ -426,6 +426,11 @@ verify_jwt = false
 [functions.company-registry]
 verify_jwt = false
 
+# The customer's booking request: prices the chosen mover's van again and saves it (signed-in customers
+# only — the function checks the session itself, like the others).
+[functions.book]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

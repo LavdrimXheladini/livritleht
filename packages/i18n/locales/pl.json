@@ -183,6 +183,41 @@
         "longDistance": "Długi dystans, {{km}} km",
         "minimumPrice": "Wyrównanie do minimalnej ceny przewoźnika"
       }
+    },
+    "cancel": {
+      "free24": "Bezpłatne anulowanie do 24 godzin przed godziną przyjazdu.",
+      "free48": "Bezpłatne anulowanie do 48 godzin przed godziną przyjazdu.",
+      "free72": "Bezpłatne anulowanie do 72 godzin przed godziną przyjazdu.",
+      "free168": "Bezpłatne anulowanie do 7 dni przed godziną przyjazdu.",
+      "late0": "Późniejsze anulowanie też jest bezpłatne.",
+      "late": "Później: {{pct}}% ceny przewoźnika.",
+      "late100": "Później: pełna cena przewoźnika."
+    },
+    "review": {
+      "title": "Sprawdź rezerwację",
+      "subtitle": "Cena twojego przewoźnika za tę przeprowadzkę, przeliczona właśnie według jego stawek.",
+      "contract": "Umowę na tę przeprowadzkę zawierasz z {{name}}. MoversHub jest platformą rezerwacyjną.",
+      "moverTitle": "Twój przewoźnik",
+      "address": "Adres: {{address}}",
+      "phone": "Telefon: {{phone}}",
+      "email": "E-mail: {{email}}",
+      "priceTitle": "Cena",
+      "fee": "Opłata rezerwacyjna MoversHub",
+      "feeTba": "jeszcze nieustalona",
+      "feeNote": "Kwota opłaty rezerwacyjnej nie jest jeszcze ustalona: zobaczysz ją i sumę przed płatnością.",
+      "total": "Razem",
+      "validUntil": "Ta cena obowiązuje do {{time}}.",
+      "expired": "Ta cena wygasła. Przelicz ją ponownie, aby kontynuować.",
+      "priceAgain": "Przelicz ponownie",
+      "cancelTitle": "Anulowanie",
+      "withdrawal": "Przeprowadzka zarezerwowana na konkretny dzień zwykle nie daje prawa do odstąpienia w ciągu 14 dni; obowiązują warunki anulowania przewoźnika.",
+      "pay": "Zapisz kartę i zarezerwuj",
+      "payNote": "Płatność kartą wkrótce. Twoja prośba jest zapisana — nic nie jest pobierane i nie trafia jeszcze do przewoźnika.",
+      "unavailable": "Ten przewoźnik nie może już przyjąć tej przeprowadzki (zmieniły się jego dokumenty, obszar lub dni). Wybierz innego przewoźnika.",
+      "chooseAnother": "Wybierz innego przewoźnika",
+      "invalidDate": "Dzień przeprowadzki minął. Wybierz inny dzień.",
+      "chooseDay": "Wybierz inny dzień",
+      "error": "Nie udało się teraz sprawdzić ceny."
     }
   },
   "items": {
@@ -485,7 +520,28 @@
         "whole_units": "Ta waluta nie ma groszy: używaj pełnych kwot.",
         "km_invalid": "Wpisz pełne kilometry, np. 150.",
         "long_distance_both": "Wypełnij oba pola albo zostaw oba puste."
-      }
+      },
+      "cancelTitle": "Warunki anulowania",
+      "cancelText": "Twoje własne warunki. Klienci widzą je przed rezerwacją; zmiana dotyczy przeprowadzek zarezerwowanych później.",
+      "cancelFree": "Bezpłatne anulowanie do",
+      "cancelHours": {
+        "h24": "1 dnia przed",
+        "h48": "2 dni przed",
+        "h72": "3 dni przed",
+        "h168": "7 dni przed"
+      },
+      "cancelLateLabel": "Późniejsze anulowanie kosztuje klienta",
+      "cancelLate": {
+        "p0": "Nic",
+        "p25": "25% twojej ceny",
+        "p50": "50% twojej ceny",
+        "p100": "Całą twoją cenę"
+      },
+      "cancelNotSet": "Nieustawione — klienci nie mogą cię jeszcze zarezerwować",
+      "cancelSave": "Zapisz warunki anulowania",
+      "cancelSaved": "Warunki anulowania zapisane.",
+      "cancelMissing": "Wybierz oba: do kiedy jest bezpłatnie i ile kosztuje późniejsze anulowanie.",
+      "cancelCustomersSee": "Klienci widzą: {{text}}"
     },
     "switchTitle": "Sam potrzebujesz przeprowadzki?",
     "switchToCustomer": "Przełącz na tryb klienta",

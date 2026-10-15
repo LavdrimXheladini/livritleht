@@ -561,7 +561,7 @@ test.describe('booking a move', () => {
    * A move with every step filled in (2 people, a van, tomorrow 09:00), on the device as the app keeps
    * it (mobile/core/src/booking-draft.ts) — only when the device has none yet, so a reload keeps changes.
    */
-  async function plannedMove(page: Page) {
+  async function plannedMove(page: Page, changes: Record<string, unknown> = {}) {
     const draft = {
       pickup: {
         place: { label: 'Prishtina', area: 'Prishtina', lat: 42.6629, lon: 21.1655, countryCode: 'XK' },
@@ -585,6 +585,8 @@ test.describe('booking a move', () => {
       crew: 2,
       vehicleClass: 'VAN',
       choice: null,
+      jobId: null,
+      ...changes,
     };
     await page.addInitScript(
       ({ key, value }) => {
@@ -606,6 +608,50 @@ test.describe('booking a move', () => {
     );
     await page.goto(url);
   });
+
+  /** The `book` function's answer for the saved quote's cheapest van mover (Test Transport Prizren), valid until 10:15. */
+  const bookAnswer = (changes: Record<string, unknown> = {}) => {
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    return {
+      jobId: '00000000-0000-4000-8000-0000000e0b01',
+      distanceKm: 83.2,
+      quote: {
+        id: '00000000-0000-4000-8000-0000000e0c01',
+        expiresAt: new Date(2026, 9, 15, 10, 15).toISOString(),
+        currency: 'EUR',
+        lines: (prizren.quote as unknown as { lines: unknown[] }).lines,
+        estLaborMin: 40,
+        moverPrice: prizren.quote.moverPrice,
+        bookingFee: null,
+        total: prizren.quote.moverPrice,
+      },
+      mover: {
+        companyId: prizren.companyId,
+        name: prizren.companyName,
+        isBusiness: true,
+        registrationNo: 'TEST-XK-002',
+        address: 'Test address, Prizren',
+        country: 'XK',
+        phone: '+38344000902',
+        email: 'test-prizren@example.com',
+        insuranceUntil: '2027-12-31T23:59:59+00:00',
+        cancellation: { freeHours: 24, latePct: 50 },
+      },
+      ...changes,
+    };
+  };
+
+  /** The `book` function: answers in turn (the last one repeats); records what the app sent. */
+  async function fakeBook(page: Page, ...answers: { status?: number; body: unknown }[]) {
+    const sent: Record<string, unknown>[] = [];
+    await page.route('**/functions/v1/book', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      sent.push(route.request().postDataJSON() as Record<string, unknown>);
+      const { status = 200, body } = answers[Math.min(sent.length, answers.length) - 1]!;
+      return route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+    });
+    return sent;
+  }
 
   /** Records every `quote` request the app sends; the saved quote answers them. */
   async function quoteRequests(page: Page) {
@@ -713,7 +759,13 @@ test.describe('booking a move', () => {
     const quote = savedQuoteCopy();
     const vans = quote.classes.find((c) => c.vehicleClass === 'VAN')!.offers;
     const [prizren, prishtina] = vans as [SavedOffer, SavedOffer];
-    prishtina.mover = { isBusiness: false, registrationNo: null, town: 'Prishtinë', insuranceUntil: '2027-12-31T23:59:59+00:00' };
+    prishtina.mover = {
+      isBusiness: false,
+      registrationNo: null,
+      town: 'Prishtinë',
+      insuranceUntil: '2027-12-31T23:59:59+00:00',
+      cancellation: { freeHours: 72, latePct: 0 },
+    };
     await page.route('**/functions/v1/quote', (route) =>
       route.request().method() === 'OPTIONS'
         ? route.fulfill({ status: 204, headers: cors })
@@ -738,6 +790,11 @@ test.describe('booking a move', () => {
     await expect(card(prishtina)).toContainText('Prishtinë');
     await expect(card(prishtina)).not.toContainText('Reg. no.');
     await expect(app(page).getByText(m.feeTba)).toHaveCount(2);
+    // Each mover's own cancellation terms (COMPLIANCE §8).
+    await expect(page.getByTestId(`offer-${prizren.companyId}-cancellation`)).toHaveText(
+      `${b.cancel.free24} ${b.cancel.late.replace('{{pct}}', '50')}`,
+    );
+    await expect(page.getByTestId(`offer-${prishtina.companyId}-cancellation`)).toHaveText(`${b.cancel.free72} ${b.cancel.late0}`);
 
     // The price line by line, adding up to the mover's price.
     await page.getByTestId(`offer-${prizren.companyId}-details`).click();
@@ -748,16 +805,73 @@ test.describe('booking a move', () => {
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('booking-movers.png');
 
-    // "Book best offer" chooses the lowest; another can be chosen instead; a reload keeps it.
+    // "Book best offer" chooses the lowest and opens the review; back, another can be chosen instead.
+    await fakeBook(page, { body: bookAnswer() });
+    const choice = async () => JSON.parse((await stored(page, 'movershub.booking'))!).draft.choice as unknown;
     await page.getByTestId('movers-best').click();
+    await expect(page.getByText(b.review.title)).toBeVisible();
+    expect(await choice()).toEqual({ vehicleId: prizren.vehicleId, companyId: prizren.companyId });
+    await page.getByTestId('review-back').click();
     await expect(page.getByTestId(`offer-${prizren.companyId}-choose`)).toHaveText(m.chosen);
-    await expect(app(page).getByText(en.landing.quote.soonTitle)).toBeVisible();
-    expect(JSON.parse((await stored(page, 'movershub.booking'))!).draft.choice).toEqual({ vehicleId: prizren.vehicleId, companyId: prizren.companyId });
     await page.getByTestId(`offer-${prishtina.companyId}-choose`).click();
-    await expect(page.getByTestId(`offer-${prishtina.companyId}-choose`)).toHaveText(m.chosen);
-    await expect(page.getByTestId(`offer-${prizren.companyId}-choose`)).toHaveText(m.choose);
+    await expect(page.getByText(b.review.title)).toBeVisible();
+    expect(await choice()).toEqual({ vehicleId: prishtina.vehicleId, companyId: prishtina.companyId });
+  });
+
+  test('review: priced again on the server, with whom the contract is, their details and terms — before any payment', async ({ page }) => {
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    const sent = await fakeBook(page, { body: bookAnswer() });
+    await plannedMove(page, { choice: { vehicleId: prizren.vehicleId, companyId: prizren.companyId } });
+    await page.goto(`${url}book/review`);
+    const r = b.review;
+
+    await expect(page.getByTestId('review-contract')).toHaveText(r.contract.replace('{{name}}', prizren.companyName));
+    // The move and the chosen van — never a price (COMPLIANCE §1.1, §13); the directions go with it.
+    expect(sent[0]).toMatchObject({ vehicleId: prizren.vehicleId, vehicleClass: 'VAN', helpers: 2, scheduledAt: new Date(2026, 9, 16, 9).toISOString() });
+    expect(sent[0]).not.toHaveProperty('jobId');
+    expect(Object.keys(sent[0]!).filter((k) => /price|total|fee/i.test(k))).toEqual([]);
+    expect((sent[0]!.pickup as { details: string }).details).toBe('Block B, entrance 2');
+    // Who the mover is (COMPLIANCE §4), the price as the server worked it out, the terms (§8).
+    const details = page.getByTestId('review-mover-details');
+    for (const line of [
+      b.movers.regNo.replace('{{no}}', 'TEST-XK-002'),
+      r.address.replace('{{address}}', 'Test address, Prizren'),
+      r.phone.replace('{{phone}}', '+38344000902'),
+      r.email.replace('{{email}}', 'test-prizren@example.com'),
+    ]) {
+      await expect(details).toContainText(line);
+    }
+    await expect(page.getByTestId('review-mover-price')).toContainText(euros(prizren.quote.moverPrice));
+    await expect(app(page).getByText(r.feeTba)).toBeVisible();
+    await expect(page.getByTestId('review-valid')).toHaveText(r.validUntil.replace('{{time}}', '10:15'));
+    await expect(page.getByTestId('review-cancellation')).toHaveText(`${b.cancel.free24} ${b.cancel.late.replace('{{pct}}', '50')}`);
+    // Paying (the card books the move) waits for Stripe.
+    await expect(page.getByTestId('review-pay')).toBeDisabled();
+    await expect(page.getByTestId('review-pay-note')).toHaveText(r.payNote);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('booking-review.png');
+
+    // The saved request is remembered with the move: asked again, it is updated, not saved twice.
+    expect(JSON.parse((await stored(page, 'movershub.booking'))!).draft.jobId).toBe('00000000-0000-4000-8000-0000000e0b01');
     await page.reload();
-    await expect(page.getByTestId(`offer-${prishtina.companyId}-choose`)).toHaveText(m.chosen);
+    await expect(page.getByTestId('review-contract')).toBeVisible();
+    expect(sent.at(-1)).toMatchObject({ jobId: '00000000-0000-4000-8000-0000000e0b01' });
+  });
+
+  test('review: an expired price is priced again; a mover no longer available sends back to the movers', async ({ page }) => {
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    const expired = bookAnswer();
+    expired.quote.expiresAt = new Date(2026, 9, 15, 9, 59).toISOString();
+    const sent = await fakeBook(page, { body: expired }, { status: 409, body: { error: 'mover_unavailable' } });
+    await plannedMove(page, { choice: { vehicleId: prizren.vehicleId, companyId: prizren.companyId } });
+    await page.goto(`${url}book/review`);
+    await expect(page.getByTestId('review-valid')).toHaveText(b.review.expired);
+    await page.getByTestId('review-price-again').click();
+    await expect(page.getByTestId('review-unavailable')).toHaveText(b.review.unavailable);
+    expect(sent).toHaveLength(2);
+    await page.getByRole('button', { name: b.review.chooseAnother }).click();
+    await expect(page.getByText(b.movers.title)).toBeVisible();
+    expect(JSON.parse((await stored(page, 'movershub.booking'))!).draft.choice).toBeNull();
   });
 
   test('the move stays on the device after a reload, and is forgotten on sign out', async ({ page }) => {
@@ -1368,8 +1482,32 @@ test.describe('signed in as a mover', () => {
     expect(writes[0]?.body).not.toHaveProperty('confirmed_by_mover_at');
   });
 
+  test('cancellation: the mover chooses their own terms; customers see them, and the step needs them', async ({ page }) => {
+    const writes = await fakeMoverCompany(page, { initial: savedCompany() });
+    await fakeVehicles(page, { initial: [van] });
+    await fakeRates(page, { cards: [{ ...savedCard, vehicle_id: van.id }], areas: [{ id: '00000000-0000-4000-8000-0000000a0001', label: 'Prishtinë', radius_km: 50 }] });
+    const r = en.mover.rates;
+    await page.goto(url);
+    // Prices and a work area, but no terms yet: still to do.
+    await expect(page.getByTestId('step-rates')).toContainText(en.mover.stepStatus.todo);
+    await page.getByTestId('step-rates').click();
+    await expect(page.getByTestId('cancel-terms')).toContainText(r.cancelNotSet);
+    // Nothing is pre-chosen.
+    await page.getByTestId('cancel-save').click();
+    await expect(page.getByTestId('cancel-missing')).toHaveText(r.cancelMissing);
+    await page.getByTestId('cancel-free-48').click();
+    await page.getByTestId('cancel-late-50').click();
+    await page.getByTestId('cancel-save').click();
+    await expect(page.getByTestId('cancel-current')).toHaveText(
+      r.cancelCustomersSee.replace('{{text}}', `${en.booking.cancel.free48} ${en.booking.cancel.late.replace('{{pct}}', '50')}`),
+    );
+    expect(writes).toEqual([{ method: 'PATCH', body: { cancel_free_hours: 48, cancel_late_pct: 50 } }]);
+    await page.getByTestId('rates-back').click();
+    await expect(page.getByTestId('step-rates')).toContainText(en.mover.stepStatus.saved);
+  });
+
   test('work area: a town found on the map is added with a radius, and removed again', async ({ page }) => {
-    await fakeMoverCompany(page, { initial: savedCompany() });
+    await fakeMoverCompany(page, { initial: savedCompany({ cancel_free_hours: 48, cancel_late_pct: 50 }) });
     await fakeVehicles(page, { initial: [van] });
     await fakeCompanyChecks(page); // the address search
     const writes = await fakeRates(page, { cards: [{ ...savedCard, vehicle_id: van.id }] });

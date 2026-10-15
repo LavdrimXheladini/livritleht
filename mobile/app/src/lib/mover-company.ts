@@ -4,6 +4,7 @@ import {
   MOVER_COMPANY_COLUMNS,
   moverCompanyColumns,
   moverCompanyRowSchema,
+  type CancellationTerms,
   type MoverCompanyForm,
   type MoverCompanyRow,
 } from '@movershub/shared';
@@ -66,6 +67,31 @@ export function useSaveMoverCompany() {
         ? supabase.from('mover_companies').update(columns).eq('id', companyId)
         : supabase.from('mover_companies').insert({ ...columns, owner_id: userId });
       const { data, error } = await write.select(MOVER_COMPANY_COLUMNS).abortSignal(timeoutSignal()).single();
+      if (error) throw error;
+      return moverCompanyRowSchema.parse(data);
+    },
+    onSuccess: (row) => queryClient.setQueryData(companyKey(userId), row),
+  });
+}
+
+/**
+ * Saves the mover's own cancellation terms (design/DECISIONS.md #26): shown to customers before they
+ * book; they apply to moves booked after the change (each quote keeps the terms the customer saw).
+ */
+export function useSaveCancellation() {
+  const { supabase, session } = useAuth();
+  const queryClient = useQueryClient();
+  const userId = session?.user.id;
+  return useMutation({
+    networkMode: 'always',
+    mutationFn: async ({ companyId, terms }: { companyId: string; terms: CancellationTerms }) => {
+      const { data, error } = await supabase
+        .from('mover_companies')
+        .update({ cancel_free_hours: terms.freeHours, cancel_late_pct: terms.latePct })
+        .eq('id', companyId)
+        .select(MOVER_COMPANY_COLUMNS)
+        .abortSignal(timeoutSignal())
+        .single();
       if (error) throw error;
       return moverCompanyRowSchema.parse(data);
     },

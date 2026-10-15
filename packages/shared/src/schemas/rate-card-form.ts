@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { CURRENCIES, type Currency, type VehicleClass } from '../constants';
 import { MARKET_RATES, suggestedRateCard, type MarketCountry } from '../market-rates';
 import { WHOLE_UNIT_CURRENCIES } from '../money';
+import type { CancellationTerms } from './booking';
 import type { RateCard } from './pricing';
 
 // The mover's own prices for one van (COMPLIANCE §1, §1.1; design/DECISIONS.md #22). Typed in whole
@@ -208,15 +209,16 @@ export const serviceAreaRowSchema = z.object({ id: z.uuid(), label: z.string().n
 export type ServiceAreaRow = z.infer<typeof serviceAreaRowSchema>;
 
 /**
- * The checklist's "Your rates" step: done once every van in use has prices the mover saved and there
- * is at least one work area; else to do.
+ * The checklist's "Your rates" step: done once every van in use has prices the mover saved, there is
+ * at least one work area and the mover chose their cancellation terms; else to do.
  */
 export function ratesStepStatus(
   vehicles: readonly { id: string; active: boolean }[],
   cards: readonly Pick<RateCardRow, 'vehicle_id' | 'confirmed_by_mover_at'>[],
   areas: readonly unknown[],
+  terms: CancellationTerms | null,
 ): 'todo' | 'saved' {
   const inUse = vehicles.filter((v) => v.active);
   const priced = inUse.every((v) => cards.some((c) => c.vehicle_id === v.id && c.confirmed_by_mover_at !== null));
-  return inUse.length > 0 && priced && areas.length > 0 ? 'saved' : 'todo';
+  return inUse.length > 0 && priced && areas.length > 0 && terms !== null ? 'saved' : 'todo';
 }

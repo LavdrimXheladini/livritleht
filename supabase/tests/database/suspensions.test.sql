@@ -16,9 +16,9 @@ update public.profiles set role = 'mover' where id in ('00000000-0000-0000-0000-
 update public.profiles set role = 'customer' where id = '00000000-0000-0000-0000-00000000c401';
 update public.profiles set role = 'admin' where id = '00000000-0000-0000-0000-00000000e401';
 
-insert into public.mover_companies (id, owner_id, legal_name, country, verification_status, stripe_onboarding_complete)
-values ('00000000-0000-0000-0000-0000000aa401', '00000000-0000-0000-0000-00000000d401', 'Rio Mudanças Lda', 'PT', 'verified', true),
-       ('00000000-0000-0000-0000-0000000aa402', '00000000-0000-0000-0000-00000000d402', 'Tejo Transportes Lda', 'PT', 'verified', true);
+insert into public.mover_companies (id, owner_id, legal_name, country, verification_status, stripe_onboarding_complete, cancel_free_hours, cancel_late_pct)
+values ('00000000-0000-0000-0000-0000000aa401', '00000000-0000-0000-0000-00000000d401', 'Rio Mudanças Lda', 'PT', 'verified', true, 48, 50),
+       ('00000000-0000-0000-0000-0000000aa402', '00000000-0000-0000-0000-00000000d402', 'Tejo Transportes Lda', 'PT', 'verified', true, 48, 50);
 insert into public.vehicles (id, company_id, class, plate, max_weight_kg, verified_at)
 values ('00000000-0000-0000-0000-0000000bb401', '00000000-0000-0000-0000-0000000aa401', 'VAN', 'TEST-SU-1', 2800, now());
 insert into public.rate_cards (vehicle_id, currency, base_fee, per_km, per_labor_minute_1_helper, confirmed_by_mover_at)

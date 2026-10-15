@@ -91,6 +91,7 @@ function RootStack() {
         <Stack.Screen name="book/when" />
         <Stack.Screen name="book/size" />
         <Stack.Screen name="book/movers" />
+        <Stack.Screen name="book/review" />
       </Stack.Protected>
     </Stack>
   );

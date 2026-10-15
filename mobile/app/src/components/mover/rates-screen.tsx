@@ -9,17 +9,23 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import { quoteVehicle } from '@movershub/pricing';
 import {
   BOOKING_FEE_RULE,
+  CANCEL_FREE_HOURS,
+  CANCEL_LATE_PCT,
   MOVER_COUNTRIES,
   SERVICE_AREA_RADII_KM,
   TYPICAL_LOADS,
+  cancellationTerms,
   formatMoney,
   perMinuteFromHourly,
   rateCardCurrencies,
   rateCardFormDefaults,
   rateCardFormSchema,
   toMinorUnits,
+  type CancelFreeHours,
+  type CancelLatePct,
   type Currency,
   type GeoSuggestion,
+  type MoverCompanyRow,
   type MoverCountry,
   type RateCard,
   type RateCardFormInput,
@@ -29,10 +35,11 @@ import {
 import { Button, ChipGroup, DarkPanel, Display, Pill, Screen, TextField, announce, currentLocale, useAnnouncement } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
-import { useMoverCompany } from '@/lib/mover-company';
+import { useMoverCompany, useSaveCancellation } from '@/lib/mover-company';
 import { useRateCards, useSaveRateCard, useServiceAreas } from '@/lib/rates';
 import { useVehicles } from '@/lib/vehicles';
 
+import { useCancellationText } from '../booking/cancellation';
 import { PlaceSearch } from './place-search';
 
 const RATE_ERRORS = ['amount_required', 'amount_invalid', 'whole_units', 'km_invalid', 'long_distance_both'] as const;
@@ -80,7 +87,8 @@ function Waiting({ failed, onRetry }: { failed: boolean; onRetry: () => void }) 
 
 /**
  * "Your prices and work area" (mover side, setup step 4 — COMPLIANCE §1, §1.1; design/DECISIONS.md #22):
- * every van in use with its own prices, and the towns the mover picks up jobs around.
+ * every van in use with its own prices, the towns the mover picks up jobs around, and their own
+ * cancellation terms (#26).
  */
 export function RatesScreen() {
   const { t } = useTranslation();
@@ -118,6 +126,7 @@ export function RatesScreen() {
             )}
           </View>
           <WorkAreas country={company.data.country} areas={areas} />
+          <Cancellation company={company.data} />
         </>
       )}
     </Screen>
@@ -217,6 +226,87 @@ function WorkAreas({ country, areas }: { country: string; areas: ReturnType<type
             {t('mover.rates.errorSave')}
           </Text>
         ) : null}
+      </View>
+    </View>
+  );
+}
+
+/**
+ * The mover's own cancellation terms (design/DECISIONS.md #26): until when cancelling is free, and what
+ * a later cancellation costs — chosen, never pre-filled. Customers see them before booking; a mover
+ * without terms isn't offered to customers.
+ */
+function Cancellation({ company }: { company: MoverCompanyRow }) {
+  const { t } = useTranslation();
+  const describe = useCancellationText();
+  const saved = cancellationTerms(company);
+  const [freeHours, setFreeHours] = useState<CancelFreeHours | null>(saved?.freeHours ?? null);
+  const [latePct, setLatePct] = useState<CancelLatePct | null>(saved?.latePct ?? null);
+  const [tried, setTried] = useState(0);
+  const save = useSaveCancellation();
+  const missing = freeHours === null || latePct === null;
+  useAnnouncement(tried > 0 && missing ? t('mover.rates.cancelMissing') : null, tried);
+
+  const submit = async () => {
+    if (freeHours === null || latePct === null) {
+      setTried((n) => n + 1);
+      return;
+    }
+    try {
+      await save.mutateAsync({ companyId: company.id, terms: { freeHours, latePct } });
+    } catch {
+      return;
+    }
+    announce(t('mover.rates.cancelSaved'));
+  };
+
+  return (
+    <View className="gap-3">
+      <View className="gap-1">
+        <Text accessibilityRole="header" className="font-sans-medium text-base text-night-50">
+          {t('mover.rates.cancelTitle')}
+        </Text>
+        <Text className="font-sans text-[13px] leading-[18px] text-sage-400">{t('mover.rates.cancelText')}</Text>
+      </View>
+      <View testID="cancel-terms" className="gap-4 rounded-panel border border-night-600 bg-night-800 p-3.5">
+        {saved ? (
+          <Text testID="cancel-current" className="font-sans text-[13.5px] leading-5 text-night-50">
+            {t('mover.rates.cancelCustomersSee', { text: describe(saved) })}
+          </Text>
+        ) : (
+          <Pill tone="accent" size="sm">
+            {t('mover.rates.cancelNotSet')}
+          </Pill>
+        )}
+        <ChipGroup
+          testID="cancel-free"
+          variant="dark-pill"
+          label={t('mover.rates.cancelFree')}
+          accessibilityLabel={t('mover.rates.cancelFree')}
+          value={freeHours}
+          onChange={setFreeHours}
+          options={CANCEL_FREE_HOURS.map((h) => ({ value: h, label: t(`mover.rates.cancelHours.h${h}`) }))}
+        />
+        <ChipGroup
+          testID="cancel-late"
+          variant="dark-pill"
+          label={t('mover.rates.cancelLateLabel')}
+          accessibilityLabel={t('mover.rates.cancelLateLabel')}
+          value={latePct}
+          onChange={setLatePct}
+          options={CANCEL_LATE_PCT.map((pct) => ({ value: pct, label: t(`mover.rates.cancelLate.p${pct}`) }))}
+        />
+        {tried > 0 && missing ? (
+          <Text testID="cancel-missing" className="font-sans text-[13px] text-danger-on-dark">
+            {t('mover.rates.cancelMissing')}
+          </Text>
+        ) : null}
+        {save.isError ? (
+          <Text testID="cancel-error" className="font-sans text-[13px] text-danger-on-dark">
+            {t('mover.rates.errorSave')}
+          </Text>
+        ) : null}
+        <Button testID="cancel-save" variant="accent" size="md" title={t('mover.rates.cancelSave')} loading={save.isPending} onPress={() => void submit()} />
       </View>
     </View>
   );

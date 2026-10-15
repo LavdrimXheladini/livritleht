@@ -4,7 +4,11 @@ import { ITEM_KEYS, TYPICAL_LOADS } from '../items';
 import { demoPlace } from '../places';
 import {
   ITEM_GROUPS,
+  bookRequestFromDraft,
+  bookRequestSchema,
   bookingDraftSchema,
+  cancellationTerms,
+  jobType,
   fittingClass,
   jobItems,
   loadTenthsM3,
@@ -30,6 +34,7 @@ const draft: BookingDraft = {
   crew: 2,
   vehicleClass: 'VAN',
   choice: null,
+  jobId: null,
 };
 
 describe('item groups', () => {
@@ -131,5 +136,48 @@ describe('draft on the device', () => {
     expect(bookingDraftSchema.parse(JSON.parse(JSON.stringify(draft)))).toEqual(draft);
     expect(bookingDraftSchema.safeParse({ ...draft, items: { piano: { qty: 1, assembly: false } } }).success).toBe(false);
     expect(bookingDraftSchema.safeParse({ ...draft, items: { box: { qty: 0, assembly: false } } }).success).toBe(false);
+  });
+});
+
+describe('booking request', () => {
+  const chosen = { ...draft, choice: { vehicleId: '7e57a000-0000-4000-8000-000000000201', companyId: '7e570000-0000-4000-8000-000000000002' } };
+
+  it('waits for a mover and a day', () => {
+    expect(bookRequestFromDraft(draft)).toBeNull();
+    expect(bookRequestFromDraft({ ...chosen, hour: null })).toBeNull();
+  });
+
+  it('sends the move and the chosen van — never a price — and the server schema accepts it', () => {
+    const request = bookRequestFromDraft(chosen)!;
+    expect(request).toMatchObject({ vehicleId: chosen.choice.vehicleId, helpers: 2, vehicleClass: 'VAN', scheduledAt: scheduledAt('2026-10-20', 9) });
+    expect(request).not.toHaveProperty('jobId');
+    expect(bookRequestSchema.safeParse(request).success).toBe(true);
+    expect(bookRequestSchema.safeParse({ ...request, moverPrice: 1 }).success).toBe(false);
+    expect(bookRequestFromDraft({ ...chosen, jobId: '00000000-0000-4000-8000-0000000e0001' })).toHaveProperty('jobId', '00000000-0000-4000-8000-0000000e0001');
+  });
+
+  it('refuses a stop that is not complete', () => {
+    const request = bookRequestFromDraft(chosen)!;
+    expect(bookRequestSchema.safeParse({ ...request, pickup: { ...request.pickup, hasLift: null } }).success).toBe(false);
+    expect(bookRequestSchema.safeParse({ ...request, dropoff: { ...request.dropoff, details: '' } }).success).toBe(false);
+  });
+});
+
+describe('job type', () => {
+  const items = (n: number) => [{ key: 'box' as const, qty: n, assembly: false }];
+  it('is a label from what was listed', () => {
+    expect(jobType({ crossBorder: true, vehicleClass: 'VAN', items: items(1) })).toBe('CROSS_BORDER');
+    expect(jobType({ crossBorder: false, vehicleClass: 'SMALL', items: items(3) })).toBe('ITEM');
+    expect(jobType({ crossBorder: false, vehicleClass: 'VAN', items: items(10) })).toBe('SMALL_MOVE');
+    expect(jobType({ crossBorder: false, vehicleClass: 'BOX', items: items(10) })).toBe('FULL_MOVE');
+    expect(jobType({ crossBorder: false, vehicleClass: 'LARGE_VAN', items: items(120) })).toBe('FULL_MOVE');
+  });
+});
+
+describe('cancellation terms', () => {
+  it('are read from the company row only when both are set to one of the choices', () => {
+    expect(cancellationTerms({ cancel_free_hours: 48, cancel_late_pct: 50 })).toEqual({ freeHours: 48, latePct: 50 });
+    expect(cancellationTerms({ cancel_free_hours: null, cancel_late_pct: null })).toBeNull();
+    expect(cancellationTerms({ cancel_free_hours: 12, cancel_late_pct: 50 })).toBeNull();
   });
 });

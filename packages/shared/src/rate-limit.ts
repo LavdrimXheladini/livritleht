@@ -18,6 +18,8 @@ export const RATE_LIMITS = {
   phoneCodeCheck: { limit: 10, windowSeconds: 600 },
   /** A look-up in an official company register (VIES, the Polish white list, the Swiss UID register). */
   companyRegistry: { limit: 20, windowSeconds: 600 },
+  /** A booking request: one route, one database lookup, two writes (a customer reviews a few times). */
+  book: { limit: 20, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 export type RateLimitScope = keyof typeof RATE_LIMITS;
 

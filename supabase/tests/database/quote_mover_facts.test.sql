@@ -12,11 +12,12 @@ values
 update public.profiles set role = 'mover' where id in ('00000000-0000-0000-0000-00000000d401', '00000000-0000-0000-0000-00000000d402');
 
 insert into public.mover_companies
-  (id, owner_id, legal_name, registration_no, country, is_business, verification_status, stripe_onboarding_complete, address_details)
+  (id, owner_id, legal_name, registration_no, country, is_business, verification_status, stripe_onboarding_complete, address_details,
+   cancel_free_hours, cancel_late_pct)
 values
   ('00000000-0000-0000-0000-0000000aa401', '00000000-0000-0000-0000-00000000d401', 'Lisboa Mudanças Lda', '515000001', 'PT', true, 'verified', true,
-   '{"street":"Rua Augusta","houseNumber":"10","city":"Lisboa","countryCode":"PT","lat":38.71,"lon":-9.137}'),
-  ('00000000-0000-0000-0000-0000000aa402', '00000000-0000-0000-0000-00000000d402', 'Ana Costa', 'SHOULD-NOT-SHOW', 'PT', false, 'verified', true, null);
+   '{"street":"Rua Augusta","houseNumber":"10","city":"Lisboa","countryCode":"PT","lat":38.71,"lon":-9.137}', 48, 50),
+  ('00000000-0000-0000-0000-0000000aa402', '00000000-0000-0000-0000-00000000d402', 'Ana Costa', 'SHOULD-NOT-SHOW', 'PT', false, 'verified', true, null, 24, 0);
 
 insert into public.vehicles (id, company_id, class, plate, max_weight_kg, volume_m3, verified_at)
 values

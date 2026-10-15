@@ -53,7 +53,8 @@ select throws_ok(
 -- The platform verifies the company and its documents, not yet the vehicles ---------------
 reset role;
 select set_config('request.jwt.claims', '', true); -- acting as the platform (service role) from here
-update public.mover_companies set verification_status = 'verified', stripe_onboarding_complete = true
+update public.mover_companies set verification_status = 'verified', stripe_onboarding_complete = true,
+  cancel_free_hours = 48, cancel_late_pct = 50
 where id = '00000000-0000-0000-0000-0000000aa301';
 insert into public.mover_documents (company_id, type, file_path, expires_at, verified_at)
 values ('00000000-0000-0000-0000-0000000aa301', 'insurance', 'aa301/insurance.pdf', now() + interval '1 year', now()),

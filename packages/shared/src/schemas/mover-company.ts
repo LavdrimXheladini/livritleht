@@ -157,6 +157,9 @@ export const moverCompanyRowSchema = z.object({
   self_certification_at: z.string().nullable(),
   /** MoversHub's note when it asks for changes (the admin page); cleared when the mover changes something. */
   review_note: z.string().nullish(),
+  /** The mover's own cancellation terms (`cancellationTerms` in ./booking); null until chosen. */
+  cancel_free_hours: z.number().int().nullish(),
+  cancel_late_pct: z.number().int().nullish(),
 });
 export type MoverCompanyRow = z.infer<typeof moverCompanyRowSchema>;
 export const MOVER_COMPANY_COLUMNS = Object.keys(moverCompanyRowSchema.shape).join(', ');

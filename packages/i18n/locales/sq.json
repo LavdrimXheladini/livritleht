@@ -183,6 +183,41 @@
         "longDistance": "Distancë e gjatë, {{km}} km",
         "minimumPrice": "Plotësuar deri te çmimi minimal i transportuesit"
       }
+    },
+    "cancel": {
+      "free24": "Anulim falas deri 24 orë para orës së mbërritjes.",
+      "free48": "Anulim falas deri 48 orë para orës së mbërritjes.",
+      "free72": "Anulim falas deri 72 orë para orës së mbërritjes.",
+      "free168": "Anulim falas deri 7 ditë para orës së mbërritjes.",
+      "late0": "Edhe anulimet më vonë janë falas.",
+      "late": "Më vonë: {{pct}}% e çmimit të transportuesit.",
+      "late100": "Më vonë: çmimi i plotë i transportuesit."
+    },
+    "review": {
+      "title": "Kontrollo rezervimin",
+      "subtitle": "Çmimi i transportuesit tënd për këtë shpërngulje, i llogaritur sërish tani nga tarifat e tij.",
+      "contract": "Kontrata jote për këtë shpërngulje është me {{name}}. MoversHub është platforma e rezervimit.",
+      "moverTitle": "Transportuesi yt",
+      "address": "Adresa: {{address}}",
+      "phone": "Telefoni: {{phone}}",
+      "email": "Email: {{email}}",
+      "priceTitle": "Çmimi",
+      "fee": "Tarifa e rezervimit e MoversHub",
+      "feeTba": "ende pa u vendosur",
+      "feeNote": "Shuma e tarifës së rezervimit ende nuk është vendosur: do ta shohësh atë dhe totalin para pagesës.",
+      "total": "Gjithsej",
+      "validUntil": "Ky çmim vlen deri në {{time}}.",
+      "expired": "Ky çmim ka skaduar. Llogarite sërish për të vazhduar.",
+      "priceAgain": "Llogarit sërish",
+      "cancelTitle": "Anulimi",
+      "withdrawal": "Një shpërngulje e rezervuar për një datë të caktuar zakonisht nuk ka të drejtë tërheqjeje 14-ditore; vlejnë kushtet e anulimit të transportuesit.",
+      "pay": "Ruaj kartën dhe rezervo",
+      "payNote": "Pagesa me kartë hapet së shpejti. Kërkesa jote është ruajtur — asgjë nuk tarifohet dhe ende nuk i dërgohet transportuesit.",
+      "unavailable": "Ky transportues nuk mund ta marrë më këtë shpërngulje (ndryshuan dokumentet, zona ose ditët e tij). Zgjidh një transportues tjetër.",
+      "chooseAnother": "Zgjidh një transportues tjetër",
+      "invalidDate": "Dita e shpërnguljes ka kaluar. Zgjidh një ditë tjetër.",
+      "chooseDay": "Zgjidh një ditë tjetër",
+      "error": "Nuk mundëm ta kontrollojmë çmimin tani."
     }
   },
   "items": {
@@ -485,7 +520,28 @@
         "whole_units": "Kjo monedhë nuk ka qindarka: përdor shuma të plota.",
         "km_invalid": "Shkruaj kilometra të plotë, p.sh. 150.",
         "long_distance_both": "Plotëso të dyja ose lëri të dyja bosh."
-      }
+      },
+      "cancelTitle": "Kushtet e anulimit",
+      "cancelText": "Kushtet e tua. Klientët i shohin para se të rezervojnë; një ndryshim vlen për shpërnguljet e rezervuara më pas.",
+      "cancelFree": "Anulim falas deri",
+      "cancelHours": {
+        "h24": "1 ditë para",
+        "h48": "2 ditë para",
+        "h72": "3 ditë para",
+        "h168": "7 ditë para"
+      },
+      "cancelLateLabel": "Një anulim më vonë i kushton klientit",
+      "cancelLate": {
+        "p0": "Asgjë",
+        "p25": "25% të çmimit tënd",
+        "p50": "50% të çmimit tënd",
+        "p100": "Çmimin tënd të plotë"
+      },
+      "cancelNotSet": "Pa u caktuar — klientët ende nuk mund të të rezervojnë",
+      "cancelSave": "Ruaj kushtet e anulimit",
+      "cancelSaved": "Kushtet e anulimit u ruajtën.",
+      "cancelMissing": "Zgjidh të dyja: deri kur është falas dhe sa kushton një anulim më vonë.",
+      "cancelCustomersSee": "Klientët shohin: {{text}}"
     },
     "switchTitle": "Të duhet vetë një zhvendosje?",
     "switchToCustomer": "Kalo në anën e klientit",

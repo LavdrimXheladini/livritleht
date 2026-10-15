@@ -25,6 +25,8 @@ const row = (id: string, over: Partial<QuotableVehicleRow> = {}): QuotableVehicl
   registration_no: `reg-${id}`,
   town: 'Prishtinë',
   insurance_until: '2027-12-31T23:59:59+00:00',
+  cancel_free_hours: 48,
+  cancel_late_pct: 50,
   ...over,
 });
 
@@ -97,6 +99,7 @@ describe('offers for a vehicle class', () => {
       registrationNo: 'reg-a',
       town: 'Prishtinë',
       insuranceUntil: '2027-12-31T23:59:59+00:00',
+      cancellation: { freeHours: 48, latePct: 50 },
     });
     expect(offers.find((o) => o.vehicleId === 'b')!.mover).toMatchObject({ isBusiness: false, registrationNo: null, town: null });
   });

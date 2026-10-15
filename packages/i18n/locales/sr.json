@@ -183,6 +183,41 @@
         "longDistance": "Duga relacija, {{km}} km",
         "minimumPrice": "Dopuna do minimalne cene prevoznika"
       }
+    },
+    "cancel": {
+      "free24": "Besplatno otkazivanje do 24 sata pre vremena dolaska.",
+      "free48": "Besplatno otkazivanje do 48 sati pre vremena dolaska.",
+      "free72": "Besplatno otkazivanje do 72 sata pre vremena dolaska.",
+      "free168": "Besplatno otkazivanje do 7 dana pre vremena dolaska.",
+      "late0": "I kasnije otkazivanje je besplatno.",
+      "late": "Kasnije: {{pct}}% cene prevoznika.",
+      "late100": "Kasnije: puna cena prevoznika."
+    },
+    "review": {
+      "title": "Proverite rezervaciju",
+      "subtitle": "Cena vašeg prevoznika za ovu selidbu, upravo ponovo izračunata po njegovim tarifama.",
+      "contract": "Ugovor za ovu selidbu sklapate sa {{name}}. MoversHub je platforma za rezervacije.",
+      "moverTitle": "Vaš prevoznik",
+      "address": "Adresa: {{address}}",
+      "phone": "Telefon: {{phone}}",
+      "email": "Email: {{email}}",
+      "priceTitle": "Cena",
+      "fee": "MoversHub naknada za rezervaciju",
+      "feeTba": "još nije određena",
+      "feeNote": "Iznos naknade za rezervaciju još nije određen: videćete ga, i ukupnu cenu, pre plaćanja.",
+      "total": "Ukupno",
+      "validUntil": "Ova cena važi do {{time}}.",
+      "expired": "Ova cena je istekla. Izračunajte je ponovo da biste nastavili.",
+      "priceAgain": "Izračunaj ponovo",
+      "cancelTitle": "Otkazivanje",
+      "withdrawal": "Selidba rezervisana za određeni datum obično nema pravo na odustanak u roku od 14 dana; važe uslovi otkazivanja prevoznika.",
+      "pay": "Sačuvaj karticu i rezerviši",
+      "payNote": "Plaćanje karticom uskoro. Vaš zahtev je sačuvan — ništa se ne naplaćuje i još se ne šalje prevozniku.",
+      "unavailable": "Ovaj prevoznik više ne može da preuzme ovu selidbu (promenili su se njegovi dokumenti, područje ili dani). Izaberite drugog prevoznika.",
+      "chooseAnother": "Izaberi drugog prevoznika",
+      "invalidDate": "Dan selidbe je prošao. Izaberite drugi dan.",
+      "chooseDay": "Izaberi drugi dan",
+      "error": "Trenutno nismo mogli da proverimo cenu."
     }
   },
   "items": {
@@ -485,7 +520,28 @@
         "whole_units": "Ova valuta nema decimale: koristite cele iznose.",
         "km_invalid": "Unesite cele kilometre, npr. 150.",
         "long_distance_both": "Popunite oba polja ili ostavite oba prazna."
-      }
+      },
+      "cancelTitle": "Uslovi otkazivanja",
+      "cancelText": "Vaši sopstveni uslovi. Klijenti ih vide pre rezervacije; izmena važi za selidbe rezervisane posle nje.",
+      "cancelFree": "Besplatno otkazivanje do",
+      "cancelHours": {
+        "h24": "1 dan pre",
+        "h48": "2 dana pre",
+        "h72": "3 dana pre",
+        "h168": "7 dana pre"
+      },
+      "cancelLateLabel": "Kasnije otkazivanje klijenta košta",
+      "cancelLate": {
+        "p0": "Ništa",
+        "p25": "25% vaše cene",
+        "p50": "50% vaše cene",
+        "p100": "Vašu punu cenu"
+      },
+      "cancelNotSet": "Nije podešeno — klijenti vas još ne mogu rezervisati",
+      "cancelSave": "Sačuvaj uslove otkazivanja",
+      "cancelSaved": "Uslovi otkazivanja sačuvani.",
+      "cancelMissing": "Izaberite oba: do kada je besplatno i koliko košta kasnije otkazivanje.",
+      "cancelCustomersSee": "Klijenti vide: {{text}}"
     },
     "switchTitle": "Treba vam selidba?",
     "switchToCustomer": "Pređi na stranu klijenta",

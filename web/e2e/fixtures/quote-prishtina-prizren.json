@@ -28,7 +28,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-001",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",
@@ -120,7 +124,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-002",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",
@@ -165,7 +173,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-001",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",
@@ -263,7 +275,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-001",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",
@@ -308,7 +324,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-003",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",
@@ -406,7 +426,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-002",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",
@@ -504,7 +528,11 @@
             "isBusiness": true,
             "registrationNo": "TEST-XK-003",
             "town": null,
-            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+            "insuranceUntil": "2027-12-31T23:59:59+00:00",
+            "cancellation": {
+              "freeHours": 24,
+              "latePct": 50
+            }
           },
           "quote": {
             "currency": "EUR",

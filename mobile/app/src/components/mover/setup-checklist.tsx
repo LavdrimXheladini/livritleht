@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { documentsStepStatus, ratesStepStatus, vehiclesStepStatus } from '@movershub/shared';
+import { cancellationTerms, documentsStepStatus, ratesStepStatus, vehiclesStepStatus } from '@movershub/shared';
 import { BuildingIcon, CardIcon, DarkPanel, Display, DocumentIcon, PinIcon, TagIcon, VanIcon, type PillTone } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
@@ -151,7 +151,7 @@ function RatesStep() {
         ? 'todo'
         : vehicles.data === undefined || cards.data === undefined || areas.query.data === undefined
           ? undefined
-          : ratesStepStatus(vehicles.data, cards.data, areas.query.data);
+          : ratesStepStatus(vehicles.data, cards.data, areas.query.data, cancellationTerms(company.data));
   return (
     <IconRow
       testID="step-rates"

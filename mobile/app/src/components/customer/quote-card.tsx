@@ -73,6 +73,7 @@ export function QuoteCard() {
       crew,
       vehicleClass: shownCls,
       choice: null,
+      jobId: null,
     });
     router.push('/book/stops');
   };

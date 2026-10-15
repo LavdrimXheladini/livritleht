@@ -20,3 +20,24 @@ export async function insertRows(table: string, rows: Record<string, unknown>[],
   });
   if (!res.ok) throw new Error(`insert into ${table}: ${res.status} ${await res.text()}`);
 }
+
+/**
+ * A PostgREST request as the service role that returns rows (`Prefer: return=representation` for
+ * writes): GET to read, POST to insert, PATCH to update. `path` is the table and its query, e.g.
+ * `jobs?id=eq.…`. Throws on failure.
+ */
+export async function serviceRows<T>(method: 'GET' | 'POST' | 'PATCH', path: string, body?: unknown): Promise<T[]> {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method,
+    headers: {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+      'Content-Type': 'application/json',
+      ...(method === 'GET' ? {} : { Prefer: 'return=representation' }),
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!res.ok) throw new Error(`${method} ${path.split('?')[0]}: ${res.status} ${await res.text()}`);
+  return (await res.json()) as T[];
+}

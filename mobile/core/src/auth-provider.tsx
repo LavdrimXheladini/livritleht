@@ -64,6 +64,8 @@ export function AuthProvider({ supabase, children }: { supabase: SupabaseClient;
     queryClient.removeQueries({ queryKey: ['vehicles'] });
     queryClient.removeQueries({ queryKey: ['rate-cards'] });
     queryClient.removeQueries({ queryKey: ['service-areas'] });
+    // A booking request's answer carries the mover's contact details.
+    queryClient.removeQueries({ queryKey: ['book'] });
   }, [queryClient]);
 
   useEffect(() => {
