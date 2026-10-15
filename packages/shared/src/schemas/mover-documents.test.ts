@@ -61,6 +61,13 @@ describe('status', () => {
     expect(documentStatus({ expires_at: '2026-11-01T00:00:00Z', verified_at: '2026-10-01T00:00:00Z' }, now)).toBe('expiring');
     expect(documentStatus({ expires_at: '2026-10-01T00:00:00Z', verified_at: '2026-09-01T00:00:00Z' }, now)).toBe('expired');
     expect(documentStatus({ expires_at: null, verified_at: null }, now)).toBe('checking');
+    expect(documentStatus({ expires_at: null, verified_at: null, review_note: 'Not readable.' }, now)).toBe('changes');
+  });
+
+  it('a required document MoversHub asked to replace makes the step "needs changes"', () => {
+    const insurance = { type: 'insurance' as const, expires_at: '2027-12-31T23:59:59Z', verified_at: null, review_note: 'Not readable.' };
+    const extract = { type: 'registration' as const, expires_at: null, verified_at: '2026-10-01T00:00:00Z' };
+    expect(documentsStepStatus([insurance, extract], true, now)).toBe('rejected');
   });
 
   it("sums up the required documents for the setup checklist (cross-border ones don't count)", () => {

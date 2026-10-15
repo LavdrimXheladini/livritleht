@@ -14,8 +14,12 @@ function flatten(tree: Tree, prefix = ''): Record<string, string> {
   }, {});
 }
 
+// Every namespace, keys prefixed with it (e.g. "admin:title").
 const flat = Object.fromEntries(
-  Object.entries(resources).map(([lng, { translation }]) => [lng, flatten(translation as Tree)]),
+  Object.entries(resources).map(([lng, namespaces]) => [
+    lng,
+    Object.fromEntries(Object.entries(namespaces).flatMap(([ns, tree]) => Object.entries(flatten(tree as Tree)).map(([k, v]) => [`${ns}:${k}`, v]))),
+  ]),
 );
 const enKeys = Object.keys(flat.en ?? {}).sort();
 

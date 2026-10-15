@@ -246,7 +246,8 @@
         "verified": "Zweryfikowany",
         "expiring": "Wkrótce wygasa",
         "expired": "Wygasł",
-        "optional": "Opcjonalne"
+        "optional": "Opcjonalne",
+        "changes": "Poproszono o zmiany"
       },
       "validUntil": "Ważny do {{date}}",
       "chooseFile": "Wybierz plik",
@@ -297,7 +298,8 @@
       "status": {
         "verified": "Zweryfikowany",
         "checking": "Sprawdzany",
-        "inactive": "Nieużywany"
+        "inactive": "Nieużywany",
+        "changes": "Poproszono o zmiany"
       },
       "errors": {
         "class_required": "Wybierz klasę wielkości.",
@@ -372,7 +374,8 @@
     },
     "switchTitle": "Sam potrzebujesz przeprowadzki?",
     "switchToCustomer": "Przełącz na tryb klienta",
-    "nowHere": "Jesteś teraz w trybie przewoźnika."
+    "nowHere": "Jesteś teraz w trybie przewoźnika.",
+    "reviewNote": "MoversHub prosi o zmiany: {{note}}"
   },
   "places": {
     "prishtina": "Prisztina",
@@ -787,6 +790,102 @@
       "a": "Example Moving Co.",
       "b": "Sample Transport Co.",
       "c": "Demo Relocations Co."
+    }
+  },
+  "admin": {
+    "title": "Przewoźnicy do sprawdzenia",
+    "allMovers": "Wszyscy przewoźnicy",
+    "signInFirst": "Zaloguj się kontem administratora.",
+    "notAllowed": "Ta strona jest tylko dla administratorów MoversHub.",
+    "tabs": {
+      "pending": "Czekają na sprawdzenie",
+      "rejected": "Poproszono o zmiany",
+      "verified": "Zatwierdzeni"
+    },
+    "empty": "Nikogo tu nie ma.",
+    "waitingCounts": "czeka {{documents}} dokumentów i {{vans}} pojazdów",
+    "updated": "zmieniono {{date}}",
+    "moverTitle": "Przewoźnik",
+    "notFound": "Ten przewoźnik nie istnieje.",
+    "kind": "Działa jako",
+    "business": "Firma",
+    "person": "Osoba prywatna",
+    "registrationNo": "Numer rejestrowy",
+    "taxId": "Numer podatkowy",
+    "country": "Kraj",
+    "taxCountry": "podatki w",
+    "address": "Adres",
+    "phone": "Telefon",
+    "phoneConfirmed": "potwierdzony kodem",
+    "phoneNotConfirmed": "NIEpotwierdzony",
+    "email": "E-mail",
+    "selfCertified": "Oświadczenie",
+    "updatedAt": "Ostatnia zmiana",
+    "registers": "Rejestry urzędowe",
+    "checkByHand": "Brak odpowiedzi rejestru: sprawdź numer ręcznie w {{register}}:",
+    "noRegisterAnswer": "Brak odpowiedzi rejestru.",
+    "registerResult": {
+      "match": "Nazwa się zgadza",
+      "mismatch": "INNA NAZWA",
+      "valid": "Ważny",
+      "not_found": "Nie znaleziono",
+      "unavailable": "Rejestr nie odpowiedział"
+    },
+    "documents": "Dokumenty",
+    "none": "Brak.",
+    "validUntil": "Ważny do",
+    "openFile": "Otwórz plik (10 min)",
+    "vans": "Pojazdy",
+    "tailLift": "winda",
+    "noTailLift": "bez windy",
+    "tachograph": "tachograf",
+    "noTachograph": "bez tachografu",
+    "pricesAndAreas": "Ceny i obszary pracy",
+    "pricedVans": "{{priced}} z {{vans}} używanych pojazdów ma zapisane ceny",
+    "noAreas": "brak obszaru pracy",
+    "history": "Decyzje",
+    "entity": {
+      "mover_company": "Firma",
+      "mover_document": "Dokument",
+      "vehicle": "Pojazd"
+    },
+    "action": {
+      "verify": "zatwierdzono",
+      "reject": "poproszono o zmiany"
+    },
+    "status": {
+      "pending": "Czeka",
+      "verified": "Zatwierdzony",
+      "rejected": "Poproszono o zmiany",
+      "inactive": "Nieużywany"
+    },
+    "noteToMover": "Uwaga dla przewoźnika",
+    "noteLabel": "Co przewoźnik ma zmienić (przeczyta to)",
+    "sendNote": "Poproś o zmiany",
+    "cancel": "Anuluj",
+    "approve": "Zatwierdź",
+    "askForChanges": "Poproś o zmiany",
+    "errors": {
+      "admins_only": "Decydować mogą tylko administratorzy.",
+      "not_found": "To już nie istnieje.",
+      "not_waiting_for_check": "To nie czeka na sprawdzenie (zatwierdzonego przewoźnika zmienia się przez zawieszenie).",
+      "company_incomplete": "Jeszcze niekompletne:",
+      "review_note_required": "Napisz uwagę dla przewoźnika.",
+      "document_expired": "Ten dokument wygasł.",
+      "failed": "Nie udało się. Spróbuj ponownie.",
+      "invalid_request": "Nie udało się. Spróbuj ponownie."
+    },
+    "missing": {
+      "tax_id": "numer podatkowy",
+      "tax_residency_country": "kraj podatkowy",
+      "address": "adres na mapie",
+      "contact_phone": "telefon",
+      "contact_email": "e-mail",
+      "self_certification": "oświadczenie",
+      "registration_no": "numer rejestrowy",
+      "document_registration": "zatwierdzony odpis z rejestru",
+      "document_id": "zatwierdzony dokument tożsamości",
+      "document_insurance": "zatwierdzone, ważne ubezpieczenie"
     }
   }
 }

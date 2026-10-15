@@ -246,7 +246,8 @@
         "verified": "Verified",
         "expiring": "Ends soon",
         "expired": "Expired",
-        "optional": "Optional"
+        "optional": "Optional",
+        "changes": "Changes asked"
       },
       "validUntil": "Valid until {{date}}",
       "chooseFile": "Choose a file",
@@ -297,7 +298,8 @@
       "status": {
         "verified": "Verified",
         "checking": "Being checked",
-        "inactive": "Not in use"
+        "inactive": "Not in use",
+        "changes": "Changes asked"
       },
       "errors": {
         "class_required": "Choose a size class.",
@@ -372,7 +374,8 @@
     },
     "switchTitle": "Need a move yourself?",
     "switchToCustomer": "Switch to the customer side",
-    "nowHere": "You're on the mover side now."
+    "nowHere": "You're on the mover side now.",
+    "reviewNote": "MoversHub asked for changes: {{note}}"
   },
   "places": {
     "prishtina": "Prishtina",
@@ -787,6 +790,102 @@
       "a": "Example Moving Co.",
       "b": "Sample Transport Co.",
       "c": "Demo Relocations Co."
+    }
+  },
+  "admin": {
+    "title": "Movers to check",
+    "allMovers": "All movers",
+    "signInFirst": "Sign in with your admin account.",
+    "notAllowed": "This page is for MoversHub admins only.",
+    "tabs": {
+      "pending": "Waiting for a check",
+      "rejected": "Changes asked",
+      "verified": "Approved"
+    },
+    "empty": "Nobody here.",
+    "waitingCounts": "{{documents}} documents and {{vans}} vans waiting",
+    "updated": "changed {{date}}",
+    "moverTitle": "Mover",
+    "notFound": "This mover does not exist.",
+    "kind": "Works as",
+    "business": "Business",
+    "person": "Private person",
+    "registrationNo": "Registration number",
+    "taxId": "Tax number",
+    "country": "Country",
+    "taxCountry": "taxed in",
+    "address": "Address",
+    "phone": "Phone",
+    "phoneConfirmed": "confirmed with a code",
+    "phoneNotConfirmed": "NOT confirmed",
+    "email": "Email",
+    "selfCertified": "Self-certified",
+    "updatedAt": "Last change",
+    "registers": "Official registers",
+    "checkByHand": "No register answer: check the number by hand in {{register}}:",
+    "noRegisterAnswer": "No register answer yet.",
+    "registerResult": {
+      "match": "Name matches",
+      "mismatch": "OTHER NAME",
+      "valid": "Valid",
+      "not_found": "Not found",
+      "unavailable": "Register did not answer"
+    },
+    "documents": "Documents",
+    "none": "None.",
+    "validUntil": "Valid until",
+    "openFile": "Open file (10 min)",
+    "vans": "Vans",
+    "tailLift": "tail lift",
+    "noTailLift": "no tail lift",
+    "tachograph": "tachograph",
+    "noTachograph": "no tachograph",
+    "pricesAndAreas": "Prices and work areas",
+    "pricedVans": "{{priced}} of {{vans}} vans in use have saved prices",
+    "noAreas": "no work area",
+    "history": "Decisions",
+    "entity": {
+      "mover_company": "Company",
+      "mover_document": "Document",
+      "vehicle": "Van"
+    },
+    "action": {
+      "verify": "approved",
+      "reject": "changes asked"
+    },
+    "status": {
+      "pending": "Waiting",
+      "verified": "Approved",
+      "rejected": "Changes asked",
+      "inactive": "Not in use"
+    },
+    "noteToMover": "Note to the mover",
+    "noteLabel": "What the mover should change (they read this)",
+    "sendNote": "Ask for changes",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "askForChanges": "Ask for changes",
+    "errors": {
+      "admins_only": "Only admins can decide this.",
+      "not_found": "It no longer exists.",
+      "not_waiting_for_check": "This is not waiting for a check (an approved mover is changed through a suspension).",
+      "company_incomplete": "Not complete yet:",
+      "review_note_required": "Write a note for the mover.",
+      "document_expired": "This document has expired.",
+      "failed": "That did not work. Try again.",
+      "invalid_request": "That did not work. Try again."
+    },
+    "missing": {
+      "tax_id": "tax number",
+      "tax_residency_country": "tax country",
+      "address": "address on the map",
+      "contact_phone": "phone",
+      "contact_email": "email",
+      "self_certification": "self-certification",
+      "registration_no": "registration number",
+      "document_registration": "approved register extract",
+      "document_id": "approved ID document",
+      "document_insurance": "approved, valid insurance"
     }
   }
 }

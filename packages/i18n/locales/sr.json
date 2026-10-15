@@ -246,7 +246,8 @@
         "verified": "Provereno",
         "expiring": "Uskoro ističe",
         "expired": "Isteklo",
-        "optional": "Opciono"
+        "optional": "Opciono",
+        "changes": "Tražene izmene"
       },
       "validUntil": "Važi do {{date}}",
       "chooseFile": "Izaberite fajl",
@@ -297,7 +298,8 @@
       "status": {
         "verified": "Provereno",
         "checking": "Na proveri",
-        "inactive": "Nije u upotrebi"
+        "inactive": "Nije u upotrebi",
+        "changes": "Tražene izmene"
       },
       "errors": {
         "class_required": "Izaberite klasu veličine.",
@@ -372,7 +374,8 @@
     },
     "switchTitle": "Treba vam selidba?",
     "switchToCustomer": "Pređi na stranu klijenta",
-    "nowHere": "Sada ste na strani prevoznika."
+    "nowHere": "Sada ste na strani prevoznika.",
+    "reviewNote": "MoversHub traži izmene: {{note}}"
   },
   "places": {
     "prishtina": "Priština",
@@ -787,6 +790,102 @@
       "a": "Example Moving Co.",
       "b": "Sample Transport Co.",
       "c": "Demo Relocations Co."
+    }
+  },
+  "admin": {
+    "title": "Prevoznici za proveru",
+    "allMovers": "Svi prevoznici",
+    "signInFirst": "Prijavite se administratorskim nalogom.",
+    "notAllowed": "Ova stranica je samo za administratore MoversHub-a.",
+    "tabs": {
+      "pending": "Čekaju proveru",
+      "rejected": "Tražene izmene",
+      "verified": "Odobreni"
+    },
+    "empty": "Nema nikoga.",
+    "waitingCounts": "čeka {{documents}} dokumenata i {{vans}} vozila",
+    "updated": "izmenjeno {{date}}",
+    "moverTitle": "Prevoznik",
+    "notFound": "Ovaj prevoznik ne postoji.",
+    "kind": "Radi kao",
+    "business": "Firma",
+    "person": "Privatno lice",
+    "registrationNo": "Registarski broj",
+    "taxId": "Poreski broj",
+    "country": "Država",
+    "taxCountry": "porez u",
+    "address": "Adresa",
+    "phone": "Telefon",
+    "phoneConfirmed": "potvrđen kodom",
+    "phoneNotConfirmed": "NIJE potvrđen",
+    "email": "Email",
+    "selfCertified": "Izjava",
+    "updatedAt": "Poslednja izmena",
+    "registers": "Zvanični registri",
+    "checkByHand": "Nema odgovora registra: proverite broj ručno u {{register}}:",
+    "noRegisterAnswer": "Još nema odgovora registra.",
+    "registerResult": {
+      "match": "Naziv se poklapa",
+      "mismatch": "DRUGI NAZIV",
+      "valid": "Važeći",
+      "not_found": "Nije pronađen",
+      "unavailable": "Registar nije odgovorio"
+    },
+    "documents": "Dokumenti",
+    "none": "Nema.",
+    "validUntil": "Važi do",
+    "openFile": "Otvori fajl (10 min)",
+    "vans": "Vozila",
+    "tailLift": "rampa",
+    "noTailLift": "bez rampe",
+    "tachograph": "tahograf",
+    "noTachograph": "bez tahografa",
+    "pricesAndAreas": "Cene i područja rada",
+    "pricedVans": "{{priced}} od {{vans}} vozila u upotrebi ima sačuvane cene",
+    "noAreas": "nema područja rada",
+    "history": "Odluke",
+    "entity": {
+      "mover_company": "Firma",
+      "mover_document": "Dokument",
+      "vehicle": "Vozilo"
+    },
+    "action": {
+      "verify": "odobreno",
+      "reject": "tražene izmene"
+    },
+    "status": {
+      "pending": "Čeka",
+      "verified": "Odobreno",
+      "rejected": "Tražene izmene",
+      "inactive": "Nije u upotrebi"
+    },
+    "noteToMover": "Napomena za prevoznika",
+    "noteLabel": "Šta prevoznik treba da izmeni (on ovo čita)",
+    "sendNote": "Zatraži izmene",
+    "cancel": "Otkaži",
+    "approve": "Odobri",
+    "askForChanges": "Zatraži izmene",
+    "errors": {
+      "admins_only": "O ovome odlučuju samo administratori.",
+      "not_found": "To više ne postoji.",
+      "not_waiting_for_check": "Ovo ne čeka proveru (odobreni prevoznik se menja kroz suspenziju).",
+      "company_incomplete": "Još nije potpuno:",
+      "review_note_required": "Napišite napomenu za prevoznika.",
+      "document_expired": "Ovaj dokument je istekao.",
+      "failed": "Nije uspelo. Pokušajte ponovo.",
+      "invalid_request": "Nije uspelo. Pokušajte ponovo."
+    },
+    "missing": {
+      "tax_id": "poreski broj",
+      "tax_residency_country": "država poreza",
+      "address": "adresa na mapi",
+      "contact_phone": "telefon",
+      "contact_email": "email",
+      "self_certification": "izjava",
+      "registration_no": "registarski broj",
+      "document_registration": "odobren izvod iz registra",
+      "document_id": "odobren lični dokument",
+      "document_insurance": "odobreno, važeće osiguranje"
     }
   }
 }

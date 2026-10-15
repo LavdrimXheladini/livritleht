@@ -86,6 +86,8 @@ export const moverDocumentRowSchema = z.object({
   expires_at: z.string().nullable(),
   verified_at: z.string().nullable(),
   updated_at: z.string(),
+  /** MoversHub's note when it asks for a new document; cleared by a new upload. */
+  review_note: z.string().nullish(),
 });
 export type MoverDocumentRow = z.infer<typeof moverDocumentRowSchema>;
 export const MOVER_DOCUMENT_COLUMNS = Object.keys(moverDocumentRowSchema.shape).join(', ');
@@ -93,11 +95,15 @@ export const MOVER_DOCUMENT_COLUMNS = Object.keys(moverDocumentRowSchema.shape).
 /** Days before the end date from which the app warns (the reminders are sent 30, 14 and 3 days before, §5). */
 export const EXPIRY_WARNING_DAYS = 30;
 
-export type DocumentStatus = 'missing' | 'checking' | 'verified' | 'expiring' | 'expired';
+export type DocumentStatus = 'missing' | 'checking' | 'changes' | 'verified' | 'expiring' | 'expired';
 
-/** Where one document stands on `now`. */
-export function documentStatus(row: Pick<MoverDocumentRow, 'expires_at' | 'verified_at'> | undefined, now: Date): DocumentStatus {
+/** Where one document stands on `now` (`changes`: MoversHub asked for a new one). */
+export function documentStatus(
+  row: Pick<MoverDocumentRow, 'expires_at' | 'verified_at'> & { review_note?: string | null | undefined } | undefined,
+  now: Date,
+): DocumentStatus {
   if (!row) return 'missing';
+  if (!row.verified_at && row.review_note) return 'changes';
   if (row.expires_at) {
     const end = new Date(row.expires_at).getTime();
     if (end <= now.getTime()) return 'expired';
@@ -111,12 +117,13 @@ export function documentStatus(row: Pick<MoverDocumentRow, 'expires_at' | 'verif
  * check), something missing or expired, or a document ending soon.
  */
 export function documentsStepStatus(
-  rows: readonly Pick<MoverDocumentRow, 'type' | 'expires_at' | 'verified_at'>[],
+  rows: readonly (Pick<MoverDocumentRow, 'type' | 'expires_at' | 'verified_at'> & { review_note?: string | null | undefined })[],
   isBusiness: boolean,
   now: Date,
-): 'todo' | 'saved' | 'verified' | 'expiring' | 'expired' {
+): 'todo' | 'saved' | 'verified' | 'expiring' | 'expired' | 'rejected' {
   const statuses = requiredDocuments(isBusiness).map((type) => documentStatus(rows.find((r) => r.type === type), now));
   if (statuses.includes('expired')) return 'expired';
+  if (statuses.includes('changes')) return 'rejected';
   if (statuses.includes('missing')) return 'todo';
   if (statuses.includes('expiring')) return 'expiring';
   return statuses.every((s) => s === 'verified') ? 'verified' : 'saved';

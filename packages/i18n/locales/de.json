@@ -246,7 +246,8 @@
         "verified": "Geprüft",
         "expiring": "Läuft bald ab",
         "expired": "Abgelaufen",
-        "optional": "Optional"
+        "optional": "Optional",
+        "changes": "Änderungen erbeten"
       },
       "validUntil": "Gültig bis {{date}}",
       "chooseFile": "Datei auswählen",
@@ -297,7 +298,8 @@
       "status": {
         "verified": "Geprüft",
         "checking": "Wird geprüft",
-        "inactive": "Nicht in Nutzung"
+        "inactive": "Nicht in Nutzung",
+        "changes": "Änderungen erbeten"
       },
       "errors": {
         "class_required": "Wähle eine Größenklasse.",
@@ -372,7 +374,8 @@
     },
     "switchTitle": "Brauchst du selbst einen Umzug?",
     "switchToCustomer": "Zum Kundenbereich wechseln",
-    "nowHere": "Du bist jetzt im Bereich für Umzugsunternehmen."
+    "nowHere": "Du bist jetzt im Bereich für Umzugsunternehmen.",
+    "reviewNote": "MoversHub bittet um Änderungen: {{note}}"
   },
   "places": {
     "prishtina": "Prishtina",
@@ -787,6 +790,102 @@
       "a": "Example Moving Co.",
       "b": "Sample Transport Co.",
       "c": "Demo Relocations Co."
+    }
+  },
+  "admin": {
+    "title": "Umzugsunternehmen prüfen",
+    "allMovers": "Alle Umzugsunternehmen",
+    "signInFirst": "Melde dich mit deinem Admin-Konto an.",
+    "notAllowed": "Diese Seite ist nur für MoversHub-Admins.",
+    "tabs": {
+      "pending": "Warten auf Prüfung",
+      "rejected": "Änderungen erbeten",
+      "verified": "Freigegeben"
+    },
+    "empty": "Niemand hier.",
+    "waitingCounts": "{{documents}} Dokumente und {{vans}} Fahrzeuge warten",
+    "updated": "geändert am {{date}}",
+    "moverTitle": "Umzugsunternehmen",
+    "notFound": "Dieses Umzugsunternehmen gibt es nicht.",
+    "kind": "Arbeitet als",
+    "business": "Unternehmen",
+    "person": "Privatperson",
+    "registrationNo": "Registernummer",
+    "taxId": "Steuernummer",
+    "country": "Land",
+    "taxCountry": "steuerpflichtig in",
+    "address": "Adresse",
+    "phone": "Telefon",
+    "phoneConfirmed": "mit Code bestätigt",
+    "phoneNotConfirmed": "NICHT bestätigt",
+    "email": "E-Mail",
+    "selfCertified": "Selbsterklärung",
+    "updatedAt": "Letzte Änderung",
+    "registers": "Amtliche Register",
+    "checkByHand": "Keine Registerantwort: Prüfe die Nummer von Hand in {{register}}:",
+    "noRegisterAnswer": "Noch keine Registerantwort.",
+    "registerResult": {
+      "match": "Name stimmt",
+      "mismatch": "ANDERER NAME",
+      "valid": "Gültig",
+      "not_found": "Nicht gefunden",
+      "unavailable": "Register hat nicht geantwortet"
+    },
+    "documents": "Dokumente",
+    "none": "Keine.",
+    "validUntil": "Gültig bis",
+    "openFile": "Datei öffnen (10 Min.)",
+    "vans": "Fahrzeuge",
+    "tailLift": "Ladebordwand",
+    "noTailLift": "keine Ladebordwand",
+    "tachograph": "Tachograf",
+    "noTachograph": "kein Tachograf",
+    "pricesAndAreas": "Preise und Einsatzgebiete",
+    "pricedVans": "{{priced}} von {{vans}} genutzten Fahrzeugen haben gespeicherte Preise",
+    "noAreas": "kein Einsatzgebiet",
+    "history": "Entscheidungen",
+    "entity": {
+      "mover_company": "Unternehmen",
+      "mover_document": "Dokument",
+      "vehicle": "Fahrzeug"
+    },
+    "action": {
+      "verify": "freigegeben",
+      "reject": "Änderungen erbeten"
+    },
+    "status": {
+      "pending": "Wartet",
+      "verified": "Freigegeben",
+      "rejected": "Änderungen erbeten",
+      "inactive": "Nicht in Nutzung"
+    },
+    "noteToMover": "Hinweis an das Umzugsunternehmen",
+    "noteLabel": "Was geändert werden soll (das Umzugsunternehmen liest das)",
+    "sendNote": "Änderungen erbitten",
+    "cancel": "Abbrechen",
+    "approve": "Freigeben",
+    "askForChanges": "Änderungen erbitten",
+    "errors": {
+      "admins_only": "Das entscheiden nur Admins.",
+      "not_found": "Das gibt es nicht mehr.",
+      "not_waiting_for_check": "Das wartet nicht auf eine Prüfung (ein freigegebenes Unternehmen wird über eine Sperre geändert).",
+      "company_incomplete": "Noch nicht vollständig:",
+      "review_note_required": "Schreibe einen Hinweis für das Umzugsunternehmen.",
+      "document_expired": "Dieses Dokument ist abgelaufen.",
+      "failed": "Das hat nicht geklappt. Versuche es erneut.",
+      "invalid_request": "Das hat nicht geklappt. Versuche es erneut."
+    },
+    "missing": {
+      "tax_id": "Steuernummer",
+      "tax_residency_country": "Steuerland",
+      "address": "Adresse auf der Karte",
+      "contact_phone": "Telefon",
+      "contact_email": "E-Mail",
+      "self_certification": "Selbsterklärung",
+      "registration_no": "Registernummer",
+      "document_registration": "freigegebener Registerauszug",
+      "document_id": "freigegebener Ausweis",
+      "document_insurance": "freigegebene, gültige Versicherung"
     }
   }
 }

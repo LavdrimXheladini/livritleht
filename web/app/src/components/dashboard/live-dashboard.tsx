@@ -323,9 +323,10 @@ export function LiveDashboard({ locale, jobs, homeHref }: { locale: Locale; jobs
 
 const itemCode = (k: number) => `IT-${String(k + 1).padStart(2, '0')}`;
 
-type T = ReturnType<typeof useTranslation>['t'];
+/** Just the two texts it needs: the full typed `t` makes TypeScript give up ("excessively deep"). */
+type EtaT = (key: 'dashboard.job.min' | 'dashboard.job.hm', options: Record<string, number>) => string;
 
-function formatEta(min: number, t: T) {
+function formatEta(min: number, t: EtaT) {
   return min < 60 ? t('dashboard.job.min', { m: min }) : t('dashboard.job.hm', { h: Math.floor(min / 60), m: min % 60 });
 }
 
@@ -390,7 +391,10 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function itemName(it: DemoItem, t: T) {
+/** Only the item names: with the full typed `t` the template key makes TypeScript give up ("excessively deep"). */
+type ItemNameT = (key: `dashboard.itemNames.${DemoItem['key']}`) => string;
+
+function itemName(it: DemoItem, t: ItemNameT): string {
   const name = t(`dashboard.itemNames.${it.key}`);
   return it.count ? `${name} ×${it.count}` : name;
 }

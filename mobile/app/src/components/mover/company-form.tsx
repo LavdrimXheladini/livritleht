@@ -228,6 +228,13 @@ function CompanyForm({ row, email }: { row: MoverCompanyRow | null; email: strin
         <Text className="font-sans text-[15px] leading-[22px] text-sage-400">{t('mover.company.subtitle')}</Text>
       </View>
 
+      {row?.verification_status === 'rejected' && row.review_note ? (
+        <DarkPanel>
+          <Text testID="company-review-note" className="font-sans text-sm leading-5 text-accent-300">
+            {t('mover.reviewNote', { note: row.review_note })}
+          </Text>
+        </DarkPanel>
+      ) : null}
       {row?.verification_status === 'verified' ? (
         <DarkPanel>
           <Text testID="company-reverify" className="font-sans text-sm leading-5 text-night-50">

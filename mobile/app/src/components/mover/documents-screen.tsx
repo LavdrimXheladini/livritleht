@@ -30,6 +30,7 @@ import { useMoverDocuments, useUploadDocument, type ChosenFile } from '@/lib/mov
 const STATUS_TONE: Record<DocumentStatus, PillTone> = {
   missing: 'accent',
   checking: 'dark-muted',
+  changes: 'accent',
   verified: 'dark',
   expiring: 'accent',
   expired: 'accent',
@@ -201,6 +202,11 @@ function DocumentCard({
           <Text className="font-sans text-[13px] leading-[18px] text-sage-400">{t(`mover.documents.types.${type}.text`)}</Text>
           {row?.expires_at ? (
             <Text className="font-sans text-[13px] text-night-50">{t('mover.documents.validUntil', { date: formatExpiryDate(row.expires_at) })}</Text>
+          ) : null}
+          {status === 'changes' && row?.review_note ? (
+            <Text testID={`document-${type}-note`} className="font-sans text-[13px] leading-[18px] text-accent-300">
+              {t('mover.reviewNote', { note: row.review_note })}
+            </Text>
           ) : null}
         </View>
         <Pill tone={notNeeded ? 'dark-muted' : STATUS_TONE[status]} size="sm">

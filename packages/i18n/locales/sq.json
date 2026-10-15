@@ -246,7 +246,8 @@
         "verified": "Verifikuar",
         "expiring": "Skadon së shpejti",
         "expired": "Ka skaduar",
-        "optional": "Opsionale"
+        "optional": "Opsionale",
+        "changes": "Kërkohen ndryshime"
       },
       "validUntil": "E vlefshme deri më {{date}}",
       "chooseFile": "Zgjidh një skedar",
@@ -297,7 +298,8 @@
       "status": {
         "verified": "Verifikuar",
         "checking": "Në kontroll",
-        "inactive": "Jo në përdorim"
+        "inactive": "Jo në përdorim",
+        "changes": "Kërkohen ndryshime"
       },
       "errors": {
         "class_required": "Zgjidh një klasë madhësie.",
@@ -372,7 +374,8 @@
     },
     "switchTitle": "Të duhet vetë një zhvendosje?",
     "switchToCustomer": "Kalo në anën e klientit",
-    "nowHere": "Tani je në anën e transportuesit."
+    "nowHere": "Tani je në anën e transportuesit.",
+    "reviewNote": "MoversHub kërkoi ndryshime: {{note}}"
   },
   "places": {
     "prishtina": "Prishtina",
@@ -787,6 +790,102 @@
       "a": "Example Moving Co.",
       "b": "Sample Transport Co.",
       "c": "Demo Relocations Co."
+    }
+  },
+  "admin": {
+    "title": "Transportues për kontroll",
+    "allMovers": "Të gjithë transportuesit",
+    "signInFirst": "Hyr me llogarinë tënde të administratorit.",
+    "notAllowed": "Kjo faqe është vetëm për administratorët e MoversHub.",
+    "tabs": {
+      "pending": "Presin kontroll",
+      "rejected": "Kërkohen ndryshime",
+      "verified": "Të miratuar"
+    },
+    "empty": "Askush këtu.",
+    "waitingCounts": "{{documents}} dokumente dhe {{vans}} furgonë në pritje",
+    "updated": "ndryshuar më {{date}}",
+    "moverTitle": "Transportuesi",
+    "notFound": "Ky transportues nuk ekziston.",
+    "kind": "Punon si",
+    "business": "Biznes",
+    "person": "Person privat",
+    "registrationNo": "Numri i regjistrimit",
+    "taxId": "Numri fiskal",
+    "country": "Shteti",
+    "taxCountry": "tatohet në",
+    "address": "Adresa",
+    "phone": "Telefoni",
+    "phoneConfirmed": "konfirmuar me kod",
+    "phoneNotConfirmed": "JO i konfirmuar",
+    "email": "Emaili",
+    "selfCertified": "Vetëdeklaruar",
+    "updatedAt": "Ndryshimi i fundit",
+    "registers": "Regjistrat zyrtarë",
+    "checkByHand": "Asnjë përgjigje nga regjistri: kontrolloje numrin me dorë në {{register}}:",
+    "noRegisterAnswer": "Ende asnjë përgjigje nga regjistri.",
+    "registerResult": {
+      "match": "Emri përputhet",
+      "mismatch": "EMËR TJETËR",
+      "valid": "I vlefshëm",
+      "not_found": "Nuk u gjet",
+      "unavailable": "Regjistri nuk u përgjigj"
+    },
+    "documents": "Dokumentet",
+    "none": "Asnjë.",
+    "validUntil": "E vlefshme deri",
+    "openFile": "Hap skedarin (10 min)",
+    "vans": "Furgonët",
+    "tailLift": "platformë ngritëse",
+    "noTailLift": "pa platformë ngritëse",
+    "tachograph": "tahograf",
+    "noTachograph": "pa tahograf",
+    "pricesAndAreas": "Çmimet dhe zonat e punës",
+    "pricedVans": "{{priced}} nga {{vans}} furgonë në përdorim kanë çmime të ruajtura",
+    "noAreas": "asnjë zonë pune",
+    "history": "Vendimet",
+    "entity": {
+      "mover_company": "Kompania",
+      "mover_document": "Dokument",
+      "vehicle": "Furgon"
+    },
+    "action": {
+      "verify": "miratuar",
+      "reject": "kërkuar ndryshime"
+    },
+    "status": {
+      "pending": "Në pritje",
+      "verified": "Miratuar",
+      "rejected": "Kërkohen ndryshime",
+      "inactive": "Jo në përdorim"
+    },
+    "noteToMover": "Shënim për transportuesin",
+    "noteLabel": "Çfarë duhet të ndryshojë transportuesi (e lexon këtë)",
+    "sendNote": "Kërko ndryshime",
+    "cancel": "Anulo",
+    "approve": "Mirato",
+    "askForChanges": "Kërko ndryshime",
+    "errors": {
+      "admins_only": "Vetëm administratorët e vendosin këtë.",
+      "not_found": "Nuk ekziston më.",
+      "not_waiting_for_check": "Kjo nuk pret kontroll (një transportues i miratuar ndryshohet me pezullim).",
+      "company_incomplete": "Ende jo i plotë:",
+      "review_note_required": "Shkruaj një shënim për transportuesin.",
+      "document_expired": "Ky dokument ka skaduar.",
+      "failed": "Nuk funksionoi. Provo përsëri.",
+      "invalid_request": "Nuk funksionoi. Provo përsëri."
+    },
+    "missing": {
+      "tax_id": "numri fiskal",
+      "tax_residency_country": "shteti i tatimit",
+      "address": "adresa në hartë",
+      "contact_phone": "telefoni",
+      "contact_email": "emaili",
+      "self_certification": "vetëdeklarimi",
+      "registration_no": "numri i regjistrimit",
+      "document_registration": "ekstrakti i miratuar",
+      "document_id": "dokumenti i identitetit i miratuar",
+      "document_insurance": "sigurimi i miratuar dhe i vlefshëm"
     }
   }
 }

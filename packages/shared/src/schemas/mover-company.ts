@@ -155,6 +155,8 @@ export const moverCompanyRowSchema = z.object({
   contact_email: z.string().nullable(),
   verification_status: z.enum(['pending', 'verified', 'rejected']),
   self_certification_at: z.string().nullable(),
+  /** MoversHub's note when it asks for changes (the admin page); cleared when the mover changes something. */
+  review_note: z.string().nullish(),
 });
 export type MoverCompanyRow = z.infer<typeof moverCompanyRowSchema>;
 export const MOVER_COMPANY_COLUMNS = Object.keys(moverCompanyRowSchema.shape).join(', ');

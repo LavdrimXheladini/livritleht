@@ -90,6 +90,8 @@ export const vehicleRowSchema = z.object({
   active: z.boolean(),
   verified_at: z.string().nullable(),
   created_at: z.string(),
+  /** MoversHub's note when it asks for changes; cleared when the mover changes the van. */
+  review_note: z.string().nullish(),
 });
 export type VehicleRow = z.infer<typeof vehicleRowSchema>;
 export const VEHICLE_COLUMNS = Object.keys(vehicleRowSchema.shape).join(', ');
@@ -107,15 +109,20 @@ export function vehicleFormDefaults(row: VehicleRow | null): Partial<VehicleForm
   };
 }
 
-/** Where one van stands: in use and checked, in use and waiting for the check, or not in use. */
-export const vehicleStatus = (row: Pick<VehicleRow, 'active' | 'verified_at'>): 'verified' | 'checking' | 'inactive' =>
-  !row.active ? 'inactive' : row.verified_at ? 'verified' : 'checking';
+/** Where one van stands: in use and checked, waiting for the check, changes asked, or not in use. */
+export const vehicleStatus = (
+  row: Pick<VehicleRow, 'active' | 'verified_at'> & { review_note?: string | null | undefined },
+): 'verified' | 'checking' | 'changes' | 'inactive' =>
+  !row.active ? 'inactive' : row.verified_at ? 'verified' : row.review_note ? 'changes' : 'checking';
 
 /** The checklist's summary: no van in use yet, vans waiting for the check, or at least one checked van in use. */
-export function vehiclesStepStatus(rows: readonly Pick<VehicleRow, 'active' | 'verified_at'>[]): 'todo' | 'saved' | 'verified' {
+export function vehiclesStepStatus(
+  rows: readonly (Pick<VehicleRow, 'active' | 'verified_at'> & { review_note?: string | null | undefined })[],
+): 'todo' | 'saved' | 'verified' | 'rejected' {
   const inUse = rows.filter((r) => r.active);
   if (inUse.length === 0) return 'todo';
-  return inUse.some((r) => r.verified_at) ? 'verified' : 'saved';
+  if (inUse.some((r) => r.verified_at)) return 'verified';
+  return inUse.some((r) => r.review_note) ? 'rejected' : 'saved';
 }
 
 /** "2.8 t" from kilograms (one decimal, no trailing ".0"). */

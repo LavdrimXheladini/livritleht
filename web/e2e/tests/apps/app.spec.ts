@@ -1133,6 +1133,38 @@ test.describe('signed in as a mover', () => {
     expect(writes[1]).toMatchObject({ table: 'service_areas', method: 'DELETE' });
   });
 
+  test("MoversHub's notes: the mover reads what to change on the company, a document and a van", async ({ page }) => {
+    const note = (text: string) => en.mover.reviewNote.replace('{{note}}', text);
+    await fakeMoverCompany(page, { initial: savedCompany({ verification_status: 'rejected', review_note: 'The address is not the one on the extract.' }) });
+    await fakeMoverDocuments(page, {
+      initial: [
+        {
+          id: '00000000-0000-4000-8000-0000000d0101',
+          type: 'insurance',
+          file_path: '00000000-0000-4000-8000-0000000c0002/insurance/old.pdf',
+          expires_at: '2027-12-31T23:59:59Z',
+          verified_at: null,
+          updated_at: '2026-10-14T09:00:00.000Z',
+          review_note: 'The policy number is not readable.',
+        },
+      ],
+    });
+    await fakeVehicles(page, { initial: [{ ...van, verified_at: null, review_note: 'The plate on the photo is different.' }] });
+    await page.goto(url);
+    for (const step of ['step-company', 'step-documents', 'step-vehicles']) await expect(page.getByTestId(step)).toContainText(en.mover.stepStatus.rejected);
+
+    await page.getByTestId('step-company').click();
+    await expect(page.getByTestId('company-review-note')).toHaveText(note('The address is not the one on the extract.'));
+    await page.getByTestId('company-back').click();
+    await page.getByTestId('step-documents').click();
+    await expect(page.getByTestId('document-insurance')).toContainText(en.mover.documents.status.changes);
+    await expect(page.getByTestId('document-insurance-note')).toHaveText(note('The policy number is not readable.'));
+    await page.getByTestId('documents-back').click();
+    await page.getByTestId('step-vehicles').click();
+    await expect(page.getByTestId('vehicle-01-111 AA')).toContainText(en.mover.vehicles.status.changes);
+    await expect(page.getByTestId('vehicle-01-111 AA-note')).toHaveText(note('The plate on the photo is different.'));
+  });
+
   test.describe('in Albanian', () => {
     test.use({ locale: 'sq-XK' });
 

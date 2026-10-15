@@ -40,7 +40,7 @@ const VEHICLE_ERRORS = [
 type VehicleError = (typeof VEHICLE_ERRORS)[number];
 const isVehicleError = (m: string): m is VehicleError => (VEHICLE_ERRORS as readonly string[]).includes(m);
 
-const STATUS_TONE: Record<ReturnType<typeof vehicleStatus>, PillTone> = { verified: 'dark', checking: 'dark-muted', inactive: 'dark-muted' };
+const STATUS_TONE: Record<ReturnType<typeof vehicleStatus>, PillTone> = { verified: 'dark', checking: 'dark-muted', changes: 'accent', inactive: 'dark-muted' };
 
 function goBack(fallback: '/' | '/mover/vehicles') {
   if (router.canGoBack()) router.back();
@@ -151,6 +151,11 @@ function VehicleCard({ vehicle, busy, onToggle }: { vehicle: VehicleRow; busy: b
             {t(`vehicles.${vehicle.class}.name`)} · {vehicle.plate}
           </Text>
           <Text className="font-sans text-[13px] text-sage-400">{details.join(' · ')}</Text>
+          {status === 'changes' && vehicle.review_note ? (
+            <Text testID={`vehicle-${vehicle.plate}-note`} className="font-sans text-[13px] leading-[18px] text-accent-300">
+              {t('mover.reviewNote', { note: vehicle.review_note })}
+            </Text>
+          ) : null}
         </View>
         <Pill tone={STATUS_TONE[status]} size="sm">
           {t(`mover.vehicles.status.${status}`)}

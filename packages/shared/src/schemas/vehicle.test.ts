@@ -65,6 +65,8 @@ describe('status', () => {
     expect(vehiclesStepStatus([{ active: false, verified_at: '2026-10-01' }])).toBe('todo');
     expect(vehiclesStepStatus([{ active: true, verified_at: null }])).toBe('saved');
     expect(vehiclesStepStatus([{ active: true, verified_at: null }, { active: true, verified_at: '2026-10-01' }])).toBe('verified');
+    expect(vehicleStatus({ active: true, verified_at: null, review_note: 'Plate not readable.' })).toBe('changes');
+    expect(vehiclesStepStatus([{ active: true, verified_at: null, review_note: 'Plate not readable.' }])).toBe('rejected');
   });
 
   it('shows weights in tonnes and fills the form from a saved van', () => {
