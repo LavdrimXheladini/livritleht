@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import type { Locale } from '@movershub/shared';
+import { Button } from '@movershub/ui/web';
 
+import { settlePassword } from '@/lib/auth/password-owed';
 import { createClient } from '@/lib/supabase/client';
 
 export function SignOutButton({ locale }: { locale: Locale }) {
@@ -12,16 +14,18 @@ export function SignOutButton({ locale }: { locale: Locale }) {
   const router = useRouter();
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      className="self-start"
       onClick={async () => {
         await createClient().auth.signOut();
+        settlePassword();
         router.replace(`/${locale}`);
         router.refresh();
       }}
-      className="self-start rounded-md border border-ink-300 px-4 py-2 font-medium text-ink-700 hover:bg-ink-50"
     >
       {t('common.signOut')}
-    </button>
+    </Button>
   );
 }

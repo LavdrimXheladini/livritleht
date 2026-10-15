@@ -1,3 +1,4 @@
+export * from './auth-errors';
 export * from './cache';
 export * from './company-ids';
 export * from './constants';

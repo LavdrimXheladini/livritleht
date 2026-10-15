@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { LOCALES, SELF_SIGNUP_ROLES } from '../constants';
 
-/** E.164, e.g. +38344123456 (Kosovo), +48501234567 (Poland). */
+/** E.164, e.g. +38344123456 (Kosovo), +48501234567 (Poland) — a mover's contact phone. */
 export const phoneSchema = z
   .string()
   .trim()
@@ -29,18 +29,6 @@ export const passwordSchema = z
 
 /** Signing in only needs a password: older ones may predate today's rules. */
 export const signInPasswordSchema = z.string().min(1, 'password_required');
-
-export const otpRequestSchema = z.discriminatedUnion('channel', [
-  z.object({ channel: z.literal('phone'), phone: phoneSchema }),
-  z.object({ channel: z.literal('email'), email: emailSchema }),
-]);
-export type OtpRequest = z.infer<typeof otpRequestSchema>;
-
-export const otpVerifySchema = z.discriminatedUnion('channel', [
-  z.object({ channel: z.literal('phone'), phone: phoneSchema, code: otpCodeSchema }),
-  z.object({ channel: z.literal('email'), email: emailSchema, code: otpCodeSchema }),
-]);
-export type OtpVerify = z.infer<typeof otpVerifySchema>;
 
 /**
  * Metadata sent with sign-up; the `handle_new_user` trigger reads the locale. A `role` sent here is

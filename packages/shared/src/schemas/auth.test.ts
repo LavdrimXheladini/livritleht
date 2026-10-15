@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { otpRequestSchema, passwordSchema, phoneSchema, signupMetadataSchema } from './auth';
+import { emailSchema, passwordSchema, phoneSchema, signupMetadataSchema } from './auth';
 
 describe('phoneSchema', () => {
   it('normalises spaces and dashes to E.164', () => {
@@ -13,12 +13,9 @@ describe('phoneSchema', () => {
   });
 });
 
-describe('otpRequestSchema', () => {
-  it('lowercases email', () => {
-    expect(otpRequestSchema.parse({ channel: 'email', email: ' Ana@Example.COM ' })).toEqual({
-      channel: 'email',
-      email: 'ana@example.com',
-    });
+describe('emailSchema', () => {
+  it('trims and lowercases', () => {
+    expect(emailSchema.parse(' Ana@Example.COM ')).toBe('ana@example.com');
   });
 });
 

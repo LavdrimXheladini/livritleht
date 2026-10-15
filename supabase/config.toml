@@ -276,20 +276,16 @@ content_path = "./supabase/templates/recovery.html"
 # content_path = "./templates/password_changed_notification.html"
 
 [auth.sms]
-# Allow/disallow new user signups via SMS to your project.
-enable_signup = true
+# Allow/disallow new user signups via SMS to your project. Off: the app and the website sign in with
+# email + password (design/DECISIONS.md #17, #29). Phone codes are only the mover's contact-phone check,
+# which runs through the phone-verification function (Twilio Verify), not Supabase Auth.
+enable_signup = false
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = false
 # Template for sending OTP to users
 template = "Your code is {{ `{{ .Code }}` }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
 max_frequency = "5s"
-
-# Use pre-defined map of phone number to OTP for testing.
-# Local dev only — no SMS is sent for these numbers (see seed.sql).
-[auth.sms.test_otp]
-38344000001 = "123456"
-48500000001 = "123456"
 
 # Configure logged in session timeouts.
 # [auth.sessions]
