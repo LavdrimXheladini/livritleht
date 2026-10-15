@@ -570,7 +570,24 @@
     "switchTitle": "Treba vam selidba?",
     "switchToCustomer": "Pređi na stranu klijenta",
     "nowHere": "Sada ste na strani prevoznika.",
-    "reviewNote": "MoversHub traži izmene: {{note}}"
+    "reviewNote": "MoversHub traži izmene: {{note}}",
+    "reminders": {
+      "title": "Podsetnici",
+      "endsOn": "Važi do {{date}}.",
+      "endedOn": "Važenje je isteklo {{date}}.",
+      "endingWhat": {
+        "insurance": "Od tog dana klijenti ne mogu da vas rezervišu — otpremite novi dokument pre toga.",
+        "crossBorder": "Od tog dana ne dobijate selidbe preko granice — otpremite novi dokument pre toga.",
+        "id": "Otpremite novu ličnu kartu pre toga, da vaš nalog ostane proveren."
+      },
+      "endedWhat": {
+        "insurance": "Klijenti ne mogu da vas rezervišu dok ne otpremite važeći dokument.",
+        "crossBorder": "Ne dobijate selidbe preko granice dok ne otpremite važeći dokument.",
+        "id": "Otpremite novu ličnu kartu, da vaš nalog ostane proveren."
+      },
+      "upload": "Otpremi novi dokument",
+      "dismiss": "U redu"
+    }
   },
   "places": {
     "prishtina": "Priština",

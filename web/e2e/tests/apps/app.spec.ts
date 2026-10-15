@@ -1160,6 +1160,58 @@ test.describe('signed in as a mover', () => {
     await fakeMoverCompany(page); // no company saved yet
   });
 
+  test('reminders: documents ending or ended, with what that means; upload leads to the documents, "Got it" puts one away', async ({ page }) => {
+    const reminder = (n: number, type: string, days: 0 | 3 | 14 | 30, expires: string) => ({
+      id: `00000000-0000-4000-8000-0000000f00${String(n).padStart(2, '0')}`,
+      document_id: `00000000-0000-4000-8000-0000000d00${type === 'insurance' ? '01' : '02'}`,
+      document_type: type,
+      kind: days === 0 ? 'document_ended' : 'document_ending',
+      days_before: days,
+      expires_at: expires,
+      created_at: '2026-10-15T05:07:00+00:00',
+    });
+    const rows = [
+      reminder(1, 'insurance', 30, '2026-10-28T23:59:59+00:00'),
+      reminder(2, 'insurance', 14, '2026-10-28T23:59:59+00:00'),
+      reminder(3, 'cmr', 0, '2026-10-14T23:59:59+00:00'),
+    ];
+    const marked: { body: unknown; query: string }[] = [];
+    await page.route('**/rest/v1/mover_reminders*', (route) => {
+      const request = route.request();
+      if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': '*' } });
+      if (request.method() === 'PATCH') {
+        marked.push({ body: request.postDataJSON(), query: decodeURIComponent(new URL(request.url()).search) });
+        return route.fulfill({ status: 204, headers: cors });
+      }
+      return route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify(rows) });
+    });
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    await fakeMoverDocuments(page);
+    await page.goto(url);
+    const r = en.mover.reminders;
+    const types = en.mover.documents.types;
+
+    // The ended one first; one per document (its latest stage), with what it means (COMPLIANCE §5).
+    const cards = page.getByTestId('reminders').locator('[data-testid="reminder-cmr"], [data-testid="reminder-insurance"]');
+    await expect(cards).toHaveCount(2);
+    await expect(cards.first()).toHaveAttribute('data-testid', 'reminder-cmr');
+    await expect(page.getByTestId('reminder-cmr')).toContainText(types.cmr.title);
+    await expect(page.getByTestId('reminder-cmr')).toContainText(`${r.endedOn.replace('{{date}}', '14.10.2026')} ${r.endedWhat.crossBorder}`);
+    await expect(page.getByTestId('reminder-insurance')).toContainText(`${r.endsOn.replace('{{date}}', '28.10.2026')} ${r.endingWhat.insurance}`);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-reminders.png');
+
+    // "Got it": all of the document's reminders are read; it goes away.
+    await page.getByTestId('reminder-insurance-dismiss').click();
+    await expect(page.getByTestId('reminder-insurance')).toHaveCount(0);
+    expect(marked).toHaveLength(1);
+    expect(marked[0]!.body).toMatchObject({ read_at: expect.any(String) });
+    expect(marked[0]!.query).toContain(`id=in.(${rows[0]!.id},${rows[1]!.id})`);
+    // "Upload the new one" opens the documents.
+    await page.getByTestId('reminder-cmr-upload').click();
+    await expect(page.getByText(en.mover.documents.title)).toBeVisible();
+  });
+
   test('home: setup checklist and an example request with the payout', async ({ page }) => {
     await page.goto(url);
     await expect(page.getByText(en.mover.homeTitle)).toBeVisible();

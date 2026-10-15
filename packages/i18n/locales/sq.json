@@ -570,7 +570,24 @@
     "switchTitle": "Të duhet vetë një zhvendosje?",
     "switchToCustomer": "Kalo në anën e klientit",
     "nowHere": "Tani je në anën e transportuesit.",
-    "reviewNote": "MoversHub kërkoi ndryshime: {{note}}"
+    "reviewNote": "MoversHub kërkoi ndryshime: {{note}}",
+    "reminders": {
+      "title": "Kujtesa",
+      "endsOn": "E vlefshme deri më {{date}}.",
+      "endedOn": "Ka mbaruar më {{date}}.",
+      "endingWhat": {
+        "insurance": "Nga ajo ditë klientët nuk mund të të rezervojnë — ngarko dokumentin e ri para asaj dite.",
+        "crossBorder": "Nga ajo ditë nuk të ofrohen shpërngulje përtej kufirit — ngarko dokumentin e ri para asaj dite.",
+        "id": "Ngarko letërnjoftimin e ri para asaj dite, që llogaria jote të mbetet e kontrolluar."
+      },
+      "endedWhat": {
+        "insurance": "Klientët nuk mund të të rezervojnë derisa të ngarkosh një dokument të vlefshëm.",
+        "crossBorder": "Nuk të ofrohen shpërngulje përtej kufirit derisa të ngarkosh një dokument të vlefshëm.",
+        "id": "Ngarko letërnjoftimin e ri, që llogaria jote të mbetet e kontrolluar."
+      },
+      "upload": "Ngarko dokumentin e ri",
+      "dismiss": "Në rregull"
+    }
   },
   "places": {
     "prishtina": "Prishtina",

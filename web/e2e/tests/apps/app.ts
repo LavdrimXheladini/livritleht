@@ -28,12 +28,13 @@ const answer = (body: string, status = 200) => (route: Route) =>
 
 /**
  * `quote` answers with the saved Prishtina → Prizren quote (test movers, 83.2 km); `places` finds
- * nothing; the customer has no moves yet (`jobs`).
+ * nothing; the customer has no moves yet (`jobs`), the mover no reminders (`mover_reminders`).
  */
 export async function serveFixtures(page: Page) {
   await page.route('**/functions/v1/quote', answer(quote));
   await page.route('**/functions/v1/places', answer('{"suggestions":[]}'));
   await page.route('**/rest/v1/jobs*', answer('[]'));
+  await page.route('**/rest/v1/mover_reminders*', answer('[]'));
 }
 
 /** Where the app keeps the session and the side it last showed (SESSION_STORAGE_KEY, mobile/core/src/saved-role.ts). */

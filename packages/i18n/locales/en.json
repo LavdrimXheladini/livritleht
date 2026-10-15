@@ -570,7 +570,24 @@
     "switchTitle": "Need a move yourself?",
     "switchToCustomer": "Switch to the customer side",
     "nowHere": "You're on the mover side now.",
-    "reviewNote": "MoversHub asked for changes: {{note}}"
+    "reviewNote": "MoversHub asked for changes: {{note}}",
+    "reminders": {
+      "title": "Reminders",
+      "endsOn": "Valid until {{date}}.",
+      "endedOn": "Ended on {{date}}.",
+      "endingWhat": {
+        "insurance": "From that day customers can't book you — upload the new one before then.",
+        "crossBorder": "From that day you're not offered moves across a border — upload the new one before then.",
+        "id": "Upload your new ID before then, so your account stays checked."
+      },
+      "endedWhat": {
+        "insurance": "Customers can't book you until you upload a valid one.",
+        "crossBorder": "You're not offered moves across a border until you upload a valid one.",
+        "id": "Upload your new ID, so your account stays checked."
+      },
+      "upload": "Upload the new one",
+      "dismiss": "Got it"
+    }
   },
   "places": {
     "prishtina": "Prishtina",

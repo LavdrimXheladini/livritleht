@@ -570,7 +570,24 @@
     "switchTitle": "Brauchst du selbst einen Umzug?",
     "switchToCustomer": "Zum Kundenbereich wechseln",
     "nowHere": "Du bist jetzt im Bereich für Umzugsunternehmen.",
-    "reviewNote": "MoversHub bittet um Änderungen: {{note}}"
+    "reviewNote": "MoversHub bittet um Änderungen: {{note}}",
+    "reminders": {
+      "title": "Erinnerungen",
+      "endsOn": "Gültig bis {{date}}.",
+      "endedOn": "Abgelaufen am {{date}}.",
+      "endingWhat": {
+        "insurance": "Ab diesem Tag können Kunden dich nicht buchen — lade das neue Dokument vorher hoch.",
+        "crossBorder": "Ab diesem Tag bekommst du keine Umzüge über eine Grenze — lade das neue Dokument vorher hoch.",
+        "id": "Lade deinen neuen Ausweis vorher hoch, damit dein Konto geprüft bleibt."
+      },
+      "endedWhat": {
+        "insurance": "Kunden können dich nicht buchen, bis du ein gültiges Dokument hochlädst.",
+        "crossBorder": "Du bekommst keine Umzüge über eine Grenze, bis du ein gültiges Dokument hochlädst.",
+        "id": "Lade deinen neuen Ausweis hoch, damit dein Konto geprüft bleibt."
+      },
+      "upload": "Neues Dokument hochladen",
+      "dismiss": "Verstanden"
+    }
   },
   "places": {
     "prishtina": "Prishtina",

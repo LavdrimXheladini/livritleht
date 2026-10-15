@@ -570,7 +570,24 @@
     "switchTitle": "Sam potrzebujesz przeprowadzki?",
     "switchToCustomer": "Przełącz na tryb klienta",
     "nowHere": "Jesteś teraz w trybie przewoźnika.",
-    "reviewNote": "MoversHub prosi o zmiany: {{note}}"
+    "reviewNote": "MoversHub prosi o zmiany: {{note}}",
+    "reminders": {
+      "title": "Przypomnienia",
+      "endsOn": "Ważność do {{date}}.",
+      "endedOn": "Ważność skończyła się {{date}}.",
+      "endingWhat": {
+        "insurance": "Od tego dnia klienci nie mogą cię zarezerwować — wgraj nowy dokument wcześniej.",
+        "crossBorder": "Od tego dnia nie dostajesz przeprowadzek za granicę — wgraj nowy dokument wcześniej.",
+        "id": "Wgraj nowy dowód osobisty wcześniej, aby twoje konto pozostało sprawdzone."
+      },
+      "endedWhat": {
+        "insurance": "Klienci nie mogą cię zarezerwować, dopóki nie wgrasz ważnego dokumentu.",
+        "crossBorder": "Nie dostajesz przeprowadzek za granicę, dopóki nie wgrasz ważnego dokumentu.",
+        "id": "Wgraj nowy dowód osobisty, aby twoje konto pozostało sprawdzone."
+      },
+      "upload": "Wgraj nowy dokument",
+      "dismiss": "Rozumiem"
+    }
   },
   "places": {
     "prishtina": "Prisztina",

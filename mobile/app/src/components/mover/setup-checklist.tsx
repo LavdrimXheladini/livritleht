@@ -12,6 +12,7 @@ import { useRateCards, useServiceAreas } from '@/lib/rates';
 import { useVehicles } from '@/lib/vehicles';
 
 import { IconRow } from './icon-row';
+import { Reminders } from './reminders';
 
 // What a mover sets up before taking jobs (COMPLIANCE §5). Company, documents, vans and prices are
 // built; payouts follow ("Coming next").
@@ -29,7 +30,7 @@ const STATUS_TONE: Record<StepStatus, PillTone> = {
   expired: 'accent',
 };
 
-/** Signed in: welcome, the setup checklist and when location is shared. */
+/** Signed in: welcome, reminders (documents ending), the setup checklist and when location is shared. */
 export function SetupChecklist() {
   const { t } = useTranslation();
   return (
@@ -38,6 +39,7 @@ export function SetupChecklist() {
         <Display tone="dark">{t('mover.homeTitle')}</Display>
         <Text className="font-sans text-[15px] leading-[22px] text-sage-400">{t('mover.homeSubtitle')}</Text>
       </View>
+      <Reminders />
       <DarkPanel className="gap-4">
         <Display size={22} tone="dark">
           {t('mover.checklistTitle')}

@@ -26,6 +26,7 @@ export const RETENTION_CATEGORIES = [
   'phone_verifications',
   'company_registry_checks',
   'booking_requests',
+  'mover_reminders',
 ] as const;
 export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
@@ -62,4 +63,7 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   // Booking requests never booked (public.jobs still QUOTED, with their quotes): the customer's
   // addresses for a move that didn't happen — delete some time after the last quote expired.
   booking_requests: { keepDays: null, from: 'expired', holdIfDisputeOpen: false },
+  // Reminders before a mover's documents end (public.mover_reminders): useful until read and sent;
+  // they go with the document or the account (on delete cascade).
+  mover_reminders: { keepDays: null, from: 'created', holdIfDisputeOpen: false },
 };
