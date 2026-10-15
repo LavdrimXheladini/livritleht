@@ -58,7 +58,8 @@ let flush: ReturnType<typeof setTimeout> | undefined;
 function announceOnWeb(message: string) {
   const region = liveRegion();
   if (!region) return;
-  queued.push(message);
+  // The same message twice in a row (e.g. two quick attempts with the same error) is read once.
+  if (!queued.includes(message)) queued.push(message);
   if (flush) return;
   // Emptied first, so the same message is read again when it comes back.
   region.textContent = '';

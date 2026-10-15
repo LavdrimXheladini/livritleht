@@ -14,6 +14,7 @@ import {
   fakeCompanyChecks,
   fakeMoverCompany,
   fakeMoverDocuments,
+  fakeRates,
   fakeVehicles,
   fitScreenToPage,
   noNetwork,
@@ -652,6 +653,37 @@ const savedCompany = (changes: Record<string, unknown> = {}) => ({
   ...changes,
 });
 
+/** A checked van in use (Kosovo company). */
+const van = {
+  id: '00000000-0000-4000-8000-0000000be100',
+  class: 'VAN',
+  plate: '01-111 AA',
+  max_weight_kg: 2800,
+  volume_m3: 6,
+  has_tail_lift: false,
+  tachograph: false,
+  active: true,
+  verified_at: '2026-10-10T09:00:00.000Z',
+  created_at: '2026-10-01T09:00:00.000Z',
+};
+
+/** A saved rate card (EUR). */
+const savedCard = {
+  currency: 'EUR',
+  base_fee: 2500,
+  per_km: 60,
+  per_labor_minute_1_helper: 50,
+  per_labor_minute_2_helpers: 96,
+  per_labor_minute_3_helpers: null,
+  min_price: 4000,
+  floor_without_lift_fee: 500,
+  heavy_item_fee: 1000,
+  assembly_per_item: 1500,
+  long_distance_threshold_km: null,
+  long_distance_per_km: 0,
+  confirmed_by_mover_at: '2026-10-12T09:00:00.000Z',
+};
+
 test.describe('signed in as a mover', () => {
   test.beforeEach(async ({ page }) => {
     await signInAs(page, 'mover');
@@ -1025,6 +1057,80 @@ test.describe('signed in as a mover', () => {
       ['PATCH', expect.objectContaining({ plate: '01-111 AA', max_weight_kg: 3100 })],
       ['PATCH', { active: false }],
     ]);
+  });
+
+  test('prices: a van starts from the local averages, marked as suggestions; saving confirms the card', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    await fakeVehicles(page, { initial: [van] });
+    const writes = await fakeRates(page);
+    const r = en.mover.rates;
+    await page.goto(url);
+    await expect(page.getByTestId('step-rates')).toContainText(en.mover.stepStatus.todo);
+    await page.getByTestId('step-rates').click();
+    await expect(page.getByTestId('rates-01-111 AA')).toContainText(r.noPrices);
+    await page.getByTestId('rates-01-111 AA-edit').click();
+
+    await expect(page.getByTestId('rate-suggested')).toHaveText(r.suggested);
+    // Kosovo prices in EUR; the fields hold the local averages for a van, to start from.
+    await expect(page.getByRole('radio', { name: 'EUR' })).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByTestId('rate-baseFee')).not.toHaveValue('');
+    await expect(page.getByTestId('rate-example')).toBeVisible();
+
+    // Hourly in, per minute kept: the form says what is saved.
+    await page.getByTestId('rate-hourly1').fill('25');
+    await expect(app(page).getByText(r.keptAs.replace('{{perMinute}}', '€0.42').replace('{{hourly}}', '€25.20'))).toBeVisible();
+    await page.getByTestId('rate-hourly3').fill('');
+    await page.getByTestId('rate-longDistanceFromKm').fill('150');
+    await page.getByTestId('rate-save').click();
+    await expect(app(page).getByText(r.errors.long_distance_both, { exact: true })).toBeVisible();
+    await page.getByTestId('rate-longDistancePerKm').fill('0.30');
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-rate-card.png');
+    await page.getByTestId('rate-save').click();
+
+    await expect(page.getByTestId('rates-01-111 AA')).toContainText(r.pricesSaved);
+    expect(writes).toHaveLength(1);
+    expect(writes[0]).toMatchObject({
+      table: 'rate_cards',
+      method: 'POST',
+      body: {
+        vehicle_id: van.id,
+        currency: 'EUR',
+        per_labor_minute_1_helper: 42,
+        per_labor_minute_3_helpers: null,
+        long_distance_threshold_km: 150,
+        long_distance_per_km: 30,
+      },
+    });
+    // Saving never sends a confirmation time: Postgres records it.
+    expect(writes[0]?.body).not.toHaveProperty('confirmed_by_mover_at');
+  });
+
+  test('work area: a town found on the map is added with a radius, and removed again', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    await fakeVehicles(page, { initial: [van] });
+    await fakeCompanyChecks(page); // the address search
+    const writes = await fakeRates(page, { cards: [{ ...savedCard, vehicle_id: van.id }] });
+    const r = en.mover.rates;
+    await page.goto(url);
+    await page.getByTestId('step-rates').click();
+    await page.getByTestId('area-search').fill('Prishtina');
+    await page.getByTestId('area-suggestion').first().click();
+    await page.getByRole('radio', { name: r.km.replace('{{km}}', '25') }).click();
+    await page.getByTestId('area-add').click();
+    await expect(page.getByText(r.area.replace('{{place}}', 'Prishtinë').replace('{{km}}', '25'))).toBeVisible();
+    expect(writes[0]).toMatchObject({
+      table: 'service_areas',
+      method: 'POST',
+      body: { company_id: '00000000-0000-4000-8000-0000000c0002', label: 'Prishtinë', center: 'SRID=4326;POINT(21.1655 42.6629)', radius_km: 25 },
+    });
+    // Prices for every van in use and an area: the step is done.
+    await page.getByTestId('rates-back').click();
+    await expect(page.getByTestId('step-rates')).toContainText(en.mover.stepStatus.saved);
+    await page.getByTestId('step-rates').click();
+    await page.getByTestId('area-Prishtinë-remove').click();
+    await expect(page.getByTestId('area-Prishtinë')).toHaveCount(0);
+    expect(writes[1]).toMatchObject({ table: 'service_areas', method: 'DELETE' });
   });
 
   test.describe('in Albanian', () => {

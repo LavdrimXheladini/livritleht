@@ -332,6 +332,51 @@ export async function fakeVehicles(page: Page, { initial = [] }: { initial?: Rec
 }
 
 /**
+ * The prices and work areas behind "Your prices and work area": rest/v1/rate_cards (saving confirms a
+ * card, like the database's trigger) and rest/v1/service_areas. Records each write.
+ */
+export async function fakeRates(page: Page, { cards = [], areas = [] }: { cards?: Record<string, unknown>[]; areas?: Record<string, unknown>[] } = {}) {
+  let cardRows = [...cards];
+  let areaRows = [...areas];
+  const writes: { table: string; method: string; body: unknown; query: string }[] = [];
+  const reply = (route: Route, body: unknown, status = 200) =>
+    route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+  const preflight = (route: Route) => route.fulfill({ status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': '*' } });
+  await page.route('**/rest/v1/rate_cards*', async (route) => {
+    const request = route.request();
+    const method = request.method();
+    if (method === 'OPTIONS') return preflight(route);
+    if (method === 'GET') return reply(route, cardRows);
+    const body = request.postDataJSON() as Record<string, unknown>;
+    const query = new URL(request.url()).search;
+    writes.push({ table: 'rate_cards', method, body, query });
+    const vehicleId = (body.vehicle_id as string | undefined) ?? new URL(request.url()).searchParams.get('vehicle_id')?.replace('eq.', '');
+    const row = { ...cardRows.find((r) => r.vehicle_id === vehicleId), ...body, vehicle_id: vehicleId, confirmed_by_mover_at: '2026-10-15T10:00:00.000Z' };
+    cardRows = [...cardRows.filter((r) => r.vehicle_id !== vehicleId), row];
+    return reply(route, row, method === 'POST' ? 201 : 200);
+  });
+  await page.route('**/rest/v1/service_areas*', async (route) => {
+    const request = route.request();
+    const method = request.method();
+    if (method === 'OPTIONS') return preflight(route);
+    if (method === 'GET') return reply(route, areaRows);
+    const query = new URL(request.url()).search;
+    if (method === 'DELETE') {
+      const id = new URL(request.url()).searchParams.get('id')?.replace('eq.', '');
+      writes.push({ table: 'service_areas', method, body: null, query });
+      areaRows = areaRows.filter((r) => r.id !== id);
+      return route.fulfill({ status: 204, headers: cors });
+    }
+    const body = request.postDataJSON() as Record<string, unknown>;
+    writes.push({ table: 'service_areas', method, body, query });
+    const row = { id: `00000000-0000-4000-8000-0000000a${String(areaRows.length + 1).padStart(4, '0')}`, label: body.label, radius_km: body.radius_km };
+    areaRows = [...areaRows, row];
+    return reply(route, row, 201);
+  });
+  return writes;
+}
+
+/**
  * Opens the app already signed in as a customer or a mover (the session is in storage before it
  * starts); `passwordOwed`: it closed while a password was still owed after a code. Returns what the
  * app asked the stand-in server for.

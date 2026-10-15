@@ -74,6 +74,8 @@ function RootStack() {
         <Stack.Screen name="mover/documents" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
         <Stack.Screen name="mover/vehicles" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
         <Stack.Screen name="mover/vehicle" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
+        <Stack.Screen name="mover/rates" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
+        <Stack.Screen name="mover/rate-card" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
       </Stack.Protected>
     </Stack>
   );

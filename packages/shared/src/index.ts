@@ -14,4 +14,5 @@ export * from './schemas/mover-company';
 export * from './schemas/mover-documents';
 export * from './schemas/pricing';
 export * from './schemas/profile';
+export * from './schemas/rate-card-form';
 export * from './schemas/vehicle';

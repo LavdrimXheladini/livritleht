@@ -2,20 +2,20 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { documentsStepStatus, vehiclesStepStatus } from '@movershub/shared';
+import { documentsStepStatus, ratesStepStatus, vehiclesStepStatus } from '@movershub/shared';
 import { BuildingIcon, CardIcon, DarkPanel, Display, DocumentIcon, PinIcon, TagIcon, VanIcon, type PillTone } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
 import { useMoverCompany } from '@/lib/mover-company';
 import { useMoverDocuments } from '@/lib/mover-documents';
+import { useRateCards, useServiceAreas } from '@/lib/rates';
 import { useVehicles } from '@/lib/vehicles';
 
 import { IconRow } from './icon-row';
 
-// What a mover sets up before taking jobs (COMPLIANCE §5). The company, documents and vans steps are
-// built; the others follow one by one ("Coming next").
+// What a mover sets up before taking jobs (COMPLIANCE §5). Company, documents, vans and prices are
+// built; payouts follow ("Coming next").
 const LATER_STEPS = [
-  ['rates', TagIcon],
   ['payouts', CardIcon],
 ] as const;
 
@@ -46,6 +46,7 @@ export function SetupChecklist() {
           <CompanyStep />
           <DocumentsStep />
           <VehiclesStep />
+          <RatesStep />
           {LATER_STEPS.map(([key, icon]) => (
             <IconRow
               key={key}
@@ -132,6 +133,34 @@ function VehiclesStep() {
       badge={status ? t(`mover.stepStatus.${status}`) : undefined}
       badgeTone={status ? STATUS_TONE[status] : undefined}
       onPress={() => router.push('/mover/vehicles')}
+    />
+  );
+}
+
+/** "Your rates": prices for every van in use and a work area (none while they load). */
+function RatesStep() {
+  const { t } = useTranslation();
+  const company = useMoverCompany();
+  const vehicles = useVehicles(company.data?.id);
+  const cards = useRateCards(company.data?.id);
+  const areas = useServiceAreas(company.data?.id);
+  const status: StepStatus | undefined =
+    company.data === undefined
+      ? undefined
+      : company.data === null
+        ? 'todo'
+        : vehicles.data === undefined || cards.data === undefined || areas.query.data === undefined
+          ? undefined
+          : ratesStepStatus(vehicles.data, cards.data, areas.query.data);
+  return (
+    <IconRow
+      testID="step-rates"
+      icon={TagIcon}
+      title={t('mover.steps.rates.title')}
+      text={t('mover.steps.rates.text')}
+      badge={status ? t(`mover.stepStatus.${status}`) : undefined}
+      badgeTone={status ? STATUS_TONE[status] : undefined}
+      onPress={() => router.push('/mover/rates')}
     />
   );
 }
