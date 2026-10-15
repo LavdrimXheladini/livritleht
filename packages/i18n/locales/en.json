@@ -130,7 +130,9 @@
       "todo": "To do",
       "saved": "Saved",
       "verified": "Verified",
-      "rejected": "Needs changes"
+      "rejected": "Needs changes",
+      "expiring": "Ends soon",
+      "expired": "Expired"
     },
     "company": {
       "title": "Your company",
@@ -205,6 +207,64 @@
         "phone_invalid": "This number can't receive codes. Check it.",
         "phone_send_failed": "The code couldn't be sent. Try again.",
         "phone_check_failed": "The code couldn't be checked. Try again."
+      }
+    },
+    "documents": {
+      "title": "Your documents",
+      "subtitle": "MoversHub checks them before you get job requests. A PDF or a photo, up to 10 MB each.",
+      "privacy": "Stored privately and encrypted. Only you and the people who check movers for MoversHub can see them.",
+      "needCompany": "Fill in your company first: the documents belong to it.",
+      "goToCompany": "Fill in your company",
+      "requiredTitle": "Needed for every job",
+      "crossBorderTitle": "For cross-border jobs",
+      "crossBorderText": "Without these you get jobs inside one country only.",
+      "types": {
+        "registration": {
+          "title": "Company register extract",
+          "text": "From the business register (ARBK, QKB, CRM, KRS/CEIDG, Handelsregister…), showing your company's name, number and address."
+        },
+        "id": {
+          "title": "ID card or passport",
+          "text": "Your own, with your name and photo clearly visible."
+        },
+        "insurance": {
+          "title": "Carrier liability insurance",
+          "text": "The policy that covers the goods you move (in Poland: OC przewoźnika)."
+        },
+        "cmr": {
+          "title": "CMR insurance",
+          "text": "Covers goods on international road transport."
+        },
+        "licence": {
+          "title": "EU operator licence",
+          "text": "The Community licence, needed for vehicles over 2.5 t on international jobs."
+        }
+      },
+      "status": {
+        "missing": "Missing",
+        "checking": "Being checked",
+        "verified": "Verified",
+        "expiring": "Ends soon",
+        "expired": "Expired",
+        "optional": "Optional"
+      },
+      "validUntil": "Valid until {{date}}",
+      "chooseFile": "Choose a file",
+      "replace": "Upload a new one",
+      "takePhoto": "Take a photo",
+      "expiry": "Valid until",
+      "expiryHint": "Day.month.year, e.g. 31.12.2027",
+      "save": "Save document",
+      "cancel": "Cancel",
+      "saved": "Document saved. MoversHub will check it.",
+      "errors": {
+        "file_too_large": "The file is larger than 10 MB. Choose a smaller one or take a photo.",
+        "file_type": "Choose a PDF or a photo (JPG, PNG, HEIC).",
+        "camera_denied": "MoversHub may not use the camera. Allow it in your phone's settings, or choose a file.",
+        "upload_failed": "The document couldn't be saved. Check your connection and try again.",
+        "expiry_required": "Enter the date it's valid until.",
+        "expiry_invalid": "Enter a real date, e.g. 31.12.2027.",
+        "expiry_past": "This date has passed: upload a document that is still valid."
       }
     },
     "switchTitle": "Need a move yourself?",

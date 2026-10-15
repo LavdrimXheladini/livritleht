@@ -71,6 +71,7 @@ function RootStack() {
         <Stack.Screen name="index" />
         {/* The mover's setup, step by step. */}
         <Stack.Screen name="mover/company" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
+        <Stack.Screen name="mover/documents" options={{ contentStyle: { backgroundColor: colors.night[900] } }} />
       </Stack.Protected>
     </Stack>
   );

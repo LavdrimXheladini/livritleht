@@ -130,7 +130,9 @@
       "todo": "Për t'u bërë",
       "saved": "Ruajtur",
       "verified": "Verifikuar",
-      "rejected": "Duhen ndryshime"
+      "rejected": "Duhen ndryshime",
+      "expiring": "Skadon së shpejti",
+      "expired": "Ka skaduar"
     },
     "company": {
       "title": "Kompania jote",
@@ -205,6 +207,64 @@
         "phone_invalid": "Ky numër nuk mund të marrë kode. Kontrolloje.",
         "phone_send_failed": "Kodi nuk u dërgua. Provo përsëri.",
         "phone_check_failed": "Kodi nuk u kontrollua. Provo përsëri."
+      }
+    },
+    "documents": {
+      "title": "Dokumentet e tua",
+      "subtitle": "MoversHub i kontrollon para se të marrësh kërkesa për punë. PDF ose foto, deri në 10 MB secili.",
+      "privacy": "Ruhen privatisht dhe të enkriptuara. I shohin vetëm ti dhe personat që kontrollojnë transportuesit për MoversHub.",
+      "needCompany": "Plotëso së pari kompaninë: dokumentet i përkasin asaj.",
+      "goToCompany": "Plotëso kompaninë",
+      "requiredTitle": "Të nevojshme për çdo punë",
+      "crossBorderTitle": "Për punë ndërkufitare",
+      "crossBorderText": "Pa këto merr vetëm punë brenda një shteti.",
+      "types": {
+        "registration": {
+          "title": "Ekstrakti i regjistrit të biznesit",
+          "text": "Nga regjistri i bizneseve (ARBK, QKB, CRM, KRS/CEIDG, Handelsregister…), me emrin, numrin dhe adresën e kompanisë."
+        },
+        "id": {
+          "title": "Letërnjoftimi ose pasaporta",
+          "text": "I yti, me emrin dhe foton të qarta."
+        },
+        "insurance": {
+          "title": "Sigurimi i përgjegjësisë së transportuesit",
+          "text": "Polica që mbulon mallrat që transporton (në Poloni: OC przewoźnika)."
+        },
+        "cmr": {
+          "title": "Sigurimi CMR",
+          "text": "Mbulon mallrat në transportin ndërkombëtar rrugor."
+        },
+        "licence": {
+          "title": "Licenca e BE-së për transportues",
+          "text": "Licenca e Komunitetit, e nevojshme për automjete mbi 2,5 t në punë ndërkombëtare."
+        }
+      },
+      "status": {
+        "missing": "Mungon",
+        "checking": "Në kontroll",
+        "verified": "Verifikuar",
+        "expiring": "Skadon së shpejti",
+        "expired": "Ka skaduar",
+        "optional": "Opsionale"
+      },
+      "validUntil": "E vlefshme deri më {{date}}",
+      "chooseFile": "Zgjidh një skedar",
+      "replace": "Ngarko një të ri",
+      "takePhoto": "Bëj një foto",
+      "expiry": "E vlefshme deri më",
+      "expiryHint": "Dita.muaji.viti, p.sh. 31.12.2027",
+      "save": "Ruaj dokumentin",
+      "cancel": "Anulo",
+      "saved": "Dokumenti u ruajt. MoversHub do ta kontrollojë.",
+      "errors": {
+        "file_too_large": "Skedari është më i madh se 10 MB. Zgjidh një më të vogël ose bëj një foto.",
+        "file_type": "Zgjidh një PDF ose një foto (JPG, PNG, HEIC).",
+        "camera_denied": "MoversHub nuk ka leje për kamerën. Lejoje te cilësimet e telefonit ose zgjidh një skedar.",
+        "upload_failed": "Dokumenti nuk u ruajt. Kontrollo lidhjen dhe provo përsëri.",
+        "expiry_required": "Shkruaj datën deri kur është i vlefshëm.",
+        "expiry_invalid": "Shkruaj një datë të vërtetë, p.sh. 31.12.2027.",
+        "expiry_past": "Kjo datë ka kaluar: ngarko një dokument që është ende i vlefshëm."
       }
     },
     "switchTitle": "Të duhet vetë një zhvendosje?",

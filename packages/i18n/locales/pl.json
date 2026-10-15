@@ -130,7 +130,9 @@
       "todo": "Do zrobienia",
       "saved": "Zapisano",
       "verified": "Zweryfikowano",
-      "rejected": "Wymaga zmian"
+      "rejected": "Wymaga zmian",
+      "expiring": "Wkrótce wygasa",
+      "expired": "Wygasł"
     },
     "company": {
       "title": "Twoja firma",
@@ -205,6 +207,64 @@
         "phone_invalid": "Ten numer nie może odbierać kodów. Sprawdź go.",
         "phone_send_failed": "Nie udało się wysłać kodu. Spróbuj ponownie.",
         "phone_check_failed": "Nie udało się sprawdzić kodu. Spróbuj ponownie."
+      }
+    },
+    "documents": {
+      "title": "Twoje dokumenty",
+      "subtitle": "MoversHub sprawdza je, zanim dostaniesz zlecenia. PDF lub zdjęcie, do 10 MB każde.",
+      "privacy": "Przechowywane prywatnie i zaszyfrowane. Widzisz je tylko ty i osoby, które sprawdzają przewoźników dla MoversHub.",
+      "needCompany": "Najpierw uzupełnij dane firmy: dokumenty należą do niej.",
+      "goToCompany": "Uzupełnij firmę",
+      "requiredTitle": "Potrzebne do każdego zlecenia",
+      "crossBorderTitle": "Do zleceń międzynarodowych",
+      "crossBorderText": "Bez nich dostajesz tylko zlecenia w obrębie jednego kraju.",
+      "types": {
+        "registration": {
+          "title": "Odpis z rejestru firm",
+          "text": "Z rejestru (KRS/CEIDG, ARBK, QKB, CRM, Handelsregister…), z nazwą, numerem i adresem firmy."
+        },
+        "id": {
+          "title": "Dowód osobisty lub paszport",
+          "text": "Twój, z wyraźnie widocznym imieniem, nazwiskiem i zdjęciem."
+        },
+        "insurance": {
+          "title": "Ubezpieczenie OC przewoźnika",
+          "text": "Polisa, która obejmuje przewożone rzeczy."
+        },
+        "cmr": {
+          "title": "Ubezpieczenie CMR",
+          "text": "Obejmuje towary w międzynarodowym transporcie drogowym."
+        },
+        "licence": {
+          "title": "Licencja wspólnotowa",
+          "text": "Potrzebna dla pojazdów powyżej 2,5 t w zleceniach międzynarodowych."
+        }
+      },
+      "status": {
+        "missing": "Brak",
+        "checking": "Sprawdzany",
+        "verified": "Zweryfikowany",
+        "expiring": "Wkrótce wygasa",
+        "expired": "Wygasł",
+        "optional": "Opcjonalne"
+      },
+      "validUntil": "Ważny do {{date}}",
+      "chooseFile": "Wybierz plik",
+      "replace": "Prześlij nowy",
+      "takePhoto": "Zrób zdjęcie",
+      "expiry": "Ważny do",
+      "expiryHint": "Dzień.miesiąc.rok, np. 31.12.2027",
+      "save": "Zapisz dokument",
+      "cancel": "Anuluj",
+      "saved": "Dokument zapisany. MoversHub go sprawdzi.",
+      "errors": {
+        "file_too_large": "Plik jest większy niż 10 MB. Wybierz mniejszy albo zrób zdjęcie.",
+        "file_type": "Wybierz PDF albo zdjęcie (JPG, PNG, HEIC).",
+        "camera_denied": "MoversHub nie ma dostępu do aparatu. Zezwól na to w ustawieniach telefonu albo wybierz plik.",
+        "upload_failed": "Nie udało się zapisać dokumentu. Sprawdź połączenie i spróbuj ponownie.",
+        "expiry_required": "Wpisz datę, do której jest ważny.",
+        "expiry_invalid": "Wpisz prawdziwą datę, np. 31.12.2027.",
+        "expiry_past": "Ta data już minęła: prześlij dokument, który jest nadal ważny."
       }
     },
     "switchTitle": "Sam potrzebujesz przeprowadzki?",

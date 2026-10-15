@@ -11,5 +11,6 @@ export * from './retention.config';
 export * from './schemas/auth';
 export * from './schemas/geo';
 export * from './schemas/mover-company';
+export * from './schemas/mover-documents';
 export * from './schemas/pricing';
 export * from './schemas/profile';

@@ -75,9 +75,13 @@ select lives_ok(
      values ('00000000-0000-0000-0000-0000000aa001', 'SRID=4326;POINT(-9.1393 38.7223)', 40) $$,
   'a mover can set a service area');
 
+-- The file first (Storage API: the company's folder, by document type), then the document row.
+insert into storage.objects (bucket_id, name, owner)
+values ('mover-documents', '00000000-0000-0000-0000-0000000aa001/insurance/policy.pdf', '00000000-0000-0000-0000-00000000d201');
 select lives_ok(
   $$ insert into public.mover_documents (id, company_id, type, file_path, expires_at)
-     values ('00000000-0000-0000-0000-0000000dd001', '00000000-0000-0000-0000-0000000aa001', 'insurance', 'aa001/insurance.pdf', now() + interval '1 year') $$,
+     values ('00000000-0000-0000-0000-0000000dd001', '00000000-0000-0000-0000-0000000aa001', 'insurance',
+             '00000000-0000-0000-0000-0000000aa001/insurance/policy.pdf', now() + interval '1 year') $$,
   'a mover can upload an insurance document');
 
 select throws_ok(

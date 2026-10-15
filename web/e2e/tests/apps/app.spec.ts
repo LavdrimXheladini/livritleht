@@ -13,6 +13,7 @@ import {
   fakeAccount,
   fakeCompanyChecks,
   fakeMoverCompany,
+  fakeMoverDocuments,
   fitScreenToPage,
   noNetwork,
   offlineWithSavedSide,
@@ -841,6 +842,93 @@ test.describe('signed in as a mover', () => {
     await page.getByTestId('company-save').click();
     await expect(page.getByTestId('company-error')).toHaveText(en.mover.company.errorSave);
     await expect(page.getByTestId('company-legal-name')).toHaveValue('Lëvizje Shpk');
+  });
+
+  test('documents: without a company first, the screen sends the mover to "Your company"', async ({ page }) => {
+    await page.goto(url);
+    await expect(page.getByTestId('step-documents')).toContainText(en.mover.stepStatus.todo);
+    await page.getByTestId('step-documents').click();
+    await expect(page.getByText(en.mover.documents.needCompany)).toBeVisible();
+    await page.getByTestId('documents-company').click();
+    await expect(page.getByRole('heading', { name: en.mover.company.title })).toBeVisible();
+  });
+
+  test('documents: the insurance is uploaded with its end date into the company folder, then checked', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    const calls = await fakeMoverDocuments(page);
+    const d = en.mover.documents;
+    await page.goto(url);
+    await page.getByTestId('step-documents').click();
+    await expect(page.getByRole('heading', { name: d.title })).toBeVisible();
+    // A business: register extract + insurance; CMR and licence only for cross-border jobs.
+    for (const type of ['registration', 'insurance', 'cmr', 'licence']) await expect(page.getByTestId(`document-${type}`)).toBeVisible();
+    await expect(page.getByTestId('document-id')).toHaveCount(0);
+    await expect(page.getByTestId('document-insurance')).toContainText(d.status.missing);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-documents.png');
+
+    const chooser = page.waitForEvent('filechooser');
+    await page.getByTestId('document-insurance-choose').click();
+    await (await chooser).setFiles({ name: 'polica-2027.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4 stand-in policy') });
+    await expect(page.getByTestId('document-insurance-file')).toContainText('polica-2027.pdf');
+
+    // The end date: required, real, not past.
+    await page.getByTestId('document-insurance-save').click();
+    await expect(app(page).getByText(d.errors.expiry_required, { exact: true })).toBeVisible();
+    await page.getByTestId('document-insurance-expiry').fill('31.12.2020');
+    await page.getByTestId('document-insurance-save').click();
+    await expect(app(page).getByText(d.errors.expiry_past, { exact: true })).toBeVisible();
+    expect(calls.uploads).toEqual([]);
+
+    await page.getByTestId('document-insurance-expiry').fill('31.12.2030');
+    await page.getByTestId('document-insurance-save').click();
+    await expect(page.getByTestId('document-insurance')).toContainText(d.status.checking);
+    await expect(page.getByTestId('document-insurance')).toContainText(d.validUntil.replace('{{date}}', '31.12.2030'));
+    expect(calls.uploads).toHaveLength(1);
+    expect(calls.uploads[0]?.path).toMatch(/^00000000-0000-4000-8000-0000000c0002\/insurance\/[a-z0-9]+\.pdf$/);
+    expect(calls.uploads[0]?.contentType).toBe('application/pdf');
+    expect(calls.writes).toEqual([
+      {
+        method: 'POST',
+        body: { company_id: '00000000-0000-4000-8000-0000000c0002', type: 'insurance', file_path: calls.uploads[0]?.path, expires_at: '2030-12-31T23:59:59Z' },
+      },
+    ]);
+    expect(calls.removed).toEqual([]);
+  });
+
+  test('documents: a new file replaces the current one, which is then removed; files over 10 MB or of other types are refused', async ({ page }) => {
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    const extract = {
+      id: '00000000-0000-4000-8000-0000000d0099',
+      type: 'registration',
+      file_path: '00000000-0000-4000-8000-0000000c0002/registration/old.pdf',
+      expires_at: null,
+      verified_at: '2026-10-01T09:00:00.000Z',
+      updated_at: '2026-10-01T09:00:00.000Z',
+    };
+    const calls = await fakeMoverDocuments(page, { initial: [extract] });
+    await page.goto(url);
+    await page.getByTestId('step-documents').click();
+    await expect(page.getByTestId('document-registration')).toContainText(en.mover.documents.status.verified);
+
+    const pick = async (file: { name: string; mimeType: string; buffer: Buffer }) => {
+      const chooser = page.waitForEvent('filechooser');
+      await page.getByTestId('document-registration-choose').click();
+      await (await chooser).setFiles(file);
+    };
+    await pick({ name: 'notes.zip', mimeType: 'application/zip', buffer: Buffer.from('zip') });
+    await expect(page.getByTestId('document-registration-problem')).toHaveText(en.mover.documents.errors.file_type);
+    await pick({ name: 'huge.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(11 * 1024 * 1024) });
+    await expect(page.getByTestId('document-registration-problem')).toHaveText(en.mover.documents.errors.file_too_large);
+
+    await pick({ name: 'extract.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('jpeg stand-in') });
+    // A register extract has no end date to ask for.
+    await expect(page.getByTestId('document-registration-expiry')).toHaveCount(0);
+    await page.getByTestId('document-registration-save').click();
+    await expect(page.getByTestId('document-registration')).toContainText(en.mover.documents.status.checking);
+    expect(calls.uploads[0]?.path).toMatch(/\/registration\/[a-z0-9]+\.jpg$/);
+    expect(calls.writes).toEqual([{ method: 'PATCH', body: { file_path: calls.uploads[0]?.path, expires_at: null } }]);
+    expect(calls.removed).toEqual([extract.file_path]);
   });
 
   test.describe('in Albanian', () => {

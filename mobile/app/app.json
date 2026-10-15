@@ -35,7 +35,15 @@
         }
       ],
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "MoversHub uses the camera only when you photograph a document for your mover account.",
+          "photosPermission": "MoversHub opens your photos only when you choose a document for your mover account.",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

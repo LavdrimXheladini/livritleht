@@ -130,7 +130,9 @@
       "todo": "Offen",
       "saved": "Gespeichert",
       "verified": "Geprüft",
-      "rejected": "Änderungen nötig"
+      "rejected": "Änderungen nötig",
+      "expiring": "Läuft bald ab",
+      "expired": "Abgelaufen"
     },
     "company": {
       "title": "Dein Unternehmen",
@@ -205,6 +207,64 @@
         "phone_invalid": "An diese Nummer können keine Codes gesendet werden. Prüfe sie.",
         "phone_send_failed": "Der Code konnte nicht gesendet werden. Versuche es erneut.",
         "phone_check_failed": "Der Code konnte nicht geprüft werden. Versuche es erneut."
+      }
+    },
+    "documents": {
+      "title": "Deine Dokumente",
+      "subtitle": "MoversHub prüft sie, bevor du Auftragsanfragen bekommst. PDF oder Foto, je bis 10 MB.",
+      "privacy": "Privat und verschlüsselt gespeichert. Nur du und die Leute, die für MoversHub Umzugsunternehmen prüfen, können sie sehen.",
+      "needCompany": "Fülle zuerst dein Unternehmen aus: Die Dokumente gehören dazu.",
+      "goToCompany": "Unternehmen ausfüllen",
+      "requiredTitle": "Für jeden Auftrag nötig",
+      "crossBorderTitle": "Für grenzüberschreitende Aufträge",
+      "crossBorderText": "Ohne sie bekommst du nur Aufträge innerhalb eines Landes.",
+      "types": {
+        "registration": {
+          "title": "Registerauszug",
+          "text": "Aus dem Unternehmensregister (Handelsregister, Firmenbuch, ARBK, QKB, CRM, KRS/CEIDG…), mit Name, Nummer und Adresse deines Unternehmens."
+        },
+        "id": {
+          "title": "Ausweis oder Reisepass",
+          "text": "Dein eigener, mit gut lesbarem Namen und Foto."
+        },
+        "insurance": {
+          "title": "Verkehrshaftungsversicherung",
+          "text": "Die Police, die die transportierten Güter abdeckt (in Polen: OC przewoźnika)."
+        },
+        "cmr": {
+          "title": "CMR-Versicherung",
+          "text": "Deckt Güter im internationalen Straßentransport."
+        },
+        "licence": {
+          "title": "EU-Gemeinschaftslizenz",
+          "text": "Nötig für Fahrzeuge über 2,5 t bei internationalen Aufträgen."
+        }
+      },
+      "status": {
+        "missing": "Fehlt",
+        "checking": "Wird geprüft",
+        "verified": "Geprüft",
+        "expiring": "Läuft bald ab",
+        "expired": "Abgelaufen",
+        "optional": "Optional"
+      },
+      "validUntil": "Gültig bis {{date}}",
+      "chooseFile": "Datei auswählen",
+      "replace": "Neue hochladen",
+      "takePhoto": "Foto aufnehmen",
+      "expiry": "Gültig bis",
+      "expiryHint": "Tag.Monat.Jahr, z. B. 31.12.2027",
+      "save": "Dokument speichern",
+      "cancel": "Abbrechen",
+      "saved": "Dokument gespeichert. MoversHub prüft es.",
+      "errors": {
+        "file_too_large": "Die Datei ist größer als 10 MB. Wähle eine kleinere oder nimm ein Foto auf.",
+        "file_type": "Wähle ein PDF oder ein Foto (JPG, PNG, HEIC).",
+        "camera_denied": "MoversHub darf die Kamera nicht nutzen. Erlaube es in den Einstellungen deines Telefons oder wähle eine Datei.",
+        "upload_failed": "Das Dokument konnte nicht gespeichert werden. Prüfe deine Verbindung und versuche es erneut.",
+        "expiry_required": "Gib das Datum ein, bis zu dem es gültig ist.",
+        "expiry_invalid": "Gib ein echtes Datum ein, z. B. 31.12.2027.",
+        "expiry_past": "Dieses Datum ist vorbei: Lade ein Dokument hoch, das noch gültig ist."
       }
     },
     "switchTitle": "Brauchst du selbst einen Umzug?",

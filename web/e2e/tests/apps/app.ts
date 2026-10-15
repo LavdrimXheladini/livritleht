@@ -259,6 +259,48 @@ export async function fakeCompanyChecks(
 }
 
 /**
+ * The company's documents: rows (rest/v1/mover_documents) and files (the private storage bucket),
+ * answering like PostgREST and Supabase Storage. Records the uploaded file paths, row writes and
+ * removed files.
+ */
+export async function fakeMoverDocuments(page: Page, { initial = [] }: { initial?: Record<string, unknown>[] } = {}) {
+  let rows = [...initial];
+  const calls = {
+    uploads: [] as { path: string; contentType: string | null; bytes: number }[],
+    writes: [] as { method: string; body: Record<string, unknown> }[],
+    removed: [] as string[],
+  };
+  const reply = (route: Route, body: unknown, status = 200) =>
+    route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+  await page.route('**/storage/v1/object/mover-documents**', async (route) => {
+    const request = route.request();
+    if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': '*' } });
+    if (request.method() === 'DELETE') {
+      const { prefixes } = request.postDataJSON() as { prefixes: string[] };
+      calls.removed.push(...prefixes);
+      return reply(route, prefixes.map((name) => ({ name })));
+    }
+    const path = decodeURIComponent(new URL(request.url()).pathname.split('/storage/v1/object/mover-documents/')[1] ?? '');
+    calls.uploads.push({ path, contentType: request.headers()['content-type'] ?? null, bytes: request.postDataBuffer()?.length ?? 0 });
+    return reply(route, { Key: `mover-documents/${path}`, Id: 'stand-in' });
+  });
+  await page.route('**/rest/v1/mover_documents*', async (route) => {
+    const request = route.request();
+    const method = request.method();
+    if (method === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': '*' } });
+    if (method === 'GET') return reply(route, rows);
+    const body = request.postDataJSON() as Record<string, unknown>;
+    calls.writes.push({ method, body });
+    const id = method === 'POST' ? `00000000-0000-4000-8000-0000000d${String(rows.length + 1).padStart(4, '0')}` : new URL(request.url()).searchParams.get('id')?.replace('eq.', '');
+    const before = rows.find((r) => r.id === id);
+    const row = { ...before, ...body, id, verified_at: null, updated_at: '2026-10-15T10:00:00.000Z' };
+    rows = [...rows.filter((r) => r.id !== id), row];
+    return reply(route, row, method === 'POST' ? 201 : 200);
+  });
+  return calls;
+}
+
+/**
  * Opens the app already signed in as a customer or a mover (the session is in storage before it
  * starts); `passwordOwed`: it closed while a password was still owed after a code. Returns what the
  * app asked the stand-in server for.

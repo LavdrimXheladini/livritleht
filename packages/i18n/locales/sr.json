@@ -130,7 +130,9 @@
       "todo": "Treba popuniti",
       "saved": "Sačuvano",
       "verified": "Provereno",
-      "rejected": "Potrebne izmene"
+      "rejected": "Potrebne izmene",
+      "expiring": "Uskoro ističe",
+      "expired": "Isteklo"
     },
     "company": {
       "title": "Vaša firma",
@@ -205,6 +207,64 @@
         "phone_invalid": "Ovaj broj ne može da prima kodove. Proverite ga.",
         "phone_send_failed": "Kod nije poslat. Pokušajte ponovo.",
         "phone_check_failed": "Kod nije proveren. Pokušajte ponovo."
+      }
+    },
+    "documents": {
+      "title": "Vaši dokumenti",
+      "subtitle": "MoversHub ih proverava pre nego što dobijete zahteve za posao. PDF ili fotografija, do 10 MB svaki.",
+      "privacy": "Čuvaju se privatno i šifrovano. Vidite ih samo vi i osobe koje proveravaju prevoznike za MoversHub.",
+      "needCompany": "Prvo popunite podatke o firmi: dokumenti pripadaju njoj.",
+      "goToCompany": "Popunite firmu",
+      "requiredTitle": "Potrebno za svaki posao",
+      "crossBorderTitle": "Za međunarodne poslove",
+      "crossBorderText": "Bez njih dobijate samo poslove unutar jedne države.",
+      "types": {
+        "registration": {
+          "title": "Izvod iz registra privrednih subjekata",
+          "text": "Iz registra (ARBK, QKB, CRM, KRS/CEIDG, Handelsregister…), sa nazivom, brojem i adresom firme."
+        },
+        "id": {
+          "title": "Lična karta ili pasoš",
+          "text": "Vaša, sa jasno vidljivim imenom i fotografijom."
+        },
+        "insurance": {
+          "title": "Osiguranje od odgovornosti prevoznika",
+          "text": "Polisa koja pokriva robu koju prevozite (u Poljskoj: OC przewoźnika)."
+        },
+        "cmr": {
+          "title": "CMR osiguranje",
+          "text": "Pokriva robu u međunarodnom drumskom prevozu."
+        },
+        "licence": {
+          "title": "EU licenca za prevoznika",
+          "text": "Licenca Zajednice, potrebna za vozila preko 2,5 t na međunarodnim poslovima."
+        }
+      },
+      "status": {
+        "missing": "Nedostaje",
+        "checking": "Na proveri",
+        "verified": "Provereno",
+        "expiring": "Uskoro ističe",
+        "expired": "Isteklo",
+        "optional": "Opciono"
+      },
+      "validUntil": "Važi do {{date}}",
+      "chooseFile": "Izaberite fajl",
+      "replace": "Pošaljite novi",
+      "takePhoto": "Fotografišite",
+      "expiry": "Važi do",
+      "expiryHint": "Dan.mesec.godina, npr. 31.12.2027",
+      "save": "Sačuvaj dokument",
+      "cancel": "Otkaži",
+      "saved": "Dokument je sačuvan. MoversHub će ga proveriti.",
+      "errors": {
+        "file_too_large": "Fajl je veći od 10 MB. Izaberite manji ili fotografišite.",
+        "file_type": "Izaberite PDF ili fotografiju (JPG, PNG, HEIC).",
+        "camera_denied": "MoversHub nema pristup kameri. Dozvolite ga u podešavanjima telefona ili izaberite fajl.",
+        "upload_failed": "Dokument nije sačuvan. Proverite vezu i pokušajte ponovo.",
+        "expiry_required": "Unesite datum do kog važi.",
+        "expiry_invalid": "Unesite stvaran datum, npr. 31.12.2027.",
+        "expiry_past": "Ovaj datum je prošao: pošaljite dokument koji još važi."
       }
     },
     "switchTitle": "Treba vam selidba?",

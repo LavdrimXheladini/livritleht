@@ -2,24 +2,32 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
+import { documentsStepStatus } from '@movershub/shared';
 import { BuildingIcon, CardIcon, DarkPanel, Display, DocumentIcon, PinIcon, TagIcon, VanIcon, type PillTone } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
 import { useMoverCompany } from '@/lib/mover-company';
+import { useMoverDocuments } from '@/lib/mover-documents';
 
 import { IconRow } from './icon-row';
 
-// What a mover sets up before taking jobs (COMPLIANCE §5). The company step is built; the others
-// follow one by one ("Coming next").
+// What a mover sets up before taking jobs (COMPLIANCE §5). The company and documents steps are built;
+// the others follow one by one ("Coming next").
 const LATER_STEPS = [
-  ['documents', DocumentIcon],
   ['vehicles', VanIcon],
   ['rates', TagIcon],
   ['payouts', CardIcon],
 ] as const;
 
-type StepStatus = 'todo' | 'saved' | 'verified' | 'rejected';
-const STATUS_TONE: Record<StepStatus, PillTone> = { todo: 'accent', saved: 'dark-muted', verified: 'dark', rejected: 'accent' };
+type StepStatus = 'todo' | 'saved' | 'verified' | 'rejected' | 'expiring' | 'expired';
+const STATUS_TONE: Record<StepStatus, PillTone> = {
+  todo: 'accent',
+  saved: 'dark-muted',
+  verified: 'dark',
+  rejected: 'accent',
+  expiring: 'accent',
+  expired: 'accent',
+};
 
 /** Signed in: welcome, the setup checklist and when location is shared. */
 export function SetupChecklist() {
@@ -36,6 +44,7 @@ export function SetupChecklist() {
         </Display>
         <View accessibilityRole="list" className="gap-4">
           <CompanyStep />
+          <DocumentsStep />
           {LATER_STEPS.map(([key, icon]) => (
             <IconRow
               key={key}
@@ -70,6 +79,32 @@ function CompanyStep() {
       badge={status ? t(`mover.stepStatus.${status}`) : undefined}
       badgeTone={status ? STATUS_TONE[status] : undefined}
       onPress={() => router.push('/mover/company')}
+    />
+  );
+}
+
+/** "Documents": opens the upload screen; its badge sums up the required documents (none while they load). */
+function DocumentsStep() {
+  const { t } = useTranslation();
+  const company = useMoverCompany();
+  const documents = useMoverDocuments(company.data?.id);
+  const status: StepStatus | undefined =
+    company.data === undefined
+      ? undefined
+      : company.data === null
+        ? 'todo'
+        : documents.data === undefined
+          ? undefined
+          : documentsStepStatus(documents.data, company.data.is_business, new Date());
+  return (
+    <IconRow
+      testID="step-documents"
+      icon={DocumentIcon}
+      title={t('mover.steps.documents.title')}
+      text={t('mover.steps.documents.text')}
+      badge={status ? t(`mover.stepStatus.${status}`) : undefined}
+      badgeTone={status ? STATUS_TONE[status] : undefined}
+      onPress={() => router.push('/mover/documents')}
     />
   );
 }
