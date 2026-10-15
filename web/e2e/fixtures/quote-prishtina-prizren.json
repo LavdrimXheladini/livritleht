@@ -24,6 +24,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000101",
           "companyId": "7e570000-0000-4000-8000-000000000001",
           "companyName": "Test Movers Prishtina",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-001",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 22,
@@ -110,6 +116,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000201",
           "companyId": "7e570000-0000-4000-8000-000000000002",
           "companyName": "Test Transport Prizren",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-002",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 40,
@@ -149,6 +161,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000102",
           "companyId": "7e570000-0000-4000-8000-000000000001",
           "companyName": "Test Movers Prishtina",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-001",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 40,
@@ -241,6 +259,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000103",
           "companyId": "7e570000-0000-4000-8000-000000000001",
           "companyName": "Test Movers Prishtina",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-001",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 106,
@@ -280,6 +304,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000301",
           "companyId": "7e570000-0000-4000-8000-000000000003",
           "companyName": "Test Logistics Ferizaj",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-003",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 106,
@@ -372,6 +402,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000202",
           "companyId": "7e570000-0000-4000-8000-000000000002",
           "companyName": "Test Transport Prizren",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-002",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 177,
@@ -464,6 +500,12 @@
           "vehicleId": "7e57a000-0000-4000-8000-000000000302",
           "companyId": "7e570000-0000-4000-8000-000000000003",
           "companyName": "Test Logistics Ferizaj",
+          "mover": {
+            "isBusiness": true,
+            "registrationNo": "TEST-XK-003",
+            "town": null,
+            "insuranceUntil": "2027-12-31T23:59:59+00:00"
+          },
           "quote": {
             "currency": "EUR",
             "estLaborMin": 309,

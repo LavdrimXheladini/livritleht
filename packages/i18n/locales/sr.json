@@ -152,6 +152,37 @@
       "tooSmall": "{{vehicle}} možda neće primiti vaše stvari.",
       "seeMovers": "Pogledaj prevoznike",
       "note": "Cene od prevoznika na MoversHubu — sopstvene tarife svakog prevoznika, za vaše stvari, spratove i dan. Pre plaćanja vidite prevoznika i njegovu fiksnu cenu, a naknada za rezervaciju je navedena posebno."
+    },
+    "movers": {
+      "title": "Izaberite prevoznika",
+      "subtitle": "Svaka cena je fiksna cena samog prevoznika za vašu selidbu, po njegovim tarifama.",
+      "order": "Poređano po ceni za vašu selidbu, od najniže. Prevoznici ne mogu da kupe bolje mesto.",
+      "best": "Rezerviši najbolju ponudu",
+      "business": "Firma",
+      "private": "Privatno lice",
+      "privateNote": "Nije firma — neka prava potrošača važe samo za firme.",
+      "regNo": "Mat. br. {{no}}",
+      "insurance": "Osiguranje provereno, važi do {{date}}",
+      "moverPrice": "Cena prevoznika",
+      "fee": "+ MoversHub naknada za rezervaciju: {{fee}}",
+      "feeTba": "+ MoversHub naknada za rezervaciju, navedena posebno (iznos još nije određen)",
+      "total": "Ukupno {{total}}",
+      "details": "Detalji cene",
+      "hideDetails": "Sakrij detalje cene",
+      "choose": "Izaberi ovog prevoznika",
+      "chosen": "Izabran",
+      "none": "Još nijedan prevoznik na MoversHubu ne nudi ovu veličinu vozila za vašu selidbu. Probajte drugu veličinu.",
+      "yourMover": "Vaš prevoznik: {{name}}",
+      "lines": {
+        "base": "Osnovna cena",
+        "distance": "Razdaljina, {{km}} km",
+        "labor": "Rad, oko {{min}} min",
+        "floors": "Spratovi bez lifta: {{n}}",
+        "heavyItems": "Teške stvari: {{n}}",
+        "assembly": "Rastavljanje i sastavljanje: {{n}}",
+        "longDistance": "Duga relacija, {{km}} km",
+        "minimumPrice": "Dopuna do minimalne cene prevoznika"
+      }
     }
   },
   "items": {

@@ -152,6 +152,37 @@
       "tooSmall": "{{vehicle}} may be too small for your things.",
       "seeMovers": "See movers",
       "note": "Prices from movers on MoversHub — each mover's own rates, for your things, floors and day. Before you pay, you see your mover and their fixed total, with the booking fee listed separately."
+    },
+    "movers": {
+      "title": "Choose your mover",
+      "subtitle": "Each price is the mover's own fixed price for your move, from their rates.",
+      "order": "Sorted by price for your move, lowest first. Movers can't pay for a better place.",
+      "best": "Book best offer",
+      "business": "Business",
+      "private": "Private person",
+      "privateNote": "Not a business — some consumer rights apply only to businesses.",
+      "regNo": "Reg. no. {{no}}",
+      "insurance": "Insurance checked, valid until {{date}}",
+      "moverPrice": "Mover's price",
+      "fee": "+ MoversHub booking fee: {{fee}}",
+      "feeTba": "+ MoversHub booking fee, listed separately (amount not decided yet)",
+      "total": "Total {{total}}",
+      "details": "Price details",
+      "hideDetails": "Hide price details",
+      "choose": "Choose this mover",
+      "chosen": "Chosen",
+      "none": "No mover on MoversHub takes this van size for your move yet. Try another size.",
+      "yourMover": "Your mover: {{name}}",
+      "lines": {
+        "base": "Base fee",
+        "distance": "Distance, {{km}} km",
+        "labor": "Work, about {{min}} min",
+        "floors": "Floors without a lift: {{n}}",
+        "heavyItems": "Heavy items: {{n}}",
+        "assembly": "Take apart and put back together: {{n}}",
+        "longDistance": "Long distance, {{km}} km",
+        "minimumPrice": "Topped up to the mover's minimum price"
+      }
     }
   },
   "items": {

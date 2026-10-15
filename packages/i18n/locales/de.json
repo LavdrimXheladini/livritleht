@@ -152,6 +152,37 @@
       "tooSmall": "{{vehicle}} ist für deine Sachen vielleicht zu klein.",
       "seeMovers": "Unternehmen ansehen",
       "note": "Preise von Umzugsunternehmen auf MoversHub — die eigenen Tarife jedes Unternehmens, für deine Sachen, Stockwerke und deinen Tag. Vor dem Bezahlen siehst du dein Umzugsunternehmen und seinen Festpreis, die Buchungsgebühr wird separat ausgewiesen."
+    },
+    "movers": {
+      "title": "Wähle dein Umzugsunternehmen",
+      "subtitle": "Jeder Preis ist der eigene Festpreis des Unternehmens für deinen Umzug, nach seinen Tarifen.",
+      "order": "Nach Preis für deinen Umzug sortiert, der niedrigste zuerst. Unternehmen können nicht für einen besseren Platz bezahlen.",
+      "best": "Bestes Angebot buchen",
+      "business": "Unternehmen",
+      "private": "Privatperson",
+      "privateNote": "Kein Unternehmen — manche Verbraucherrechte gelten nur gegenüber Unternehmen.",
+      "regNo": "Reg.-Nr. {{no}}",
+      "insurance": "Versicherung geprüft, gültig bis {{date}}",
+      "moverPrice": "Preis des Unternehmens",
+      "fee": "+ MoversHub-Buchungsgebühr: {{fee}}",
+      "feeTba": "+ MoversHub-Buchungsgebühr, separat ausgewiesen (Betrag noch nicht festgelegt)",
+      "total": "Gesamt {{total}}",
+      "details": "Preisdetails",
+      "hideDetails": "Preisdetails ausblenden",
+      "choose": "Dieses Unternehmen wählen",
+      "chosen": "Gewählt",
+      "none": "Noch kein Unternehmen auf MoversHub bietet diese Fahrzeuggröße für deinen Umzug an. Versuch eine andere Größe.",
+      "yourMover": "Dein Umzugsunternehmen: {{name}}",
+      "lines": {
+        "base": "Grundgebühr",
+        "distance": "Strecke, {{km}} km",
+        "labor": "Arbeit, etwa {{min}} Min.",
+        "floors": "Stockwerke ohne Aufzug: {{n}}",
+        "heavyItems": "Schwere Sachen: {{n}}",
+        "assembly": "Ab- und Aufbau: {{n}}",
+        "longDistance": "Langstrecke, {{km}} km",
+        "minimumPrice": "Aufgerundet auf den Mindestpreis des Unternehmens"
+      }
     }
   },
   "items": {

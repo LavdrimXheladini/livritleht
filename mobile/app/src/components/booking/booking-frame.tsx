@@ -7,12 +7,12 @@ import { Button, Display, ProgressBar, Screen, updateBooking, useAuth, useBookin
 import { jobItems, moveDays, stopProblems, type BookingDraft } from '@movershub/shared';
 
 // The customer's booking, one screen per step: where (stops), what (items), when (day, time, crew),
-// then the van size priced for this move. Later steps: the mover and their fixed total, then the card.
+// the van size priced for this move, then the mover. Next: the booking request, then the card.
 
-export const BOOKING_STEPS = ['/book/stops', '/book/items', '/book/when', '/book/size'] as const;
+export const BOOKING_STEPS = ['/book/stops', '/book/items', '/book/when', '/book/size', '/book/movers'] as const;
 
 /** Each step's name, for test ids (the browser version keeps earlier screens in the page). */
-const STEP_NAMES = ['stops', 'items', 'when', 'size'] as const;
+const STEP_NAMES = ['stops', 'items', 'when', 'size', 'movers'] as const;
 
 export type UpdateBooking = (change: (draft: BookingDraft) => BookingDraft) => void;
 
@@ -29,12 +29,15 @@ export function useBooking(): { draft: BookingDraft | null; update: UpdateBookin
 
 const samePlace = (d: BookingDraft) => d.pickup.place.lat === d.dropoff.place.lat && d.pickup.place.lon === d.dropoff.place.lon;
 
-/** The first step still missing something (the last step when nothing is): where Continue on home leads. */
+/**
+ * The first step still missing something, else the last (choosing the mover): where Continue on home
+ * leads. The van size always has an answer (the size that fits the items).
+ */
 export function firstOpenStep(draft: BookingDraft, today = new Date()): number {
   if (samePlace(draft) || stopProblems(draft.pickup).length || stopProblems(draft.dropoff).length) return 0;
   if (jobItems(draft.items).length === 0) return 1;
   if (draft.day === null || draft.hour === null || !moveDays(today).includes(draft.day)) return 2;
-  return 3;
+  return BOOKING_STEPS.length - 1;
 }
 
 function goBack(step: number) {

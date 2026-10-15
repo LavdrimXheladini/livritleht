@@ -29,6 +29,7 @@ const draft: BookingDraft = {
   hour: 9,
   crew: 2,
   vehicleClass: 'VAN',
+  choice: null,
 };
 
 describe('item groups', () => {
@@ -121,6 +122,11 @@ describe('quote request', () => {
 });
 
 describe('draft on the device', () => {
+  it('a move saved before choosing a mover existed has no choice yet', () => {
+    const { choice: _choice, ...older } = draft;
+    expect(bookingDraftSchema.parse(older).choice).toBeNull();
+  });
+
   it('round-trips, and something else is refused', () => {
     expect(bookingDraftSchema.parse(JSON.parse(JSON.stringify(draft)))).toEqual(draft);
     expect(bookingDraftSchema.safeParse({ ...draft, items: { piano: { qty: 1, assembly: false } } }).success).toBe(false);

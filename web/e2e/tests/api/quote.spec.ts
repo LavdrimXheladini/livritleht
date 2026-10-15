@@ -16,7 +16,9 @@ const job = { helpers: 2, items: [{ key: 'sofa3', qty: 1 }, { key: 'box', qty: 1
 
 type Line = { kind: string; amount: number; quantity?: number; unitAmount?: number };
 type Offer = {
+  companyId: string;
   companyName: string;
+  mover: { isBusiness: boolean; registrationNo: string | null; town: string | null; insuranceUntil: string | null };
   quote: {
     currency: string;
     moverPrice: number;
@@ -45,6 +47,13 @@ test('"from" is the lowest mover quote in each class, from the server (COMPLIANC
   expect(body.classes).toHaveLength(5);
   for (const c of body.classes) {
     expect(c.count).toBe(c.offers.length);
+    // One offer per mover, saying who they are (COMPLIANCE §4): the test movers are businesses with checked insurance.
+    expect(new Set(c.offers.map((o) => o.companyId)).size).toBe(c.offers.length);
+    for (const { mover } of c.offers) {
+      expect(mover.isBusiness).toBe(true);
+      expect(mover.registrationNo).toMatch(/^TEST-/);
+      expect(Date.parse(mover.insuranceUntil ?? '')).toBeGreaterThan(Date.now());
+    }
     for (const f of c.from) {
       const prices = c.offers.filter((o) => o.quote.currency === f.currency).map((o) => o.quote.moverPrice);
       expect(f.moverPrice).toBe(Math.min(...prices));

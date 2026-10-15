@@ -548,11 +548,51 @@ test.describe('booking a move', () => {
     houseNumber: '5',
     city: 'Prizren',
   };
+  type SavedOffer = { vehicleId: string; companyId: string; companyName: string; mover: Record<string, unknown>; quote: { moverPrice: number } };
+  /** A fresh copy of the saved quote (Prishtina → Prizren, test movers), to read or change. */
+  const savedQuoteCopy = () =>
+    JSON.parse(readFileSync(new URL('../../fixtures/quote-prishtina-prizren.json', import.meta.url), 'utf8')) as {
+      classes: { vehicleClass: string; offers: SavedOffer[]; crews: Record<string, { from: { moverPrice: number }[] }> }[];
+    };
   /** The saved quote's lowest price for a class and crew size. */
-  const fromPrice = (cls: string, crew: 1 | 2 | 3) =>
-    (JSON.parse(readFileSync(new URL('../../fixtures/quote-prishtina-prizren.json', import.meta.url), 'utf8')) as {
-      classes: { vehicleClass: string; crews: Record<string, { from: { moverPrice: number }[] }> }[];
-    }).classes.find((c) => c.vehicleClass === cls)!.crews[crew]!.from[0]!.moverPrice;
+  const fromPrice = (cls: string, crew: 1 | 2 | 3) => savedQuoteCopy().classes.find((c) => c.vehicleClass === cls)!.crews[crew]!.from[0]!.moverPrice;
+
+  /**
+   * A move with every step filled in (2 people, a van, tomorrow 09:00), on the device as the app keeps
+   * it (mobile/core/src/booking-draft.ts) — only when the device has none yet, so a reload keeps changes.
+   */
+  async function plannedMove(page: Page) {
+    const draft = {
+      pickup: {
+        place: { label: 'Prishtina', area: 'Prishtina', lat: 42.6629, lon: 21.1655, countryCode: 'XK' },
+        street: null,
+        houseNumber: null,
+        floor: 2,
+        hasLift: true,
+        details: 'Block B, entrance 2',
+      },
+      dropoff: {
+        place: { label: street.label, area: street.area, lat: street.lat, lon: street.lon, countryCode: 'XK' },
+        street: street.street,
+        houseNumber: street.houseNumber,
+        floor: 0,
+        hasLift: null,
+        details: '',
+      },
+      items: { sofa3: { qty: 1, assembly: false }, box: { qty: 10, assembly: false } },
+      day: '2026-10-16',
+      hour: 9,
+      crew: 2,
+      vehicleClass: 'VAN',
+      choice: null,
+    };
+    await page.addInitScript(
+      ({ key, value }) => {
+        if (!localStorage.getItem(key)) localStorage.setItem(key, value);
+      },
+      { key: 'movershub.booking', value: JSON.stringify({ userId: STAND_IN_ID, draft }) },
+    );
+  }
   const euros = (cents: number) => `€${cents % 100 ? (cents / 100).toFixed(2) : cents / 100}`;
 
   test.beforeEach(async ({ page }) => {
@@ -656,15 +696,68 @@ test.describe('booking a move', () => {
     // A smaller size may be picked, with a warning.
     await page.getByTestId('size-class-SMALL').click();
     await expect(page.getByTestId('size-too-small')).toHaveText(b.size.tooSmall.replace('{{vehicle}}', en.vehicles.SMALL.name));
+    await page.getByTestId('size-class-VAN').click();
+    await expect(page.getByTestId('size-too-small')).toHaveCount(0);
     await page.getByTestId('size-see-movers').click();
-    await expect(page.getByText(en.landing.quote.soonTitle)).toBeVisible();
+    await expect(page.getByText(b.movers.title)).toBeVisible();
 
-    // Home remembers the move and goes back to where it was left.
+    // Home remembers the move and goes back to where it was left: choosing the mover.
     await page.goto(url);
     await expect(page.getByTestId('current-move')).toContainText('→');
     await page.getByTestId('booking-continue').click();
-    await expect(page.getByText(b.size.title)).toBeVisible();
-    await expect(page.getByTestId('size-class-SMALL')).toHaveAttribute('aria-checked', 'true');
+    await expect(page.getByText(b.movers.title)).toBeVisible();
+  });
+
+  test('movers: each with their own price and who they are, lowest first; "Book best offer" chooses the lowest', async ({ page }) => {
+    // The saved quote's two van movers; the dearer one as a private person.
+    const quote = savedQuoteCopy();
+    const vans = quote.classes.find((c) => c.vehicleClass === 'VAN')!.offers;
+    const [prizren, prishtina] = vans as [SavedOffer, SavedOffer];
+    prishtina.mover = { isBusiness: false, registrationNo: null, town: 'Prishtinë', insuranceUntil: '2027-12-31T23:59:59+00:00' };
+    await page.route('**/functions/v1/quote', (route) =>
+      route.request().method() === 'OPTIONS'
+        ? route.fulfill({ status: 204, headers: cors })
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify(quote) }),
+    );
+    await plannedMove(page);
+    await page.goto(`${url}book/movers`);
+    const m = b.movers;
+    const card = (o: SavedOffer) => page.getByTestId(`offer-${o.companyId}`);
+
+    await expect(page.getByText(m.title)).toBeVisible();
+    // Lowest first, at the mover's own price to the cent (COMPLIANCE §1.1).
+    await expect(page.locator('[data-testid^="offer-"][data-testid$="-price"]')).toHaveText([euros(prizren.quote.moverPrice), euros(prishtina.quote.moverPrice)]);
+    // Who they are (COMPLIANCE §4): business with its registration number, checked insurance…
+    await expect(card(prizren)).toContainText(prizren.companyName);
+    await expect(card(prizren)).toContainText(m.business);
+    await expect(card(prizren)).toContainText(m.regNo.replace('{{no}}', 'TEST-XK-002'));
+    await expect(card(prizren)).toContainText(m.insurance.replace('{{date}}', '31.12.2027'));
+    // …or a private person, said plainly, without a registration number.
+    await expect(card(prishtina)).toContainText(m.private);
+    await expect(card(prishtina)).toContainText(m.privateNote);
+    await expect(card(prishtina)).toContainText('Prishtinë');
+    await expect(card(prishtina)).not.toContainText('Reg. no.');
+    await expect(app(page).getByText(m.feeTba)).toHaveCount(2);
+
+    // The price line by line, adding up to the mover's price.
+    await page.getByTestId(`offer-${prizren.companyId}-details`).click();
+    const lines = page.getByTestId(`offer-${prizren.companyId}-lines`);
+    await expect(lines).toContainText(m.lines.base);
+    await expect(lines).toContainText(m.lines.distance.replace('{{km}}', '83.2'));
+    await expect(lines).toContainText(m.lines.labor.replace('{{min}}', '40'));
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('booking-movers.png');
+
+    // "Book best offer" chooses the lowest; another can be chosen instead; a reload keeps it.
+    await page.getByTestId('movers-best').click();
+    await expect(page.getByTestId(`offer-${prizren.companyId}-choose`)).toHaveText(m.chosen);
+    await expect(app(page).getByText(en.landing.quote.soonTitle)).toBeVisible();
+    expect(JSON.parse((await stored(page, 'movershub.booking'))!).draft.choice).toEqual({ vehicleId: prizren.vehicleId, companyId: prizren.companyId });
+    await page.getByTestId(`offer-${prishtina.companyId}-choose`).click();
+    await expect(page.getByTestId(`offer-${prishtina.companyId}-choose`)).toHaveText(m.chosen);
+    await expect(page.getByTestId(`offer-${prizren.companyId}-choose`)).toHaveText(m.choose);
+    await page.reload();
+    await expect(page.getByTestId(`offer-${prishtina.companyId}-choose`)).toHaveText(m.chosen);
   });
 
   test('the move stays on the device after a reload, and is forgotten on sign out', async ({ page }) => {

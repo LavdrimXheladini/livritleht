@@ -72,6 +72,7 @@ export function QuoteCard() {
       hour: null,
       crew,
       vehicleClass: shownCls,
+      choice: null,
     });
     router.push('/book/stops');
   };

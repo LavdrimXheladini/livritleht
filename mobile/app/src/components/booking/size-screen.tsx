@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { AccessibilityInfo, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import { Button, Card, WarningIcon, currentLocale, cx, formatMoveDay, useMoveQuote } from '@movershub/mobile';
 import {
@@ -19,7 +19,7 @@ import {
 import { colors } from '@movershub/ui';
 
 import { offersFor, type ClassOffers } from '../customer/offers';
-import { BookingSoon, PricesError, PricesLoading } from '../customer/quote-card';
+import { PricesError, PricesLoading } from '../customer/quote-card';
 import { VehicleClasses } from '../customer/vehicle-classes';
 import { BookingFrame, type UpdateBooking } from './booking-frame';
 import { hourText } from './when-screen';
@@ -28,7 +28,7 @@ import { hourText } from './when-screen';
  * Step 4: the van size, each with its lowest mover's price ("from") for THIS move — the customer's
  * stops, floors, items, crew and day, priced on the server from each mover's own rate card
  * (COMPLIANCE §1.1). The size that fits the items is chosen to start with; a smaller one may be picked,
- * with a warning. Next (build step 4, part 2): the movers in that size and their fixed totals.
+ * with a warning. Then the movers in that size, each with their fixed price (the movers screen).
  */
 export function SizeScreen() {
   const { t } = useTranslation();
@@ -49,7 +49,6 @@ function Size({ draft, update }: { draft: BookingDraft; update: UpdateBooking })
   const { t } = useTranslation();
   const locale = currentLocale();
   const quote = useMoveQuote(moveQuoteRequest(draft));
-  const [submitted, setSubmitted] = useState(false);
   const fit = fittingClass(loadTenthsM3(jobItems(draft.items)));
   const data = quote.data;
   const updating = quote.isPlaceholderData;
@@ -57,9 +56,12 @@ function Size({ draft, update }: { draft: BookingDraft; update: UpdateBooking })
   const shown = shownClass(offers, draft.vehicleClass, fit);
   const anyOffer = offers !== null && VEHICLE_CLASSES.some((k) => offers[k]);
 
+  // Another size: a mover chosen in the old one no longer applies.
+  const setClass = (vehicleClass: VehicleClass) =>
+    update((d) => (d.vehicleClass === vehicleClass ? d : { ...d, vehicleClass, choice: null }));
   const seeMovers = () => {
-    setSubmitted(true);
-    AccessibilityInfo.announceForAccessibility(`${t('landing.quote.soonTitle')} ${t('customer.bookingSoon')}`);
+    setClass(shown);
+    router.push('/book/movers');
   };
 
   return (
@@ -70,10 +72,7 @@ function Size({ draft, update }: { draft: BookingDraft; update: UpdateBooking })
           <VehicleClasses
             offers={offers}
             selected={shown}
-            onSelect={(vehicleClass) => {
-              setSubmitted(false);
-              update((d) => ({ ...d, vehicleClass }));
-            }}
+            onSelect={setClass}
             locale={locale}
             updating={updating}
             testIDPrefix="size-class"
@@ -91,7 +90,6 @@ function Size({ draft, update }: { draft: BookingDraft; update: UpdateBooking })
           ) : (
             <Text className="font-sans text-[13.5px] leading-5 text-ink-700">{t('customer.noMoversHere')}</Text>
           )}
-          {submitted ? <BookingSoon /> : null}
           <Text className="font-sans text-xs leading-[18px] text-ink-500">
             {t('booking.size.note')}
             {data.testMovers ? ` ${t('landing.quote.testNote')}` : null}
@@ -107,7 +105,7 @@ function Size({ draft, update }: { draft: BookingDraft; update: UpdateBooking })
 }
 
 /** The move in short: route, day and time, people, things and their volume. */
-function MoveSummary({ draft }: { draft: BookingDraft }) {
+export function MoveSummary({ draft, testIDPrefix = 'size-summary' }: { draft: BookingDraft; testIDPrefix?: string }) {
   const { t } = useTranslation();
   const locale = currentLocale();
   const items = jobItems(draft.items);
@@ -123,7 +121,7 @@ function MoveSummary({ draft }: { draft: BookingDraft }) {
       {lines.map((line, i) => (
         <Text
           key={line}
-          testID={`size-summary-${i}`}
+          testID={`${testIDPrefix}-${i}`}
           className={i === 0 ? 'font-sans-semibold text-[15px] text-ink-900' : 'font-sans text-sm text-ink-700'}
         >
           {line}

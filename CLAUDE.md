@@ -141,7 +141,7 @@ platform_commission = round(mover_price × take_rate)   // 20% domestic, 15% cro
 mover_payout        = mover_price − platform_commission
 ```
 
-**Vehicle-class screen:** for each class, run the engine for every eligible vehicle (class match, vehicle active + verified, mover verified + Stripe ready + not suspended, service area covers pickup, available at scheduled_at, insurance valid on the move date; cross-border also needs CMR + tachograph rules, documents valid on the move date) → show `from €min` and the number of offers. Customer then picks a mover or "Book best offer". The quote is saved in `quotes` and expires (e.g., 15 min).
+**Vehicle-class screen:** for each class, run the engine for every eligible vehicle (class match, vehicle active + verified, mover verified + Stripe ready + not suspended, service area covers pickup, available at scheduled_at, insurance valid on the move date; cross-border also needs CMR + tachograph rules, documents valid on the move date) → show `from €min` and the number of offers (one offer per mover: their cheapest van in the class). Customer then picks a mover (each offer says who they are: business or private person, registration number, town, checked insurance — `quotable_vehicles`) or "Book best offer". The quote is saved in `quotes` and expires (e.g., 15 min).
 
 Distance = route distance between stops at quote time. Traffic/detours never change the price. Changes after booking go through `price_adjustments` (customer must approve).
 

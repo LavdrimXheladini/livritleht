@@ -21,6 +21,10 @@ const row = (id: string, over: Partial<QuotableVehicleRow> = {}): QuotableVehicl
   assembly_per_item: 600,
   long_distance_threshold_km: null,
   long_distance_per_km: 0,
+  is_business: true,
+  registration_no: `reg-${id}`,
+  town: 'Prishtinë',
+  insurance_until: '2027-12-31T23:59:59+00:00',
   ...over,
 });
 
@@ -77,6 +81,24 @@ describe('offers for a vehicle class', () => {
     expect(noCrewOf3.offers.map((o) => o.vehicleId)).toEqual(['y']);
     const corridor = buildClassOffers('VAN', { ...job, crossBorder: true }, rows, null);
     expect(corridor.offers.every((o) => o.quote.currency === 'EUR')).toBe(true); // COMPLIANCE §11
+  });
+
+  it('offers each mover once: their cheapest van, counted as one mover', () => {
+    const twoVans = [row('a'), row('a2', { company_id: 'company-a', base_fee: 1000 }), row('b', { base_fee: 4000 })];
+    const result = buildClassOffers('VAN', job, twoVans, null);
+    expect(result.offers.map((o) => o.vehicleId)).toEqual(['a2', 'b']);
+    expect(result.count).toBe(2);
+  });
+
+  it('says who each mover is (COMPLIANCE §4)', () => {
+    const { offers } = buildClassOffers('VAN', job, [row('a'), row('b', { is_business: false, registration_no: null, town: null })], null);
+    expect(offers.find((o) => o.vehicleId === 'a')!.mover).toEqual({
+      isBusiness: true,
+      registrationNo: 'reg-a',
+      town: 'Prishtinë',
+      insuranceUntil: '2027-12-31T23:59:59+00:00',
+    });
+    expect(offers.find((o) => o.vehicleId === 'b')!.mover).toMatchObject({ isBusiness: false, registrationNo: null, town: null });
   });
 
   it('says so when no mover is available', () => {

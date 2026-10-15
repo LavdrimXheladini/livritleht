@@ -10,5 +10,14 @@ export {
   type QuoteLineKind,
   type QuoteResult,
 } from './engine';
-export { buildClassOffers, pickFrom, rateCardFromRow, type ClassOffers, type FromPrice, type Offer, type QuotableVehicleRow } from './offers';
+export {
+  buildClassOffers,
+  pickFrom,
+  rateCardFromRow,
+  type ClassOffers,
+  type FromPrice,
+  type MoverFacts,
+  type Offer,
+  type QuotableVehicleRow,
+} from './offers';
 export { estimateRoadKm, quoteForRequest, type ClassQuote, type QuoteDeps, type QuoteOutcome, type QuoteResponse } from './service';

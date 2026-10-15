@@ -129,6 +129,13 @@ export function scheduledAt(day: string, hour: number): string {
   return new Date(y, m - 1, d, hour).toISOString();
 }
 
+/**
+ * The mover the customer chose: their van in the chosen size. Only which one — the price is the
+ * server's, shown from its quote and priced again when the booking is sent.
+ */
+export const bookingChoiceSchema = z.object({ vehicleId: z.string().min(1).max(64), companyId: z.string().min(1).max(64) });
+export type BookingChoice = z.infer<typeof bookingChoiceSchema>;
+
 export const bookingDraftSchema = z.object({
   pickup: bookingStopSchema,
   dropoff: bookingStopSchema,
@@ -138,6 +145,8 @@ export const bookingDraftSchema = z.object({
   hour: z.number().int().min(0).max(23).nullable(),
   crew: z.union([z.literal(1), z.literal(2), z.literal(3)]),
   vehicleClass: z.enum(VEHICLE_CLASSES),
+  /** Null until a mover is chosen (also in moves saved before choosing existed). */
+  choice: bookingChoiceSchema.nullable().default(null),
 });
 export type BookingDraft = z.infer<typeof bookingDraftSchema>;
 

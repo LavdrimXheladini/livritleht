@@ -1,5 +1,6 @@
-// Offers for one vehicle class: every quotable vehicle priced from its OWN rate card, cheapest
-// first, plus the "from" price the vehicle-class screen shows (COMPLIANCE §1.1). Pure, no I/O.
+// Offers for one vehicle class: every quotable vehicle priced from its OWN rate card, one offer per
+// mover (their cheapest van in the class), cheapest first, plus the "from" price the vehicle-class
+// screen shows (COMPLIANCE §1.1). Pure, no I/O.
 
 import type { BookingFeeRule, Currency, QuoteJob, RateCard, VehicleClass } from '@movershub/shared';
 
@@ -22,6 +23,13 @@ export type QuotableVehicleRow = {
   assembly_per_item: number;
   long_distance_threshold_km: number | null;
   long_distance_per_km: number;
+  is_business: boolean;
+  /** Businesses only (null for a private person). */
+  registration_no: string | null;
+  /** The city of the company's address (null before it was found on the map). */
+  town: string | null;
+  /** End of the checked carrier insurance (ISO 8601). */
+  insurance_until: string | null;
 };
 
 export function rateCardFromRow(row: QuotableVehicleRow): RateCard {
@@ -39,8 +47,11 @@ export function rateCardFromRow(row: QuotableVehicleRow): RateCard {
   };
 }
 
+/** Who the mover is, as customers see it on an offer (COMPLIANCE §4); address and contact come at booking. */
+export type MoverFacts = { isBusiness: boolean; registrationNo: string | null; town: string | null; insuranceUntil: string | null };
+
 /** A specific mover's vehicle and its fixed price for this job — what the customer books. */
-export type Offer = { vehicleId: string; companyId: string; companyName: string; quote: Quote };
+export type Offer = { vehicleId: string; companyId: string; companyName: string; mover: MoverFacts; quote: Quote };
 
 /** Lowest offer in one currency (a class can mix currencies, e.g. EUR and PLN movers). */
 export type FromPrice = { currency: Currency; moverPrice: number; moverPayout: number; bookingFee: number | null; total: number };
@@ -52,11 +63,11 @@ export function pickFrom(from: readonly FromPrice[], preferred?: Currency): From
 
 export type ClassOffers = {
   vehicleClass: VehicleClass;
-  /** Number of offers; 0 = no mover available for this class here. */
+  /** Number of movers offering; 0 = no mover available for this class here. */
   count: number;
   /** "from €X": the lowest mover's price in each currency (amounts in different currencies are not compared). */
   from: FromPrice[];
-  /** Every offer, cheapest first within each currency. */
+  /** One offer per mover (their cheapest van), cheapest first within each currency. */
   offers: Offer[];
 };
 
@@ -66,18 +77,29 @@ export function buildClassOffers(
   rows: readonly QuotableVehicleRow[],
   bookingFee: BookingFeeRule | null,
 ): ClassOffers {
-  const offers: Offer[] = [];
+  const priced: Offer[] = [];
   for (const row of rows) {
     const result = quoteVehicle({ ...job, vehicleClass }, rateCardFromRow(row), { bookingFee });
     // Vehicles that can't take this job (crew not offered, non-EUR corridor) are simply not offered.
-    if (result.ok) offers.push({ vehicleId: row.vehicle_id, companyId: row.company_id, companyName: row.company_name, quote: result.quote });
+    if (result.ok) {
+      priced.push({
+        vehicleId: row.vehicle_id,
+        companyId: row.company_id,
+        companyName: row.company_name,
+        mover: { isBusiness: row.is_business, registrationNo: row.registration_no, town: row.town, insuranceUntil: row.insurance_until },
+        quote: result.quote,
+      });
+    }
   }
-  offers.sort(
+  priced.sort(
     (a, b) =>
       a.quote.currency.localeCompare(b.quote.currency) ||
       a.quote.moverPrice - b.quote.moverPrice ||
       a.vehicleId.localeCompare(b.vehicleId),
   );
+  // The customer chooses a mover: a mover with two vans of this class offers their cheaper one.
+  const movers = new Set<string>();
+  const offers = priced.filter((o) => !movers.has(o.companyId) && movers.add(o.companyId));
 
   const from: FromPrice[] = [];
   for (const { quote } of offers) {

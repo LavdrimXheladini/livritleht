@@ -152,6 +152,37 @@
       "tooSmall": "{{vehicle}} może nie pomieścić twoich rzeczy.",
       "seeMovers": "Zobacz przewoźników",
       "note": "Ceny od przewoźników w MoversHub — własne stawki każdego przewoźnika, dla twoich rzeczy, pięter i dnia. Przed płatnością widzisz przewoźnika i jego stałą cenę, a opłata rezerwacyjna jest podana osobno."
+    },
+    "movers": {
+      "title": "Wybierz przewoźnika",
+      "subtitle": "Każda cena to stała cena przewoźnika za twoją przeprowadzkę, według jego stawek.",
+      "order": "Posortowane według ceny za twoją przeprowadzkę, od najniższej. Przewoźnicy nie mogą zapłacić za lepsze miejsce.",
+      "best": "Zarezerwuj najlepszą ofertę",
+      "business": "Firma",
+      "private": "Osoba prywatna",
+      "privateNote": "To nie firma — niektóre prawa konsumenta dotyczą tylko firm.",
+      "regNo": "Nr rej. {{no}}",
+      "insurance": "Ubezpieczenie sprawdzone, ważne do {{date}}",
+      "moverPrice": "Cena przewoźnika",
+      "fee": "+ opłata rezerwacyjna MoversHub: {{fee}}",
+      "feeTba": "+ opłata rezerwacyjna MoversHub, podana osobno (kwota jeszcze nieustalona)",
+      "total": "Razem {{total}}",
+      "details": "Szczegóły ceny",
+      "hideDetails": "Ukryj szczegóły ceny",
+      "choose": "Wybierz tego przewoźnika",
+      "chosen": "Wybrany",
+      "none": "Żaden przewoźnik w MoversHub nie oferuje jeszcze tej wielkości auta dla twojej przeprowadzki. Wybierz inną wielkość.",
+      "yourMover": "Twój przewoźnik: {{name}}",
+      "lines": {
+        "base": "Opłata podstawowa",
+        "distance": "Dystans, {{km}} km",
+        "labor": "Praca, około {{min}} min",
+        "floors": "Piętra bez windy: {{n}}",
+        "heavyItems": "Ciężkie rzeczy: {{n}}",
+        "assembly": "Rozkręcenie i złożenie: {{n}}",
+        "longDistance": "Długi dystans, {{km}} km",
+        "minimumPrice": "Wyrównanie do minimalnej ceny przewoźnika"
+      }
     }
   },
   "items": {

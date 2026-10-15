@@ -26,6 +26,10 @@ const card = (vehicleId: string): QuotableVehicleRow => ({
   assembly_per_item: 700,
   long_distance_threshold_km: null,
   long_distance_per_km: 0,
+  is_business: true,
+  registration_no: `reg-${vehicleId}`,
+  town: null,
+  insurance_until: null,
 });
 
 function deps(over: Partial<QuoteDeps> = {}): QuoteDeps {

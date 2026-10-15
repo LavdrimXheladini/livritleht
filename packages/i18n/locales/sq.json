@@ -152,6 +152,37 @@
       "tooSmall": "{{vehicle}} mund të jetë shumë i vogël për sendet e tua.",
       "seeMovers": "Shiko transportuesit",
       "note": "Çmimet nga transportuesit në MoversHub — tarifat e vetë secilit transportues, për sendet, katet dhe ditën tënde. Para pagesës sheh transportuesin dhe totalin e tij fiks, me tarifën e rezervimit të shënuar veçmas."
+    },
+    "movers": {
+      "title": "Zgjidh transportuesin",
+      "subtitle": "Çdo çmim është çmimi fiks i vetë transportuesit për shpërnguljen tënde, sipas tarifave të tij.",
+      "order": "Renditur sipas çmimit për shpërnguljen tënde, nga më i ulëti. Transportuesit nuk mund të paguajnë për një vend më të mirë.",
+      "best": "Rezervo ofertën më të mirë",
+      "business": "Biznes",
+      "private": "Person privat",
+      "privateNote": "Nuk është biznes — disa të drejta të konsumatorit vlejnë vetëm për bizneset.",
+      "regNo": "Nr. i regjistrimit {{no}}",
+      "insurance": "Sigurimi i kontrolluar, i vlefshëm deri më {{date}}",
+      "moverPrice": "Çmimi i transportuesit",
+      "fee": "+ tarifa e rezervimit e MoversHub: {{fee}}",
+      "feeTba": "+ tarifa e rezervimit e MoversHub, e shënuar veçmas (shuma ende pa u vendosur)",
+      "total": "Gjithsej {{total}}",
+      "details": "Detajet e çmimit",
+      "hideDetails": "Fshih detajet e çmimit",
+      "choose": "Zgjidh këtë transportues",
+      "chosen": "I zgjedhur",
+      "none": "Ende asnjë transportues në MoversHub nuk merr këtë madhësi furgoni për shpërnguljen tënde. Provo një madhësi tjetër.",
+      "yourMover": "Transportuesi yt: {{name}}",
+      "lines": {
+        "base": "Tarifa bazë",
+        "distance": "Distanca, {{km}} km",
+        "labor": "Puna, rreth {{min}} min",
+        "floors": "Kate pa ashensor: {{n}}",
+        "heavyItems": "Sende të rënda: {{n}}",
+        "assembly": "Çmontim dhe montim: {{n}}",
+        "longDistance": "Distancë e gjatë, {{km}} km",
+        "minimumPrice": "Plotësuar deri te çmimi minimal i transportuesit"
+      }
     }
   },
   "items": {
