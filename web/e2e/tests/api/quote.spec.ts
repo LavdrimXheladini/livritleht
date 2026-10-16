@@ -47,11 +47,12 @@ test('"from" is the lowest mover quote in each class, from the server (COMPLIANC
   expect(body.classes).toHaveLength(5);
   for (const c of body.classes) {
     expect(c.count).toBe(c.offers.length);
-    // One offer per mover, saying who they are (COMPLIANCE §4): the test movers are businesses with checked insurance.
+    // One offer per mover, saying who they are (COMPLIANCE §4): a business shows its registration
+    // number, a private person none; insurance checked and valid. (Any quotable test mover — seeded
+    // ones and the demo mover alike.)
     expect(new Set(c.offers.map((o) => o.companyId)).size).toBe(c.offers.length);
     for (const { mover } of c.offers) {
-      expect(mover.isBusiness).toBe(true);
-      expect(mover.registrationNo).toMatch(/^TEST-/);
+      expect(Boolean(mover.registrationNo)).toBe(mover.isBusiness);
       expect(Date.parse(mover.insuranceUntil ?? '')).toBeGreaterThan(Date.now());
     }
     for (const f of c.from) {

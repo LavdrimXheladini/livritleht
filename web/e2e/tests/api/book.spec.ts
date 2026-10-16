@@ -34,7 +34,12 @@ const move = {
   vehicleClass: 'VAN',
 };
 
-type Offer = { vehicleId: string; companyName: string; quote: { moverPrice: number; total: number } };
+type Offer = {
+  vehicleId: string;
+  companyName: string;
+  mover: { isBusiness: boolean; registrationNo: string | null; cancellation: { freeHours: number; latePct: number } };
+  quote: { moverPrice: number; total: number };
+};
 
 test('answers signed-in users only', async ({ request }) => {
   const res = await request.post(bookUrl, { headers: { apikey: key, Authorization: `Bearer ${key}` }, data: { ...move, vehicleId: crypto.randomUUID() } });
@@ -84,9 +89,15 @@ test.describe('signed in', () => {
       mover: { name: string; isBusiness: boolean; registrationNo: string | null; cancellation: { freeHours: number; latePct: number } };
     };
     expect(answer.quote.moverPrice).toBe(offer.quote.moverPrice);
-    // Who the contract is with (COMPLIANCE §4), and their terms (§8).
-    expect(answer.mover).toMatchObject({ name: offer.companyName, isBusiness: true, cancellation: { freeHours: 24, latePct: 50 } });
-    expect(answer.mover.registrationNo).toMatch(/^TEST-/);
+    // Who the contract is with — exactly the mover the customer was quoted (COMPLIANCE §4) — and their
+    // terms (§8). Whichever test mover is cheapest today: seeded ones and the demo mover alike.
+    expect(answer.mover).toMatchObject({
+      name: offer.companyName,
+      isBusiness: offer.mover.isBusiness,
+      registrationNo: offer.mover.registrationNo,
+      cancellation: offer.mover.cancellation,
+    });
+    expect(Boolean(answer.mover.registrationNo)).toBe(answer.mover.isBusiness);
     expect(Date.parse(answer.quote.expiresAt) - Date.now()).toBeGreaterThan(10 * 60 * 1000);
 
     // Saved for the customer, not booked; the directions kept for the mover who accepts.
