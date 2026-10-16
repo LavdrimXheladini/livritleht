@@ -38,11 +38,12 @@ test('download my data, then delete the account: the password again, and signed 
     expect(data.account.email).toBe(email);
     expect(data.profile.role).toBe('customer');
 
-    // Delete: a wrong password says so; the right one deletes, signs out and says so.
-    await page.getByLabel(en.auth.passwordLabel).fill('wrong-password-1');
+    // Delete: a wrong password says so; the right one deletes, signs out and says so. (By test id: Next
+    // keeps the sign-in page mounted, hidden, with its own password field.)
+    await page.getByTestId('delete-password').fill('wrong-password-1');
     await page.getByRole('button', { name: en.account.deleteButton }).click();
     await expect(page.getByTestId('delete-error')).toHaveText(en.account.wrongPassword);
-    await page.getByLabel(en.auth.passwordLabel).fill('movers2027');
+    await page.getByTestId('delete-password').fill('movers2027');
     await page.getByRole('button', { name: en.account.deleteButton }).click();
     await expect(page).toHaveURL(/\/en\/login\?deleted=1$/);
     await expect(page.getByTestId('auth-notice')).toHaveText(en.account.deleted);

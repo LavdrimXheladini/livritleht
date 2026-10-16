@@ -86,12 +86,13 @@ test.describe('signed in', () => {
       account: { email: string };
       moverCompany: { legal_name: string };
       documents: { type: string; downloadUrl: string | null }[];
-      vehicles: { rate_cards: unknown[] }[];
+      vehicles: { rate_cards: { base_fee: number } | null }[];
       serviceAreas: unknown[];
     };
     expect(data.account.email).toBe(mover.email);
     expect(data.moverCompany.legal_name).toBe('E2E Leaving Movers');
-    expect(data.vehicles[0]!.rate_cards).toHaveLength(1);
+    // One price card per van (embedded as an object).
+    expect(data.vehicles[0]!.rate_cards).toMatchObject({ base_fee: 2500 });
     expect(data.serviceAreas).toHaveLength(1);
     expect(data.documents[0]!.type).toBe('insurance');
     // The file itself, through the link in the export.

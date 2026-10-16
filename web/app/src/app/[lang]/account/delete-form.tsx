@@ -31,6 +31,7 @@ export function DeleteAccountForm({ lang }: { lang: string }) {
         <span className="text-sm text-ink-600">{t('auth.passwordLabel')}</span>
         <input
           name="password"
+          data-testid="delete-password"
           type="password"
           autoComplete="current-password"
           aria-invalid={Boolean(message)}
