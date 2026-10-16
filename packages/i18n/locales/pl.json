@@ -82,7 +82,20 @@
     "customer": "Jesteś po stronie klienta: rezerwujesz przeprowadzki u przewoźników w MoversHub.",
     "mover": "Jesteś po stronie przewoźnika: oferujesz przeprowadzki w MoversHub.",
     "admin": "Otwórz stronę administracyjną",
-    "getApp": "Rezerwacja przeprowadzki i konfiguracja konta przewoźnika odbywają się w aplikacji MoversHub. Wkrótce na iPhone'a i Androida."
+    "getApp": "Rezerwacja przeprowadzki i konfiguracja konta przewoźnika odbywają się w aplikacji MoversHub. Wkrótce na iPhone'a i Androida.",
+    "open": "Twoje konto",
+    "dataTitle": "Twoje dane",
+    "dataText": "Pobierz kopię wszystkiego, co MoversHub przechowuje o twoim koncie, jako plik (JSON).",
+    "download": "Pobierz moje dane",
+    "downloadError": "Nie udało się teraz przygotować twoich danych. Spróbuj ponownie za chwilę.",
+    "deleteTitle": "Usuń konto",
+    "deleteText": "To usuwa twoje konto i niezarezerwowane przeprowadzki. U przewoźnika usuwa też firmę, dokumenty i ich pliki, auta, ceny i obszary działania. Tego nie da się cofnąć.",
+    "deleteHint": "Wpisz hasło, aby potwierdzić.",
+    "deleteButton": "Usuń moje konto",
+    "wrongPassword": "To hasło jest nieprawidłowe.",
+    "recordsKept": "Twoje konto ma dane, które trzeba na razie zachować (zarezerwowane przeprowadzki, podatki lub spór), więc nie można go jeszcze usunąć. Skontaktuj się z MoversHub, aby usunąć to, co można.",
+    "adminNo": "Konta administratorów usuwa MoversHub, nie tutaj.",
+    "deleted": "Twoje konto zostało usunięte. Dziękujemy za korzystanie z MoversHub."
   },
   "customer": {
     "homeTitle": "Zarezerwuj przewoźnika",

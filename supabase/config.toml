@@ -427,6 +427,10 @@ verify_jwt = false
 [functions.book]
 verify_jwt = false
 
+# The signed-in person's own data: download it, or delete the account (password typed again).
+[functions.account]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

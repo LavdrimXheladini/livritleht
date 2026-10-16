@@ -1,0 +1,190 @@
+// `account` — the signed-in person's own data (design/DECISIONS.md #31; COMPLIANCE §9: people can
+// download and delete their data, except records the law keeps).
+//   POST { action: 'export' } → everything MoversHub keeps about them, as JSON (document files as
+//     links valid for an hour)
+//   POST { action: 'delete', password } → { status: 'deleted' } — the password is typed again, so a
+//     session left open on someone else's phone can't delete the account
+//   401 sign_in_required · 400 invalid_request | wrong_password · 403 admins_only_by_platform
+//   409 records_kept (a move beyond a request, or a suspension: kept until they can be anonymised —
+//   COMPLIANCE-TODO §14) · 429 rate_limited
+// Deleting removes a mover's company (documents, files, vans, prices, work areas, reminders), the
+// requests customers saved with that mover (never booked, so nothing to keep), and then the login,
+// which takes the profile, the person's own requests, confirmed phones and register checks with it.
+
+import {
+  DELETABLE_JOB_STATUSES,
+  accountRequestSchema,
+} from '../_shared/movershub/shared/index.ts';
+import { caller, type Caller } from '../_shared/auth.ts';
+import { failure, json, preflight } from '../_shared/http.ts';
+import { rateLimited } from '../_shared/rate-limit.ts';
+import { serviceRows } from '../_shared/service.ts';
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
+const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+const BUCKET = 'mover-documents';
+const service = { apikey: SERVICE_ROLE_KEY, Authorization: `Bearer ${SERVICE_ROLE_KEY}`, 'Content-Type': 'application/json' };
+
+type AuthUser = { id: string; email?: string; created_at?: string; last_sign_in_at?: string; email_confirmed_at?: string };
+type Company = { id: string } & Record<string, unknown>;
+
+async function authUser(id: string): Promise<AuthUser> {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${id}`, { headers: service, signal: AbortSignal.timeout(5000) });
+  if (!res.ok) throw new Error(`auth user ${res.status}`);
+  return (await res.json()) as AuthUser;
+}
+
+/** The password typed again: Supabase Auth checks it (a wrong one: 400). */
+async function passwordMatches(email: string, password: string): Promise<boolean> {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+    method: 'POST',
+    headers: service,
+    body: JSON.stringify({ email, password }),
+    signal: AbortSignal.timeout(5000),
+  });
+  if (res.ok) return true;
+  if (res.status === 400) return false;
+  throw new Error(`password check ${res.status}`);
+}
+
+/** Every file in the company's folder of the private bucket (`<company>/<type>/<file>`). */
+async function companyFiles(companyId: string): Promise<string[]> {
+  const list = async (prefix: string) => {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
+      method: 'POST',
+      headers: service,
+      body: JSON.stringify({ prefix, limit: 1000 }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) throw new Error(`storage list ${res.status}`);
+    return (await res.json()) as { name: string; id: string | null }[];
+  };
+  const files: string[] = [];
+  for (const entry of await list(`${companyId}/`)) {
+    // Folders (one per document type) have no id.
+    if (entry.id) files.push(`${companyId}/${entry.name}`);
+    else for (const file of await list(`${companyId}/${entry.name}/`)) if (file.id) files.push(`${companyId}/${entry.name}/${file.name}`);
+  }
+  return files;
+}
+
+async function signedUrl(path: string): Promise<string | null> {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${BUCKET}/${path}`, {
+    method: 'POST',
+    headers: service,
+    body: JSON.stringify({ expiresIn: 3600 }),
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!res.ok) return null;
+  const { signedURL } = (await res.json()) as { signedURL?: string };
+  return signedURL ? `${SUPABASE_URL}/storage/v1${signedURL}` : null;
+}
+
+const eq = (id: string) => `eq.${id}`;
+
+async function exportData(user: AuthUser) {
+  const [profile] = await serviceRows<Record<string, unknown>>('GET', `profiles?id=${eq(user.id)}&select=*`);
+  const moves = await serviceRows('GET', `jobs?customer_id=${eq(user.id)}&select=*,pickup_lat,pickup_lon,dropoff_lat,dropoff_lon,quotes(*)&order=created_at.desc`);
+  const [company] = await serviceRows<Company>('GET', `mover_companies?owner_id=${eq(user.id)}&select=*`);
+  const byCompany = async <T>(table: string, select = '*') =>
+    company ? await serviceRows<T>('GET', `${table}?company_id=${eq(company.id)}&select=${select}`) : [];
+  const documents = await byCompany<{ file_path: string } & Record<string, unknown>>('mover_documents');
+  const vehicles = await byCompany<{ id: string }>('vehicles', '*,rate_cards(*)');
+  return {
+    exportedAt: new Date().toISOString(),
+    about: 'Everything MoversHub keeps about your account (COMPLIANCE §9). Document links work for one hour.',
+    account: { id: user.id, email: user.email, createdAt: user.created_at, emailConfirmedAt: user.email_confirmed_at, lastSignInAt: user.last_sign_in_at },
+    profile: profile ?? null,
+    moves,
+    moverCompany: company ?? null,
+    documents: await Promise.all(documents.map(async (d) => ({ ...d, downloadUrl: await signedUrl(d.file_path) }))),
+    vehicles,
+    serviceAreas: await byCompany('service_areas'),
+    reminders: await serviceRows('GET', `mover_reminders?user_id=${eq(user.id)}&select=*&order=created_at.desc`),
+    // MoversHub's decisions on the company's setup (who decided stays out: MoversHub's staff).
+    reviewHistory: company
+      ? await serviceRows('GET', `audit_log?entity_id=in.(${[company.id, ...documents.map((d) => d.id), ...vehicles.map((v) => v.id)].join(',')})&select=action,entity,entity_id,note,created_at&order=created_at.desc`)
+      : [],
+    confirmedPhones: await serviceRows('GET', `phone_verifications?user_id=${eq(user.id)}&select=*`),
+    registerChecks: await serviceRows('GET', `company_registry_checks?user_id=${eq(user.id)}&select=*`),
+  };
+}
+
+/** What must be kept stops the deletion (until anonymising exists — COMPLIANCE-TODO §14). */
+async function keptRecords(userId: string, companyId: string | null): Promise<boolean> {
+  const kept = `status=not.in.(${DELETABLE_JOB_STATUSES.join(',')})`;
+  const own = await serviceRows('GET', `jobs?customer_id=${eq(userId)}&${kept}&select=id&limit=1`);
+  if (own.length) return true;
+  if (!companyId) return false;
+  const [asMover, suspensions] = await Promise.all([
+    serviceRows('GET', `jobs?chosen_mover_company_id=${eq(companyId)}&${kept}&select=id&limit=1`),
+    serviceRows('GET', `suspensions?company_id=${eq(companyId)}&select=id&limit=1`),
+  ]);
+  return asMover.length > 0 || suspensions.length > 0;
+}
+
+async function deleteAccount(user: AuthUser, companyId: string | null): Promise<void> {
+  if (companyId) {
+    // Customers' requests with this mover, never booked: they can't be booked any more. Then the
+    // mover's older prices on requests that moved on to another mover (the request itself stays).
+    await serviceRows('DELETE', `jobs?chosen_mover_company_id=${eq(companyId)}&status=in.(${DELETABLE_JOB_STATUSES.join(',')})&select=id`);
+    await serviceRows('DELETE', `quotes?mover_company_id=${eq(companyId)}&select=id`);
+    // The files first: once the company is gone, nothing would point to them.
+    const files = await companyFiles(companyId);
+    if (files.length) {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}`, {
+        method: 'DELETE',
+        headers: service,
+        body: JSON.stringify({ prefixes: files }),
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (!res.ok) throw new Error(`storage delete ${res.status}`);
+    }
+    // Documents, vans, prices, work areas and reminders go with the company.
+    await serviceRows('DELETE', `mover_companies?id=${eq(companyId)}&select=id`);
+  }
+  // The login last: the profile, the person's own requests (and their quotes), confirmed phones and
+  // register checks go with it.
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${user.id}`, { method: 'DELETE', headers: service, signal: AbortSignal.timeout(10_000) });
+  if (!res.ok) throw new Error(`auth delete ${res.status}`);
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return preflight(req);
+  if (req.method !== 'POST') return json(req, { error: 'method_not_allowed' }, 405, { Allow: 'POST, OPTIONS' });
+  let who: Caller;
+  try {
+    who = await caller(req);
+  } catch (e) {
+    console.error('account: sign-in check failed', failure(e));
+    return json(req, { error: 'unavailable' }, 503);
+  }
+  if (who.kind !== 'user') return json(req, { error: 'sign_in_required' }, 401);
+  const limited = await rateLimited(req, 'account', who);
+  if (limited) return limited;
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return json(req, { error: 'invalid_json' }, 400);
+  }
+  const parsed = accountRequestSchema.safeParse(body);
+  if (!parsed.success) return json(req, { error: 'invalid_request' }, 400);
+
+  try {
+    const user = await authUser(who.userId);
+    if (parsed.data.action === 'export') return json(req, await exportData(user));
+
+    const [profile] = await serviceRows<{ role: string | null }>('GET', `profiles?id=${eq(user.id)}&select=role`);
+    // Admin accounts are given and taken by the platform.
+    if (profile?.role === 'admin') return json(req, { error: 'admins_only_by_platform' }, 403);
+    if (!user.email || !(await passwordMatches(user.email, parsed.data.password))) return json(req, { error: 'wrong_password' }, 400);
+    const [company] = await serviceRows<Company>('GET', `mover_companies?owner_id=${eq(user.id)}&select=id`);
+    if (await keptRecords(user.id, company?.id ?? null)) return json(req, { error: 'records_kept' }, 409);
+    await deleteAccount(user, company?.id ?? null);
+    return json(req, { status: 'deleted' });
+  } catch (e) {
+    console.error(`account ${parsed.data.action} failed`, failure(e));
+    return json(req, { error: 'unavailable' }, 500);
+  }
+});

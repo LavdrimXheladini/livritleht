@@ -94,6 +94,8 @@ function RootStack() {
         <Stack.Screen name="book/review" />
         {/* The customer's own moves. */}
         <Stack.Screen name="moves/[id]" />
+        {/* Either side: download the account's data, or delete it. */}
+        <Stack.Screen name="account" />
       </Stack.Protected>
     </Stack>
   );

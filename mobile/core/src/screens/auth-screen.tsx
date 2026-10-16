@@ -28,8 +28,18 @@ import { RoleChoice } from './role-choice';
  * anyone whether an address has an account: every address gets the same answers. The role picked
  * here is saved only after the code has proven the email (`public.choose_role`).
  */
-export function AuthScreen({ onCodeSent, onForgotPassword }: { onCodeSent: (sent: PendingSignIn) => void; onForgotPassword: () => void }) {
+export function AuthScreen({
+  onCodeSent,
+  onForgotPassword,
+  notice = null,
+}: {
+  onCodeSent: (sent: PendingSignIn) => void;
+  onForgotPassword: () => void;
+  /** A one-time message above the form (e.g. "Your account is deleted."), read out when shown. */
+  notice?: string | null;
+}) {
   const { t } = useTranslation();
+  useAnnouncement(notice);
   const [mode, setMode] = useState<AuthMode>('login');
   // The typed address survives switching tabs and going to "Forgot password?" and back.
   const [email, setEmail] = useState(getDraftEmail);
@@ -46,6 +56,13 @@ export function AuthScreen({ onCodeSent, onForgotPassword }: { onCodeSent: (sent
           {mode === 'login' ? t('auth.passwordSubtitle') : t('auth.registerSubtitle')}
         </Text>
       </View>
+      {notice ? (
+        <View className="rounded-lg bg-stone-150 p-4">
+          <Text testID="auth-notice" className="font-sans text-sm leading-5 text-ink-900">
+            {notice}
+          </Text>
+        </View>
+      ) : null}
       <SegmentedControl
         value={mode}
         onChange={setMode}

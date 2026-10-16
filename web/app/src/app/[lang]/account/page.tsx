@@ -12,6 +12,7 @@ import { PASSWORD_OWED_COOKIE, parseOwed } from '@/lib/auth/password-owed';
 import { getT } from '@/lib/i18n';
 import { createClient } from '@/lib/supabase/server';
 
+import { DeleteAccountForm } from './delete-form';
 import { RoleChooser, SwitchSide } from './role-forms';
 import { SignOutButton } from './sign-out-button';
 
@@ -57,7 +58,9 @@ async function AccountDetails({ locale, searchParams }: { locale: Locale; search
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle<{ role: string | null }>();
   const role = profile?.role ?? null;
-  const existing = (await searchParams).notice === 'existing';
+  const query = await searchParams;
+  const existing = query.notice === 'existing';
+  const exportFailed = query.error === 'export';
   const t = getT(locale);
 
   return (
@@ -88,6 +91,32 @@ async function AccountDetails({ locale, searchParams }: { locale: Locale; search
       )}
       <p className="m-0 text-sm text-ink-600">{t('account.getApp')}</p>
       <SignOutButton locale={locale} />
+
+      {/* COMPLIANCE §9: a copy of the data, and deleting the account. */}
+      <section aria-labelledby="account-data" className="flex flex-col gap-2 border-t border-stone-300 pt-5">
+        <h2 id="account-data" className="m-0 text-base font-semibold text-ink-900">
+          {t('account.dataTitle')}
+        </h2>
+        <p className="m-0 text-sm text-ink-700">{t('account.dataText')}</p>
+        {/* A file download, not a page: a plain link, never prefetched. */}
+        <a href={`/${locale}/account/export`} data-testid="account-download" className="self-start text-sm font-medium text-ink-900 underline">
+          {t('account.download')}
+        </a>
+        {exportFailed ? (
+          <p role="alert" className="m-0 text-sm text-danger">
+            {t('account.downloadError')}
+          </p>
+        ) : null}
+      </section>
+      {role === 'admin' ? null : (
+        <section aria-labelledby="account-delete" className="flex flex-col gap-2 border-t border-stone-300 pt-5">
+          <h2 id="account-delete" className="m-0 text-base font-semibold text-ink-900">
+            {t('account.deleteTitle')}
+          </h2>
+          <p className="m-0 text-sm text-ink-700">{t('account.deleteText')}</p>
+          <DeleteAccountForm lang={locale} />
+        </section>
+      )}
     </>
   );
 }

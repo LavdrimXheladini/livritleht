@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
@@ -54,6 +55,9 @@ export function MoverHome({ notice }: { notice: string | null }) {
         </Text>
         <SwitchSideButton to="customer" testID="switch-to-customer" dark />
       </View>
+
+      {/* Download the account's data, or delete it (COMPLIANCE §9). */}
+      <Button testID="open-account" variant="link-dark" className="self-center" title={t('account.open')} onPress={() => router.push('/account')} />
     </Screen>
   );
 }

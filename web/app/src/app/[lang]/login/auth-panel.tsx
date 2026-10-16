@@ -133,10 +133,22 @@ export function AuthPanel({ locale, owed }: { locale: Locale; owed: OwedPurpose 
   );
 }
 
-/** Shown after /[lang]/auth/confirm refused an emailed link (?error=link_invalid). */
+/**
+ * Shown after /[lang]/auth/confirm refused an emailed link (?error=link_invalid), or after the account
+ * was deleted (?deleted=1).
+ */
 function LinkError() {
+  const { t } = useTranslation();
   const errorText = useErrorText();
-  const error = useSearchParams().get('error');
+  const query = useSearchParams();
+  if (query.get('deleted') === '1') {
+    return (
+      <p role="status" data-testid="auth-notice" className="m-0 rounded-input bg-stone-200 px-4 py-3 text-sm text-ink-900">
+        {t('account.deleted')}
+      </p>
+    );
+  }
+  const error = query.get('error');
   if (error !== 'link_invalid') return null;
   return (
     <p role="alert" className="m-0 text-sm text-danger">

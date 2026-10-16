@@ -1,13 +1,15 @@
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 
-import { AuthScreen, getDraftVersion, setPendingSignIn } from '@movershub/mobile';
+import { AuthScreen, getDraftVersion, setPendingSignIn, takeSignedOutNotice } from '@movershub/mobile';
 
 export default function Login() {
   // Back from "Forgot password?" with a corrected address: the form starts again with it. (Coming back
   // from the code screen keeps the form as it was, with the tab and the side picked.)
   const [draft, setDraft] = useState(getDraftVersion);
   useFocusEffect(useCallback(() => setDraft(getDraftVersion()), []));
+  // E.g. "Your account is deleted." — once.
+  const [notice] = useState(takeSignedOutNotice);
 
   return (
     <AuthScreen
@@ -18,6 +20,7 @@ export default function Login() {
         router.push('/verify');
       }}
       onForgotPassword={() => router.push('/forgot')}
+      notice={notice}
     />
   );
 }

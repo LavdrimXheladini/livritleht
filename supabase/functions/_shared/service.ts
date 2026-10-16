@@ -23,10 +23,10 @@ export async function insertRows(table: string, rows: Record<string, unknown>[],
 
 /**
  * A PostgREST request as the service role that returns rows (`Prefer: return=representation` for
- * writes): GET to read, POST to insert, PATCH to update. `path` is the table and its query, e.g.
+ * writes): GET to read, POST to insert, PATCH to update, DELETE to delete. `path` is the table and its query, e.g.
  * `jobs?id=eq.…`. Throws on failure.
  */
-export async function serviceRows<T>(method: 'GET' | 'POST' | 'PATCH', path: string, body?: unknown): Promise<T[]> {
+export async function serviceRows<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', path: string, body?: unknown): Promise<T[]> {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     method,
     headers: {

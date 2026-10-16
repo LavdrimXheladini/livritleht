@@ -82,7 +82,20 @@
     "customer": "Na strani ste klijenta: rezervišete selidbe kod prevoznika na MoversHubu.",
     "mover": "Na strani ste prevoznika: nudite selidbe na MoversHubu.",
     "admin": "Otvori administraciju",
-    "getApp": "Rezervacija selidbe i podešavanje naloga prevoznika rade se u aplikaciji MoversHub. Uskoro za iPhone i Android."
+    "getApp": "Rezervacija selidbe i podešavanje naloga prevoznika rade se u aplikaciji MoversHub. Uskoro za iPhone i Android.",
+    "open": "Vaš nalog",
+    "dataTitle": "Vaši podaci",
+    "dataText": "Preuzmite kopiju svega što MoversHub čuva o vašem nalogu, kao datoteku (JSON).",
+    "download": "Preuzmi moje podatke",
+    "downloadError": "Trenutno nismo mogli da pripremimo vaše podatke. Pokušajte ponovo za trenutak.",
+    "deleteTitle": "Obrišite nalog",
+    "deleteText": "Ovo briše vaš nalog i selidbe koje nisu rezervisane. Kod prevoznika briše i firmu, dokumente i njihove datoteke, vozila, cene i područja rada. Ne može se poništiti.",
+    "deleteHint": "Upišite lozinku da potvrdite.",
+    "deleteButton": "Obriši moj nalog",
+    "wrongPassword": "Ta lozinka nije tačna.",
+    "recordsKept": "Vaš nalog ima podatke koji se za sada moraju čuvati (rezervisane selidbe, porezi ili spor), pa se još ne može obrisati. Obratite se MoversHubu da uklonite ono što se može ukloniti.",
+    "adminNo": "Administratorske naloge uklanja MoversHub, ne ovde.",
+    "deleted": "Vaš nalog je obrisan. Hvala što ste koristili MoversHub."
   },
   "customer": {
     "homeTitle": "Rezerviši selidbu kod prevoznika",

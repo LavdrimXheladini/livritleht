@@ -58,7 +58,7 @@ movershub/
 │  └─ i18n/            # Translation files
 ├─ supabase/
 │  ├─ migrations/      # SQL migrations (only way to change schema)
-│  ├─ functions/       # Edge functions: quote, places, phone-verification, company-registry, book (later: job-transition, stripe-webhook, tracking-token)
+│  ├─ functions/       # Edge functions: quote, places, phone-verification, company-registry, book, account (later: job-transition, stripe-webhook, tracking-token)
 │  ├─ seed.sql         # Test data: movers, vehicles, rate cards, customers
 │  └─ tests/           # pgTAP tests for RLS and DB functions
 ├─ scripts/            # dev-prep.mjs: regenerates theme.css + clears stale bundler caches before dev/build
@@ -99,6 +99,8 @@ movershub/
 - `terms_notices` — company_id, terms_version_id, channel (`email` | `in_app`), sent_at
 - `terms_acceptances` — user_id, terms_version_id, accepted_at (a mover who rejects new terms can terminate before effective_at)
 - `dac7_quarterly_totals` — company_id, year, quarter, currency, total_payouts, total_fees_withheld, job_count (computed from `payments`; source for the annual DAC7 export)
+
+**Account data (COMPLIANCE §9; design/DECISIONS.md #31):** the `account` function exports everything kept about the signed-in account and deletes it (password typed again; in order: customers' unbooked requests with the mover, the mover's older quotes, stored files, the company, the login — `mover_companies.owner_id` is on delete restrict). It refuses admins and accounts with records to keep (a move beyond QUOTED, a suspension) until anonymising exists.
 
 Rules:
 - **RLS on every table.** Customers see only their jobs; movers see offers in their area (district only, no exact address) and jobs they accepted; admins via service role in edge functions.

@@ -1002,6 +1002,65 @@ test.describe('booking a move', () => {
   });
 });
 
+test.describe('your account (COMPLIANCE §9)', () => {
+  const a = en.account;
+
+  /** The `account` function: answers in turn (the last repeats); records what the app sent. */
+  async function fakeAccountFunction(page: Page, ...answers: { status?: number; body: unknown }[]) {
+    const sent: Record<string, unknown>[] = [];
+    await page.route('**/functions/v1/account', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      sent.push(route.request().postDataJSON() as Record<string, unknown>);
+      const { status = 200, body } = answers[Math.min(sent.length, answers.length) - 1]!;
+      return route.fulfill({ status, contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+    });
+    return sent;
+  }
+
+  test.beforeEach(async ({ page }) => {
+    await signInAs(page, 'customer');
+  });
+
+  test('download my data: everything kept about the account, as a file', async ({ page }) => {
+    const sent = await fakeAccountFunction(page, { body: { account: { email: 'customer@example.com' }, moves: [] } });
+    await page.goto(url);
+    await page.getByTestId('open-account').click();
+    await expect(page.getByTestId('account-email')).toHaveText(a.signedInAs.replace('{{email}}', 'customer@example.com'));
+    const download = page.waitForEvent('download');
+    await page.getByTestId('account-download').click();
+    const file = await download;
+    expect(file.suggestedFilename()).toMatch(/^movershub-data-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(sent).toEqual([{ action: 'export' }]);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('account.png');
+  });
+
+  test('delete: the password again; a wrong one or records to keep say so; then signed out with a note', async ({ page }) => {
+    const sent = await fakeAccountFunction(
+      page,
+      { status: 400, body: { error: 'wrong_password' } },
+      { status: 409, body: { error: 'records_kept' } },
+      { body: { status: 'deleted' } },
+    );
+    await page.goto(`${url}account`);
+    await page.getByTestId('account-delete').click();
+    await expect(app(page).getByText(en.auth.errors.password_required)).toBeVisible();
+    expect(sent).toHaveLength(0);
+
+    await page.getByTestId('account-password').fill('wrong-one-1');
+    await page.getByTestId('account-delete').click();
+    await expect(app(page).getByText(a.wrongPassword)).toBeVisible();
+    await page.getByTestId('account-password').fill('movers2026');
+    await page.getByTestId('account-delete').click();
+    await expect(app(page).getByText(a.recordsKept)).toBeVisible();
+    await page.getByTestId('account-delete').click();
+    // Deleted: this device forgets the account, and the sign-in screen says so.
+    await expect(page.getByTestId('auth-notice')).toHaveText(a.deleted);
+    expect(sent.at(-1)).toEqual({ action: 'delete', password: 'movers2026' });
+    expect(await stored(page, SESSION_KEY)).toBeNull();
+  });
+});
+
 test("a customer who opens the mover's company form is sent home", async ({ page }) => {
   await signInAs(page, 'customer');
   await page.goto(`${url}mover/company`);

@@ -1,6 +1,7 @@
 export { announce, useAnnouncement } from './a11y';
 export { classFrom, fetchMoveQuote, fetchQuote, searchPlaces, useMoveQuote, useQuote, type ClassFrom } from './api';
 export { AuthProvider, useAuth } from './auth-provider';
+export { setSignedOutNotice, takeSignedOutNotice } from './signed-out-notice';
 export { clearBookingDraft, restoreBookingDraft, startBooking, updateBooking, useBookingDraft } from './booking-draft';
 export { cx } from './components/cx';
 export * from './components/icons';

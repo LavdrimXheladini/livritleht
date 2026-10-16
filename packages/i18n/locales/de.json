@@ -82,7 +82,20 @@
     "customer": "Du bist auf der Kundenseite: Du buchst Umzüge bei Umzugsunternehmen auf MoversHub.",
     "mover": "Du bist auf der Unternehmensseite: Du bietest Umzüge auf MoversHub an.",
     "admin": "Admin-Seite öffnen",
-    "getApp": "Einen Umzug buchen und dich als Umzugsunternehmen einrichten geht in der MoversHub-App. Bald für iPhone und Android."
+    "getApp": "Einen Umzug buchen und dich als Umzugsunternehmen einrichten geht in der MoversHub-App. Bald für iPhone und Android.",
+    "open": "Dein Konto",
+    "dataTitle": "Deine Daten",
+    "dataText": "Lade eine Kopie von allem herunter, was MoversHub zu deinem Konto speichert, als Datei (JSON).",
+    "download": "Meine Daten herunterladen",
+    "downloadError": "Wir konnten deine Daten gerade nicht vorbereiten. Versuch es gleich noch einmal.",
+    "deleteTitle": "Konto löschen",
+    "deleteText": "Das löscht dein Konto und deine nicht gebuchten Umzüge. Bei einem Umzugsunternehmen auch die Firma, die Dokumente und ihre Dateien, die Fahrzeuge, Preise und Einsatzgebiete. Das lässt sich nicht rückgängig machen.",
+    "deleteHint": "Gib zur Bestätigung dein Passwort ein.",
+    "deleteButton": "Mein Konto löschen",
+    "wrongPassword": "Dieses Passwort ist falsch.",
+    "recordsKept": "Dein Konto hat Daten, die vorerst aufbewahrt werden müssen (gebuchte Umzüge, Steuern oder ein Streitfall), daher kann es noch nicht gelöscht werden. Wende dich an MoversHub, um zu entfernen, was möglich ist.",
+    "adminNo": "Admin-Konten entfernt MoversHub, nicht hier.",
+    "deleted": "Dein Konto wurde gelöscht. Danke, dass du MoversHub genutzt hast."
   },
   "customer": {
     "homeTitle": "Mit einem Umzugsunternehmen buchen",

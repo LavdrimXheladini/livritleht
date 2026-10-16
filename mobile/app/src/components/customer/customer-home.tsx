@@ -67,6 +67,9 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
           <SwitchSideButton to="mover" testID="switch-to-mover" />
         </Card>
       ) : null}
+
+      {/* Download the account's data, or delete it (COMPLIANCE §9). */}
+      <Button testID="open-account" variant="link" className="self-center" title={t('account.open')} onPress={() => router.push('/account')} />
     </Screen>
   );
 }

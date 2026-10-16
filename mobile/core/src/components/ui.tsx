@@ -124,7 +124,7 @@ export function Wordmark({ tone = 'light', partner }: { tone?: Tone; partner?: s
 
 /* ── Button ────────────────────────────────────────────────────────────── */
 
-export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'outline-dark' | 'link' | 'link-dark';
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'outline-dark' | 'link' | 'link-dark' | 'danger';
 
 const BUTTON: Record<ButtonVariant, { box: string; text: string; spinner: string }> = {
   /** Deep-green pill — the main action. */
@@ -144,6 +144,8 @@ const BUTTON: Record<ButtonVariant, { box: string; text: string; spinner: string
   link: { box: '', text: 'font-sans-medium text-ink-900 underline', spinner: colors.ink[900] },
   /** Link on night surfaces (readable copper). */
   'link-dark': { box: '', text: 'font-sans-medium text-accent-300 underline', spinner: colors.accent[300] },
+  /** Red — what can't be undone ("Delete my account"). */
+  danger: { box: 'bg-danger active:opacity-80', text: 'font-sans-medium text-stone-50', spinner: colors.stone[50] },
 };
 
 // Every size is at least 44 pt tall on the phone (touch targets), and links at least 44 pt wide

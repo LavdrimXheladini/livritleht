@@ -20,6 +20,8 @@ export const RATE_LIMITS = {
   companyRegistry: { limit: 20, windowSeconds: 600 },
   /** A booking request: one route, one database lookup, two writes (a customer reviews a few times). */
   book: { limit: 20, windowSeconds: 600 },
+  /** Downloading or deleting one's data (each export reads every table and signs file links). */
+  account: { limit: 10, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 export type RateLimitScope = keyof typeof RATE_LIMITS;
 

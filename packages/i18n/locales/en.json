@@ -82,7 +82,20 @@
     "customer": "You're on the customer side: you book moves with movers on MoversHub.",
     "mover": "You're on the mover side: you offer moves on MoversHub.",
     "admin": "Open the admin page",
-    "getApp": "Booking a move, and setting up as a mover, happen in the MoversHub app. It's coming to iPhone and Android soon."
+    "getApp": "Booking a move, and setting up as a mover, happen in the MoversHub app. It's coming to iPhone and Android soon.",
+    "open": "Your account",
+    "dataTitle": "Your data",
+    "dataText": "Download a copy of everything MoversHub keeps about your account, as a file (JSON).",
+    "download": "Download my data",
+    "downloadError": "We couldn't prepare your data right now. Try again in a moment.",
+    "deleteTitle": "Delete your account",
+    "deleteText": "This deletes your account and your moves that aren't booked. For a mover it also deletes the company, the documents and their files, the vans, prices and work areas. It can't be undone.",
+    "deleteHint": "Type your password to confirm.",
+    "deleteButton": "Delete my account",
+    "wrongPassword": "That password is wrong.",
+    "recordsKept": "Your account has records that must be kept for now (booked moves, tax or a dispute), so it can't be deleted yet. Contact MoversHub to remove what can be removed.",
+    "adminNo": "Admin accounts are removed by MoversHub, not here.",
+    "deleted": "Your account is deleted. Thank you for using MoversHub."
   },
   "customer": {
     "homeTitle": "Book with a mover",

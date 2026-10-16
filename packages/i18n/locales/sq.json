@@ -82,7 +82,20 @@
     "customer": "Je në anën e klientit: rezervon shpërngulje me transportuesit në MoversHub.",
     "mover": "Je në anën e transportuesit: ofron shpërngulje në MoversHub.",
     "admin": "Hap faqen e administrimit",
-    "getApp": "Rezervimi i një shpërnguljeje dhe regjistrimi si transportues bëhen në aplikacionin MoversHub. Së shpejti në iPhone dhe Android."
+    "getApp": "Rezervimi i një shpërnguljeje dhe regjistrimi si transportues bëhen në aplikacionin MoversHub. Së shpejti në iPhone dhe Android.",
+    "open": "Llogaria jote",
+    "dataTitle": "Të dhënat e tua",
+    "dataText": "Shkarko një kopje të gjithçkaje që MoversHub ruan për llogarinë tënde, si skedar (JSON).",
+    "download": "Shkarko të dhënat e mia",
+    "downloadError": "Nuk mundëm t’i përgatisim të dhënat tani. Provo sërish pas pak.",
+    "deleteTitle": "Fshi llogarinë tënde",
+    "deleteText": "Kjo fshin llogarinë tënde dhe shpërnguljet e parezervuara. Për një transportues fshin edhe kompaninë, dokumentet dhe skedarët e tyre, furgonët, çmimet dhe zonat e punës. Nuk mund të kthehet.",
+    "deleteHint": "Shkruaj fjalëkalimin për ta konfirmuar.",
+    "deleteButton": "Fshi llogarinë time",
+    "wrongPassword": "Ky fjalëkalim është i gabuar.",
+    "recordsKept": "Llogaria jote ka të dhëna që duhen ruajtur tani për tani (shpërngulje të rezervuara, taksa ose një mosmarrëveshje), prandaj ende nuk mund të fshihet. Kontakto MoversHub për të hequr atë që mund të hiqet.",
+    "adminNo": "Llogaritë e administratorëve i heq MoversHub, jo këtu.",
+    "deleted": "Llogaria jote u fshi. Faleminderit që përdore MoversHub."
   },
   "customer": {
     "homeTitle": "Rezervo me një transportues",
