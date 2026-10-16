@@ -34,6 +34,8 @@ async function account(request: APIRequestContext, role: 'admin' | 'customer', c
 }
 
 test('an admin publishes the terms for customers; booking waits for them to be accepted; a waiting version is withdrawn', async ({ page, request }) => {
+  // Many round trips to the cloud project (sign-in, pages, API), and the clean-up after.
+  test.setTimeout(120_000);
   const existing = await request.get(`${projectUrl}/rest/v1/terms_versions?audience=eq.customer&select=id`, { headers: service() });
   test.skip(((await existing.json()) as unknown[]).length > 0, 'the project already publishes terms for customers');
 

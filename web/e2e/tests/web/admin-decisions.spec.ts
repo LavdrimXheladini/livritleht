@@ -29,6 +29,8 @@ async function account(request: APIRequestContext, role: 'admin' | 'mover', crea
 }
 
 test('an admin suspends a mover with reasons; the mover appeals; upholding it lifts the suspension', async ({ page, request }) => {
+  // Many round trips to the cloud project (sign-in, pages, API), and the clean-up after.
+  test.setTimeout(120_000);
   const created: string[] = [];
   let companyId = '';
   try {

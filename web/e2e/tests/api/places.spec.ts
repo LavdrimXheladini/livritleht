@@ -1,4 +1,4 @@
-import { expect, test, type APIRequestContext } from '@playwright/test';
+import { expect, test, type APIRequestContext, type APIResponse } from '@playwright/test';
 
 // API tests for the deployed `places` edge function (address search for the signed-in app). Skipped unless:
 //   QUOTE_API_URL=https://<ref>.supabase.co/functions/v1/quote QUOTE_API_KEY=<publishable key> pnpm e2e
@@ -78,15 +78,18 @@ test.describe('signed in', () => {
     const second = await signedInUser(request, created);
     // Too-short searches: counted, then refused before any request to Photon.
     const search = (accessToken: string) => request.post(url, { headers: asUser(accessToken), data: { q: 'ab', locale: 'en' } });
-    let allowed = 0;
-    let over = await search(first);
-    for (; over.status() !== 429 && allowed < 200; allowed++) {
-      expect(over.status()).toBe(400);
-      over = await search(first);
-    }
-    // RATE_LIMITS.addressSearch in packages/shared: 60 a minute.
-    expect(allowed).toBe(60);
-    expect(Number(over.headers()['retry-after'])).toBeGreaterThan(0);
+    // RATE_LIMITS.addressSearch in packages/shared: 60 a minute. Six at a time — one after another
+    // they take too long from far away (~1 s each), all 61 at once overwhelm the function — and
+    // Postgres counts them one by one.
+    test.setTimeout(120_000);
+    const answers: APIResponse[] = [];
+    const lane = async (n: number) => {
+      for (let i = 0; i < n; i++) answers.push(await search(first));
+    };
+    await Promise.all([11, 10, 10, 10, 10, 10].map(lane));
+    expect(answers.map((r) => r.status()).sort()).toEqual([...Array<number>(60).fill(400), 429]);
+    const over = answers.find((r) => r.status() === 429);
+    expect(Number(over?.headers()['retry-after'])).toBeGreaterThan(0);
     // The same machine, another account: not limited (a per-IP count would be over by now).
     expect((await search(second)).status()).toBe(400);
   });
