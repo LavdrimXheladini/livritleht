@@ -41,3 +41,15 @@ export async function serviceRows<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   if (!res.ok) throw new Error(`${method} ${path.split('?')[0]}: ${res.status} ${await res.text()}`);
   return (await res.json()) as T[];
 }
+
+/** Calls a Postgres function through PostgREST as the service role; returns its result. Throws on failure. */
+export async function serviceRpc<T>(fn: string, args: Record<string, unknown>): Promise<T> {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: { apikey: SERVICE_ROLE_KEY, Authorization: `Bearer ${SERVICE_ROLE_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(args),
+    signal: AbortSignal.timeout(5000),
+  });
+  if (!res.ok) throw new Error(`rpc ${fn}: ${res.status} ${await res.text()}`);
+  return (await res.json()) as T;
+}

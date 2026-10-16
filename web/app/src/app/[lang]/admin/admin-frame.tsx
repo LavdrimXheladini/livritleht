@@ -16,9 +16,14 @@ export function AdminFrame({ locale, title, children }: { locale: Locale; title:
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-10">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h1 className="font-display text-3xl text-ink-900">{title}</h1>
-        <Link href={`/${locale}/admin`} className="text-sm text-ink-700 underline">
-          {ta('allMovers')}
-        </Link>
+        <span className="flex gap-4">
+          <Link href={`/${locale}/admin`} className="text-sm text-ink-700 underline">
+            {ta('allMovers')}
+          </Link>
+          <Link href={`/${locale}/admin/terms`} className="text-sm text-ink-700 underline">
+            {ta('termsNav')}
+          </Link>
+        </span>
       </div>
       {children}
     </main>

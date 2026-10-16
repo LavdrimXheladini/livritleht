@@ -8,6 +8,7 @@ import { routeLabel } from '@movershub/shared';
 import { BOOKING_STEPS, firstOpenStep, useBooking } from '../booking/booking-frame';
 
 import { SwitchSideButton } from '../switch-side';
+import { UpcomingTerms } from '../terms';
 import { MyMoves } from './my-moves';
 import { QuoteCard } from './quote-card';
 
@@ -48,6 +49,8 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
           </Text>
         </Card>
       ) : null}
+      {/* New terms coming (design/DECISIONS.md #34) — admins have none. */}
+      {canSwitch ? <UpcomingTerms audience="customer" /> : null}
 
       <View className="gap-3">
         <Display size={heroSize}>{t('landing.hero.title')}</Display>

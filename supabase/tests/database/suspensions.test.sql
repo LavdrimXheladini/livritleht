@@ -1,6 +1,12 @@
 begin;
 select plan(24);
 
+-- Terms published on the project would leave these sample movers unquoted until they accept them
+-- (20261016100000, tested in terms.test.sql): set aside here, like everything else (rolled back).
+delete from public.terms_acceptances;
+delete from public.terms_notices;
+delete from public.terms_versions;
+
 -- Suspensions (COMPLIANCE §3): a written reason, human review before any effect, notice, 30 days
 -- for a termination, and suspended or terminated companies are not quoted.
 -- Fixtures: a mover with a quotable van in Lisbon (far from every test mover), a second mover, a

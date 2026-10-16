@@ -1047,6 +1047,91 @@ test.describe('terms, privacy policy and contact (COMPLIANCE §8, §9)', () => {
   });
 });
 
+test.describe('accepting the terms (COMPLIANCE §3, §8)', () => {
+  const tr = en.terms;
+  const published = (n: number, audience: 'customer' | 'mover', effective: string, summary: string | null = null) => ({
+    id: `00000000-0000-4000-8000-0000000e700${n}`,
+    audience,
+    version: n,
+    summary,
+    published_at: '2026-10-01T09:00:00+00:00',
+    effective_at: effective,
+  });
+
+  /** Published versions (with a text for each), the person's acceptances; records accept_terms calls. */
+  async function fakeTerms(page: Page, versions: ReturnType<typeof published>[], accepted: string[]) {
+    const calls: unknown[] = [];
+    const json = (route: Route, body: unknown) => route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+    await page.route('**/rest/v1/terms_versions*', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      const url = decodeURIComponent(route.request().url());
+      const one = /id=eq\.([0-9a-f-]+)/.exec(url)?.[1];
+      if (!one) return json(route, versions);
+      const v = versions.find((x) => x.id === one)!;
+      const doc = v.audience === 'mover' ? 'mover-terms' : 'terms';
+      return json(route, { version: v.version, effective_at: v.effective_at, content: { doc, locale: 'en', updated: '2026-10-16', text: legalDocument(doc, 'en').text } });
+    });
+    await page.route('**/rest/v1/terms_acceptances*', (route) =>
+      route.request().method() === 'OPTIONS' ? route.fulfill({ status: 204, headers: cors }) : json(route, accepted.map((id) => ({ terms_version_id: id }))),
+    );
+    await page.route('**/rest/v1/rpc/accept_terms', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      calls.push(route.request().postDataJSON());
+      return json(route, '2026-10-16T10:00:00+00:00');
+    });
+    return calls;
+  }
+
+  test('a customer accepts the terms in effect before anything else: ticked by them, never for them', async ({ page }) => {
+    await signInAs(page, 'customer');
+    const v1 = published(1, 'customer', '2026-10-01T09:00:00+00:00');
+    const calls = await fakeTerms(page, [v1], []);
+    await page.goto(url);
+    await expect(page.getByTestId('accept-terms')).toContainText(tr.acceptText.customer);
+    await expect(app(page).getByText(tr.acceptTitle)).toBeVisible();
+    await expect(page.getByTestId('accept-terms-tick')).toHaveAttribute('aria-checked', 'false');
+    await expect(page).toHaveScreenshot('accept-terms.png');
+    await page.getByTestId('accept-terms-accept').click();
+    await expect(app(page).getByText(tr.tickFirst)).toBeVisible();
+    expect(calls).toEqual([]);
+    await page.getByTestId('accept-terms-tick').click();
+    await page.getByTestId('accept-terms-accept').click();
+    await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    expect(calls).toEqual([{ p_version_id: v1.id }]);
+  });
+
+  test('a mover after a change: "New terms" with what changed; the published version is what they read', async ({ page }) => {
+    await signInAs(page, 'mover');
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    const v1 = published(1, 'mover', '2026-09-01T09:00:00+00:00');
+    const v2 = published(2, 'mover', '2026-10-10T00:00:00+00:00', 'The commission across a border is now 15%.');
+    await fakeTerms(page, [v1, v2], [v1.id]);
+    await page.goto(url);
+    await expect(app(page).getByText(tr.newTitle)).toBeVisible();
+    await expect(page.getByTestId('accept-terms')).toContainText(tr.changedText.mover.replace('{{version}}', '2').replace('{{date}}', '10.10.2026'));
+    await expect(page.getByTestId('accept-terms-summary')).toHaveText(tr.whatChanged.replace('{{summary}}', v2.summary!));
+    await page.getByTestId('accept-terms-read').click();
+    await expect(page.getByTestId('legal-version')).toHaveText(tr.versionLine.replace('{{version}}', '2').replace('{{date}}', '10.10.2026'));
+    await expect(app(page).getByText(legalDocument('mover-terms', 'en').text.intro)).toBeVisible();
+  });
+
+  test('new terms coming: a notice on the home with the date and what changed; "Accept now" puts it away', async ({ page }) => {
+    await signInAs(page, 'mover');
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    const v1 = published(1, 'mover', '2026-09-01T09:00:00+00:00');
+    const v2 = published(2, 'mover', '2099-01-01T00:00:00+00:00', 'Payouts move to Mondays.');
+    const calls = await fakeTerms(page, [v1, v2], [v1.id]);
+    await page.goto(url);
+    const notice = page.getByTestId('terms-notice');
+    await expect(notice).toContainText(tr.upcomingTitle.mover.replace('{{date}}', '01.01.2099'));
+    await expect(notice).toContainText(tr.whatChanged.replace('{{summary}}', v2.summary!));
+    await expect(notice).toContainText(tr.upcomingText.mover);
+    await page.getByTestId('terms-notice-accept').click();
+    await expect(notice).toHaveCount(0);
+    expect(calls).toEqual([{ p_version_id: v2.id }]);
+  });
+});
+
 test.describe('your account (COMPLIANCE §9)', () => {
   const a = en.account;
 

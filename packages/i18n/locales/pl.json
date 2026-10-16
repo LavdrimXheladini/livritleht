@@ -962,6 +962,7 @@
       "insurance": "Jego ubezpieczenie OC przewoźnika jest ważne w dniu przeprowadzki.",
       "crossBorder": "Za granicę: jego ubezpieczenie CMR jest ważne w dniu przeprowadzki, ceny są w euro, a cięższe auta mają tachograf i ważną licencję.",
       "terms": "Sam ustalił swoje ceny i warunki anulowania.",
+      "accepted": "Zaakceptowali obowiązujący regulamin dla przewoźników.",
       "payouts": "Skonfigurował wypłaty u dostawcy płatności MoversHub.",
       "standing": "Jego konto nie jest zawieszone."
     },
@@ -1159,7 +1160,8 @@
       "mover_document": "Dokument",
       "vehicle": "Pojazd",
       "suspension": "Decyzja",
-      "appeal": "Odwołanie"
+      "appeal": "Odwołanie",
+      "terms_version": "Regulamin"
     },
     "action": {
       "verify": "zatwierdzono",
@@ -1167,7 +1169,9 @@
       "suspend": "podjęta",
       "lift": "zniesiona",
       "uphold": "uwzględnione",
-      "dismiss": "odrzucone"
+      "dismiss": "odrzucone",
+      "publish": "opublikowany",
+      "withdraw": "wycofany"
     },
     "status": {
       "pending": "Czeka",
@@ -1196,7 +1200,13 @@
       "effective_in_past": "Ta data już minęła.",
       "note_required": "Napisz dlaczego (co najmniej 3 znaki).",
       "not_in_force": "Ta decyzja została już zniesiona.",
-      "already_decided": "Na to już odpowiedziano."
+      "already_decided": "Na to już odpowiedziano.",
+      "unchanged": "Ten tekst jest już ostatnią wersją.",
+      "summary_required": "Napisz, co się zmieniło (co najmniej 3 znaki).",
+      "upcoming_exists": "Jedna wersja już czeka na wejście w życie: najpierw ją wycofaj.",
+      "terms_notice_too_short": "Nowy regulamin dla przewoźników obowiązuje co najmniej 15 dni po publikacji.",
+      "already_in_effect": "Ta wersja już obowiązuje: nie można jej wycofać.",
+      "content_required": "Nie ma tekstu do opublikowania."
     },
     "missing": {
       "tax_id": "numer podatkowy",
@@ -1274,7 +1284,32 @@
       "document_rejection": "Skarga: sprawdzenie dokumentu",
       "other": "Skarga"
     },
-    "sentOn": "wysłano {{date}}"
+    "sentOn": "wysłano {{date}}",
+    "termsNav": "Regulaminy",
+    "terms": {
+      "title": "Regulaminy",
+      "intro": "Opublikuj regulamin z aplikacji jako nową wersję. Użytkownicy akceptują wersję dla swojej strony, zanim będą mogli rezerwować lub być pokazywani klientom. Nowy regulamin dla przewoźników obowiązuje co najmniej 15 dni po publikacji (pierwsza wersja od razu), a przewoźnicy są o tym informowani w aplikacji.",
+      "audience": {
+        "customer": "Regulamin dla klientów",
+        "mover": "Regulamin dla przewoźników"
+      },
+      "none": "Nic jeszcze nie opublikowano: nikt nie musi niczego akceptować.",
+      "current": "Obowiązuje: wersja {{version}} od {{date}} · zaakceptowało {{count}}",
+      "upcoming": "Oczekuje: wersja {{version}} od {{date}} · zaakceptowało {{count}}",
+      "withdrawn": "Wycofana: wersja {{version}}",
+      "appText": "Tekst w aplikacji (zmieniony {{date}})",
+      "same": "To ostatnia opublikowana wersja.",
+      "differs": "Różni się od ostatniej opublikowanej wersji.",
+      "effective": "Obowiązuje od (puste: od razu)",
+      "effectiveMover": "Obowiązuje od — co najmniej 15 dni od dziś, poza pierwszą wersją (puste: od razu)",
+      "summary": "Co się zmieniło (użytkownicy przeczytają to w powiadomieniu; niepotrzebne przy pierwszej wersji)",
+      "publish": "Opublikuj jako nową wersję",
+      "withdraw": "Wycofaj…",
+      "withdrawNote": "Dlaczego (do akt)",
+      "withdrawSend": "Wycofaj teraz",
+      "read": "Przeczytaj tekst",
+      "past": "Wcześniej: wersja {{version}} od {{date}} · zaakceptowało {{count}}"
+    }
   },
   "legal": {
     "titles": {
@@ -1288,5 +1323,42 @@
     "englishOnly": "Na razie ten tekst jest po angielsku. Polska wersja pojawi się, gdy tekst będzie ostateczny.",
     "updated": "Ostatnia zmiana: {{date}}",
     "contents": "Spis treści"
+  },
+  "terms": {
+    "acceptTitle": "Zanim zaczniesz",
+    "newTitle": "Nowy regulamin",
+    "acceptText": {
+      "customer": "Przeczytaj regulamin dla klientów i zaakceptuj go, aby rezerwować u przewoźników w MoversHub.",
+      "mover": "Przeczytaj regulamin dla przewoźników i zaakceptuj go, aby oferować przeprowadzki w MoversHub."
+    },
+    "changedText": {
+      "customer": "Regulamin dla klientów się zmienił: wersja {{version}} obowiązuje od {{date}}.",
+      "mover": "Regulamin dla przewoźników się zmienił: wersja {{version}} obowiązuje od {{date}}."
+    },
+    "whatChanged": "Co się zmieniło: {{summary}}",
+    "read": {
+      "customer": "Przeczytaj regulamin dla klientów",
+      "mover": "Przeczytaj regulamin dla przewoźników"
+    },
+    "readPrivacy": "Przeczytaj politykę prywatności",
+    "checkbox": {
+      "customer": "Akceptuję regulamin dla klientów i potwierdzam zapoznanie się z polityką prywatności.",
+      "mover": "Akceptuję regulamin dla przewoźników i potwierdzam zapoznanie się z polityką prywatności."
+    },
+    "tickFirst": "Zaznacz pole, aby zaakceptować regulamin.",
+    "accept": "Akceptuj i kontynuuj",
+    "disagree": "Nie zgadzasz się? Możesz usunąć konto w „Twoje konto”.",
+    "upcomingTitle": {
+      "customer": "Nowy regulamin dla klientów od {{date}}",
+      "mover": "Nowy regulamin dla przewoźników od {{date}}"
+    },
+    "upcomingText": {
+      "customer": "Do tego czasu obowiązuje obecny regulamin.",
+      "mover": "Do tego czasu obowiązuje obecny regulamin. Jeśli się nie zgadzasz, możesz wcześniej usunąć konto."
+    },
+    "readNew": "Przeczytaj",
+    "acceptNow": "Akceptuj teraz",
+    "versionLine": "Wersja {{version}} · obowiązuje od {{date}}",
+    "versionUnavailable": "Tej wersji nie można teraz pokazać."
   }
 }

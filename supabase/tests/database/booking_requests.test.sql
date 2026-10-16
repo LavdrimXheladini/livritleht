@@ -1,6 +1,12 @@
 begin;
 select plan(16);
 
+-- Terms published on the project would leave these sample movers unquoted until they accept them
+-- (20261016100000, tested in terms.test.sql): set aside here, like everything else (rolled back).
+delete from public.terms_acceptances;
+delete from public.terms_notices;
+delete from public.terms_versions;
+
 -- Migration 20261015130000: movers' own cancellation terms, and booking requests (jobs + quotes) that
 -- only the server writes and only their customer reads. Fixtures by the platform (service role): a
 -- verified mover in Lisbon (far from every test mover) without terms yet, and two customers.

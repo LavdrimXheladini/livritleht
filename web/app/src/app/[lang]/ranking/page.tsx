@@ -13,10 +13,10 @@ import { getT } from '@/lib/i18n';
  * When this page last changed. Update it with every change of the rules below — and the rules with
  * every change of who is quoted (`public.quotable_vehicles`) or of the order (packages/pricing).
  */
-const UPDATED = '2026-10-15';
+const UPDATED = '2026-10-16';
 
-/** The conditions of `public.quotable_vehicles` (migration 20261015130000), in that order. */
-const WHO = ['verified', 'van', 'area', 'country', 'insurance', 'crossBorder', 'terms', 'payouts', 'standing'] as const;
+/** The conditions of `public.quotable_vehicles` (migration 20261016100000), in that order. */
+const WHO = ['verified', 'van', 'area', 'country', 'insurance', 'crossBorder', 'terms', 'accepted', 'payouts', 'standing'] as const;
 const NEVER = ['paid', 'declining', 'location', 'commission'] as const;
 
 export async function generateMetadata({ params }: PageProps<'/[lang]/ranking'>): Promise<Metadata> {

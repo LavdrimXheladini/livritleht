@@ -1,6 +1,12 @@
 begin;
 select plan(35);
 
+-- Terms published on the project would leave these sample movers unquoted until they accept them
+-- (20261016100000, tested in terms.test.sql): set aside here, like everything else (rolled back).
+delete from public.terms_acceptances;
+delete from public.terms_notices;
+delete from public.terms_versions;
+
 -- Vehicle verification (COMPLIANCE §5, §11) and documents valid on the move date.
 -- Fixtures: one mover whose company is verified, insured and has CMR insurance (no operator licence
 -- yet). Service area in Lisbon, far from every test mover, so the sample data never mixes in.

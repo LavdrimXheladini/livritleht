@@ -29,7 +29,8 @@ const answer = (body: string, status = 200) => (route: Route) =>
 /**
  * `quote` answers with the saved Prishtina → Prizren quote (test movers, 83.2 km); `places` finds
  * nothing; the customer has no moves yet (`jobs`), the mover no reminders (`mover_reminders`), no
- * decisions about their account (`suspensions`) and no complaints (`mover_appeals`).
+ * decisions about their account (`suspensions`), no complaints (`mover_appeals`), and no terms are
+ * published (`terms_versions`, `terms_acceptances`).
  */
 export async function serveFixtures(page: Page) {
   await page.route('**/functions/v1/quote', answer(quote));
@@ -38,6 +39,9 @@ export async function serveFixtures(page: Page) {
   await page.route('**/rest/v1/mover_reminders*', answer('[]'));
   await page.route('**/rest/v1/suspensions*', answer('[]'));
   await page.route('**/rest/v1/mover_appeals*', answer('[]'));
+  // No terms published: nothing to accept (design/DECISIONS.md #34).
+  await page.route('**/rest/v1/terms_versions*', answer('[]'));
+  await page.route('**/rest/v1/terms_acceptances*', answer('[]'));
 }
 
 /** Where the app keeps the session and the side it last showed (SESSION_STORAGE_KEY, mobile/core/src/saved-role.ts). */

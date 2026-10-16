@@ -3,7 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import { isLocale } from '@movershub/i18n';
+import { LEGAL_UPDATED, isLocale, legalDocument } from '@movershub/i18n';
+import { TERMS_AUDIENCES, TERMS_DOC } from '@movershub/shared';
 
 import { createClient } from '@/lib/supabase/server';
 
@@ -131,4 +132,51 @@ export async function answerAppeal(_previous: DecisionResult | null, formData: F
   const supabase = await createClient();
   const { error } = await supabase.rpc('admin_decide_appeal', { p_appeal_id: appealId, p_upheld: upheld, p_reason: reason });
   return decided(lang, companyId, error);
+}
+
+const publishSchema = z.object({
+  lang: z.string().refine(isLocale),
+  audience: z.enum(TERMS_AUDIENCES),
+  effective: z.union([z.literal(''), z.iso.date()]),
+  summary: z.string().trim().max(2000),
+});
+
+/**
+ * Publishes the terms in the app's code (packages/i18n/src/legal) as the next version for customers
+ * or movers (design/DECISIONS.md #34), applying from the chosen day (at once when empty). Postgres
+ * checks the admin, the 15 days' notice for movers, what changed, and tells movers in the app.
+ */
+export async function publishTerms(_previous: DecisionResult | null, formData: FormData): Promise<DecisionResult> {
+  const parsed = publishSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, error: 'invalid_request' };
+  const { lang, audience, effective, summary } = parsed.data;
+  const doc = TERMS_DOC[audience];
+  const content = { doc, locale: 'en', updated: LEGAL_UPDATED, text: legalDocument(doc, 'en').text };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('admin_publish_terms', {
+    p_audience: audience,
+    p_content: content,
+    p_summary: summary || null,
+    p_effective_at: effective ? `${effective}T00:00:00Z` : null,
+  });
+  if (error) {
+    const known = ['admins_only', 'content_required', 'upcoming_exists', 'unchanged', 'summary_required'];
+    return { ok: false, error: error.message === 'notice_too_short' ? 'terms_notice_too_short' : known.includes(error.message) ? error.message : 'failed' };
+  }
+  revalidatePath(`/${lang}/admin/terms`);
+  return { ok: true };
+}
+
+const withdrawSchema = z.object({ lang: z.string().refine(isLocale), versionId: z.uuid(), note: z.string().trim().max(1000) });
+
+/** Withdraws a version that doesn't apply yet, with a note for the record. */
+export async function withdrawTerms(_previous: DecisionResult | null, formData: FormData): Promise<DecisionResult> {
+  const parsed = withdrawSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, error: 'invalid_request' };
+  const { lang, versionId, note } = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('admin_withdraw_terms', { p_version_id: versionId, p_note: note });
+  if (error) return { ok: false, error: ['admins_only', 'note_required', 'already_in_effect'].includes(error.message) ? error.message : 'failed' };
+  revalidatePath(`/${lang}/admin/terms`);
+  return { ok: true };
 }

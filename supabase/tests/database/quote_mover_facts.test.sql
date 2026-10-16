@@ -1,6 +1,12 @@
 begin;
 select plan(8);
 
+-- Terms published on the project would leave these sample movers unquoted until they accept them
+-- (20261016100000, tested in terms.test.sql): set aside here, like everything else (rolled back).
+delete from public.terms_acceptances;
+delete from public.terms_notices;
+delete from public.terms_versions;
+
 -- Quotes say who each mover is (migration 20261015120000, COMPLIANCE §4): business or private person,
 -- the registration number (businesses only), the town, and until when the checked insurance runs.
 -- Fixtures written by the platform (service role): two quotable movers in Lisbon, far from every test

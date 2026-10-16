@@ -962,6 +962,7 @@
       "insurance": "Sigurimi i tij i transportuesit është i vlefshëm në ditën e shpërnguljes.",
       "crossBorder": "Kur kalohet kufiri: sigurimi i tij CMR është i vlefshëm në ditën e shpërnguljes, çmimet janë në euro dhe furgonët më të rëndë kanë tahograf dhe licencë operatori të vlefshme.",
       "terms": "Ka vendosur vetë çmimet dhe kushtet e anulimit.",
+      "accepted": "Kanë pranuar kushtet për transportuesit që janë në fuqi.",
       "payouts": "Ka konfiguruar pagesat te ofruesi i pagesave i MoversHub.",
       "standing": "Llogaria e tij nuk është pezulluar."
     },
@@ -1159,7 +1160,8 @@
       "mover_document": "Dokument",
       "vehicle": "Furgon",
       "suspension": "Vendim",
-      "appeal": "Ankesë"
+      "appeal": "Ankesë",
+      "terms_version": "Kushtet"
     },
     "action": {
       "verify": "miratuar",
@@ -1167,7 +1169,9 @@
       "suspend": "vendosur",
       "lift": "hequr",
       "uphold": "pranuar",
-      "dismiss": "refuzuar"
+      "dismiss": "refuzuar",
+      "publish": "publikuar",
+      "withdraw": "tërhequr"
     },
     "status": {
       "pending": "Në pritje",
@@ -1196,7 +1200,13 @@
       "effective_in_past": "Ajo datë ka kaluar.",
       "note_required": "Shkruaj pse (të paktën 3 shkronja).",
       "not_in_force": "Ky vendim është hequr tashmë.",
-      "already_decided": "Kësaj i është përgjigjur tashmë."
+      "already_decided": "Kësaj i është përgjigjur tashmë.",
+      "unchanged": "Ky tekst është tashmë versioni i fundit.",
+      "summary_required": "Thuaj çfarë ndryshoi (të paktën 3 shkronja).",
+      "upcoming_exists": "Një version tashmë pret të hyjë në fuqi: tërhiqe fillimisht.",
+      "terms_notice_too_short": "Kushtet e reja për transportuesit vlejnë të paktën 15 ditë pas publikimit.",
+      "already_in_effect": "Ky version tashmë vlen: nuk mund të tërhiqet.",
+      "content_required": "Nuk ka tekst për të publikuar."
     },
     "missing": {
       "tax_id": "numri fiskal",
@@ -1274,7 +1284,32 @@
       "document_rejection": "Ankesë: kontrolli i dokumentit",
       "other": "Ankesë"
     },
-    "sentOn": "dërguar {{date}}"
+    "sentOn": "dërguar {{date}}",
+    "termsNav": "Kushtet",
+    "terms": {
+      "title": "Kushtet",
+      "intro": "Publiko kushtet që janë në aplikacion si version të ri. Njerëzit pranojnë versionin për anën e tyre para se të rezervojnë ose t'u shfaqen klientëve. Kushtet e reja për transportuesit vlejnë të paktën 15 ditë pas publikimit (versioni i parë menjëherë), dhe transportuesit njoftohen në aplikacion.",
+      "audience": {
+        "customer": "Kushtet për klientët",
+        "mover": "Kushtet për transportuesit"
+      },
+      "none": "Asgjë e publikuar ende: askujt nuk i kërkohet të pranojë asgjë.",
+      "current": "Në fuqi: versioni {{version}} që nga {{date}} · pranuar nga {{count}}",
+      "upcoming": "Në pritje: versioni {{version}} nga {{date}} · pranuar nga {{count}}",
+      "withdrawn": "Tërhequr: versioni {{version}}",
+      "appText": "Teksti në aplikacion (përditësuar {{date}})",
+      "same": "Është versioni i fundit i publikuar.",
+      "differs": "Ndryshon nga versioni i fundit i publikuar.",
+      "effective": "Vlen nga (bosh: menjëherë)",
+      "effectiveMover": "Vlen nga — të paktën 15 ditë nga sot, përveç versionit të parë (bosh: menjëherë)",
+      "summary": "Çfarë ndryshoi (njerëzit e lexojnë në njoftim; nuk duhet për versionin e parë)",
+      "publish": "Publiko si version të ri",
+      "withdraw": "Tërhiq…",
+      "withdrawNote": "Pse (për regjistrin)",
+      "withdrawSend": "Tërhiq tani",
+      "read": "Lexo tekstin",
+      "past": "Më parë: versioni {{version}} nga {{date}} · pranuar nga {{count}}"
+    }
   },
   "legal": {
     "titles": {
@@ -1288,5 +1323,42 @@
     "englishOnly": "Tani për tani ky tekst është në anglisht. Versioni shqip vjen sapo teksti të jetë përfundimtar.",
     "updated": "Përditësuar më: {{date}}",
     "contents": "Përmbajtja"
+  },
+  "terms": {
+    "acceptTitle": "Para se të fillosh",
+    "newTitle": "Kushte të reja",
+    "acceptText": {
+      "customer": "Lexo kushtet për klientët dhe pranoji për të rezervuar me transportuesit në MoversHub.",
+      "mover": "Lexo kushtet për transportuesit dhe pranoji për të ofruar zhvendosje në MoversHub."
+    },
+    "changedText": {
+      "customer": "Kushtet për klientët kanë ndryshuar: versioni {{version}} vlen nga {{date}}.",
+      "mover": "Kushtet për transportuesit kanë ndryshuar: versioni {{version}} vlen nga {{date}}."
+    },
+    "whatChanged": "Çfarë ndryshoi: {{summary}}",
+    "read": {
+      "customer": "Lexo kushtet për klientët",
+      "mover": "Lexo kushtet për transportuesit"
+    },
+    "readPrivacy": "Lexo politikën e privatësisë",
+    "checkbox": {
+      "customer": "I pranoj kushtet për klientët dhe e kam lexuar politikën e privatësisë.",
+      "mover": "I pranoj kushtet për transportuesit dhe e kam lexuar politikën e privatësisë."
+    },
+    "tickFirst": "Shëno kutinë për të pranuar kushtet.",
+    "accept": "Prano dhe vazhdo",
+    "disagree": "Nuk pajtohesh? Mund ta fshish llogarinë te \"Llogaria jote\".",
+    "upcomingTitle": {
+      "customer": "Kushte të reja për klientët nga {{date}}",
+      "mover": "Kushte të reja për transportuesit nga {{date}}"
+    },
+    "upcomingText": {
+      "customer": "Deri atëherë vlejnë kushtet e tanishme.",
+      "mover": "Deri atëherë vlejnë kushtet e tanishme. Nëse nuk pajtohesh, mund ta fshish llogarinë para asaj dite."
+    },
+    "readNew": "Lexoji",
+    "acceptNow": "Prano tani",
+    "versionLine": "Versioni {{version}} · vlen nga {{date}}",
+    "versionUnavailable": "Ky version nuk mund të shfaqet tani."
   }
 }

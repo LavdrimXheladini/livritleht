@@ -1,6 +1,12 @@
 begin;
 select plan(64);
 
+-- Terms published on the project would leave these sample movers unquoted until they accept them
+-- (20261016100000, tested in terms.test.sql): set aside here, like everything else (rolled back).
+delete from public.terms_acceptances;
+delete from public.terms_notices;
+delete from public.terms_versions;
+
 -- Fixtures: two movers and a customer (profiles via the sign-up trigger). Service areas in Lisbon,
 -- far from every test mover, so the sample data never mixes into these results.
 insert into auth.users (id, phone, raw_user_meta_data)

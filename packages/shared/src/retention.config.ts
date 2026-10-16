@@ -29,6 +29,7 @@ export const RETENTION_CATEGORIES = [
   'mover_reminders',
   'suspensions',
   'mover_appeals',
+  'terms_acceptances',
 ] as const;
 export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
@@ -74,4 +75,8 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   // else go with the account.
   suspensions: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
   mover_appeals: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
+  // Who accepted which version of the terms, and when (public.terms_acceptances; the published texts
+  // themselves are kept in public.terms_versions): evidence of the contract. Today they go with the
+  // account (on delete cascade) — the lawyer may want them kept longer.
+  terms_acceptances: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
 };

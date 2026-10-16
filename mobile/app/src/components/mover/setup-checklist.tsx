@@ -12,6 +12,7 @@ import { useRateCards, useServiceAreas } from '@/lib/rates';
 import { useVehicles } from '@/lib/vehicles';
 
 import { DecisionNotices } from './decisions';
+import { UpcomingTerms } from '../terms';
 import { IconRow } from './icon-row';
 import { Reminders } from './reminders';
 
@@ -44,6 +45,7 @@ export function SetupChecklist() {
         <Text className="font-sans text-[15px] leading-[22px] text-sage-400">{t('mover.homeSubtitle')}</Text>
       </View>
       <DecisionNotices />
+      <UpcomingTerms audience="mover" />
       <Reminders />
       <DarkPanel className="gap-4">
         <Display size={22} tone="dark">

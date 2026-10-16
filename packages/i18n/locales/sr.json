@@ -962,6 +962,7 @@
       "insurance": "Njegovo osiguranje prevoznika važi na dan selidbe.",
       "crossBorder": "Preko granice: njegovo CMR osiguranje važi na dan selidbe, cene su u evrima, a teža vozila imaju tahograf i važeću licencu.",
       "terms": "Sam je odredio svoje cene i uslove otkazivanja.",
+      "accepted": "Prihvatili su uslove za prevoznike koji su na snazi.",
       "payouts": "Podesio je isplate kod MoversHub dobavljača plaćanja.",
       "standing": "Njegov nalog nije suspendovan."
     },
@@ -1159,7 +1160,8 @@
       "mover_document": "Dokument",
       "vehicle": "Vozilo",
       "suspension": "Odluka",
-      "appeal": "Žalba"
+      "appeal": "Žalba",
+      "terms_version": "Uslovi"
     },
     "action": {
       "verify": "odobreno",
@@ -1167,7 +1169,9 @@
       "suspend": "doneta",
       "lift": "ukinuta",
       "uphold": "usvojena",
-      "dismiss": "odbijena"
+      "dismiss": "odbijena",
+      "publish": "objavljeni",
+      "withdraw": "povučeni"
     },
     "status": {
       "pending": "Čeka",
@@ -1196,7 +1200,13 @@
       "effective_in_past": "Taj datum je prošao.",
       "note_required": "Napišite zašto (najmanje 3 znaka).",
       "not_in_force": "Ova odluka je već ukinuta.",
-      "already_decided": "Na ovo je već odgovoreno."
+      "already_decided": "Na ovo je već odgovoreno.",
+      "unchanged": "Ovaj tekst je već poslednja verzija.",
+      "summary_required": "Napišite šta se promenilo (najmanje 3 znaka).",
+      "upcoming_exists": "Jedna verzija već čeka da stupi na snagu: prvo je povucite.",
+      "terms_notice_too_short": "Novi uslovi za prevoznike važe najmanje 15 dana posle objave.",
+      "already_in_effect": "Ova verzija već važi: ne može da se povuče.",
+      "content_required": "Nema teksta za objavu."
     },
     "missing": {
       "tax_id": "poreski broj",
@@ -1274,7 +1284,32 @@
       "document_rejection": "Prigovor: provera dokumenta",
       "other": "Prigovor"
     },
-    "sentOn": "poslato {{date}}"
+    "sentOn": "poslato {{date}}",
+    "termsNav": "Uslovi",
+    "terms": {
+      "title": "Uslovi",
+      "intro": "Objavite uslove iz aplikacije kao novu verziju. Korisnici prihvataju verziju za svoju stranu pre nego što mogu da rezervišu ili da budu prikazani klijentima. Novi uslovi za prevoznike važe najmanje 15 dana posle objave (prva verzija odmah), a prevoznici se obaveštavaju u aplikaciji.",
+      "audience": {
+        "customer": "Uslovi za klijente",
+        "mover": "Uslovi za prevoznike"
+      },
+      "none": "Još ništa nije objavljeno: niko ne mora ništa da prihvati.",
+      "current": "Na snazi: verzija {{version}} od {{date}} · prihvatilo {{count}}",
+      "upcoming": "Čeka: verzija {{version}} od {{date}} · prihvatilo {{count}}",
+      "withdrawn": "Povučena: verzija {{version}}",
+      "appText": "Tekst u aplikaciji (izmenjen {{date}})",
+      "same": "To je poslednja objavljena verzija.",
+      "differs": "Razlikuje se od poslednje objavljene verzije.",
+      "effective": "Važi od (prazno: odmah)",
+      "effectiveMover": "Važi od — najmanje 15 dana od danas, osim prve verzije (prazno: odmah)",
+      "summary": "Šta se promenilo (korisnici to čitaju u obaveštenju; nije potrebno za prvu verziju)",
+      "publish": "Objavi kao novu verziju",
+      "withdraw": "Povuci…",
+      "withdrawNote": "Zašto (za evidenciju)",
+      "withdrawSend": "Povuci odmah",
+      "read": "Pročitaj tekst",
+      "past": "Ranije: verzija {{version}} od {{date}} · prihvatilo {{count}}"
+    }
   },
   "legal": {
     "titles": {
@@ -1288,5 +1323,42 @@
     "englishOnly": "Za sada je ovaj tekst na engleskom. Prevod sledi čim tekst bude konačan.",
     "updated": "Poslednja izmena: {{date}}",
     "contents": "Sadržaj"
+  },
+  "terms": {
+    "acceptTitle": "Pre nego što počnete",
+    "newTitle": "Novi uslovi",
+    "acceptText": {
+      "customer": "Pročitajte uslove za klijente i prihvatite ih da biste rezervisali kod prevoznika na MoversHub-u.",
+      "mover": "Pročitajte uslove za prevoznike i prihvatite ih da biste nudili selidbe na MoversHub-u."
+    },
+    "changedText": {
+      "customer": "Uslovi za klijente su se promenili: verzija {{version}} važi od {{date}}.",
+      "mover": "Uslovi za prevoznike su se promenili: verzija {{version}} važi od {{date}}."
+    },
+    "whatChanged": "Šta se promenilo: {{summary}}",
+    "read": {
+      "customer": "Pročitajte uslove za klijente",
+      "mover": "Pročitajte uslove za prevoznike"
+    },
+    "readPrivacy": "Pročitajte politiku privatnosti",
+    "checkbox": {
+      "customer": "Prihvatam uslove za klijente i potvrđujem da mi je politika privatnosti poznata.",
+      "mover": "Prihvatam uslove za prevoznike i potvrđujem da mi je politika privatnosti poznata."
+    },
+    "tickFirst": "Označite polje da biste prihvatili uslove.",
+    "accept": "Prihvati i nastavi",
+    "disagree": "Ne slažete se? Nalog možete da obrišete u „Vaš nalog”.",
+    "upcomingTitle": {
+      "customer": "Novi uslovi za klijente od {{date}}",
+      "mover": "Novi uslovi za prevoznike od {{date}}"
+    },
+    "upcomingText": {
+      "customer": "Do tada važe sadašnji uslovi.",
+      "mover": "Do tada važe sadašnji uslovi. Ako se ne slažete, nalog možete da obrišete pre toga."
+    },
+    "readNew": "Pročitajte ih",
+    "acceptNow": "Prihvati sada",
+    "versionLine": "Verzija {{version}} · važi od {{date}}",
+    "versionUnavailable": "Ova verzija trenutno ne može da se prikaže."
   }
 }

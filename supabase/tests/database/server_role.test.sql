@@ -1,6 +1,12 @@
 begin;
 select plan(3);
 
+-- Terms published on the project would leave these sample movers unquoted until they accept them
+-- (20261016100000, tested in terms.test.sql): set aside here, like everything else (rolled back).
+delete from public.terms_acceptances;
+delete from public.terms_notices;
+delete from public.terms_versions;
+
 -- The server role itself (edge functions and the website's server use it) — not the database owner
 -- the other tests switch back to with `reset role`.
 

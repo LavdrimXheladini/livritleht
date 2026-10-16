@@ -107,6 +107,9 @@ async function exportData(user: AuthUser) {
       'id,kind,flagged_by,reason_text,is_serious_violation,notice_sent_at,effective_at,lifted_at,created_at&notice_sent_at=not.is.null&order=created_at.desc',
     ),
     appeals: await byCompany('mover_appeals', 'id,suspension_id,subject,text,status,decision_reason,created_at,resolved_at&order=created_at.desc'),
+    // Which versions of the terms the account accepted, and when; notices of new terms to the company.
+    termsAccepted: await serviceRows('GET', `terms_acceptances?user_id=${eq(user.id)}&select=accepted_at,terms_versions(audience,version,effective_at)&order=accepted_at.desc`),
+    termsNotices: await byCompany('terms_notices', 'channel,sent_at,terms_versions(audience,version,effective_at)&order=sent_at.desc'),
     // MoversHub's decisions on the company's setup (who decided stays out: MoversHub's staff).
     reviewHistory: company
       ? await serviceRows('GET', `audit_log?entity_id=in.(${[company.id, ...documents.map((d) => d.id), ...vehicles.map((v) => v.id)].join(',')})&select=action,entity,entity_id,note,created_at&order=created_at.desc`)

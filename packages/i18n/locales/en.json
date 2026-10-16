@@ -962,6 +962,7 @@
       "insurance": "Their carrier insurance is valid on your move day.",
       "crossBorder": "Across a border: their CMR insurance is valid on your move day, their prices are in euros, and heavier vans have a tachograph and a valid operator licence.",
       "terms": "They have set their own prices and cancellation terms.",
+      "accepted": "They have accepted the terms for movers in effect.",
       "payouts": "They have set up payouts with MoversHub's payment provider.",
       "standing": "Their account is not suspended."
     },
@@ -1159,7 +1160,8 @@
       "mover_document": "Document",
       "vehicle": "Van",
       "suspension": "Decision",
-      "appeal": "Appeal"
+      "appeal": "Appeal",
+      "terms_version": "Terms"
     },
     "action": {
       "verify": "approved",
@@ -1167,7 +1169,9 @@
       "suspend": "decided",
       "lift": "lifted",
       "uphold": "upheld",
-      "dismiss": "rejected"
+      "dismiss": "rejected",
+      "publish": "published",
+      "withdraw": "withdrawn"
     },
     "status": {
       "pending": "Waiting",
@@ -1196,7 +1200,13 @@
       "effective_in_past": "That date has passed.",
       "note_required": "Write why (at least 3 characters).",
       "not_in_force": "This decision was already lifted.",
-      "already_decided": "This was already answered."
+      "already_decided": "This was already answered.",
+      "unchanged": "This text is already the latest version.",
+      "summary_required": "Say what changed (at least 3 characters).",
+      "upcoming_exists": "A version is already waiting to apply: withdraw it first.",
+      "terms_notice_too_short": "New terms for movers apply at least 15 days after publishing.",
+      "already_in_effect": "This version applies already: it can't be withdrawn.",
+      "content_required": "There is no text to publish."
     },
     "missing": {
       "tax_id": "tax number",
@@ -1274,7 +1284,32 @@
       "document_rejection": "Complaint: document check",
       "other": "Complaint"
     },
-    "sentOn": "sent {{date}}"
+    "sentOn": "sent {{date}}",
+    "termsNav": "Terms",
+    "terms": {
+      "title": "Terms",
+      "intro": "Publish the terms in the app as a new version. People accept the version for their side before they can book or be shown to customers. New terms for movers apply at least 15 days after publishing (the first version at once), and movers are told in the app.",
+      "audience": {
+        "customer": "Terms for customers",
+        "mover": "Terms for movers"
+      },
+      "none": "Nothing published yet: nobody is asked to accept anything.",
+      "current": "In effect: version {{version}} since {{date}} · accepted by {{count}}",
+      "upcoming": "Waiting: version {{version}} from {{date}} · accepted by {{count}}",
+      "withdrawn": "Withdrawn: version {{version}}",
+      "appText": "The text in the app (updated {{date}})",
+      "same": "It is the latest published version.",
+      "differs": "It differs from the latest published version.",
+      "effective": "Applies from (empty: at once)",
+      "effectiveMover": "Applies from — at least 15 days from today, except the first version (empty: at once)",
+      "summary": "What changed (people read this in the notice; not needed for the first version)",
+      "publish": "Publish as a new version",
+      "withdraw": "Withdraw…",
+      "withdrawNote": "Why (for the record)",
+      "withdrawSend": "Withdraw now",
+      "read": "Read the text",
+      "past": "Earlier: version {{version}} from {{date}} · accepted by {{count}}"
+    }
   },
   "legal": {
     "titles": {
@@ -1288,5 +1323,42 @@
     "englishOnly": "For now this text is in English. The translation follows once the text is final.",
     "updated": "Last updated: {{date}}",
     "contents": "Contents"
+  },
+  "terms": {
+    "acceptTitle": "Before you start",
+    "newTitle": "New terms",
+    "acceptText": {
+      "customer": "Read the terms for customers and accept them to book with movers on MoversHub.",
+      "mover": "Read the terms for movers and accept them to offer moves on MoversHub."
+    },
+    "changedText": {
+      "customer": "The terms for customers have changed: version {{version}} applies from {{date}}.",
+      "mover": "The terms for movers have changed: version {{version}} applies from {{date}}."
+    },
+    "whatChanged": "What changed: {{summary}}",
+    "read": {
+      "customer": "Read the terms for customers",
+      "mover": "Read the terms for movers"
+    },
+    "readPrivacy": "Read the privacy policy",
+    "checkbox": {
+      "customer": "I accept the terms for customers, and I have read the privacy policy.",
+      "mover": "I accept the terms for movers, and I have read the privacy policy."
+    },
+    "tickFirst": "Tick the box to accept the terms.",
+    "accept": "Accept and continue",
+    "disagree": "Don't agree? You can delete your account under \"Your account\".",
+    "upcomingTitle": {
+      "customer": "New terms for customers from {{date}}",
+      "mover": "New terms for movers from {{date}}"
+    },
+    "upcomingText": {
+      "customer": "Until then the current terms apply.",
+      "mover": "Until then the current terms apply. If you don't agree, you can delete your account before then."
+    },
+    "readNew": "Read them",
+    "acceptNow": "Accept now",
+    "versionLine": "Version {{version}} · applies from {{date}}",
+    "versionUnavailable": "This version can't be shown right now."
   }
 }

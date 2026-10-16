@@ -21,6 +21,8 @@ import { colors } from '@movershub/ui';
 
 import { CustomerHome } from '@/components/customer/customer-home';
 import { MoverHome } from '@/components/mover/mover-home';
+import { AcceptTermsScreen } from '@/components/terms';
+import { useTermsStatus } from '@/lib/terms';
 
 /**
  * Home (signed in only): the customer or the mover side, by the account's role. Before that, an
@@ -31,6 +33,8 @@ export default function Home() {
   const { t } = useTranslation();
   const { session, signOut, signingOut } = useAuth();
   const profile = useProfile();
+  // The terms are asked for alongside the profile, so they are known when the side is.
+  useTermsStatus(null);
   const email = session?.user.email;
   // Signed in by a code (to confirm a new account, after "Forgot password?", or "Create account" with an
   // address that already had an account): a password before anything else — also after a restart.
@@ -58,7 +62,7 @@ export default function Home() {
     return role === null ? (
       <ChooseRoleScreen preselected={pendingSignInFor(email)?.role ?? null} />
     ) : (
-      <SignedInHome role={role} email={email} />
+      <SignedInHome role={role} email={email} confirmed={!profile.data.fromDevice} />
     );
   }
   if (failed) {
@@ -83,7 +87,8 @@ export default function Home() {
   );
 }
 
-function SignedInHome({ role, email }: { role: UserRole; email: string | undefined }) {
+/** `confirmed`: the side came from the server (not the copy on this device, e.g. offline). */
+function SignedInHome({ role, email, confirmed }: { role: UserRole; email: string | undefined; confirmed: boolean }) {
   const { t } = useTranslation();
   // Asked for one role (on "Create account" or the chooser) for an email that already had an account
   // of the other kind: the code signed them in to that account. Say so once and point to the switch
@@ -99,6 +104,23 @@ function SignedInHome({ role, email }: { role: UserRole; email: string | undefin
   const [switched, setSwitched] = useState(false);
   if (!switched && role !== firstRole) setSwitched(true);
   useAnnouncement(switched ? (role === 'mover' ? t('mover.nowHere') : t('customer.nowHere')) : null);
+
+  // The terms for this side, once some apply: accepted before anything else (design/DECISIONS.md #34).
+  // While the side shown is the device's copy (the server not asked yet, or offline) the home shows
+  // at once and the terms follow when they are known; the server checks again when it matters.
+  const audience = role === 'customer' || role === 'mover' ? role : null;
+  const terms = useTermsStatus(audience);
+  if (terms.isPending && confirmed) {
+    return (
+      <View className="flex-1 items-center justify-center bg-stone-100">
+        <ActivityIndicator color={colors.brand[500]} accessibilityLabel={t('common.loading')} />
+      </View>
+    );
+  }
+  if (audience && terms.status?.mustAccept) {
+    const { mustAccept, firstTime } = terms.status;
+    return <AcceptTermsScreen key={mustAccept.id} audience={audience} version={mustAccept} firstTime={firstTime} />;
+  }
 
   const shown = switched ? null : notice;
   return role === 'mover' ? <MoverHome notice={shown} /> : <CustomerHome notice={shown} canSwitch={role !== 'admin'} />;

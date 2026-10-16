@@ -15,7 +15,7 @@ import { caller, type Caller } from '../_shared/auth.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
 import { quotableVehicles, routeKm } from '../_shared/quote-data.ts';
 import { rateLimited } from '../_shared/rate-limit.ts';
-import { serviceRows } from '../_shared/service.ts';
+import { serviceRows, serviceRpc } from '../_shared/service.ts';
 
 type CompanyRow = {
   legal_name: string;
@@ -52,6 +52,10 @@ Deno.serve(async (req) => {
     // The customer side books (admins use it too); a mover's or a new account's side doesn't.
     const [profile] = await serviceRows<{ role: string | null }>('GET', `profiles?id=eq.${who.userId}&select=role`);
     if (profile?.role !== 'customer' && profile?.role !== 'admin') return json(req, { error: 'customers_only' }, 403);
+    // The terms for customers in effect, accepted (COMPLIANCE §8; nothing to accept before the first version).
+    if (profile.role === 'customer' && (await serviceRpc<boolean>('terms_accepted', { p_user_id: who.userId, p_audience: 'customer' })) !== true) {
+      return json(req, { error: 'terms_not_accepted' }, 403);
+    }
 
     const priced = await priceBooking(body, { routeKm, quotableVehicles, bookingFee: BOOKING_FEE_RULE, now: new Date() });
     if (!priced.ok) {

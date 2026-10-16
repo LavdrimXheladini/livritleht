@@ -69,6 +69,7 @@ export const moverTerms: LegalText = {
             'your carrier insurance is valid on the move day;',
             'across a border: your CMR insurance is valid on the move day, your prices are in euros, and heavier vans have a tachograph and a valid operator licence;',
             'you have set your own prices and cancellation terms;',
+            'you have accepted these terms — the version in effect;',
             'you have set up payouts with MoversHub\'s payment provider;',
             'your account is not suspended.',
           ],

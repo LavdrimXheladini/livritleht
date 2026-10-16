@@ -962,6 +962,7 @@
       "insurance": "Seine Verkehrshaftungsversicherung gilt am Umzugstag.",
       "crossBorder": "Über eine Grenze: Seine CMR-Versicherung gilt am Umzugstag, die Preise sind in Euro, und schwerere Fahrzeuge haben einen Fahrtenschreiber und eine gültige Lizenz.",
       "terms": "Es hat seine eigenen Preise und Stornobedingungen festgelegt.",
+      "accepted": "Sie haben die geltenden AGB für Umzugsunternehmen akzeptiert.",
       "payouts": "Es hat Auszahlungen beim Zahlungsdienstleister von MoversHub eingerichtet.",
       "standing": "Sein Konto ist nicht gesperrt."
     },
@@ -1159,7 +1160,8 @@
       "mover_document": "Dokument",
       "vehicle": "Fahrzeug",
       "suspension": "Entscheidung",
-      "appeal": "Einspruch"
+      "appeal": "Einspruch",
+      "terms_version": "AGB"
     },
     "action": {
       "verify": "freigegeben",
@@ -1167,7 +1169,9 @@
       "suspend": "entschieden",
       "lift": "aufgehoben",
       "uphold": "stattgegeben",
-      "dismiss": "abgelehnt"
+      "dismiss": "abgelehnt",
+      "publish": "veröffentlicht",
+      "withdraw": "zurückgezogen"
     },
     "status": {
       "pending": "Wartet",
@@ -1196,7 +1200,13 @@
       "effective_in_past": "Dieses Datum ist vorbei.",
       "note_required": "Schreib, warum (mindestens 3 Zeichen).",
       "not_in_force": "Diese Entscheidung wurde schon aufgehoben.",
-      "already_decided": "Darauf wurde schon geantwortet."
+      "already_decided": "Darauf wurde schon geantwortet.",
+      "unchanged": "Dieser Text ist schon die neueste Version.",
+      "summary_required": "Schreib, was sich geändert hat (mindestens 3 Zeichen).",
+      "upcoming_exists": "Eine Version wartet bereits darauf, zu gelten: zieh sie zuerst zurück.",
+      "terms_notice_too_short": "Neue AGB für Umzugsunternehmen gelten frühestens 15 Tage nach der Veröffentlichung.",
+      "already_in_effect": "Diese Version gilt schon: Sie kann nicht zurückgezogen werden.",
+      "content_required": "Es gibt keinen Text zum Veröffentlichen."
     },
     "missing": {
       "tax_id": "Steuernummer",
@@ -1274,7 +1284,32 @@
       "document_rejection": "Beschwerde: Dokumentenprüfung",
       "other": "Beschwerde"
     },
-    "sentOn": "gesendet {{date}}"
+    "sentOn": "gesendet {{date}}",
+    "termsNav": "AGB",
+    "terms": {
+      "title": "AGB",
+      "intro": "Veröffentliche die AGB aus der App als neue Version. Nutzer akzeptieren die Version für ihre Seite, bevor sie buchen oder Kunden gezeigt werden können. Neue AGB für Umzugsunternehmen gelten frühestens 15 Tage nach der Veröffentlichung (die erste Version sofort), und Umzugsunternehmen werden in der App informiert.",
+      "audience": {
+        "customer": "AGB für Kunden",
+        "mover": "AGB für Umzugsunternehmen"
+      },
+      "none": "Noch nichts veröffentlicht: niemand muss etwas akzeptieren.",
+      "current": "In Kraft: Version {{version}} seit {{date}} · akzeptiert von {{count}}",
+      "upcoming": "Wartet: Version {{version}} ab {{date}} · akzeptiert von {{count}}",
+      "withdrawn": "Zurückgezogen: Version {{version}}",
+      "appText": "Der Text in der App (geändert {{date}})",
+      "same": "Er ist die zuletzt veröffentlichte Version.",
+      "differs": "Er weicht von der zuletzt veröffentlichten Version ab.",
+      "effective": "Gilt ab (leer: sofort)",
+      "effectiveMover": "Gilt ab — frühestens 15 Tage ab heute, außer bei der ersten Version (leer: sofort)",
+      "summary": "Was sich geändert hat (Nutzer lesen es in der Mitteilung; bei der ersten Version nicht nötig)",
+      "publish": "Als neue Version veröffentlichen",
+      "withdraw": "Zurückziehen…",
+      "withdrawNote": "Warum (für die Akte)",
+      "withdrawSend": "Jetzt zurückziehen",
+      "read": "Text lesen",
+      "past": "Früher: Version {{version}} ab {{date}} · akzeptiert von {{count}}"
+    }
   },
   "legal": {
     "titles": {
@@ -1288,5 +1323,42 @@
     "englishOnly": "Dieser Text ist vorerst auf Englisch. Die deutsche Fassung folgt, sobald der Text endgültig ist.",
     "updated": "Zuletzt geändert: {{date}}",
     "contents": "Inhalt"
+  },
+  "terms": {
+    "acceptTitle": "Bevor du loslegst",
+    "newTitle": "Neue AGB",
+    "acceptText": {
+      "customer": "Lies die AGB für Kunden und akzeptiere sie, um bei Umzugsunternehmen auf MoversHub zu buchen.",
+      "mover": "Lies die AGB für Umzugsunternehmen und akzeptiere sie, um Umzüge auf MoversHub anzubieten."
+    },
+    "changedText": {
+      "customer": "Die AGB für Kunden haben sich geändert: Version {{version}} gilt ab {{date}}.",
+      "mover": "Die AGB für Umzugsunternehmen haben sich geändert: Version {{version}} gilt ab {{date}}."
+    },
+    "whatChanged": "Was sich geändert hat: {{summary}}",
+    "read": {
+      "customer": "AGB für Kunden lesen",
+      "mover": "AGB für Umzugsunternehmen lesen"
+    },
+    "readPrivacy": "Datenschutzerklärung lesen",
+    "checkbox": {
+      "customer": "Ich akzeptiere die AGB für Kunden und habe die Datenschutzerklärung gelesen.",
+      "mover": "Ich akzeptiere die AGB für Umzugsunternehmen und habe die Datenschutzerklärung gelesen."
+    },
+    "tickFirst": "Setze das Häkchen, um die AGB zu akzeptieren.",
+    "accept": "Akzeptieren und weiter",
+    "disagree": "Nicht einverstanden? Du kannst dein Konto unter „Dein Konto“ löschen.",
+    "upcomingTitle": {
+      "customer": "Neue AGB für Kunden ab {{date}}",
+      "mover": "Neue AGB für Umzugsunternehmen ab {{date}}"
+    },
+    "upcomingText": {
+      "customer": "Bis dahin gelten die aktuellen AGB.",
+      "mover": "Bis dahin gelten die aktuellen AGB. Wenn du nicht einverstanden bist, kannst du dein Konto vorher löschen."
+    },
+    "readNew": "Lesen",
+    "acceptNow": "Jetzt akzeptieren",
+    "versionLine": "Version {{version}} · gilt ab {{date}}",
+    "versionUnavailable": "Diese Version kann gerade nicht angezeigt werden."
   }
 }
