@@ -12,10 +12,13 @@ import type { AdminSupabase } from './admin-session';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
-const TABS = ['pending', 'rejected', 'verified'] as const;
+const TABS = ['pending', 'rejected', 'verified', 'appeals'] as const;
 type Tab = (typeof TABS)[number];
 
-/** MoversHub's admin page: movers by where their check stands (design/DECISIONS.md #23). */
+/**
+ * MoversHub's admin page: movers by where their check stands (design/DECISIONS.md #23), and the
+ * movers' appeals and complaints waiting for an answer (#32).
+ */
 export default async function AdminPage({ params, searchParams }: PageProps<'/[lang]/admin'>) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
@@ -36,7 +39,7 @@ type Row = {
   id: string;
   legal_name: string;
   country: string;
-  verification_status: Tab;
+  verification_status: Exclude<Tab, 'appeals'>;
   updated_at: string;
   mover_documents: { verified_at: string | null }[];
   vehicles: { verified_at: string | null; active: boolean }[];
@@ -55,6 +58,28 @@ async function MoverList({
   const ta = getAdminT(locale);
   const requested = (await searchParams).status;
   const tab: Tab = TABS.includes(requested as Tab) ? (requested as Tab) : 'pending';
+  const nav = (
+    <nav className="flex flex-wrap gap-2" aria-label={ta('title')}>
+      {TABS.map((s) => (
+        <Link
+          key={s}
+          href={`/${locale}/admin?status=${s}`}
+          aria-current={s === tab ? 'page' : undefined}
+          className={`rounded-full px-4 py-2 text-sm font-medium ${s === tab ? 'bg-brand-500 text-stone-50' : 'border border-stone-300 text-ink-900'}`}
+        >
+          {ta(`tabs.${s}`)}
+        </Link>
+      ))}
+    </nav>
+  );
+  if (tab === 'appeals') {
+    return (
+      <div className="flex flex-col gap-5">
+        {nav}
+        <WaitingAppeals locale={locale} supabase={supabase} />
+      </div>
+    );
+  }
   const { data, error } = await supabase
     .from('mover_companies')
     .select('id, legal_name, country, verification_status, updated_at, mover_documents(verified_at), vehicles(verified_at, active)')
@@ -65,18 +90,7 @@ async function MoverList({
 
   return (
     <div className="flex flex-col gap-5">
-      <nav className="flex flex-wrap gap-2" aria-label={ta('title')}>
-        {TABS.map((s) => (
-          <Link
-            key={s}
-            href={`/${locale}/admin?status=${s}`}
-            aria-current={s === tab ? 'page' : undefined}
-            className={`rounded-full px-4 py-2 text-sm font-medium ${s === tab ? 'bg-brand-500 text-stone-50' : 'border border-stone-300 text-ink-900'}`}
-          >
-            {ta(`tabs.${s}`)}
-          </Link>
-        ))}
-      </nav>
+      {nav}
       {error ? <p className="text-danger">{t('common.errorGeneric')}</p> : null}
       {rows.length === 0 && !error ? <p className="text-ink-500">{ta('empty')}</p> : null}
       <ul className="flex flex-col gap-3">
@@ -102,5 +116,45 @@ async function MoverList({
         })}
       </ul>
     </div>
+  );
+}
+
+type AppealRow = { id: string; subject: string; text: string; created_at: string; company_id: string; mover_companies: { legal_name: string; country: string } };
+
+/** Appeals and complaints waiting for an answer, oldest first; each opens its mover, where it is answered. */
+async function WaitingAppeals({ locale, supabase }: { locale: Locale; supabase: AdminSupabase }) {
+  const t = getT(locale);
+  const ta = getAdminT(locale);
+  const { data, error } = await supabase
+    .from('mover_appeals')
+    .select('id, subject, text, created_at, company_id, mover_companies!inner(legal_name, country, is_test)')
+    .in('status', ['open', 'under_review'])
+    .eq('mover_companies.is_test', false)
+    .order('created_at', { ascending: true });
+  const rows = (data ?? []) as unknown as AppealRow[];
+  return (
+    <>
+      {error ? <p className="text-danger">{t('common.errorGeneric')}</p> : null}
+      {rows.length === 0 && !error ? <p className="text-ink-500">{ta('empty')}</p> : null}
+      <ul className="flex flex-col gap-3">
+        {rows.map((r) => (
+          <li key={r.id}>
+            <Link
+              href={`/${locale}/admin/movers/${r.company_id}`}
+              data-testid={`admin-waiting-appeal-${r.id}`}
+              className="flex flex-col gap-1 rounded-card border border-stone-300 bg-stone-50 p-4 hover:border-ink-300"
+            >
+              <span className="font-semibold text-ink-900">
+                {r.mover_companies.legal_name} · {r.mover_companies.country}
+              </span>
+              <span className="text-sm text-ink-600">
+                {ta(`appealSubject.${r.subject}`, { defaultValue: r.subject })} · {ta('sentOn', { date: r.created_at.slice(0, 10) })}
+              </span>
+              <span className="line-clamp-2 text-sm text-ink-900">“{r.text}”</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

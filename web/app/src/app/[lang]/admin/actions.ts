@@ -48,3 +48,87 @@ export async function review(_previous: ReviewResult | null, formData: FormData)
   revalidatePath(`/${lang}/admin`);
   return { ok: true };
 }
+
+/** What a decision about a mover, lifting it, or answering an appeal came to. */
+export type DecisionResult = { ok: true } | { ok: false; error: string };
+
+const DECISION_ERRORS = [
+  'admins_only',
+  'not_found',
+  'reason_required',
+  'kind_not_available',
+  'notice_too_short',
+  'effective_in_past',
+  'note_required',
+  'not_in_force',
+  'already_decided',
+];
+
+async function decided(lang: string, companyId: string, error: { message: string } | null): Promise<DecisionResult> {
+  if (error) return { ok: false, error: DECISION_ERRORS.includes(error.message) ? error.message : 'failed' };
+  revalidatePath(`/${lang}/admin/movers/${companyId}`);
+  revalidatePath(`/${lang}/admin`);
+  return { ok: true };
+}
+
+const suspendSchema = z.object({
+  lang: z.string().refine(isLocale),
+  companyId: z.uuid(),
+  kind: z.enum(['suspension', 'termination']),
+  reason: z.string().trim().max(4000),
+  serious: z.literal('on').optional(),
+});
+
+/**
+ * Suspends a mover or ends their account (COMPLIANCE §3): reviewed by this admin, with the reasons the
+ * mover reads in the app at once. A suspension applies now; an account ends 30 days after this notice,
+ * or now for a serious violation. Postgres checks the admin, the reasons and the notice, and logs it.
+ */
+export async function suspend(_previous: DecisionResult | null, formData: FormData): Promise<DecisionResult> {
+  const parsed = suspendSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, error: 'invalid_request' };
+  const { lang, companyId, kind, reason, serious } = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('admin_decide_suspension', {
+    p_company_id: companyId,
+    p_kind: kind,
+    p_reason: reason,
+    p_serious: kind === 'termination' && serious === 'on',
+  });
+  return decided(lang, companyId, error);
+}
+
+const liftSchema = z.object({
+  lang: z.string().refine(isLocale),
+  companyId: z.uuid(),
+  suspensionId: z.uuid(),
+  note: z.string().trim().max(1000),
+});
+
+/** Lifts a decision now, with a note for the record. */
+export async function lift(_previous: DecisionResult | null, formData: FormData): Promise<DecisionResult> {
+  const parsed = liftSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, error: 'invalid_request' };
+  const { lang, companyId, suspensionId, note } = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('admin_lift_suspension', { p_suspension_id: suspensionId, p_note: note });
+  return decided(lang, companyId, error);
+}
+
+const answerSchema = z.object({
+  lang: z.string().refine(isLocale),
+  companyId: z.uuid(),
+  appealId: z.uuid(),
+  upheld: z.enum(['true', 'false']).transform((v) => v === 'true'),
+  reason: z.string().trim().max(4000),
+});
+
+/** Answers an appeal or a complaint with reasons the mover reads; upholding an appeal lifts its decision. */
+export async function answerAppeal(_previous: DecisionResult | null, formData: FormData): Promise<DecisionResult> {
+  const parsed = answerSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, error: 'invalid_request' };
+  const { lang, companyId, appealId, upheld, reason } = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('admin_decide_appeal', { p_appeal_id: appealId, p_upheld: upheld, p_reason: reason });
+  return decided(lang, companyId, error);
+}

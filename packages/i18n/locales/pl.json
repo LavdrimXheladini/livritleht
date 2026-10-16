@@ -600,6 +600,59 @@
       },
       "upload": "Wgraj nowy dokument",
       "dismiss": "Rozumiem"
+    },
+    "decisions": {
+      "title": "Decyzje dotyczące twojego konta",
+      "inForce": {
+        "restriction": "Twoje konto jest ograniczone",
+        "suspension": "Twoje konto jest zawieszone",
+        "termination": "Twoje konto zostało zamknięte"
+      },
+      "coming": {
+        "restriction": "Twoje konto zostanie ograniczone od {{date}}",
+        "suspension": "Twoje konto zostanie zawieszone od {{date}}",
+        "termination": "Twoje konto zostanie zamknięte {{date}}"
+      },
+      "lifted": {
+        "restriction": "Ograniczenie zniesiono {{date}}",
+        "suspension": "Zawieszenie zniesiono {{date}}",
+        "termination": "Twoje konto nie zostanie zamknięte: decyzję uchylono {{date}}"
+      },
+      "what": {
+        "restriction": "Powody poniżej mówią, co ogranicza.",
+        "suspension": "Dopóki obowiązuje, klienci nie mogą cię zarezerwować.",
+        "termination": "Od tej chwili klienci nie mogą cię zarezerwować, a twoje konto zostaje zamknięte."
+      },
+      "serious": "Chodzi o poważne naruszenie, więc nie ma 30-dniowego wypowiedzenia.",
+      "reasons": "Powody MoversHub ({{date}}):",
+      "appealWaiting": "Odwołanie wysłane {{date}}. Osoba z MoversHub je przeczyta i odpowie tutaj, z uzasadnieniem.",
+      "appealUpheld": "Twoje odwołanie uwzględniono {{date}}:",
+      "appealRejected": "Twojego odwołania nie uwzględniono {{date}}:",
+      "appeal": "Odwołaj się",
+      "appealAgain": "Odwołaj się ponownie"
+    },
+    "appeals": {
+      "title": "Odwołania i skargi",
+      "subtitle": "Nie zgadzasz się z decyzją dotyczącą twojego konta albo z czymś innym w MoversHub? Napisz to tutaj. Osoba z MoversHub czyta każde odwołanie i każdą skargę i odpowiada tutaj, z uzasadnieniem.",
+      "noCompany": "Najpierw uzupełnij swoją firmę: odwołania i skargi dotyczą firmy w MoversHub.",
+      "appealLabel": "Dlaczego się nie zgadzasz?",
+      "complaintLabel": "Co się stało?",
+      "hint": "Co najmniej 10 znaków. Opisz, co się stało, z datami i zleceniem, jeśli możesz.",
+      "sendAppeal": "Wyślij odwołanie",
+      "sendComplaint": "Wyślij skargę",
+      "sent": "Wysłano. Osoba z MoversHub to przeczyta i odpowie tutaj.",
+      "complaintTitle": "Coś innego",
+      "complaintText": "Problem z samym MoversHub — zlecenie, aplikacja, sprawdzenie twoich dokumentów, wypłata.",
+      "yourComplaints": "Twoje skargi",
+      "sentOn": "Wysłano {{date}}",
+      "waiting": "Czeka na odpowiedź.",
+      "answered": "MoversHub odpowiedział {{date}}:",
+      "errors": {
+        "appeal_too_short": "Napisz co najmniej 10 znaków.",
+        "appeal_too_long": "Napisz najwyżej 4000 znaków.",
+        "not_appealable": "Ta decyzja już nie obowiązuje, więc nie ma od czego się odwoływać.",
+        "too_many_open": "Trzy twoje odwołania i skargi czekają na odpowiedź. Wyślij kolejne, gdy na jedno przyjdzie odpowiedź."
+      }
     }
   },
   "places": {
@@ -1056,7 +1109,8 @@
     "tabs": {
       "pending": "Czekają na sprawdzenie",
       "rejected": "Poproszono o zmiany",
-      "verified": "Zatwierdzeni"
+      "verified": "Zatwierdzeni",
+      "appeals": "Odwołania czekające"
     },
     "empty": "Nikogo tu nie ma.",
     "waitingCounts": "czeka {{documents}} dokumentów i {{vans}} pojazdów",
@@ -1103,11 +1157,17 @@
     "entity": {
       "mover_company": "Firma",
       "mover_document": "Dokument",
-      "vehicle": "Pojazd"
+      "vehicle": "Pojazd",
+      "suspension": "Decyzja",
+      "appeal": "Odwołanie"
     },
     "action": {
       "verify": "zatwierdzono",
-      "reject": "poproszono o zmiany"
+      "reject": "poproszono o zmiany",
+      "suspend": "podjęta",
+      "lift": "zniesiona",
+      "uphold": "uwzględnione",
+      "dismiss": "odrzucone"
     },
     "status": {
       "pending": "Czeka",
@@ -1129,7 +1189,14 @@
       "review_note_required": "Napisz uwagę dla przewoźnika.",
       "document_expired": "Ten dokument wygasł.",
       "failed": "Nie udało się. Spróbuj ponownie.",
-      "invalid_request": "Nie udało się. Spróbuj ponownie."
+      "invalid_request": "Nie udało się. Spróbuj ponownie.",
+      "reason_required": "Napisz powody (co najmniej 10 znaków).",
+      "kind_not_available": "Ten rodzaj decyzji nie jest jeszcze dostępny.",
+      "notice_too_short": "Zamknięcie konta wymaga 30-dniowego wypowiedzenia, chyba że chodzi o poważne naruszenie.",
+      "effective_in_past": "Ta data już minęła.",
+      "note_required": "Napisz dlaczego (co najmniej 3 znaki).",
+      "not_in_force": "Ta decyzja została już zniesiona.",
+      "already_decided": "Na to już odpowiedziano."
     },
     "missing": {
       "tax_id": "numer podatkowy",
@@ -1142,6 +1209,71 @@
       "document_registration": "zatwierdzony odpis z rejestru",
       "document_id": "zatwierdzony dokument tożsamości",
       "document_insurance": "zatwierdzone, ważne ubezpieczenie"
-    }
+    },
+    "decisionsTitle": "Decyzje dotyczące tego przewoźnika",
+    "decisionsIntro": "Zawieś przewoźnika albo zamknij jego konto, z powodami, które od razu przeczyta w aplikacji. Decydujesz ty, jako osoba — system może tylko oznaczyć. Każda decyzja i odpowiedź jest zapisywana.",
+    "decisionState": {
+      "in_force": "Obowiązuje",
+      "coming": "Od {{date}}",
+      "lifted": "Zniesiona {{date}}"
+    },
+    "toldOn": "przewoźnik powiadomiony {{date}}",
+    "flaggedBy": {
+      "admin": "decyzja administratora",
+      "algorithm": "oznaczone przez system",
+      "customer_report": "po zgłoszeniu klienta"
+    },
+    "seriousViolation": "poważne naruszenie",
+    "reasonsToMover": "Powody dla przewoźnika",
+    "decide": {
+      "open": "Zawieś lub zamknij konto…",
+      "kind": "Decyzja",
+      "kinds": {
+        "restriction": "Ograniczenie",
+        "suspension": "Zawieszenie",
+        "termination": "Zamknięcie konta"
+      },
+      "when": {
+        "suspension": "obowiązuje od razu, do zniesienia",
+        "termination": "wchodzi w życie 30 dni po tym powiadomieniu"
+      },
+      "serious": "Poważne naruszenie (oszustwo, działalność niezgodna z prawem, powtarzające się poważne naruszenia): konto zostaje zamknięte od razu, bez 30 dni",
+      "reason": "Powody (przewoźnik przeczyta je tak, jak są napisane; co najmniej 10 znaków)",
+      "reviewed": "To ty rozpatrujesz tę decyzję; twoje konto zostaje przy niej zapisane.",
+      "send": {
+        "suspension": "Zawieś teraz",
+        "termination": "Zamknij konto"
+      }
+    },
+    "lift": {
+      "open": "Znieś…",
+      "note": "Dlaczego jest znoszona (do akt)",
+      "send": "Znieś teraz"
+    },
+    "answer": {
+      "reason": "Twoja odpowiedź (przewoźnik przeczyta ją tak, jak jest napisana; co najmniej 10 znaków)",
+      "uphold": "Uwzględnij — znieś decyzję",
+      "reject": "Odrzuć",
+      "agree": "Zgadzam się",
+      "disagree": "Nie zgadzam się"
+    },
+    "complaintsTitle": "Skargi",
+    "appealOn": "Odwołanie z {{date}}",
+    "complaintOn": "Skarga z {{date}}",
+    "appealStatus": {
+      "open": "czeka",
+      "under_review": "rozpatrywane",
+      "upheld": "uwzględnione",
+      "rejected": "odrzucone"
+    },
+    "answerToMover": "Odpowiedź dla przewoźnika ({{date}})",
+    "appealSubject": {
+      "restriction": "Odwołanie: ograniczenie",
+      "suspension": "Odwołanie: zawieszenie",
+      "termination": "Odwołanie: zamknięcie konta",
+      "document_rejection": "Skarga: sprawdzenie dokumentu",
+      "other": "Skarga"
+    },
+    "sentOn": "wysłano {{date}}"
   }
 }

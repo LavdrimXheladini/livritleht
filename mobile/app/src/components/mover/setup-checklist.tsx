@@ -11,6 +11,7 @@ import { useMoverDocuments } from '@/lib/mover-documents';
 import { useRateCards, useServiceAreas } from '@/lib/rates';
 import { useVehicles } from '@/lib/vehicles';
 
+import { DecisionNotices } from './decisions';
 import { IconRow } from './icon-row';
 import { Reminders } from './reminders';
 
@@ -30,7 +31,10 @@ const STATUS_TONE: Record<StepStatus, PillTone> = {
   expired: 'accent',
 };
 
-/** Signed in: welcome, reminders (documents ending), the setup checklist and when location is shared. */
+/**
+ * Signed in: welcome, decisions about the account (a suspension, the account ending), reminders
+ * (documents ending), the setup checklist and when location is shared.
+ */
 export function SetupChecklist() {
   const { t } = useTranslation();
   return (
@@ -39,6 +43,7 @@ export function SetupChecklist() {
         <Display tone="dark">{t('mover.homeTitle')}</Display>
         <Text className="font-sans text-[15px] leading-[22px] text-sage-400">{t('mover.homeSubtitle')}</Text>
       </View>
+      <DecisionNotices />
       <Reminders />
       <DarkPanel className="gap-4">
         <Display size={22} tone="dark">

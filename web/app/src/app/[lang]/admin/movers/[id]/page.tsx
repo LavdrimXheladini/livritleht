@@ -3,11 +3,13 @@ import { notFound } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
 
 import { isLocale, type Locale } from '@movershub/i18n';
+import { decisionState } from '@movershub/shared';
 
 import { getAdminT, getT } from '@/lib/i18n';
 
 import { AdminFrame, AdminGate } from '../../admin-frame';
 import type { AdminSupabase } from '../../admin-session';
+import { AnswerForm, LiftForm, SuspendForm } from '../../decision-forms';
 import { ReviewButtons } from '../../review-buttons';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -78,6 +80,21 @@ type Van = {
 };
 type RegistryCheck = { register: string; result: string; tax_id: string; registered_name: string | null; registered_address: string | null; checked_at: string };
 type Entry = { action: string; entity: string; note: string | null; created_at: string };
+type Appeal = { id: string; suspension_id: string | null; subject: string; text: string; status: string; decision_reason: string | null; created_at: string; resolved_at: string | null };
+type Decision = {
+  id: string;
+  kind: 'restriction' | 'suspension' | 'termination';
+  flagged_by: string;
+  reason_text: string;
+  is_serious_violation: boolean;
+  notice_sent_at: string | null;
+  effective_at: string | null;
+  lifted_at: string | null;
+  created_at: string;
+  mover_appeals: Appeal[];
+};
+const APPEAL = 'id, suspension_id, subject, text, status, decision_reason, created_at, resolved_at';
+const waiting = (a: Appeal) => a.status === 'open' || a.status === 'under_review';
 
 const day = (iso: string | null) => (iso ? iso.slice(0, 10) : '—');
 
@@ -94,17 +111,31 @@ async function MoverDetails({ locale, id, supabase }: { locale: Locale; id: stri
   if (!companyData) return <p className="text-ink-700">{ta('notFound')}</p>;
   const company = companyData as Company;
 
-  const [documents, vans, checks, phones, cards, areas] = await Promise.all([
+  const [documents, vans, checks, phones, cards, areas, suspensions, complaintRows] = await Promise.all([
     supabase.from('mover_documents').select('id, type, file_path, expires_at, verified_at, review_note').eq('company_id', id),
     supabase.from('vehicles').select('id, class, plate, max_weight_kg, volume_m3, has_tail_lift, tachograph, active, verified_at, review_note').eq('company_id', id).order('created_at'),
     supabase.from('company_registry_checks').select('register, result, tax_id, registered_name, registered_address, checked_at').eq('user_id', company.owner_id).order('checked_at', { ascending: false }).limit(5),
     supabase.from('phone_verifications').select('phone').eq('user_id', company.owner_id),
     supabase.from('rate_cards').select('vehicle_id, currency, confirmed_by_mover_at, vehicles!inner(company_id)').eq('vehicles.company_id', id),
     supabase.from('service_areas').select('label, radius_km').eq('company_id', id),
+    supabase
+      .from('suspensions')
+      .select(`id, kind, flagged_by, reason_text, is_serious_violation, notice_sent_at, effective_at, lifted_at, created_at, mover_appeals(${APPEAL})`)
+      .eq('company_id', id)
+      .order('created_at', { ascending: false }),
+    supabase.from('mover_appeals').select(APPEAL).eq('company_id', id).is('suspension_id', null).order('created_at', { ascending: false }),
   ]);
+  const decisions = (suspensions.data ?? []) as Decision[];
+  const complaints = (complaintRows.data ?? []) as Appeal[];
   const docs = (documents.data ?? []) as Document[];
   const vehicles = (vans.data ?? []) as Van[];
-  const ids = [company.id, ...docs.map((d) => d.id), ...vehicles.map((v) => v.id)];
+  const ids = [
+    company.id,
+    ...docs.map((d) => d.id),
+    ...vehicles.map((v) => v.id),
+    ...decisions.flatMap((d) => [d.id, ...d.mover_appeals.map((a) => a.id)]),
+    ...complaints.map((c) => c.id),
+  ];
   const { data: history } = await supabase.from('audit_log').select('action, entity, note, created_at').in('entity_id', ids).order('created_at', { ascending: false }).limit(30);
   // Links to the private files, valid for 10 minutes (the admin's session may read them).
   const links = new Map<string, string>();
@@ -227,6 +258,35 @@ async function MoverDetails({ locale, id, supabase }: { locale: Locale; id: stri
         </p>
       </Section>
 
+      <Section title={ta('decisionsTitle')}>
+        <p className="text-sm text-ink-600">{ta('decisionsIntro')}</p>
+        {decisions.map((d) => {
+          const state = decisionState(d);
+          return (
+            <Item key={d.id} title={ta(`decide.kinds.${d.kind}`)} aside={<span className="text-xs font-medium text-ink-700">{ta(`decisionState.${state}`, { date: day(state === 'lifted' ? d.lifted_at : d.effective_at) })}</span>}>
+              <p className="text-sm text-ink-700" data-testid={`admin-decision-${d.id}`}>
+                {ta('toldOn', { date: day(d.notice_sent_at) })} · {ta(`flaggedBy.${d.flagged_by}`, { defaultValue: d.flagged_by })}
+                {d.is_serious_violation ? ` · ${ta('seriousViolation')}` : ''}
+              </p>
+              <Note text={d.reason_text} ta={ta} label={ta('reasonsToMover')} />
+              {d.mover_appeals.map((a) => (
+                <AppealItem key={a.id} appeal={a} locale={locale} companyId={company.id} ta={ta} />
+              ))}
+              {state !== 'lifted' && !d.mover_appeals.some(waiting) ? <LiftForm lang={locale} companyId={company.id} suspensionId={d.id} /> : null}
+            </Item>
+          );
+        })}
+        <SuspendForm lang={locale} companyId={company.id} />
+      </Section>
+
+      {complaints.length ? (
+        <Section title={ta('complaintsTitle')}>
+          {complaints.map((c) => (
+            <AppealItem key={c.id} appeal={c} locale={locale} companyId={company.id} ta={ta} />
+          ))}
+        </Section>
+      ) : null}
+
       <Section title={ta('history')}>
         {(history ?? []).length === 0 ? <p className="text-sm text-ink-600">{ta('none')}</p> : null}
         <ul className="flex flex-col gap-1 text-sm text-ink-700">
@@ -286,11 +346,26 @@ function Status({ value, ta }: { value: 'pending' | 'verified' | 'rejected' | 'i
   return <span className={`rounded-full px-3 py-1 text-xs font-medium ${tone}`}>{ta(`status.${value}`)}</span>;
 }
 
-function Note({ text, ta }: { text: string; ta: TA }) {
+function Note({ text, ta, label }: { text: string; ta: TA; label?: string }) {
   return (
-    <p className="rounded-md bg-stone-150 px-3 py-2 text-sm text-ink-900">
-      <span className="text-ink-500">{ta('noteToMover')}: </span>
+    <p className="rounded-md bg-stone-150 px-3 py-2 text-sm whitespace-pre-line text-ink-900">
+      <span className="text-ink-500">{label ?? ta('noteToMover')}: </span>
       {text}
     </p>
+  );
+}
+
+/** An appeal of a decision, or a complaint: what the mover wrote, and the answer or the form to give it. */
+function AppealItem({ appeal, locale, companyId, ta }: { appeal: Appeal; locale: Locale; companyId: string; ta: TA }) {
+  return (
+    <div className="flex flex-col gap-2 rounded-md border border-stone-300 p-3" data-testid={`admin-appeal-${appeal.id}`}>
+      <p className="text-sm font-medium text-ink-900">
+        {appeal.suspension_id ? ta('appealOn', { date: day(appeal.created_at) }) : ta('complaintOn', { date: day(appeal.created_at) })} ·{' '}
+        {ta(`appealStatus.${appeal.status}`, { defaultValue: appeal.status })}
+      </p>
+      <p className="text-sm whitespace-pre-line text-ink-900">“{appeal.text}”</p>
+      {appeal.decision_reason ? <Note text={appeal.decision_reason} ta={ta} label={ta('answerToMover', { date: day(appeal.resolved_at) })} /> : null}
+      {waiting(appeal) ? <AnswerForm lang={locale} companyId={companyId} appealId={appeal.id} complaint={appeal.suspension_id === null} /> : null}
+    </div>
   );
 }

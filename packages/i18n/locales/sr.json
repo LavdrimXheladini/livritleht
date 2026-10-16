@@ -600,6 +600,59 @@
       },
       "upload": "Otpremi novi dokument",
       "dismiss": "U redu"
+    },
+    "decisions": {
+      "title": "Odluke o vašem nalogu",
+      "inForce": {
+        "restriction": "Vaš nalog je ograničen",
+        "suspension": "Vaš nalog je suspendovan",
+        "termination": "Vaš nalog je ugašen"
+      },
+      "coming": {
+        "restriction": "Vaš nalog će biti ograničen od {{date}}",
+        "suspension": "Vaš nalog će biti suspendovan od {{date}}",
+        "termination": "Vaš nalog se gasi {{date}}"
+      },
+      "lifted": {
+        "restriction": "Ograničenje je ukinuto {{date}}",
+        "suspension": "Suspenzija je ukinuta {{date}}",
+        "termination": "Vaš nalog se više ne gasi: odluka je ukinuta {{date}}"
+      },
+      "what": {
+        "restriction": "Razlozi ispod kažu šta ograničava.",
+        "suspension": "Dok važi, klijenti ne mogu da vas rezervišu.",
+        "termination": "Od tada klijenti ne mogu da vas rezervišu, a vaš nalog se zatvara."
+      },
+      "serious": "Reč je o teškom prekršaju, pa nema otkaznog roka od 30 dana.",
+      "reasons": "Razlozi MoversHub-a ({{date}}):",
+      "appealWaiting": "Uložili ste žalbu {{date}}. Osoba iz MoversHub-a je čita i odgovara ovde, sa obrazloženjem.",
+      "appealUpheld": "Vaša žalba je usvojena {{date}}:",
+      "appealRejected": "Vaša žalba nije usvojena {{date}}:",
+      "appeal": "Uložite žalbu",
+      "appealAgain": "Uložite žalbu ponovo"
+    },
+    "appeals": {
+      "title": "Žalbe i prigovori",
+      "subtitle": "Ne slažete se sa odlukom o vašem nalogu ili sa nečim drugim na MoversHub-u? Napišite to ovde. Osoba iz MoversHub-a čita svaku žalbu i svaki prigovor i odgovara ovde, sa obrazloženjem.",
+      "noCompany": "Prvo popunite podatke o firmi: žalbe i prigovori se odnose na firmu na MoversHub-u.",
+      "appealLabel": "Zašto se ne slažete?",
+      "complaintLabel": "Šta se dogodilo?",
+      "hint": "Najmanje 10 znakova. Opišite šta se dogodilo, sa datumima i poslom ako možete.",
+      "sendAppeal": "Pošaljite žalbu",
+      "sendComplaint": "Pošaljite prigovor",
+      "sent": "Poslato. Osoba iz MoversHub-a će to pročitati i odgovoriti ovde.",
+      "complaintTitle": "Nešto drugo",
+      "complaintText": "Problem sa samim MoversHub-om — posao, aplikacija, provera vaših dokumenata, isplata.",
+      "yourComplaints": "Vaši prigovori",
+      "sentOn": "Poslato {{date}}",
+      "waiting": "Čeka odgovor.",
+      "answered": "MoversHub je odgovorio {{date}}:",
+      "errors": {
+        "appeal_too_short": "Napišite najmanje 10 znakova.",
+        "appeal_too_long": "Napišite najviše 4000 znakova.",
+        "not_appealable": "Ova odluka više ne važi, pa nema na šta da se žalite.",
+        "too_many_open": "Tri vaše žalbe i prigovora čekaju odgovor. Pošaljite nove kada na jedan stigne odgovor."
+      }
     }
   },
   "places": {
@@ -1056,7 +1109,8 @@
     "tabs": {
       "pending": "Čekaju proveru",
       "rejected": "Tražene izmene",
-      "verified": "Odobreni"
+      "verified": "Odobreni",
+      "appeals": "Žalbe na čekanju"
     },
     "empty": "Nema nikoga.",
     "waitingCounts": "čeka {{documents}} dokumenata i {{vans}} vozila",
@@ -1103,11 +1157,17 @@
     "entity": {
       "mover_company": "Firma",
       "mover_document": "Dokument",
-      "vehicle": "Vozilo"
+      "vehicle": "Vozilo",
+      "suspension": "Odluka",
+      "appeal": "Žalba"
     },
     "action": {
       "verify": "odobreno",
-      "reject": "tražene izmene"
+      "reject": "tražene izmene",
+      "suspend": "doneta",
+      "lift": "ukinuta",
+      "uphold": "usvojena",
+      "dismiss": "odbijena"
     },
     "status": {
       "pending": "Čeka",
@@ -1129,7 +1189,14 @@
       "review_note_required": "Napišite napomenu za prevoznika.",
       "document_expired": "Ovaj dokument je istekao.",
       "failed": "Nije uspelo. Pokušajte ponovo.",
-      "invalid_request": "Nije uspelo. Pokušajte ponovo."
+      "invalid_request": "Nije uspelo. Pokušajte ponovo.",
+      "reason_required": "Napišite razloge (najmanje 10 znakova).",
+      "kind_not_available": "Ova vrsta odluke još nije dostupna.",
+      "notice_too_short": "Gašenje naloga traži obaveštenje 30 dana unapred, osim kod teškog prekršaja.",
+      "effective_in_past": "Taj datum je prošao.",
+      "note_required": "Napišite zašto (najmanje 3 znaka).",
+      "not_in_force": "Ova odluka je već ukinuta.",
+      "already_decided": "Na ovo je već odgovoreno."
     },
     "missing": {
       "tax_id": "poreski broj",
@@ -1142,6 +1209,71 @@
       "document_registration": "odobren izvod iz registra",
       "document_id": "odobren lični dokument",
       "document_insurance": "odobreno, važeće osiguranje"
-    }
+    },
+    "decisionsTitle": "Odluke o ovom prevozniku",
+    "decisionsIntro": "Suspendujte prevoznika ili ugasite njegov nalog, sa razlozima koje odmah čita u aplikaciji. Odlučujete vi, kao osoba — sistem može samo da označi. Svaka odluka i odgovor se beleže.",
+    "decisionState": {
+      "in_force": "Na snazi",
+      "coming": "Od {{date}}",
+      "lifted": "Ukinuta {{date}}"
+    },
+    "toldOn": "prevoznik obavešten {{date}}",
+    "flaggedBy": {
+      "admin": "odluka administratora",
+      "algorithm": "označio sistem",
+      "customer_report": "posle prijave klijenta"
+    },
+    "seriousViolation": "težak prekršaj",
+    "reasonsToMover": "Razlozi za prevoznika",
+    "decide": {
+      "open": "Suspendujte ili ugasite nalog…",
+      "kind": "Odluka",
+      "kinds": {
+        "restriction": "Ograničenje",
+        "suspension": "Suspenzija",
+        "termination": "Gašenje naloga"
+      },
+      "when": {
+        "suspension": "važi odmah, dok se ne ukine",
+        "termination": "stupa na snagu 30 dana posle ovog obaveštenja"
+      },
+      "serious": "Težak prekršaj (prevara, nezakonita delatnost, ponovljeni teški prekršaji): nalog se gasi odmah, bez 30 dana",
+      "reason": "Razlozi (prevoznik ih čita onako kako su napisani; najmanje 10 znakova)",
+      "reviewed": "Vi ste osoba koja razmatra ovu odluku; vaš nalog se beleži uz nju.",
+      "send": {
+        "suspension": "Suspenduj odmah",
+        "termination": "Ugasi nalog"
+      }
+    },
+    "lift": {
+      "open": "Ukini…",
+      "note": "Zašto se ukida (za evidenciju)",
+      "send": "Ukini odmah"
+    },
+    "answer": {
+      "reason": "Vaš odgovor (prevoznik ga čita onako kako je napisan; najmanje 10 znakova)",
+      "uphold": "Usvoji — ukini odluku",
+      "reject": "Odbij",
+      "agree": "Slažem se",
+      "disagree": "Ne slažem se"
+    },
+    "complaintsTitle": "Prigovori",
+    "appealOn": "Žalba od {{date}}",
+    "complaintOn": "Prigovor od {{date}}",
+    "appealStatus": {
+      "open": "čeka",
+      "under_review": "u razmatranju",
+      "upheld": "usvojena",
+      "rejected": "odbijena"
+    },
+    "answerToMover": "Odgovor prevozniku ({{date}})",
+    "appealSubject": {
+      "restriction": "Žalba: ograničenje",
+      "suspension": "Žalba: suspenzija",
+      "termination": "Žalba: gašenje naloga",
+      "document_rejection": "Prigovor: provera dokumenta",
+      "other": "Prigovor"
+    },
+    "sentOn": "poslato {{date}}"
   }
 }

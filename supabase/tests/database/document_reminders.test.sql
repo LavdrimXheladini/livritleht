@@ -23,21 +23,31 @@ values
   ('00000000-0000-0000-0000-0000000dd704', '00000000-0000-0000-0000-0000000aa701', 'id', 'aa701/id.pdf', '2027-01-30 00:00+00'),
   ('00000000-0000-0000-0000-0000000dd705', '00000000-0000-0000-0000-0000000aa702', 'insurance', 'aa702/insurance.pdf', '2026-11-02 00:00+00');
 
-select is(public.queue_document_reminders('2026-11-01 00:00+00'), 3, 'three documents are due a reminder');
+-- The fixture mover's new reminders from one run (the project may hold real movers' documents too).
+create function pg_temp.queued(p_now timestamptz) returns int language plpgsql as $$
+declare
+  before uuid[] := array(select id from public.mover_reminders where company_id = '00000000-0000-0000-0000-0000000aa701');
+begin
+  perform public.queue_document_reminders(p_now);
+  return (select count(*) from public.mover_reminders where company_id = '00000000-0000-0000-0000-0000000aa701' and id <> all (before));
+end;
+$$;
+
+select is(pg_temp.queued('2026-11-01 00:00+00'), 3, 'three documents are due a reminder');
 select is(
   (select string_agg(document_type || ':' || kind || ':' || days_before, ',' order by document_type::text)
    from public.mover_reminders where company_id = '00000000-0000-0000-0000-0000000aa701'),
   'cmr:document_ending:3,insurance:document_ending:30,licence:document_ended:0',
   'each gets the reminder of its stage: the nearest of 30, 14, 3 days before, or ended');
 select is((select count(*)::int from public.mover_reminders where company_id = '00000000-0000-0000-0000-0000000aa702'), 0, 'test movers get none');
-select is(public.queue_document_reminders('2026-11-01 12:00+00'), 0, 'the same day again: nothing new (each reminder once)');
-select is(public.queue_document_reminders('2026-11-08 00:00+00'), 2,
+select is(pg_temp.queued('2026-11-01 12:00+00'), 0, 'the same day again: nothing new (each reminder once)');
+select is(pg_temp.queued('2026-11-08 00:00+00'), 2,
   'a week later: the insurance (13 days away) gets its 14-day reminder, and the CMR insurance has ended');
-select is(public.queue_document_reminders('2026-11-18 00:00+00'), 1, '…and its 3-day reminder when it gets close');
+select is(pg_temp.queued('2026-11-18 00:00+00'), 1, '…and its 3-day reminder when it gets close');
 
 -- A new CMR insurance (a new end date): the reminders about the old date go.
 update public.mover_documents set expires_at = '2027-11-03 00:00+00' where id = '00000000-0000-0000-0000-0000000dd702';
-select is(public.queue_document_reminders('2026-11-18 00:00+00'), 0, 'a new end date far away: nothing due');
+select is(pg_temp.queued('2026-11-18 00:00+00'), 0, 'a new end date far away: nothing due');
 select is((select count(*)::int from public.mover_reminders where document_id = '00000000-0000-0000-0000-0000000dd702'), 0,
   'the reminders about the replaced end date are gone');
 
@@ -57,7 +67,7 @@ select is((select count(*)::int from public.mover_reminders), 0, 'another mover 
 
 reset role;
 select set_config('request.jwt.claims', '', true);
-select is((select read_at is not null from public.mover_reminders where document_type = 'licence'), true, 'the reminder is marked read');
+select is((select read_at is not null from public.mover_reminders where document_id = '00000000-0000-0000-0000-0000000dd703'), true, 'the reminder is marked read');
 select is((select count(*)::int from cron.job where jobname = 'queue-document-reminders'), 1, 'the job runs daily (pg_cron)');
 
 select * from finish();

@@ -27,6 +27,8 @@ export const RETENTION_CATEGORIES = [
   'company_registry_checks',
   'booking_requests',
   'mover_reminders',
+  'suspensions',
+  'mover_appeals',
 ] as const;
 export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
@@ -66,4 +68,10 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   // Reminders before a mover's documents end (public.mover_reminders): useful until read and sent;
   // they go with the document or the account (on delete cascade).
   mover_reminders: { keepDays: null, from: 'created', holdIfDisputeOpen: false },
+  // Decisions about a mover (public.suspensions) and their appeals and complaints (public.mover_appeals,
+  // COMPLIANCE §3): the record of how each was handled. A company with a decision can't be deleted
+  // by its owner (the account function refuses it) until these may go; complaints about anything
+  // else go with the account.
+  suspensions: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
+  mover_appeals: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
 };

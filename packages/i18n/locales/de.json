@@ -600,6 +600,59 @@
       },
       "upload": "Neues Dokument hochladen",
       "dismiss": "Verstanden"
+    },
+    "decisions": {
+      "title": "Entscheidungen über dein Konto",
+      "inForce": {
+        "restriction": "Dein Konto ist eingeschränkt",
+        "suspension": "Dein Konto ist gesperrt",
+        "termination": "Dein Konto ist beendet"
+      },
+      "coming": {
+        "restriction": "Dein Konto wird ab {{date}} eingeschränkt",
+        "suspension": "Dein Konto wird ab {{date}} gesperrt",
+        "termination": "Dein Konto endet am {{date}}"
+      },
+      "lifted": {
+        "restriction": "Die Einschränkung wurde am {{date}} aufgehoben",
+        "suspension": "Die Sperre wurde am {{date}} aufgehoben",
+        "termination": "Dein Konto endet nicht mehr: Die Entscheidung wurde am {{date}} aufgehoben"
+      },
+      "what": {
+        "restriction": "Die Gründe unten sagen, was sie einschränkt.",
+        "suspension": "Solange sie gilt, können Kunden dich nicht buchen.",
+        "termination": "Ab dann können Kunden dich nicht buchen, und dein Konto wird geschlossen."
+      },
+      "serious": "Es geht um einen schweren Verstoß, deshalb gibt es keine Frist von 30 Tagen.",
+      "reasons": "Die Gründe von MoversHub ({{date}}):",
+      "appealWaiting": "Du hast am {{date}} Einspruch eingelegt. Ein Mensch bei MoversHub liest ihn und antwortet hier, mit Begründung.",
+      "appealUpheld": "Deinem Einspruch wurde am {{date}} stattgegeben:",
+      "appealRejected": "Dein Einspruch wurde am {{date}} abgelehnt:",
+      "appeal": "Einspruch einlegen",
+      "appealAgain": "Erneut Einspruch einlegen"
+    },
+    "appeals": {
+      "title": "Einsprüche und Beschwerden",
+      "subtitle": "Nicht einverstanden mit einer Entscheidung über dein Konto oder mit etwas anderem bei MoversHub? Schreib es hier. Ein Mensch bei MoversHub liest jeden Einspruch und jede Beschwerde und antwortet hier, mit Begründung.",
+      "noCompany": "Richte zuerst dein Unternehmen ein: Einsprüche und Beschwerden betreffen ein Unternehmen auf MoversHub.",
+      "appealLabel": "Warum bist du nicht einverstanden?",
+      "complaintLabel": "Was ist passiert?",
+      "hint": "Mindestens 10 Zeichen. Schreib, was passiert ist, mit Daten und dem Auftrag, wenn du kannst.",
+      "sendAppeal": "Einspruch senden",
+      "sendComplaint": "Beschwerde senden",
+      "sent": "Gesendet. Ein Mensch bei MoversHub liest es und antwortet hier.",
+      "complaintTitle": "Etwas anderes",
+      "complaintText": "Ein Problem mit MoversHub selbst — ein Auftrag, die App, die Prüfung deiner Dokumente, eine Auszahlung.",
+      "yourComplaints": "Deine Beschwerden",
+      "sentOn": "Gesendet am {{date}}",
+      "waiting": "Wartet auf Antwort.",
+      "answered": "MoversHub hat am {{date}} geantwortet:",
+      "errors": {
+        "appeal_too_short": "Schreib mindestens 10 Zeichen.",
+        "appeal_too_long": "Schreib höchstens 4000 Zeichen.",
+        "not_appealable": "Diese Entscheidung gilt nicht mehr, du kannst also keinen Einspruch mehr dagegen einlegen.",
+        "too_many_open": "Drei deiner Einsprüche und Beschwerden warten auf Antwort. Sende weitere, sobald einer beantwortet ist."
+      }
     }
   },
   "places": {
@@ -1056,7 +1109,8 @@
     "tabs": {
       "pending": "Warten auf Prüfung",
       "rejected": "Änderungen erbeten",
-      "verified": "Freigegeben"
+      "verified": "Freigegeben",
+      "appeals": "Offene Einsprüche"
     },
     "empty": "Niemand hier.",
     "waitingCounts": "{{documents}} Dokumente und {{vans}} Fahrzeuge warten",
@@ -1103,11 +1157,17 @@
     "entity": {
       "mover_company": "Unternehmen",
       "mover_document": "Dokument",
-      "vehicle": "Fahrzeug"
+      "vehicle": "Fahrzeug",
+      "suspension": "Entscheidung",
+      "appeal": "Einspruch"
     },
     "action": {
       "verify": "freigegeben",
-      "reject": "Änderungen erbeten"
+      "reject": "Änderungen erbeten",
+      "suspend": "entschieden",
+      "lift": "aufgehoben",
+      "uphold": "stattgegeben",
+      "dismiss": "abgelehnt"
     },
     "status": {
       "pending": "Wartet",
@@ -1129,7 +1189,14 @@
       "review_note_required": "Schreibe einen Hinweis für das Umzugsunternehmen.",
       "document_expired": "Dieses Dokument ist abgelaufen.",
       "failed": "Das hat nicht geklappt. Versuche es erneut.",
-      "invalid_request": "Das hat nicht geklappt. Versuche es erneut."
+      "invalid_request": "Das hat nicht geklappt. Versuche es erneut.",
+      "reason_required": "Schreib die Gründe (mindestens 10 Zeichen).",
+      "kind_not_available": "Diese Art von Entscheidung gibt es noch nicht.",
+      "notice_too_short": "Ein Konto zu beenden braucht 30 Tage Frist, außer bei einem schweren Verstoß.",
+      "effective_in_past": "Dieses Datum ist vorbei.",
+      "note_required": "Schreib, warum (mindestens 3 Zeichen).",
+      "not_in_force": "Diese Entscheidung wurde schon aufgehoben.",
+      "already_decided": "Darauf wurde schon geantwortet."
     },
     "missing": {
       "tax_id": "Steuernummer",
@@ -1142,6 +1209,71 @@
       "document_registration": "freigegebener Registerauszug",
       "document_id": "freigegebener Ausweis",
       "document_insurance": "freigegebene, gültige Versicherung"
-    }
+    },
+    "decisionsTitle": "Entscheidungen über dieses Umzugsunternehmen",
+    "decisionsIntro": "Sperre das Umzugsunternehmen oder beende sein Konto, mit Gründen, die es sofort in der App liest. Du entscheidest als Mensch — das System darf nur markieren. Jede Entscheidung und Antwort wird protokolliert.",
+    "decisionState": {
+      "in_force": "In Kraft",
+      "coming": "Ab {{date}}",
+      "lifted": "Aufgehoben {{date}}"
+    },
+    "toldOn": "Umzugsunternehmen informiert {{date}}",
+    "flaggedBy": {
+      "admin": "von einem Admin entschieden",
+      "algorithm": "vom System markiert",
+      "customer_report": "nach einer Kundenmeldung"
+    },
+    "seriousViolation": "schwerer Verstoß",
+    "reasonsToMover": "Gründe für das Umzugsunternehmen",
+    "decide": {
+      "open": "Sperren oder Konto beenden…",
+      "kind": "Entscheidung",
+      "kinds": {
+        "restriction": "Einschränkung",
+        "suspension": "Sperre",
+        "termination": "Kontoende"
+      },
+      "when": {
+        "suspension": "gilt sofort, bis zur Aufhebung",
+        "termination": "wirksam 30 Tage nach dieser Mitteilung"
+      },
+      "serious": "Schwerer Verstoß (Betrug, illegale Tätigkeit, wiederholte schwere Verstöße): Das Konto endet sofort, ohne die 30 Tage",
+      "reason": "Gründe (das Umzugsunternehmen liest sie so, wie sie geschrieben sind; mindestens 10 Zeichen)",
+      "reviewed": "Du bist die Person, die diese Entscheidung prüft; dein Konto wird dazu gespeichert.",
+      "send": {
+        "suspension": "Jetzt sperren",
+        "termination": "Konto beenden"
+      }
+    },
+    "lift": {
+      "open": "Aufheben…",
+      "note": "Warum sie aufgehoben wird (für die Akte)",
+      "send": "Jetzt aufheben"
+    },
+    "answer": {
+      "reason": "Deine Antwort (das Umzugsunternehmen liest sie so, wie sie geschrieben ist; mindestens 10 Zeichen)",
+      "uphold": "Stattgeben — Entscheidung aufheben",
+      "reject": "Ablehnen",
+      "agree": "Zustimmen",
+      "disagree": "Nicht zustimmen"
+    },
+    "complaintsTitle": "Beschwerden",
+    "appealOn": "Einspruch vom {{date}}",
+    "complaintOn": "Beschwerde vom {{date}}",
+    "appealStatus": {
+      "open": "wartet",
+      "under_review": "in Prüfung",
+      "upheld": "stattgegeben",
+      "rejected": "abgelehnt"
+    },
+    "answerToMover": "Antwort an das Umzugsunternehmen ({{date}})",
+    "appealSubject": {
+      "restriction": "Einspruch: Einschränkung",
+      "suspension": "Einspruch: Sperre",
+      "termination": "Einspruch: Kontoende",
+      "document_rejection": "Beschwerde: Dokumentenprüfung",
+      "other": "Beschwerde"
+    },
+    "sentOn": "gesendet {{date}}"
   }
 }

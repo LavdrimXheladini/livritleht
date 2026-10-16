@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page, type Route } from '@playwright/test';
 
 import { resources } from '@movershub/i18n';
 
@@ -1269,6 +1269,80 @@ test.describe('signed in as a mover', () => {
     // "Upload the new one" opens the documents.
     await page.getByTestId('reminder-cmr-upload').click();
     await expect(page.getByText(en.mover.documents.title)).toBeVisible();
+  });
+
+  test('a decision about the account: the reasons on the home, an appeal from there; a complaint about anything else (COMPLIANCE §3)', async ({ page }) => {
+    const decisionId = '00000000-0000-4000-8000-0000000d5001';
+    const decision = {
+      id: decisionId,
+      kind: 'suspension',
+      reason_text: 'Three customers reported damaged furniture this month.',
+      is_serious_violation: false,
+      notice_sent_at: '2026-10-14T09:00:00+00:00',
+      effective_at: '2026-10-14T09:00:00+00:00',
+      lifted_at: null,
+      mover_appeals: [] as object[],
+    };
+    const complaints: object[] = [];
+    const sent: Record<string, unknown>[] = [];
+    const json = (route: Route, body: unknown) => route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify(body) });
+    await page.route('**/rest/v1/suspensions*', (route) =>
+      route.request().method() === 'OPTIONS' ? route.fulfill({ status: 204, headers: cors }) : json(route, [decision]),
+    );
+    // Postgres keeps an appeal open until a person at MoversHub answers it (the stand-in does the same).
+    await page.route('**/rest/v1/mover_appeals*', (route) => {
+      const request = route.request();
+      if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...cors, 'Access-Control-Allow-Methods': '*' } });
+      if (request.method() === 'POST') {
+        const body = request.postDataJSON() as Record<string, unknown>;
+        sent.push(body);
+        const row = { id: `00000000-0000-4000-8000-0000000a500${sent.length}`, ...body, status: 'open', decision_reason: null, created_at: '2026-10-16T10:00:00+00:00', resolved_at: null };
+        if (body.suspension_id) decision.mover_appeals.push({ ...row, subject: 'suspension' });
+        else complaints.unshift(row);
+        return route.fulfill({ status: 201, headers: cors });
+      }
+      return json(route, complaints);
+    });
+    await fakeMoverCompany(page, { initial: savedCompany() });
+    await fakeMoverDocuments(page);
+    await page.goto(url);
+    const d = en.mover.decisions;
+    const ap = en.mover.appeals;
+
+    // On the home: what it is, what it means, and MoversHub's reasons, as written.
+    const card = page.getByTestId(`decision-${decisionId}`);
+    await expect(card).toContainText(d.inForce.suspension);
+    await expect(card).toContainText(d.what.suspension);
+    await expect(card).toContainText(d.reasons.replace('{{date}}', '14.10.2026'));
+    await expect(page.getByTestId(`decision-${decisionId}-reasons`)).toHaveText(`“${decision.reason_text}”`);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-decision.png');
+
+    // The appeal: why, in 10+ characters; sent with the decision; then it waits for an answer.
+    await page.getByTestId(`decision-${decisionId}-appeal`).click();
+    await page.getByTestId(`appeal-text-${decisionId}`).fill('Not me.');
+    await page.getByTestId(`appeal-send-${decisionId}`).click();
+    await expect(app(page).getByText(ap.errors.appeal_too_short)).toBeVisible();
+    expect(sent).toHaveLength(0);
+    await page.getByTestId(`appeal-text-${decisionId}`).fill('  The damage was there before pickup: my pickup photos show it.  ');
+    await page.getByTestId(`appeal-send-${decisionId}`).click();
+    await expect(page.getByTestId(`appeal-text-${decisionId}`)).toHaveCount(0);
+    await expect(page.getByTestId(`decision-${decisionId}-appeal-status`).last()).toHaveText(d.appealWaiting.replace('{{date}}', '16.10.2026'));
+    expect(sent[0]).toEqual({
+      company_id: savedCompany().id,
+      suspension_id: decisionId,
+      subject: 'suspension',
+      text: 'The damage was there before pickup: my pickup photos show it.',
+    });
+
+    // Anything else: a complaint, listed with "waiting for an answer".
+    await page.getByTestId('appeal-text-complaint').fill('A job showed up twice in the app yesterday.');
+    await page.getByTestId('appeal-send-complaint').click();
+    await expect(page.getByTestId('appeal-sent-complaint')).toHaveText(ap.sent);
+    expect(sent[1]).toMatchObject({ suspension_id: null, subject: 'other', text: 'A job showed up twice in the app yesterday.' });
+    await expect(page.getByTestId('complaints')).toContainText(ap.waiting);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-appeals.png');
   });
 
   test('home: setup checklist and an example request with the payout', async ({ page }) => {

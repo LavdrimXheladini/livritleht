@@ -600,6 +600,59 @@
       },
       "upload": "Upload the new one",
       "dismiss": "Got it"
+    },
+    "decisions": {
+      "title": "Decisions about your account",
+      "inForce": {
+        "restriction": "Your account is restricted",
+        "suspension": "Your account is suspended",
+        "termination": "Your account has ended"
+      },
+      "coming": {
+        "restriction": "Your account will be restricted from {{date}}",
+        "suspension": "Your account will be suspended from {{date}}",
+        "termination": "Your account ends on {{date}}"
+      },
+      "lifted": {
+        "restriction": "The restriction was lifted on {{date}}",
+        "suspension": "The suspension was lifted on {{date}}",
+        "termination": "Your account no longer ends: the decision was lifted on {{date}}"
+      },
+      "what": {
+        "restriction": "The reasons below say what it limits.",
+        "suspension": "While it applies, customers can't book you.",
+        "termination": "From then on customers can't book you, and your account closes."
+      },
+      "serious": "It is for a serious violation, so there is no 30-day notice.",
+      "reasons": "MoversHub's reasons ({{date}}):",
+      "appealWaiting": "You appealed on {{date}}. A person at MoversHub reads it and answers here, with reasons.",
+      "appealUpheld": "Your appeal was upheld on {{date}}:",
+      "appealRejected": "Your appeal was not upheld on {{date}}:",
+      "appeal": "Appeal",
+      "appealAgain": "Appeal again"
+    },
+    "appeals": {
+      "title": "Appeals and complaints",
+      "subtitle": "Disagree with a decision about your account, or with anything else on MoversHub? Write it here. A person at MoversHub reads every appeal and complaint and answers here, with reasons.",
+      "noCompany": "Set up your company first: appeals and complaints are about a company on MoversHub.",
+      "appealLabel": "Why do you disagree?",
+      "complaintLabel": "What happened?",
+      "hint": "At least 10 characters. Say what happened, with dates and the job if you can.",
+      "sendAppeal": "Send the appeal",
+      "sendComplaint": "Send the complaint",
+      "sent": "Sent. A person at MoversHub reads it and answers here.",
+      "complaintTitle": "Something else",
+      "complaintText": "A problem with MoversHub itself — a job, the app, a check of your documents, a payout.",
+      "yourComplaints": "Your complaints",
+      "sentOn": "Sent on {{date}}",
+      "waiting": "Waiting for an answer.",
+      "answered": "MoversHub answered on {{date}}:",
+      "errors": {
+        "appeal_too_short": "Write at least 10 characters.",
+        "appeal_too_long": "Write at most 4000 characters.",
+        "not_appealable": "This decision no longer applies, so there is nothing to appeal.",
+        "too_many_open": "Three of your appeals and complaints are waiting for an answer. Send more once one is answered."
+      }
     }
   },
   "places": {
@@ -1056,7 +1109,8 @@
     "tabs": {
       "pending": "Waiting for a check",
       "rejected": "Changes asked",
-      "verified": "Approved"
+      "verified": "Approved",
+      "appeals": "Appeals waiting"
     },
     "empty": "Nobody here.",
     "waitingCounts": "{{documents}} documents and {{vans}} vans waiting",
@@ -1103,11 +1157,17 @@
     "entity": {
       "mover_company": "Company",
       "mover_document": "Document",
-      "vehicle": "Van"
+      "vehicle": "Van",
+      "suspension": "Decision",
+      "appeal": "Appeal"
     },
     "action": {
       "verify": "approved",
-      "reject": "changes asked"
+      "reject": "changes asked",
+      "suspend": "decided",
+      "lift": "lifted",
+      "uphold": "upheld",
+      "dismiss": "rejected"
     },
     "status": {
       "pending": "Waiting",
@@ -1129,7 +1189,14 @@
       "review_note_required": "Write a note for the mover.",
       "document_expired": "This document has expired.",
       "failed": "That did not work. Try again.",
-      "invalid_request": "That did not work. Try again."
+      "invalid_request": "That did not work. Try again.",
+      "reason_required": "Write the reasons (at least 10 characters).",
+      "kind_not_available": "This kind of decision isn't available yet.",
+      "notice_too_short": "Ending an account takes 30 days' notice, unless it's a serious violation.",
+      "effective_in_past": "That date has passed.",
+      "note_required": "Write why (at least 3 characters).",
+      "not_in_force": "This decision was already lifted.",
+      "already_decided": "This was already answered."
     },
     "missing": {
       "tax_id": "tax number",
@@ -1142,6 +1209,71 @@
       "document_registration": "approved register extract",
       "document_id": "approved ID document",
       "document_insurance": "approved, valid insurance"
-    }
+    },
+    "decisionsTitle": "Decisions about this mover",
+    "decisionsIntro": "Suspend the mover or end their account, with the reasons they read in the app at once. You decide as a person — the system may only flag. Every decision and answer is logged.",
+    "decisionState": {
+      "in_force": "In force",
+      "coming": "From {{date}}",
+      "lifted": "Lifted {{date}}"
+    },
+    "toldOn": "mover told {{date}}",
+    "flaggedBy": {
+      "admin": "decided by an admin",
+      "algorithm": "flagged by the system",
+      "customer_report": "after a customer report"
+    },
+    "seriousViolation": "serious violation",
+    "reasonsToMover": "Reasons to the mover",
+    "decide": {
+      "open": "Suspend or end the account…",
+      "kind": "Decision",
+      "kinds": {
+        "restriction": "Restriction",
+        "suspension": "Suspension",
+        "termination": "Account ending"
+      },
+      "when": {
+        "suspension": "applies now, until lifted",
+        "termination": "takes effect 30 days after this notice"
+      },
+      "serious": "Serious violation (fraud, illegal activity, repeated serious breaches): the account ends now, without the 30 days",
+      "reason": "Reasons (the mover reads this as written; at least 10 characters)",
+      "reviewed": "You are the person reviewing this decision; your account is recorded with it.",
+      "send": {
+        "suspension": "Suspend now",
+        "termination": "End the account"
+      }
+    },
+    "lift": {
+      "open": "Lift…",
+      "note": "Why it is lifted (for the record)",
+      "send": "Lift now"
+    },
+    "answer": {
+      "reason": "Your answer (the mover reads this as written; at least 10 characters)",
+      "uphold": "Uphold — lift the decision",
+      "reject": "Reject",
+      "agree": "Agree",
+      "disagree": "Disagree"
+    },
+    "complaintsTitle": "Complaints",
+    "appealOn": "Appeal of {{date}}",
+    "complaintOn": "Complaint of {{date}}",
+    "appealStatus": {
+      "open": "waiting",
+      "under_review": "being reviewed",
+      "upheld": "upheld",
+      "rejected": "rejected"
+    },
+    "answerToMover": "Answer to the mover ({{date}})",
+    "appealSubject": {
+      "restriction": "Appeal: restriction",
+      "suspension": "Appeal: suspension",
+      "termination": "Appeal: account ending",
+      "document_rejection": "Complaint: document check",
+      "other": "Complaint"
+    },
+    "sentOn": "sent {{date}}"
   }
 }

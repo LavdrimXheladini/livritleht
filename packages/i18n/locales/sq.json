@@ -600,6 +600,59 @@
       },
       "upload": "Ngarko dokumentin e ri",
       "dismiss": "Në rregull"
+    },
+    "decisions": {
+      "title": "Vendime për llogarinë tënde",
+      "inForce": {
+        "restriction": "Llogaria jote është e kufizuar",
+        "suspension": "Llogaria jote është pezulluar",
+        "termination": "Llogaria jote ka përfunduar"
+      },
+      "coming": {
+        "restriction": "Llogaria jote do të kufizohet nga {{date}}",
+        "suspension": "Llogaria jote do të pezullohet nga {{date}}",
+        "termination": "Llogaria jote përfundon më {{date}}"
+      },
+      "lifted": {
+        "restriction": "Kufizimi u hoq më {{date}}",
+        "suspension": "Pezullimi u hoq më {{date}}",
+        "termination": "Llogaria jote nuk përfundon më: vendimi u hoq më {{date}}"
+      },
+      "what": {
+        "restriction": "Arsyet më poshtë thonë çfarë kufizon.",
+        "suspension": "Për sa kohë vlen, klientët nuk mund të të rezervojnë.",
+        "termination": "Që atëherë klientët nuk mund të të rezervojnë dhe llogaria jote mbyllet."
+      },
+      "serious": "Është për një shkelje të rëndë, prandaj nuk ka njoftim 30-ditor.",
+      "reasons": "Arsyet e MoversHub ({{date}}):",
+      "appealWaiting": "Ke bërë ankesë më {{date}}. Një person nga MoversHub e lexon dhe përgjigjet këtu, me arsye.",
+      "appealUpheld": "Ankesa jote u pranua më {{date}}:",
+      "appealRejected": "Ankesa jote nuk u pranua më {{date}}:",
+      "appeal": "Bëj ankesë",
+      "appealAgain": "Bëj ankesë përsëri"
+    },
+    "appeals": {
+      "title": "Ankesa",
+      "subtitle": "Nuk pajtohesh me një vendim për llogarinë tënde, ose me diçka tjetër në MoversHub? Shkruaje këtu. Një person nga MoversHub lexon çdo ankesë dhe përgjigjet këtu, me arsye.",
+      "noCompany": "Plotëso fillimisht kompaninë tënde: ankesat kanë të bëjnë me një kompani në MoversHub.",
+      "appealLabel": "Pse nuk pajtohesh?",
+      "complaintLabel": "Çfarë ndodhi?",
+      "hint": "Të paktën 10 shkronja. Thuaj çfarë ndodhi, me data dhe punën nëse mundesh.",
+      "sendAppeal": "Dërgo ankesën ndaj vendimit",
+      "sendComplaint": "Dërgo ankesën",
+      "sent": "U dërgua. Një person nga MoversHub e lexon dhe përgjigjet këtu.",
+      "complaintTitle": "Diçka tjetër",
+      "complaintText": "Një problem me vetë MoversHub — një punë, aplikacioni, kontrolli i dokumenteve të tua, një pagesë.",
+      "yourComplaints": "Ankesat e tua",
+      "sentOn": "Dërguar më {{date}}",
+      "waiting": "Pret përgjigje.",
+      "answered": "MoversHub u përgjigj më {{date}}:",
+      "errors": {
+        "appeal_too_short": "Shkruaj të paktën 10 shkronja.",
+        "appeal_too_long": "Shkruaj jo më shumë se 4000 shkronja.",
+        "not_appealable": "Ky vendim nuk vlen më, prandaj s’ka çfarë të ankohesh.",
+        "too_many_open": "Tri nga ankesat e tua presin përgjigje. Dërgo të tjera pasi të marrë përgjigje njëra."
+      }
     }
   },
   "places": {
@@ -1056,7 +1109,8 @@
     "tabs": {
       "pending": "Presin kontroll",
       "rejected": "Kërkohen ndryshime",
-      "verified": "Të miratuar"
+      "verified": "Të miratuar",
+      "appeals": "Ankesa në pritje"
     },
     "empty": "Askush këtu.",
     "waitingCounts": "{{documents}} dokumente dhe {{vans}} furgonë në pritje",
@@ -1103,11 +1157,17 @@
     "entity": {
       "mover_company": "Kompania",
       "mover_document": "Dokument",
-      "vehicle": "Furgon"
+      "vehicle": "Furgon",
+      "suspension": "Vendim",
+      "appeal": "Ankesë"
     },
     "action": {
       "verify": "miratuar",
-      "reject": "kërkuar ndryshime"
+      "reject": "kërkuar ndryshime",
+      "suspend": "vendosur",
+      "lift": "hequr",
+      "uphold": "pranuar",
+      "dismiss": "refuzuar"
     },
     "status": {
       "pending": "Në pritje",
@@ -1129,7 +1189,14 @@
       "review_note_required": "Shkruaj një shënim për transportuesin.",
       "document_expired": "Ky dokument ka skaduar.",
       "failed": "Nuk funksionoi. Provo përsëri.",
-      "invalid_request": "Nuk funksionoi. Provo përsëri."
+      "invalid_request": "Nuk funksionoi. Provo përsëri.",
+      "reason_required": "Shkruaj arsyet (të paktën 10 shkronja).",
+      "kind_not_available": "Ky lloj vendimi nuk ofrohet ende.",
+      "notice_too_short": "Përfundimi i një llogarie kërkon njoftim 30 ditë më parë, përveç rasteve të shkeljes së rëndë.",
+      "effective_in_past": "Ajo datë ka kaluar.",
+      "note_required": "Shkruaj pse (të paktën 3 shkronja).",
+      "not_in_force": "Ky vendim është hequr tashmë.",
+      "already_decided": "Kësaj i është përgjigjur tashmë."
     },
     "missing": {
       "tax_id": "numri fiskal",
@@ -1142,6 +1209,71 @@
       "document_registration": "ekstrakti i miratuar",
       "document_id": "dokumenti i identitetit i miratuar",
       "document_insurance": "sigurimi i miratuar dhe i vlefshëm"
-    }
+    },
+    "decisionsTitle": "Vendime për këtë transportues",
+    "decisionsIntro": "Pezullo transportuesin ose përfundo llogarinë e tij, me arsyet që ai i lexon menjëherë në aplikacion. Vendos ti si person — sistemi mund vetëm të sinjalizojë. Çdo vendim dhe përgjigje regjistrohet.",
+    "decisionState": {
+      "in_force": "Në fuqi",
+      "coming": "Nga {{date}}",
+      "lifted": "Hequr {{date}}"
+    },
+    "toldOn": "transportuesi u njoftua {{date}}",
+    "flaggedBy": {
+      "admin": "vendosur nga një administrator",
+      "algorithm": "sinjalizuar nga sistemi",
+      "customer_report": "pas një raportimi nga klienti"
+    },
+    "seriousViolation": "shkelje e rëndë",
+    "reasonsToMover": "Arsyet për transportuesin",
+    "decide": {
+      "open": "Pezullo ose përfundo llogarinë…",
+      "kind": "Vendimi",
+      "kinds": {
+        "restriction": "Kufizim",
+        "suspension": "Pezullim",
+        "termination": "Përfundim i llogarisë"
+      },
+      "when": {
+        "suspension": "vlen menjëherë, derisa të hiqet",
+        "termination": "hyn në fuqi 30 ditë pas këtij njoftimi"
+      },
+      "serious": "Shkelje e rëndë (mashtrim, veprimtari e paligjshme, shkelje të rënda të përsëritura): llogaria përfundon menjëherë, pa 30 ditët",
+      "reason": "Arsyet (transportuesi i lexon siç janë shkruar; të paktën 10 shkronja)",
+      "reviewed": "Ti je personi që e shqyrton këtë vendim; llogaria jote regjistrohet me të.",
+      "send": {
+        "suspension": "Pezullo tani",
+        "termination": "Përfundo llogarinë"
+      }
+    },
+    "lift": {
+      "open": "Hiq…",
+      "note": "Pse hiqet (për regjistrin)",
+      "send": "Hiq tani"
+    },
+    "answer": {
+      "reason": "Përgjigjja jote (transportuesi e lexon siç është shkruar; të paktën 10 shkronja)",
+      "uphold": "Prano — hiq vendimin",
+      "reject": "Refuzo",
+      "agree": "Pajtohem",
+      "disagree": "Nuk pajtohem"
+    },
+    "complaintsTitle": "Ankesa",
+    "appealOn": "Ankesë ndaj vendimit, {{date}}",
+    "complaintOn": "Ankesë, {{date}}",
+    "appealStatus": {
+      "open": "në pritje",
+      "under_review": "në shqyrtim",
+      "upheld": "pranuar",
+      "rejected": "refuzuar"
+    },
+    "answerToMover": "Përgjigjja për transportuesin ({{date}})",
+    "appealSubject": {
+      "restriction": "Ankesë: kufizim",
+      "suspension": "Ankesë: pezullim",
+      "termination": "Ankesë: përfundim i llogarisë",
+      "document_rejection": "Ankesë: kontrolli i dokumentit",
+      "other": "Ankesë"
+    },
+    "sentOn": "dërguar {{date}}"
   }
 }

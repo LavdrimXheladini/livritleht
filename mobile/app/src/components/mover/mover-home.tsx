@@ -56,8 +56,12 @@ export function MoverHome({ notice }: { notice: string | null }) {
         <SwitchSideButton to="customer" testID="switch-to-customer" dark />
       </View>
 
-      {/* Download the account's data, or delete it (COMPLIANCE §9). */}
-      <Button testID="open-account" variant="link-dark" className="self-center" title={t('account.open')} onPress={() => router.push('/account')} />
+      <View className="items-center">
+        {/* Appeal a decision about the account, or complain about anything else (COMPLIANCE §3). */}
+        <Button testID="open-appeals" variant="link-dark" title={t('mover.appeals.title')} onPress={() => router.push('/mover/appeals')} />
+        {/* Download the account's data, or delete it (COMPLIANCE §9). */}
+        <Button testID="open-account" variant="link-dark" title={t('account.open')} onPress={() => router.push('/account')} />
+      </View>
     </Screen>
   );
 }

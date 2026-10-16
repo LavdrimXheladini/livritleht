@@ -101,6 +101,12 @@ async function exportData(user: AuthUser) {
     vehicles,
     serviceAreas: await byCompany('service_areas'),
     reminders: await serviceRows('GET', `mover_reminders?user_id=${eq(user.id)}&select=*&order=created_at.desc`),
+    // Decisions about the company the mover was told of, and their appeals and complaints (COMPLIANCE §3).
+    decisions: await byCompany(
+      'suspensions',
+      'id,kind,flagged_by,reason_text,is_serious_violation,notice_sent_at,effective_at,lifted_at,created_at&notice_sent_at=not.is.null&order=created_at.desc',
+    ),
+    appeals: await byCompany('mover_appeals', 'id,suspension_id,subject,text,status,decision_reason,created_at,resolved_at&order=created_at.desc'),
     // MoversHub's decisions on the company's setup (who decided stays out: MoversHub's staff).
     reviewHistory: company
       ? await serviceRows('GET', `audit_log?entity_id=in.(${[company.id, ...documents.map((d) => d.id), ...vehicles.map((v) => v.id)].join(',')})&select=action,entity,entity_id,note,created_at&order=created_at.desc`)
