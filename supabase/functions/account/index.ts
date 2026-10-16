@@ -112,7 +112,9 @@ async function exportData(user: AuthUser) {
     appeals: await byCompany('mover_appeals', 'id,suspension_id,subject,text,status,decision_reason,created_at,resolved_at&order=created_at.desc'),
     // Which versions of the terms the account accepted, and when; notices of new terms to the company.
     // Job requests to the company and how they were answered (the moves' details stay the customers').
-    jobRequests: await byCompany('job_offers', 'job_id,status,expires_at,created_at,answered_at&order=created_at.desc'),
+    jobRequests: company
+      ? await serviceRows('GET', `job_offers?mover_company_id=${eq(company.id)}&select=job_id,status,expires_at,created_at,answered_at&order=created_at.desc`)
+      : [],
     termsAccepted: await serviceRows('GET', `terms_acceptances?user_id=${eq(user.id)}&select=accepted_at,terms_versions(audience,version,effective_at)&order=accepted_at.desc`),
     termsNotices: await byCompany('terms_notices', 'channel,sent_at,terms_versions(audience,version,effective_at)&order=sent_at.desc'),
     // MoversHub's decisions on the company's setup (who decided stays out: MoversHub's staff).

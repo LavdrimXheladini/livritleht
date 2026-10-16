@@ -72,5 +72,7 @@ export async function serviceRpc<T>(fn: string, args: Record<string, unknown>): 
     }
     throw new RpcError(fn, res.status, body.message ?? text, body.code ?? '');
   }
-  return (await res.json()) as T;
+  // A function that returns nothing (void) answers 204 with no body.
+  const text = await res.text();
+  return (text ? JSON.parse(text) : null) as T;
 }
