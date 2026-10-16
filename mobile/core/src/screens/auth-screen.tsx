@@ -32,11 +32,14 @@ export function AuthScreen({
   onCodeSent,
   onForgotPassword,
   notice = null,
+  footer = null,
 }: {
   onCodeSent: (sent: PendingSignIn) => void;
   onForgotPassword: () => void;
   /** A one-time message above the form (e.g. "Your account is deleted."), read out when shown. */
   notice?: string | null;
+  /** Under the form: e.g. the app's links to the terms and the privacy policy. */
+  footer?: ReactNode;
 }) {
   const { t } = useTranslation();
   useAnnouncement(notice);
@@ -77,6 +80,7 @@ export function AuthScreen({
       ) : (
         <RegisterForm key="register" defaultEmail={email} onEmailChange={changeEmail} onCodeSent={onCodeSent} />
       )}
+      {footer}
     </AuthFrame>
   );
 }

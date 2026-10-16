@@ -1275,5 +1275,18 @@
       "other": "Complaint"
     },
     "sentOn": "sent {{date}}"
+  },
+  "legal": {
+    "titles": {
+      "privacy": "Privacy policy",
+      "terms": "Terms for customers",
+      "mover-terms": "Terms for movers",
+      "contact": "Contact and legal notice"
+    },
+    "heading": "Terms and privacy",
+    "draft": "Draft — not yet checked by a lawyer. It doesn't apply yet: the final version replaces it before MoversHub opens.",
+    "englishOnly": "For now this text is in English. The translation follows once the text is final.",
+    "updated": "Last updated: {{date}}",
+    "contents": "Contents"
   }
 }

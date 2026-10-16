@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { Button, Card, Display, Screen, TextField, announce, setSignedOutNotice, useAnnouncement, useAuth } from '@movershub/mobile';
+import { Button, Card, Display, Screen, TextField, announce, setSignedOutNotice, useAnnouncement, useAuth, useProfile } from '@movershub/mobile';
 
 import { useAccount } from '@/lib/account';
+
+import { LegalLinks } from './legal-screen';
 
 function goBack() {
   if (router.canGoBack()) router.back();
@@ -21,6 +23,7 @@ export function AccountScreen() {
   const { t } = useTranslation();
   const { session, signOut } = useAuth();
   const account = useAccount();
+  const profile = useProfile();
   const [downloading, setDownloading] = useState(false);
   const [downloadFailed, setDownloadFailed] = useState(false);
   const [password, setPassword] = useState('');
@@ -112,6 +115,14 @@ export function AccountScreen() {
           announceError={false}
         />
         <Button testID="account-delete" variant="danger" size="md" title={t('account.deleteButton')} loading={deleting} onPress={() => void remove()} />
+      </Card>
+
+      <Card variant="widget" className="gap-1">
+        <Text accessibilityRole="header" className="font-sans-semibold text-base text-ink-900">
+          {t('legal.heading')}
+        </Text>
+        {/* The terms for this side, the privacy policy and the contact (design/DECISIONS.md #33). */}
+        <LegalLinks testID="account-legal" docs={[profile.data?.role === 'mover' ? 'mover-terms' : 'terms', 'privacy', 'contact']} />
       </Card>
     </Screen>
   );

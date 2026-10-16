@@ -6,6 +6,7 @@ export * from './items';
 export * from './market-rates';
 export * from './money';
 export * from './move-scope';
+export * from './operator';
 export * from './places';
 export * from './rate-limit';
 export * from './retention.config';

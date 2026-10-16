@@ -1,7 +1,7 @@
 import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 
-import type { Locale } from '@movershub/i18n';
+import { LEGAL_DOCS, type Locale } from '@movershub/i18n';
 import { Sheet } from '@movershub/ui/web';
 
 import { getT } from '@/lib/i18n';
@@ -52,6 +52,12 @@ export async function SiteFooter({ locale, onHome = true }: { locale: Locale; on
           <Link href={`/${locale}/ranking`} className="text-sage-400 underline hover:text-night-50">
             {t('landing.footer.ranking')}
           </Link>
+          {/* COMPLIANCE §8, §9: terms, privacy policy and contact on every page (design/DECISIONS.md #33). */}
+          {LEGAL_DOCS.map((doc) => (
+            <Link key={doc} href={`/${locale}/${doc}`} className="text-sage-400 underline hover:text-night-50">
+              {t(`legal.titles.${doc}`)}
+            </Link>
+          ))}
         </span>
       </div>
     </Sheet>

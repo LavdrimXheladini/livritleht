@@ -98,6 +98,8 @@ function RootStack() {
         {/* Either side: download the account's data, or delete it. */}
         <Stack.Screen name="account" />
       </Stack.Protected>
+      {/* The terms, the privacy policy and the contact: readable signed in or out (design/DECISIONS.md #33). */}
+      <Stack.Screen name="legal/[doc]" />
     </Stack>
   );
 }

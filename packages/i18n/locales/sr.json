@@ -1275,5 +1275,18 @@
       "other": "Prigovor"
     },
     "sentOn": "poslato {{date}}"
+  },
+  "legal": {
+    "titles": {
+      "privacy": "Politika privatnosti",
+      "terms": "Uslovi za klijente",
+      "mover-terms": "Uslovi za prevoznike",
+      "contact": "Kontakt i pravno obaveštenje"
+    },
+    "heading": "Uslovi i privatnost",
+    "draft": "Nacrt — još ga nije proverio pravnik. Još ne važi: konačna verzija ga zamenjuje pre nego što se MoversHub otvori.",
+    "englishOnly": "Za sada je ovaj tekst na engleskom. Prevod sledi čim tekst bude konačan.",
+    "updated": "Poslednja izmena: {{date}}",
+    "contents": "Sadržaj"
   }
 }

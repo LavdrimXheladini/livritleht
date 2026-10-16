@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -24,6 +25,7 @@ export async function generateMetadata({ params }: PageProps<'/[lang]/login'>): 
 export default async function LoginPage({ params }: PageProps<'/[lang]/login'>) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
+  const t = getT(lang);
   return (
     <div className="flex flex-1 flex-col px-3 pt-3 pb-10 sm:px-5 sm:pt-5">
       <Sheet tone="cream" padding="none" className="overflow-hidden">
@@ -33,6 +35,14 @@ export default async function LoginPage({ params }: PageProps<'/[lang]/login'>) 
           <Suspense fallback={null}>
             <Auth locale={lang} />
           </Suspense>
+          {/* The terms and the privacy policy, readable before signing up (design/DECISIONS.md #33). */}
+          <nav aria-label={t('legal.heading')} className="mt-8 flex flex-wrap gap-x-4 gap-y-1 text-[14px]">
+            {(['terms', 'mover-terms', 'privacy'] as const).map((doc) => (
+              <Link key={doc} href={`/${lang}/${doc}`} className="text-ink-600 underline hover:text-ink-900">
+                {t(`legal.titles.${doc}`)}
+              </Link>
+            ))}
+          </nav>
         </main>
       </Sheet>
     </div>

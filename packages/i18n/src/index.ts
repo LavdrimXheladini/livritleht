@@ -54,3 +54,5 @@ export function i18nOptions(lng: Locale): InitOptions {
 export const LOCALE_NAMES: Record<Locale, string> = { en: 'English', sq: 'Shqip', pl: 'Polski', sr: 'Srpski', de: 'Deutsch' };
 
 export { LOCALES, DEFAULT_LOCALE, isLocale, resolveLocale, type Locale };
+
+export * from './legal';

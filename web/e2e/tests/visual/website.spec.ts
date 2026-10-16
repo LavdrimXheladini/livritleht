@@ -57,3 +57,9 @@ for (const [name, viewport] of [['phone', PHONE], ['laptop', LAPTOP]] as const) 
     await expect(page).toHaveScreenshot(`ranking-en-${name}.png`, { fullPage: true, mask: [year(page)] });
   });
 }
+
+test('terms for movers (en) on a laptop', async ({ page }) => {
+  await open(page, '/en/mover-terms', LAPTOP);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(resources.en.translation.legal.titles['mover-terms']);
+  await expect(page).toHaveScreenshot('mover-terms-en-laptop.png', { fullPage: true, mask: [year(page)] });
+});

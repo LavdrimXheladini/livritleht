@@ -3,6 +3,8 @@ import { useCallback, useState } from 'react';
 
 import { AuthScreen, getDraftVersion, setPendingSignIn, takeSignedOutNotice } from '@movershub/mobile';
 
+import { LegalLinks } from '@/components/legal-screen';
+
 export default function Login() {
   // Back from "Forgot password?" with a corrected address: the form starts again with it. (Coming back
   // from the code screen keeps the form as it was, with the tab and the side picked.)
@@ -21,6 +23,7 @@ export default function Login() {
       }}
       onForgotPassword={() => router.push('/forgot')}
       notice={notice}
+      footer={<LegalLinks testID="login-legal" docs={['terms', 'mover-terms', 'privacy']} />}
     />
   );
 }

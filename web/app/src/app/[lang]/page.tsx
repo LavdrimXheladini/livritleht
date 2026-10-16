@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { isLocale } from '@movershub/i18n';
+import { OPERATOR } from '@movershub/shared';
 import { SectionTitle, Sheet } from '@movershub/ui/web';
 
 import { FaqSection } from '@/components/landing/faq-section';
@@ -63,7 +64,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
 
         <MoversSection locale={lang} />
         <MarketsSection locale={lang} />
-        <FaqSection locale={lang} contactEmail={process.env.CONTACT_EMAIL} />
+        <FaqSection locale={lang} contactEmail={OPERATOR.email ?? undefined} />
       </div>
       <div className="px-3 sm:px-5">
         <SiteFooter locale={lang} />

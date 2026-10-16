@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { resolveLocale, resources } from './index';
+import { allLegalStrings, resolveLocale, resources } from './index';
 
 type Tree = { [key: string]: string | Tree };
 
@@ -119,6 +119,12 @@ describe('banned wording (COMPLIANCE §12)', () => {
     const config = [...readFileSync(join(root, 'config.toml'), 'utf8').matchAll(/^\s*(?:subject|template)\s*=\s*"(.*)"/gm)].map((m) => m[1]!);
     expect(templates.length + config.length).toBeGreaterThan(0);
     expect([...templates, ...config].filter((text) => banned('en', text).length > 0)).toEqual([]);
+  });
+
+  it('the legal texts (privacy, terms, contact) use marketplace wording too', () => {
+    const texts = allLegalStrings();
+    expect(texts.length).toBeGreaterThan(50);
+    expect(texts.filter((text) => banned('en', text).length > 0)).toEqual([]);
   });
 });
 

@@ -45,17 +45,17 @@ Do not add new frameworks or replace any of these without asking.
 ```
 movershub/
 ├─ web/                # WEB PLATFORM
-│  ├─ app/             # Next.js: what MoversHub is + create account + get the app under /[lang], /[lang]/ranking ("How ranking works", COMPLIANCE §3), /t/[token] tracking page, /admin  (@movershub/web)
+│  ├─ app/             # Next.js: what MoversHub is + create account + get the app under /[lang], /[lang]/ranking ("How ranking works", COMPLIANCE §3), legal pages /[lang]/privacy, /terms, /mover-terms, /contact, /t/[token] tracking page, /admin  (@movershub/web)
 │  └─ e2e/             # Playwright tests (web + API)                                          (@movershub/e2e)
 ├─ mobile/             # MOBILE PLATFORM
 │  ├─ app/             # The Expo app for customers (booking, payment, tracking) and movers (onboarding, rates, jobs, GPS)  (@movershub/app)
 │  ├─ core/            # Shared Expo code: Supabase client, auth, fonts, sign-in screens, UI kit (@movershub/mobile)
 │  └─ maestro/         # Mobile E2E flows
 ├─ packages/           # SHARED BY BOTH PLATFORMS
-│  ├─ shared/          # Zod schemas, types, constants (vehicle classes, job statuses), retention.config
+│  ├─ shared/          # Zod schemas, types, constants (vehicle classes, job statuses), retention.config, OPERATOR (who runs MoversHub — legal pages)
 │  ├─ pricing/         # Pure pricing engine (no I/O) — used by edge function + tests
 │  ├─ ui/              # Design tokens (tokens.json → theme.css for web, tailwind-preset.js for mobile), fonts
-│  └─ i18n/            # Translation files
+│  └─ i18n/            # Translation files; src/legal: privacy policy, terms (customers, movers), contact — drafts, English until the lawyer has checked them
 ├─ supabase/
 │  ├─ migrations/      # SQL migrations (only way to change schema)
 │  ├─ functions/       # Edge functions: quote, places, phone-verification, company-registry, book, account (later: job-transition, stripe-webhook, tracking-token)

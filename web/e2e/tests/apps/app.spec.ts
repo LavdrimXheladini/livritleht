@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 
 import { expect, test, type Page, type Route } from '@playwright/test';
 
-import { resources } from '@movershub/i18n';
+import { legalDocument, resources } from '@movershub/i18n';
 
 import {
   PASSWORD_OWED_KEY,
@@ -999,6 +999,51 @@ test.describe('booking a move', () => {
     await signInAs(page, 'mover');
     await page.goto(`${url}book/stops`);
     await expect(page.getByTestId('step-company')).toBeVisible();
+  });
+});
+
+test.describe('terms, privacy policy and contact (COMPLIANCE §8, §9)', () => {
+  const visible = (page: Page, testId: string) => page.getByTestId(testId).locator('visible=true');
+
+  test('signed out, from the sign-in screen: a draft with every section, and on to the privacy policy', async ({ page }) => {
+    await page.goto(url);
+    await page.getByTestId('legal-link-terms').click();
+    await expect(visible(page, 'legal-draft')).toHaveText(en.legal.draft);
+    await expect(page.getByTestId('legal-english-only')).toHaveCount(0);
+    for (const section of legalDocument('terms', 'en').text.sections) {
+      await expect(page.getByTestId(`legal-section-${section.id}`).first()).toContainText(section.heading);
+    }
+    await expect(page).toHaveScreenshot('legal-terms.png');
+    await visible(page, 'legal-see-privacy').click();
+    await expect(app(page).getByText(legalDocument('privacy', 'en').text.intro)).toBeVisible();
+    await visible(page, 'legal-back').click();
+    await visible(page, 'legal-back').click();
+    await expect(page.getByTestId('auth-email')).toBeVisible();
+  });
+
+  test('"Your account" links to the terms for its side, the privacy policy and the contact', async ({ page }) => {
+    await signInAs(page, 'mover');
+    await page.goto(`${url}account`);
+    const links = page.getByTestId('account-legal');
+    await expect(links.getByTestId('legal-link-mover-terms')).toBeVisible();
+    await expect(links.getByTestId('legal-link-privacy')).toBeVisible();
+    await expect(links.getByTestId('legal-link-contact')).toBeVisible();
+    await expect(links.getByTestId('legal-link-terms')).toHaveCount(0);
+    await links.getByTestId('legal-link-contact').click();
+    await expect(app(page).getByText('Operator: [company name — added once the company is registered]')).toBeVisible();
+  });
+
+  test.describe('in Albanian', () => {
+    test.use({ locale: 'sq-XK' });
+
+    test('the screen in Albanian; the text in English, and it says so', async ({ page }) => {
+      const sq = resources.sq.translation.legal;
+      await page.goto(`${url}legal/privacy`);
+      await expect(app(page).getByText(sq.titles.privacy, { exact: true })).toBeVisible();
+      await expect(visible(page, 'legal-draft')).toHaveText(sq.draft);
+      await expect(visible(page, 'legal-english-only')).toHaveText(sq.englishOnly);
+      await expect(app(page).getByText(legalDocument('privacy', 'en').text.intro)).toBeVisible();
+    });
   });
 });
 

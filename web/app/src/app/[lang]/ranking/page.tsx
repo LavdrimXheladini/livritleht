@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { isLocale } from '@movershub/i18n';
-import { INTL_LOCALES } from '@movershub/shared';
+import { INTL_LOCALES, OPERATOR } from '@movershub/shared';
 import { SectionTitle, Sheet } from '@movershub/ui/web';
 
 import { Nav } from '@/components/landing/nav';
@@ -37,7 +37,7 @@ export default async function RankingPage({ params }: PageProps<'/[lang]/ranking
   const t = getT(lang);
   const [y, m, d] = UPDATED.split('-').map(Number) as [number, number, number];
   const updated = new Intl.DateTimeFormat(INTL_LOCALES[lang], { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(y, m - 1, d));
-  const email = process.env.CONTACT_EMAIL;
+  const email = OPERATOR.email;
 
   return (
     <>

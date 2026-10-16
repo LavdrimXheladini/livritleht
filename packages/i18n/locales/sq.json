@@ -1275,5 +1275,18 @@
       "other": "Ankesë"
     },
     "sentOn": "dërguar {{date}}"
+  },
+  "legal": {
+    "titles": {
+      "privacy": "Politika e privatësisë",
+      "terms": "Kushtet për klientët",
+      "mover-terms": "Kushtet për transportuesit",
+      "contact": "Kontakti dhe njoftimi ligjor"
+    },
+    "heading": "Kushtet dhe privatësia",
+    "draft": "Version paraprak — ende i pakontrolluar nga një jurist. Nuk vlen ende: versioni përfundimtar e zëvendëson para se të hapet MoversHub.",
+    "englishOnly": "Tani për tani ky tekst është në anglisht. Versioni shqip vjen sapo teksti të jetë përfundimtar.",
+    "updated": "Përditësuar më: {{date}}",
+    "contents": "Përmbajtja"
   }
 }

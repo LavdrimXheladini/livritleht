@@ -1275,5 +1275,18 @@
       "other": "Beschwerde"
     },
     "sentOn": "gesendet {{date}}"
+  },
+  "legal": {
+    "titles": {
+      "privacy": "Datenschutzerklärung",
+      "terms": "AGB für Kunden",
+      "mover-terms": "AGB für Umzugsunternehmen",
+      "contact": "Kontakt und Impressum"
+    },
+    "heading": "AGB und Datenschutz",
+    "draft": "Entwurf — noch nicht von einem Anwalt geprüft. Er gilt noch nicht: Vor dem Start von MoversHub ersetzt ihn die endgültige Fassung.",
+    "englishOnly": "Dieser Text ist vorerst auf Englisch. Die deutsche Fassung folgt, sobald der Text endgültig ist.",
+    "updated": "Zuletzt geändert: {{date}}",
+    "contents": "Inhalt"
   }
 }

@@ -1275,5 +1275,18 @@
       "other": "Skarga"
     },
     "sentOn": "wysłano {{date}}"
+  },
+  "legal": {
+    "titles": {
+      "privacy": "Polityka prywatności",
+      "terms": "Regulamin dla klientów",
+      "mover-terms": "Regulamin dla przewoźników",
+      "contact": "Kontakt i informacje prawne"
+    },
+    "heading": "Regulaminy i prywatność",
+    "draft": "Wersja robocza — jeszcze niesprawdzona przez prawnika. Jeszcze nie obowiązuje: przed startem MoversHub zastąpi ją wersja ostateczna.",
+    "englishOnly": "Na razie ten tekst jest po angielsku. Polska wersja pojawi się, gdy tekst będzie ostateczny.",
+    "updated": "Ostatnia zmiana: {{date}}",
+    "contents": "Spis treści"
   }
 }
