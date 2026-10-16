@@ -63,7 +63,8 @@ test('an admin suspends a mover with reasons; the mover appeals; upholding it li
     await page.getByTestId('decide-reason').fill(reasons);
     await page.getByTestId('decide-send').click();
     await expect(page.getByText(ta.decisionState.in_force, { exact: true })).toBeVisible();
-    await expect(page.getByText(reasons)).toBeVisible();
+    // As the mover reads them (the history below repeats them).
+    await expect(page.getByText(`${ta.reasonsToMover}: ${reasons}`)).toBeVisible();
 
     // The mover reads it at once (RLS) and appeals.
     const decisions = await request.get(`${projectUrl}/rest/v1/suspensions?select=id,kind,reason_text,lifted_at`, { headers: asMover });
