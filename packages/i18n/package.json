@@ -1,5 +1,6 @@
 {
   "name": "@movershub/i18n",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",

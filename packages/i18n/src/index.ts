@@ -2,11 +2,11 @@ import type { InitOptions } from 'i18next';
 
 import { DEFAULT_LOCALE, LOCALES, isLocale, resolveLocale, type Locale } from '@movershub/shared';
 
-import deFile from '../locales/de.json';
-import enFile from '../locales/en.json';
-import plFile from '../locales/pl.json';
-import sqFile from '../locales/sq.json';
-import srFile from '../locales/sr.json';
+import deFile from '../locales/de.json' with { type: 'json' };
+import enFile from '../locales/en.json' with { type: 'json' };
+import plFile from '../locales/pl.json' with { type: 'json' };
+import sqFile from '../locales/sq.json' with { type: 'json' };
+import srFile from '../locales/sr.json' with { type: 'json' };
 
 /**
  * Each language file holds everything; the admin page's texts load as their own namespace `admin`.
