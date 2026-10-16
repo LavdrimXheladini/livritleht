@@ -279,5 +279,7 @@ export type BookResponse = {
     total: number;
   };
   mover: BookedMover;
+  /** A test mover (the platform's own): booked without a card until card payments exist. */
+  testMover: boolean;
 };
 

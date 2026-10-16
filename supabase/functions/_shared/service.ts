@@ -42,7 +42,19 @@ export async function serviceRows<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   return (await res.json()) as T[];
 }
 
-/** Calls a Postgres function through PostgREST as the service role; returns its result. Throws on failure. */
+/** A Postgres function refused the call: its message (e.g. `quote_expired`) and SQLSTATE code. */
+export class RpcError extends Error {
+  constructor(
+    readonly fn: string,
+    readonly status: number,
+    readonly reason: string,
+    readonly code: string,
+  ) {
+    super(`rpc ${fn}: ${status} ${code} ${reason}`);
+  }
+}
+
+/** Calls a Postgres function through PostgREST as the service role; returns its result. Throws `RpcError` on failure. */
 export async function serviceRpc<T>(fn: string, args: Record<string, unknown>): Promise<T> {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
     method: 'POST',
@@ -50,6 +62,15 @@ export async function serviceRpc<T>(fn: string, args: Record<string, unknown>): 
     body: JSON.stringify(args),
     signal: AbortSignal.timeout(5000),
   });
-  if (!res.ok) throw new Error(`rpc ${fn}: ${res.status} ${await res.text()}`);
+  if (!res.ok) {
+    const text = await res.text();
+    let body: { message?: string; code?: string } = {};
+    try {
+      body = JSON.parse(text) as typeof body;
+    } catch {
+      // not JSON: keep the text
+    }
+    throw new RpcError(fn, res.status, body.message ?? text, body.code ?? '');
+  }
   return (await res.json()) as T;
 }

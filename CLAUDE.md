@@ -58,7 +58,7 @@ movershub/
 │  └─ i18n/            # Translation files; src/legal: privacy policy, terms (customers, movers), contact — drafts, English until the lawyer has checked them
 ├─ supabase/
 │  ├─ migrations/      # SQL migrations (only way to change schema)
-│  ├─ functions/       # Edge functions: quote, places, phone-verification, company-registry, book, account (later: job-transition, stripe-webhook, tracking-token)
+│  ├─ functions/       # Edge functions: quote, places, phone-verification, company-registry, book, account, job-transition (later: stripe-webhook, tracking-token)
 │  ├─ seed.sql         # Test data: movers, vehicles, rate cards, customers
 │  └─ tests/           # pgTAP tests for RLS and DB functions
 ├─ scripts/            # dev-prep.mjs: regenerates theme.css + clears stale bundler caches before dev/build
@@ -81,7 +81,8 @@ movershub/
 - `service_areas` — company_id, geography (PostGIS polygon or center + radius_km). The app adds towns from the map search with a radius (10–200 km); movers add and remove them
 - `jobs` — customer_id, type (`ITEM` | `SMALL_MOVE` | `FULL_MOVE` | `CROSS_BORDER`), vehicle_class, helpers, scheduled_at, status, per stop (`pickup_*` / `dropoff_*`): area, district, country (all a mover sees before accepting) and label, street, house_number, point (`geography(Point)`), details (the customer's directions), floor, has_lift; items (jsonb), distance_km, est_labor_min, chosen_mover_company_id, chosen_vehicle_id. Written only by the `book` function (service role, status QUOTED until the card books it); customers read their own, admins all. Computed fields `pickup_lat`, `pickup_lon`, `dropoff_lat`, `dropoff_lon` give the points as numbers
 - `quotes` — job_id, vehicle_id, mover_company_id, line_items (jsonb), mover_price, booking_fee (null while undecided), platform_commission, take_rate_pct, mover_payout, total, currency, cancel_free_hours + cancel_late_pct (the terms the customer saw), mover (jsonb: the mover as the customer saw them — name, business or not, registration no., address, phone, email, insurance, terms), expires_at (15 min). Written only by `book`; customers read their jobs' quotes ("My moves")
-- `job_offers` — job_id, mover_company_id, status (`offered` | `accepted` | `declined` | `expired`)
+- `job_offers` — job_id, quote_id (the price booked), mover_company_id, status (`offered` | `accepted` | `declined` | `expired` | `cancelled`), expires_at (`offer_expiry`: 12 h, ending 24 h before the move, at least 1 h), answered_at. One open per job; only to the mover the customer chose — never assigned automatically; declined/expired → the job is QUOTED again (`expire_job_offers()`, pg_cron every 5 min). Written only by the job functions; the customer reads their jobs' offers, the mover their company's. Movers read their requests through `my_mover_jobs()` (area only until accepted, COMPLIANCE §9.1)
+- `job_events` — job_id, event (`booked` | `offered` | `accepted` | `declined` | `expired` | `cancelled`), status (after it), actor_id, actor_role (`customer` | `mover` | `admin` | `system`), created_at. The job's log, written by the job functions; read by the customer and the mover it was offered to
 - `mover_reminders` — company_id, user_id (the owner), document_id, document_type, kind (`document_ending` | `document_ended`), days_before (30 | 14 | 3 | 0), expires_at, created_at, read_at, emailed_at, pushed_at. Made daily by `queue_document_reminders()` (pg_cron; COMPLIANCE §5: 30/14/3 days before a document ends), once per stage and end date; the mover reads theirs and marks them read (shown on the app's mover home). Email/push later from the same rows
 - `price_adjustments` — job_id, amount, reason, photo_path, status (`pending` | `approved` | `rejected`)
 - `job_photos` — job_id, stage (`pickup` | `dropoff`), path, taken_at
@@ -163,7 +164,7 @@ DRAFT → QUOTED → BOOKED (card saved via SetupIntent)
       ↘ CANCELLED (any time before COMPLETED, per cancellation policy)  ← GPS OFF
       ↘ DISPUTED (after COMPLETED, holds payout)
 ```
-Transitions only via the `job-transition` edge function, which checks role, current status and required data (photos, etc.), and writes `audit_log`.
+Transitions only via the `job-transition` edge function, which checks the session and the side and calls Postgres functions (service role only) that check the current status and required data (photos, etc.) atomically and write `job_events` (design/DECISIONS.md #35). Built: book (a test booking with test movers until Stripe), accept / decline, offers expiring, cancel before acceptance.
 
 ---
 

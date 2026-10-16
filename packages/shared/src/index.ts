@@ -17,6 +17,7 @@ export * from './schemas/booking';
 export * from './schemas/decisions';
 export * from './schemas/geo';
 export * from './schemas/job';
+export * from './schemas/job-transition';
 export * from './schemas/mover-company';
 export * from './schemas/mover-documents';
 export * from './schemas/pricing';

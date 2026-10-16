@@ -84,7 +84,10 @@ const eq = (id: string) => `eq.${id}`;
 
 async function exportData(user: AuthUser) {
   const [profile] = await serviceRows<Record<string, unknown>>('GET', `profiles?id=${eq(user.id)}&select=*`);
-  const moves = await serviceRows('GET', `jobs?customer_id=${eq(user.id)}&select=*,pickup_lat,pickup_lon,dropoff_lat,dropoff_lon,quotes(*)&order=created_at.desc`);
+  const moves = await serviceRows(
+    'GET',
+    `jobs?customer_id=${eq(user.id)}&select=*,pickup_lat,pickup_lon,dropoff_lat,dropoff_lon,quotes(*),job_offers(status,expires_at,created_at,answered_at),job_events(event,status,actor_role,created_at)&order=created_at.desc`,
+  );
   const [company] = await serviceRows<Company>('GET', `mover_companies?owner_id=${eq(user.id)}&select=*`);
   const byCompany = async <T>(table: string, select = '*') =>
     company ? await serviceRows<T>('GET', `${table}?company_id=${eq(company.id)}&select=${select}`) : [];
@@ -108,6 +111,8 @@ async function exportData(user: AuthUser) {
     ),
     appeals: await byCompany('mover_appeals', 'id,suspension_id,subject,text,status,decision_reason,created_at,resolved_at&order=created_at.desc'),
     // Which versions of the terms the account accepted, and when; notices of new terms to the company.
+    // Job requests to the company and how they were answered (the moves' details stay the customers').
+    jobRequests: await byCompany('job_offers', 'job_id,status,expires_at,created_at,answered_at&order=created_at.desc'),
     termsAccepted: await serviceRows('GET', `terms_acceptances?user_id=${eq(user.id)}&select=accepted_at,terms_versions(audience,version,effective_at)&order=accepted_at.desc`),
     termsNotices: await byCompany('terms_notices', 'channel,sent_at,terms_versions(audience,version,effective_at)&order=sent_at.desc'),
     // MoversHub's decisions on the company's setup (who decided stays out: MoversHub's staff).
@@ -119,24 +124,35 @@ async function exportData(user: AuthUser) {
   };
 }
 
+/**
+ * Moves that are records to keep: anything beyond a saved request — except one cancelled before any
+ * mover accepted it (nothing happened, nothing was paid).
+ */
+async function keptMoves(filter: string): Promise<boolean> {
+  const moves = await serviceRows<{ status: string; job_offers: { status: string }[] }>(
+    'GET',
+    `jobs?${filter}&status=not.in.(${DELETABLE_JOB_STATUSES.join(',')})&select=status,job_offers(status)`,
+  );
+  return moves.some((m) => m.status !== 'CANCELLED' || m.job_offers.some((o) => o.status === 'accepted'));
+}
+
 /** What must be kept stops the deletion (until anonymising exists — COMPLIANCE-TODO §14). */
 async function keptRecords(userId: string, companyId: string | null): Promise<boolean> {
-  const kept = `status=not.in.(${DELETABLE_JOB_STATUSES.join(',')})`;
-  const own = await serviceRows('GET', `jobs?customer_id=${eq(userId)}&${kept}&select=id&limit=1`);
-  if (own.length) return true;
+  if (await keptMoves(`customer_id=${eq(userId)}`)) return true;
   if (!companyId) return false;
   const [asMover, suspensions] = await Promise.all([
-    serviceRows('GET', `jobs?chosen_mover_company_id=${eq(companyId)}&${kept}&select=id&limit=1`),
+    keptMoves(`chosen_mover_company_id=${eq(companyId)}`),
     serviceRows('GET', `suspensions?company_id=${eq(companyId)}&select=id&limit=1`),
   ]);
-  return asMover.length > 0 || suspensions.length > 0;
+  return asMover || suspensions.length > 0;
 }
 
 async function deleteAccount(user: AuthUser, companyId: string | null): Promise<void> {
   if (companyId) {
-    // Customers' requests with this mover, never booked: they can't be booked any more. Then the
+    // Customers' requests with this mover, never booked or cancelled before any acceptance (keptRecords
+    // checked): they can't be booked any more. Then the
     // mover's older prices on requests that moved on to another mover (the request itself stays).
-    await serviceRows('DELETE', `jobs?chosen_mover_company_id=${eq(companyId)}&status=in.(${DELETABLE_JOB_STATUSES.join(',')})&select=id`);
+    await serviceRows('DELETE', `jobs?chosen_mover_company_id=${eq(companyId)}&status=in.(${DELETABLE_JOB_STATUSES.join(',')},CANCELLED)&select=id`);
     await serviceRows('DELETE', `quotes?mover_company_id=${eq(companyId)}&select=id`);
     // The files first: once the company is gone, nothing would point to them.
     const files = await companyFiles(companyId);

@@ -22,6 +22,8 @@ export const RATE_LIMITS = {
   book: { limit: 20, windowSeconds: 600 },
   /** Downloading or deleting one's data (each export reads every table and signs file links). */
   account: { limit: 10, windowSeconds: 600 },
+  /** Booking, answering an offer, cancelling: a few database writes each. */
+  jobTransition: { limit: 60, windowSeconds: 600 },
 } as const satisfies Record<string, RateLimitRule>;
 export type RateLimitScope = keyof typeof RATE_LIMITS;
 

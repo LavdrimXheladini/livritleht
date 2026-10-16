@@ -14,6 +14,7 @@ import { useVehicles } from '@/lib/vehicles';
 import { DecisionNotices } from './decisions';
 import { UpcomingTerms } from '../terms';
 import { IconRow } from './icon-row';
+import { MoverJobs } from './job-requests';
 import { Reminders } from './reminders';
 
 // What a mover sets up before taking jobs (COMPLIANCE §5). Company, documents, vans and prices are
@@ -33,8 +34,9 @@ const STATUS_TONE: Record<StepStatus, PillTone> = {
 };
 
 /**
- * Signed in: welcome, decisions about the account (a suspension, the account ending), reminders
- * (documents ending), the setup checklist and when location is shared.
+ * Signed in: welcome, decisions about the account (a suspension, the account ending), new terms, job
+ * requests and accepted moves, reminders (documents ending), the setup checklist and when location is
+ * shared.
  */
 export function SetupChecklist() {
   const { t } = useTranslation();
@@ -46,6 +48,8 @@ export function SetupChecklist() {
       </View>
       <DecisionNotices />
       <UpcomingTerms audience="mover" />
+      {/* Job requests to answer and accepted moves (design/DECISIONS.md #35). */}
+      <MoverJobs />
       <Reminders />
       <DarkPanel className="gap-4">
         <Display size={22} tone="dark">

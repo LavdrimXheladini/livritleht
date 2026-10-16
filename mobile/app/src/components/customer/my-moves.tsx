@@ -3,11 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 
 import { Pill, currentLocale, formatMoveDay } from '@movershub/mobile';
-import { formatMoney, jobPlaces, localDay, routeLabel, type JobRow, type Locale } from '@movershub/shared';
+import { formatMoney, jobPlaces, localDay, moveState, routeLabel, type JobRow, type Locale, type MoveState } from '@movershub/shared';
 
 import { useMyMoves } from '@/lib/moves';
 
 import { hourText } from '../booking/when-screen';
+
+/** States shown in a quiet pill: nothing is happening with the move. */
+export const QUIET_STATES: readonly MoveState[] = ['QUOTED', 'DECLINED', 'EXPIRED', 'CANCELLED'];
 
 /**
  * "Your moves" on the customer home (design/DECISIONS.md #28): each saved or booked move — route, day
@@ -39,7 +42,8 @@ function MoveRow({ job, locale }: { job: JobRow; locale: Locale }) {
   const route = routeLabel(pickup, dropoff, (city) => t('landing.quote.withinCity', { city }));
   const when = `${formatMoveDay(localDay(at), locale)}, ${hourText(at.getHours())} · ${t(`vehicles.${job.vehicle_class}.name`)}`;
   const mover = [quote?.mover?.name, quote ? formatMoney(quote.mover_price, quote.currency, locale) : null].filter(Boolean).join(' · ');
-  const status = t(`customer.moves.status.${job.status}`);
+  const state = moveState(job);
+  const status = t(`customer.moves.status.${state}`);
   return (
     <Pressable
       testID={`move-${job.id}`}
@@ -50,7 +54,7 @@ function MoveRow({ job, locale }: { job: JobRow; locale: Locale }) {
     >
       <View className="flex-row flex-wrap items-center justify-between gap-2">
         <Text className="font-sans-semibold text-[15px] text-ink-900">{route}</Text>
-        <Pill size="sm" tone={job.status === 'QUOTED' ? 'neutral' : 'brand'}>
+        <Pill size="sm" tone={QUIET_STATES.includes(state) ? 'neutral' : 'brand'}>
           {status}
         </Pill>
       </View>

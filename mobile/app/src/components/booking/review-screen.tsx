@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-import { Button, Card, CheckIcon, Display, Pill, currentLocale, formatClockTime, useAnnouncement } from '@movershub/mobile';
+import { Button, Card, CheckIcon, Display, Pill, clearBookingDraft, currentLocale, formatClockTime, useAnnouncement } from '@movershub/mobile';
 import { formatExpiryDate, formatMoney, type BookResponse, type BookedMover, type BookingDraft } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
 import { BookError, useBookRequest } from '@/lib/booking';
+import { useJobStep } from '@/lib/jobs';
 
 import { BookingFrame, type UpdateBooking } from './booking-frame';
 import { useCancellationText } from './cancellation';
@@ -144,12 +145,61 @@ function Booked({ answer, expired, onPriceAgain }: { answer: BookResponse; expir
         <Text className="font-sans text-[12.5px] leading-[18px] text-ink-600">{t('booking.review.withdrawal')}</Text>
       </Card>
 
-      {/* Saving the card books the move (COMPLIANCE §6) — Stripe isn't set up yet. */}
-      <Button testID="review-pay" title={t('booking.review.pay')} disabled onPress={() => undefined} />
-      <Text testID="review-pay-note" className="font-sans text-[13px] leading-[19px] text-ink-600">
-        {t('booking.review.payNote')}
-      </Text>
+      {answer.testMover ? (
+        <TestBooking answer={answer} expired={expired} />
+      ) : (
+        <>
+          {/* Saving the card books the move (COMPLIANCE §6) — Stripe isn't set up yet. */}
+          <Button testID="review-pay" title={t('booking.review.pay')} disabled onPress={() => undefined} />
+          <Text testID="review-pay-note" className="font-sans text-[13px] leading-[19px] text-ink-600">
+            {t('booking.review.payNote')}
+          </Text>
+        </>
+      )}
     </>
+  );
+}
+
+/**
+ * A test mover (the platform's own): booked without a card, to try MoversHub end to end until card
+ * payments exist (design/DECISIONS.md #35). The move goes to the mover as a request; the booking being
+ * put together is done, and the move's own screen shows where it stands.
+ */
+function TestBooking({ answer, expired }: { answer: BookResponse; expired: boolean }) {
+  const { t } = useTranslation();
+  const step = useJobStep();
+  const [problem, setProblem] = useState<string | null>(null);
+  useAnnouncement(problem);
+
+  const bookTest = async () => {
+    setProblem(null);
+    const result = await step.mutateAsync({ action: 'book_test', jobId: answer.jobId });
+    if (result.ok) {
+      clearBookingDraft();
+      router.replace({ pathname: '/moves/[id]', params: { id: answer.jobId } });
+      return;
+    }
+    setProblem(
+      result.error === 'quote_expired'
+        ? t('booking.review.expired')
+        : result.error === 'too_late'
+          ? t('booking.review.tooLate')
+          : t('booking.review.error'),
+    );
+  };
+
+  return (
+    <View className="gap-2">
+      <Text testID="review-test-note" className="font-sans text-[13px] leading-[19px] text-ink-700">
+        {t('booking.review.testNote', { name: answer.mover.name })}
+      </Text>
+      <Button testID="review-book-test" title={t('booking.review.bookTest')} disabled={expired} loading={step.isPending} onPress={() => void bookTest()} />
+      {problem ? (
+        <Text testID="review-book-problem" className="font-sans text-[13px] text-danger">
+          {problem}
+        </Text>
+      ) : null}
+    </View>
   );
 }
 

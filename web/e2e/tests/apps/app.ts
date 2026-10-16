@@ -39,6 +39,8 @@ export async function serveFixtures(page: Page) {
   await page.route('**/rest/v1/mover_reminders*', answer('[]'));
   await page.route('**/rest/v1/suspensions*', answer('[]'));
   await page.route('**/rest/v1/mover_appeals*', answer('[]'));
+  // No job requests or accepted moves for a mover (design/DECISIONS.md #35).
+  await page.route('**/rest/v1/rpc/my_mover_jobs*', answer('[]'));
   // No terms published: nothing to accept (design/DECISIONS.md #34).
   await page.route('**/rest/v1/terms_versions*', answer('[]'));
   await page.route('**/rest/v1/terms_acceptances*', answer('[]'));

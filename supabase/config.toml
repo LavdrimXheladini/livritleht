@@ -431,6 +431,11 @@ verify_jwt = false
 [functions.account]
 verify_jwt = false
 
+# Every step of a job: booking (a test booking until card payments exist), the mover's answer,
+# cancelling (signed-in users; the function checks the session and the side).
+[functions.job-transition]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

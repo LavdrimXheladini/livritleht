@@ -130,8 +130,19 @@
         "AT_DROPOFF": "Na miejscu dostawy",
         "COMPLETED": "Zakończona",
         "CANCELLED": "Anulowana",
-        "DISPUTED": "Sporna"
-      }
+        "DISPUTED": "Sporna",
+        "DECLINED": "Przewoźnik odmówił",
+        "EXPIRED": "Brak odpowiedzi przewoźnika"
+      },
+      "offeredNote": "Wysłano do przewoźnika {{name}}. Odpowiedź do {{date}}, {{time}} — jeśli odmówi lub nie odpowie, wybierzesz innego przewoźnika. Do tego czasu nic nie jest pobierane.",
+      "acceptedNote": "Przewoźnik {{name}} przyjął Twoją przeprowadzkę.",
+      "declinedNote": "Przewoźnik {{name}} nie może wykonać tej przeprowadzki. Wybierz innego przewoźnika — nic nie jest pobierane.",
+      "expiredNote": "Przewoźnik {{name}} nie odpowiedział na czas. Wybierz innego przewoźnika — nic nie jest pobierane.",
+      "cancelledNote": "Ta przeprowadzka jest anulowana. Nic nie zostało pobrane.",
+      "cancel": "Anuluj tę przeprowadzkę",
+      "cancelConfirm": "Anulować tę przeprowadzkę? Żaden przewoźnik jeszcze jej nie przyjął, więc nic nie jest pobierane.",
+      "cancelYes": "Tak, anuluj",
+      "cancelKeep": "Zostaw"
     }
   },
   "booking": {
@@ -254,7 +265,10 @@
       "chooseAnother": "Wybierz innego przewoźnika",
       "invalidDate": "Dzień przeprowadzki minął. Wybierz inny dzień.",
       "chooseDay": "Wybierz inny dzień",
-      "error": "Nie udało się teraz sprawdzić ceny."
+      "error": "Nie udało się teraz sprawdzić ceny.",
+      "bookTest": "Zarezerwuj (test, bez karty)",
+      "testNote": "{{name}} to testowy przewoźnik: ta rezerwacja służy do wypróbowania MoversHub. Nic nie jest pobierane i nie przyjedzie żaden prawdziwy przewoźnik.",
+      "tooLate": "Przeprowadzka zaczyna się zbyt szybko, by wysłać ją do przewoźnika. Wybierz późniejszą godzinę."
     }
   },
   "items": {
@@ -652,6 +666,22 @@
         "appeal_too_long": "Napisz najwyżej 4000 znaków.",
         "not_appealable": "Ta decyzja już nie obowiązuje, więc nie ma od czego się odwoływać.",
         "too_many_open": "Trzy twoje odwołania i skargi czekają na odpowiedź. Wyślij kolejne, gdy na jedno przyjdzie odpowiedź."
+      }
+    },
+    "jobs": {
+      "requestsTitle": "Zapytania o zlecenia",
+      "acceptedTitle": "Twoje zlecenia",
+      "accepted": "Przyjęte",
+      "levels": "Odbiór: {{pickup}} · Dostawa: {{dropoff}}",
+      "answerBy": "Odpowiedz do {{date}}, {{time}}",
+      "declineNote": "Odmowa jest bezpłatna i nigdy nie obniża Twojej pozycji.",
+      "acceptedDone": "Przyjęte. Dokładne adresy są widoczne.",
+      "declinedDone": "Odmówiono. Klient wybierze innego przewoźnika.",
+      "directions": "Wskazówki: {{text}}",
+      "errors": {
+        "offer_expired": "To zapytanie się skończyło: czas na odpowiedź minął.",
+        "already_answered": "Na to zapytanie już odpowiedziano.",
+        "not_open": "Klient anulował to zapytanie."
       }
     }
   },

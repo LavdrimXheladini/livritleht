@@ -130,8 +130,19 @@
         "AT_DROPOFF": "At the drop-off",
         "COMPLETED": "Completed",
         "CANCELLED": "Cancelled",
-        "DISPUTED": "In dispute"
-      }
+        "DISPUTED": "In dispute",
+        "DECLINED": "Your mover said no",
+        "EXPIRED": "No answer from your mover"
+      },
+      "offeredNote": "Sent to {{name}}. They answer by {{date}}, {{time}} — if they say no or don't answer, you choose another mover. Nothing is charged until then.",
+      "acceptedNote": "{{name}} accepted your move.",
+      "declinedNote": "{{name}} can't do this move. Choose another mover — nothing is charged.",
+      "expiredNote": "{{name}} didn't answer in time. Choose another mover — nothing is charged.",
+      "cancelledNote": "This move is cancelled. Nothing was charged.",
+      "cancel": "Cancel this move",
+      "cancelConfirm": "Cancel this move? No mover has accepted it yet, so nothing is charged.",
+      "cancelYes": "Yes, cancel",
+      "cancelKeep": "Keep it"
     }
   },
   "booking": {
@@ -254,7 +265,10 @@
       "chooseAnother": "Choose another mover",
       "invalidDate": "The move day has passed. Choose another day.",
       "chooseDay": "Choose another day",
-      "error": "We couldn't check the price right now."
+      "error": "We couldn't check the price right now.",
+      "bookTest": "Book (test, no card)",
+      "testNote": "{{name}} is a test mover: this booking is for trying MoversHub. Nothing is charged and no real mover comes.",
+      "tooLate": "The move starts too soon to be sent to a mover. Choose a later time."
     }
   },
   "items": {
@@ -652,6 +666,22 @@
         "appeal_too_long": "Write at most 4000 characters.",
         "not_appealable": "This decision no longer applies, so there is nothing to appeal.",
         "too_many_open": "Three of your appeals and complaints are waiting for an answer. Send more once one is answered."
+      }
+    },
+    "jobs": {
+      "requestsTitle": "Job requests",
+      "acceptedTitle": "Your jobs",
+      "accepted": "Accepted",
+      "levels": "Pickup: {{pickup}} · Drop-off: {{dropoff}}",
+      "answerBy": "Answer by {{date}}, {{time}}",
+      "declineNote": "Declining is free and never moves you down.",
+      "acceptedDone": "Accepted. The exact addresses are shown.",
+      "declinedDone": "Declined. The customer chooses another mover.",
+      "directions": "Directions: {{text}}",
+      "errors": {
+        "offer_expired": "This request has ended: the time to answer is over.",
+        "already_answered": "This request was already answered.",
+        "not_open": "The customer has cancelled this request."
       }
     }
   },

@@ -130,8 +130,19 @@
         "AT_DROPOFF": "Na mestu dostave",
         "COMPLETED": "Završena",
         "CANCELLED": "Otkazana",
-        "DISPUTED": "U sporu"
-      }
+        "DISPUTED": "U sporu",
+        "DECLINED": "Prevoznik je odbio",
+        "EXPIRED": "Prevoznik nije odgovorio"
+      },
+      "offeredNote": "Poslato prevozniku {{name}}. Odgovara do {{date}}, {{time}} — ako odbije ili ne odgovori, birate drugog prevoznika. Do tada se ništa ne naplaćuje.",
+      "acceptedNote": "Prevoznik {{name}} je prihvatio vašu selidbu.",
+      "declinedNote": "Prevoznik {{name}} ne može da obavi ovu selidbu. Izaberite drugog prevoznika — ništa se ne naplaćuje.",
+      "expiredNote": "Prevoznik {{name}} nije odgovorio na vreme. Izaberite drugog prevoznika — ništa se ne naplaćuje.",
+      "cancelledNote": "Ova selidba je otkazana. Ništa nije naplaćeno.",
+      "cancel": "Otkaži ovu selidbu",
+      "cancelConfirm": "Otkazati ovu selidbu? Nijedan prevoznik je još nije prihvatio, pa se ništa ne naplaćuje.",
+      "cancelYes": "Da, otkaži",
+      "cancelKeep": "Zadrži"
     }
   },
   "booking": {
@@ -254,7 +265,10 @@
       "chooseAnother": "Izaberi drugog prevoznika",
       "invalidDate": "Dan selidbe je prošao. Izaberite drugi dan.",
       "chooseDay": "Izaberi drugi dan",
-      "error": "Trenutno nismo mogli da proverimo cenu."
+      "error": "Trenutno nismo mogli da proverimo cenu.",
+      "bookTest": "Rezerviši (test, bez kartice)",
+      "testNote": "{{name}} je test prevoznik: ova rezervacija služi da isprobate MoversHub. Ništa se ne naplaćuje i ne dolazi pravi prevoznik.",
+      "tooLate": "Selidba počinje prerano da bi se poslala prevozniku. Izaberite kasnije vreme."
     }
   },
   "items": {
@@ -652,6 +666,22 @@
         "appeal_too_long": "Napišite najviše 4000 znakova.",
         "not_appealable": "Ova odluka više ne važi, pa nema na šta da se žalite.",
         "too_many_open": "Tri vaše žalbe i prigovora čekaju odgovor. Pošaljite nove kada na jedan stigne odgovor."
+      }
+    },
+    "jobs": {
+      "requestsTitle": "Zahtevi za poslove",
+      "acceptedTitle": "Vaši poslovi",
+      "accepted": "Prihvaćeno",
+      "levels": "Preuzimanje: {{pickup}} · Isporuka: {{dropoff}}",
+      "answerBy": "Odgovorite do {{date}}, {{time}}",
+      "declineNote": "Odbijanje je besplatno i nikada vas ne spušta niže.",
+      "acceptedDone": "Prihvaćeno. Tačne adrese su prikazane.",
+      "declinedDone": "Odbijeno. Klijent bira drugog prevoznika.",
+      "directions": "Uputstva: {{text}}",
+      "errors": {
+        "offer_expired": "Ovaj zahtev je istekao: vreme za odgovor je prošlo.",
+        "already_answered": "Na ovaj zahtev je već odgovoreno.",
+        "not_open": "Klijent je otkazao ovaj zahtev."
       }
     }
   },

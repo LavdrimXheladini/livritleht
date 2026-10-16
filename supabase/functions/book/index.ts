@@ -25,6 +25,7 @@ type CompanyRow = {
   country: string;
   contact_phone: string | null;
   contact_email: string | null;
+  is_test: boolean;
 };
 
 Deno.serve(async (req) => {
@@ -78,7 +79,7 @@ Deno.serve(async (req) => {
     // The mover as the customer sees them now (COMPLIANCE §4) — kept with the quote.
     const [company] = await serviceRows<CompanyRow>(
       'GET',
-      `mover_companies?id=eq.${booking.row.company_id}&select=legal_name,is_business,registration_no,address,country,contact_phone,contact_email`,
+      `mover_companies?id=eq.${booking.row.company_id}&select=legal_name,is_business,registration_no,address,country,contact_phone,contact_email,is_test`,
     );
     if (!company) throw new Error('mover_companies: no row');
     const mover: BookedMover = {
@@ -117,6 +118,8 @@ Deno.serve(async (req) => {
         total: q.total,
       },
       mover,
+      // A test mover is booked without a card until card payments exist (design/DECISIONS.md #35).
+      testMover: company.is_test,
     };
     return json(req, answer);
   } catch (e) {

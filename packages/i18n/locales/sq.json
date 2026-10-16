@@ -130,8 +130,19 @@
         "AT_DROPOFF": "Te vendi i dorëzimit",
         "COMPLETED": "E përfunduar",
         "CANCELLED": "E anuluar",
-        "DISPUTED": "Në mosmarrëveshje"
-      }
+        "DISPUTED": "Në mosmarrëveshje",
+        "DECLINED": "Transportuesi tha jo",
+        "EXPIRED": "Pa përgjigje nga transportuesi"
+      },
+      "offeredNote": "U dërgua te {{name}}. Përgjigjet deri më {{date}}, {{time}} — nëse thotë jo ose nuk përgjigjet, zgjedh një transportues tjetër. Deri atëherë nuk paguhet asgjë.",
+      "acceptedNote": "{{name}} e pranoi zhvendosjen tënde.",
+      "declinedNote": "{{name}} nuk mund ta bëjë këtë zhvendosje. Zgjidh një transportues tjetër — nuk paguhet asgjë.",
+      "expiredNote": "{{name}} nuk u përgjigj me kohë. Zgjidh një transportues tjetër — nuk paguhet asgjë.",
+      "cancelledNote": "Kjo zhvendosje është anuluar. Nuk u pagua asgjë.",
+      "cancel": "Anulo këtë zhvendosje",
+      "cancelConfirm": "Ta anulosh këtë zhvendosje? Asnjë transportues nuk e ka pranuar ende, prandaj nuk paguhet asgjë.",
+      "cancelYes": "Po, anuloje",
+      "cancelKeep": "Mbaje"
     }
   },
   "booking": {
@@ -254,7 +265,10 @@
       "chooseAnother": "Zgjidh një transportues tjetër",
       "invalidDate": "Dita e shpërnguljes ka kaluar. Zgjidh një ditë tjetër.",
       "chooseDay": "Zgjidh një ditë tjetër",
-      "error": "Nuk mundëm ta kontrollojmë çmimin tani."
+      "error": "Nuk mundëm ta kontrollojmë çmimin tani.",
+      "bookTest": "Rezervo (test, pa kartë)",
+      "testNote": "{{name}} është transportues testues: ky rezervim shërben për të provuar MoversHub. Nuk paguhet asgjë dhe nuk vjen asnjë transportues i vërtetë.",
+      "tooLate": "Zhvendosja fillon shumë shpejt për t'iu dërguar një transportuesi. Zgjidh një orë më të vonë."
     }
   },
   "items": {
@@ -652,6 +666,22 @@
         "appeal_too_long": "Shkruaj jo më shumë se 4000 shkronja.",
         "not_appealable": "Ky vendim nuk vlen më, prandaj s’ka çfarë të ankohesh.",
         "too_many_open": "Tri nga ankesat e tua presin përgjigje. Dërgo të tjera pasi të marrë përgjigje njëra."
+      }
+    },
+    "jobs": {
+      "requestsTitle": "Kërkesa për punë",
+      "acceptedTitle": "Punët e tua",
+      "accepted": "E pranuar",
+      "levels": "Marrja: {{pickup}} · Dorëzimi: {{dropoff}}",
+      "answerBy": "Përgjigju deri më {{date}}, {{time}}",
+      "declineNote": "Refuzimi është falas dhe nuk të ul kurrë në renditje.",
+      "acceptedDone": "U pranua. Adresat e sakta shfaqen.",
+      "declinedDone": "U refuzua. Klienti zgjedh një transportues tjetër.",
+      "directions": "Udhëzime: {{text}}",
+      "errors": {
+        "offer_expired": "Kjo kërkesë ka mbaruar: koha për t'u përgjigjur kaloi.",
+        "already_answered": "Kësaj kërkese i është përgjigjur tashmë.",
+        "not_open": "Klienti e ka anuluar këtë kërkesë."
       }
     }
   },

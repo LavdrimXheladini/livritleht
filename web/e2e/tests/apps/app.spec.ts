@@ -637,6 +637,67 @@ test.describe('booking a move', () => {
         insuranceUntil: '2027-12-31T23:59:59+00:00',
         cancellation: { freeHours: 24, latePct: 50 },
       },
+      testMover: false,
+      ...changes,
+    };
+  };
+
+  /** The move saved by `book` (bookAnswer) as the customer reads it back ("Your moves"). */
+  const savedJob = (changes: Record<string, unknown> = {}) => {
+    const answer = bookAnswer();
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    return {
+      id: answer.jobId,
+      status: 'QUOTED',
+      type: 'SMALL_MOVE',
+      vehicle_class: 'VAN',
+      helpers: 2,
+      scheduled_at: new Date(2026, 9, 16, 9).toISOString(),
+      pickup_area: 'Prishtina',
+      pickup_district: null,
+      pickup_country: 'XK',
+      pickup_label: 'Prishtina',
+      pickup_street: null,
+      pickup_house_number: null,
+      pickup_details: 'Block B, entrance 2',
+      pickup_floor: 2,
+      pickup_has_lift: false,
+      pickup_lat: 42.6629,
+      pickup_lon: 21.1655,
+      dropoff_area: street.area,
+      dropoff_district: null,
+      dropoff_country: 'XK',
+      dropoff_label: street.label,
+      dropoff_street: street.street,
+      dropoff_house_number: street.houseNumber,
+      dropoff_details: '',
+      dropoff_floor: 0,
+      dropoff_has_lift: false,
+      dropoff_lat: street.lat,
+      dropoff_lon: street.lon,
+      items: [
+        { key: 'sofa3', qty: 1, assembly: false },
+        { key: 'box', qty: 10, assembly: false },
+      ],
+      distance_km: 83.2,
+      chosen_mover_company_id: prizren.companyId,
+      chosen_vehicle_id: prizren.vehicleId,
+      created_at: new Date(2026, 9, 15, 9, 50).toISOString(),
+      quotes: [
+        {
+          id: answer.quote.id,
+          currency: 'EUR',
+          line_items: answer.quote.lines,
+          mover_price: answer.quote.moverPrice,
+          booking_fee: null,
+          total: answer.quote.total,
+          cancel_free_hours: 24,
+          cancel_late_pct: 50,
+          expires_at: new Date(2026, 9, 15, 10, 5).toISOString(),
+          created_at: new Date(2026, 9, 15, 9, 50).toISOString(),
+          mover: answer.mover,
+        },
+      ],
       ...changes,
     };
   };
@@ -877,59 +938,7 @@ test.describe('booking a move', () => {
   test('my moves: saved requests on the home; a move shows its addresses, mover and price, and can be continued', async ({ page }) => {
     const answer = bookAnswer();
     const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
-    const job = {
-      id: answer.jobId,
-      status: 'QUOTED',
-      type: 'SMALL_MOVE',
-      vehicle_class: 'VAN',
-      helpers: 2,
-      scheduled_at: new Date(2026, 9, 16, 9).toISOString(),
-      pickup_area: 'Prishtina',
-      pickup_district: null,
-      pickup_country: 'XK',
-      pickup_label: 'Prishtina',
-      pickup_street: null,
-      pickup_house_number: null,
-      pickup_details: 'Block B, entrance 2',
-      pickup_floor: 2,
-      pickup_has_lift: false,
-      pickup_lat: 42.6629,
-      pickup_lon: 21.1655,
-      dropoff_area: street.area,
-      dropoff_district: null,
-      dropoff_country: 'XK',
-      dropoff_label: street.label,
-      dropoff_street: street.street,
-      dropoff_house_number: street.houseNumber,
-      dropoff_details: '',
-      dropoff_floor: 0,
-      dropoff_has_lift: false,
-      dropoff_lat: street.lat,
-      dropoff_lon: street.lon,
-      items: [
-        { key: 'sofa3', qty: 1, assembly: false },
-        { key: 'box', qty: 10, assembly: false },
-      ],
-      distance_km: 83.2,
-      chosen_mover_company_id: prizren.companyId,
-      chosen_vehicle_id: prizren.vehicleId,
-      created_at: new Date(2026, 9, 15, 9, 50).toISOString(),
-      quotes: [
-        {
-          id: answer.quote.id,
-          currency: 'EUR',
-          line_items: answer.quote.lines,
-          mover_price: answer.quote.moverPrice,
-          booking_fee: null,
-          total: answer.quote.total,
-          cancel_free_hours: 24,
-          cancel_late_pct: 50,
-          expires_at: new Date(2026, 9, 15, 10, 5).toISOString(),
-          created_at: new Date(2026, 9, 15, 9, 50).toISOString(),
-          mover: answer.mover,
-        },
-      ],
-    };
+    const job = savedJob();
     await page.route('**/rest/v1/jobs*', (route) =>
       route.request().method() === 'OPTIONS'
         ? route.fulfill({ status: 204, headers: cors })
@@ -948,7 +957,7 @@ test.describe('booking a move', () => {
 
     // Its own screen: everything agreed, as the customer saw it (COMPLIANCE §4).
     await row.click();
-    await expect(page.getByTestId('move-quoted-note')).toHaveText(m.quotedNote);
+    await expect(page.getByTestId('move-state-note')).toHaveText(m.quotedNote);
     await expect(page.getByTestId('move-pickup')).toContainText('Block B, entrance 2');
     await expect(page.getByTestId('move-pickup')).toContainText(`${b.stops.floorN.replace('{{n}}', '2')} · ${b.stops.liftNo}`);
     await expect(page.getByTestId('move-items')).toContainText(`${en.items.sofa3} × 1`);
@@ -966,6 +975,74 @@ test.describe('booking a move', () => {
     await page.getByTestId('move-continue').click();
     await expect(page.getByText(b.review.title)).toBeVisible();
     expect(sent.at(-1)).toMatchObject({ jobId: job.id, vehicleId: prizren.vehicleId, helpers: 2, scheduledAt: job.scheduled_at });
+  });
+
+  /** `jobs`: the customer's moves as they are now; `job-transition`: records each step and says it worked. */
+  async function fakeMoves(page: Page, moves: () => unknown[]) {
+    const steps: Record<string, unknown>[] = [];
+    await page.route('**/rest/v1/jobs*', (route) =>
+      route.request().method() === 'OPTIONS'
+        ? route.fulfill({ status: 204, headers: cors })
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify(moves()) }),
+    );
+    await page.route('**/functions/v1/job-transition', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      const step = route.request().postDataJSON() as Record<string, unknown>;
+      steps.push(step);
+      const status = step.action === 'cancel' ? 'CANCELLED' : 'OFFERED';
+      return route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ status, offerId: '00000000-0000-4000-8000-0000000f0001' }) });
+    });
+    return steps;
+  }
+
+  test('a test booking: a test mover is booked without a card, and the move waits for their answer', async ({ page }) => {
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    await fakeBook(page, { body: bookAnswer({ testMover: true }) });
+    let booked = false;
+    const offer = { status: 'offered', expires_at: new Date(2026, 9, 15, 11).toISOString(), created_at: new Date(2026, 9, 15, 10).toISOString() };
+    const steps = await fakeMoves(page, () => (booked ? [savedJob({ status: 'OFFERED', job_offers: [offer] })] : []));
+    await plannedMove(page, { choice: { vehicleId: prizren.vehicleId, companyId: prizren.companyId } });
+    await page.goto(`${url}book/review`);
+    const m = en.customer.moves;
+
+    // No card for a test mover — and never for a real one (the review test above).
+    await expect(page.getByTestId('review-test-note')).toHaveText(b.review.testNote.replace('{{name}}', prizren.companyName));
+    await expect(page.getByTestId('review-pay')).toHaveCount(0);
+    booked = true;
+    await page.getByTestId('review-book-test').click();
+    await expect(page.getByTestId('move-state-note')).toHaveText(
+      m.offeredNote.replace('{{name}}', prizren.companyName).replace('{{date}}', 'Thu 15 Oct').replace('{{time}}', '11:00'),
+    );
+    expect(steps).toEqual([{ action: 'book_test', jobId: savedJob().id }]);
+    // The move being put together is done.
+    expect(await stored(page, 'movershub.booking')).toBeNull();
+    await expect(page.getByTestId('move-continue')).toHaveCount(0);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('customer-move-offered.png');
+  });
+
+  test('the mover said no: the same move, another mover — or cancel it, for free', async ({ page }) => {
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    const declined = { status: 'declined', expires_at: new Date(2026, 9, 15, 11).toISOString(), created_at: new Date(2026, 9, 15, 10).toISOString() };
+    const steps = await fakeMoves(page, () => [savedJob({ job_offers: [declined] })]);
+    const m = en.customer.moves;
+    await page.goto(url);
+    await expect(page.getByTestId(`move-${savedJob().id}`)).toContainText(m.status.DECLINED);
+    await page.getByTestId(`move-${savedJob().id}`).click();
+    await expect(page.getByTestId('move-state-note')).toHaveText(m.declinedNote.replace('{{name}}', prizren.companyName));
+
+    // Cancel: asked once more, then done.
+    await page.getByTestId('move-cancel').click();
+    await expect(app(page).getByText(m.cancelConfirm)).toBeVisible();
+    await page.getByTestId('move-cancel-yes').click();
+    await expect.poll(() => steps).toEqual([{ action: 'cancel', jobId: savedJob().id }]);
+
+    // Another mover for the same move: the movers step, nobody chosen.
+    await page.getByTestId('move-continue').click();
+    await expect(page.getByText(b.movers.title)).toBeVisible();
+    const draft = JSON.parse((await stored(page, 'movershub.booking'))!).draft as { choice: unknown; jobId: string };
+    expect(draft.choice).toBeNull();
+    expect(draft.jobId).toBe(savedJob().id);
   });
 
   test('the move stays on the device after a reload, and is forgotten on sign out', async ({ page }) => {
@@ -1399,6 +1476,97 @@ test.describe('signed in as a mover', () => {
     // "Upload the new one" opens the documents.
     await page.getByTestId('reminder-cmr-upload').click();
     await expect(page.getByText(en.mover.documents.title)).toBeVisible();
+  });
+
+  test('job requests: the area only until accepted; accepting shows the exact places; declining is free (COMPLIANCE §2, §9.1)', async ({ page }) => {
+    const request = (n: number, accepted = false) => ({
+      offer_id: `00000000-0000-4000-8000-0000000f000${n}`,
+      offer_status: accepted ? 'accepted' : 'offered',
+      offer_expires_at: '2026-10-21T20:00:00+00:00',
+      job_id: `00000000-0000-4000-8000-0000000e000${n}`,
+      status: accepted ? 'ACCEPTED' : 'OFFERED',
+      type: 'SMALL_MOVE',
+      vehicle_class: 'VAN',
+      helpers: 2,
+      scheduled_at: '2026-10-23T07:00:00+00:00',
+      items: [
+        { key: 'sofa3', qty: 1, assembly: false },
+        { key: 'box', qty: 10, assembly: false },
+      ],
+      distance_km: 83.2,
+      est_labor_min: 75,
+      pickup_area: 'Prishtina',
+      pickup_district: 'Dardania',
+      pickup_country: 'XK',
+      pickup_floor: 3,
+      pickup_has_lift: false,
+      dropoff_area: 'Prizren',
+      dropoff_district: null,
+      dropoff_country: 'XK',
+      dropoff_floor: 0,
+      dropoff_has_lift: false,
+      currency: 'EUR',
+      line_items: [{ kind: 'base', amount: 5000 }],
+      mover_price: 5000,
+      take_rate_pct: 20,
+      platform_commission: 1000,
+      mover_payout: 4000,
+      cancel_free_hours: 48,
+      cancel_late_pct: 50,
+      pickup_label: accepted ? 'Rr. Agim Ramadani 12, Prishtina' : null,
+      pickup_street: accepted ? 'Rr. Agim Ramadani' : null,
+      pickup_house_number: accepted ? '12' : null,
+      pickup_details: accepted ? 'Ring twice' : null,
+      pickup_lat: accepted ? 42.6629 : null,
+      pickup_lon: accepted ? 21.1655 : null,
+      dropoff_label: accepted ? 'Prizren' : null,
+      dropoff_street: null,
+      dropoff_house_number: null,
+      dropoff_details: accepted ? '' : null,
+      dropoff_lat: accepted ? 42.2139 : null,
+      dropoff_lon: accepted ? 20.7397 : null,
+    });
+    let rows = [request(1), request(2)];
+    const steps: Record<string, unknown>[] = [];
+    await page.route('**/rest/v1/rpc/my_mover_jobs*', (route) =>
+      route.request().method() === 'OPTIONS'
+        ? route.fulfill({ status: 204, headers: cors })
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify(rows) }),
+    );
+    await page.route('**/functions/v1/job-transition', (route) => {
+      if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+      const step = route.request().postDataJSON() as { action: string; offerId: string };
+      steps.push(step);
+      rows = step.action === 'accept' ? rows.map((r) => (r.offer_id === step.offerId ? request(1, true) : r)) : rows.filter((r) => r.offer_id !== step.offerId);
+      return route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ status: step.action === 'accept' ? 'ACCEPTED' : 'QUOTED' }) });
+    });
+    await page.goto(url);
+    const j = en.mover.jobs;
+    const st = en.booking.stops;
+
+    // Before accepting: the town and neighbourhood, the work, their own price and payout — no address.
+    const first = page.getByTestId('job-request-00000000-0000-4000-8000-0000000e0001');
+    await expect(first).toContainText('Dardania, Prishtina → Prizren');
+    await expect(first).toContainText(en.landing.movers.phone.district);
+    await expect(first).toContainText(j.levels.replace('{{pickup}}', `${st.floorN.replace('{{n}}', '3')} · ${st.liftNo}`).replace('{{dropoff}}', st.ground));
+    await expect(first).toContainText('€40');
+    await expect(first).toContainText(en.landing.movers.phone.breakdown.replace('{{price}}', '€50').replace('{{pct}}', '20'));
+    await expect(app(page).getByText('Rr. Agim Ramadani', { exact: false })).toHaveCount(0);
+    await expect(page.getByTestId('job-requests')).toContainText(j.declineNote);
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('mover-job-requests.png');
+
+    // Declining the second costs nothing; accepting the first shows where to go.
+    await page.getByTestId('job-request-00000000-0000-4000-8000-0000000e0002-decline').click();
+    await expect(page.getByTestId('job-request-00000000-0000-4000-8000-0000000e0002')).toHaveCount(0);
+    await page.getByTestId('job-request-00000000-0000-4000-8000-0000000e0001-accept').click();
+    const job = page.getByTestId('my-job-00000000-0000-4000-8000-0000000e0001');
+    await expect(job.getByTestId('my-job-00000000-0000-4000-8000-0000000e0001-pickup')).toContainText('Rr. Agim Ramadani 12, Prishtina');
+    await expect(job).toContainText(j.directions.replace('{{text}}', 'Ring twice'));
+    expect(steps).toEqual([
+      { action: 'decline', offerId: '00000000-0000-4000-8000-0000000f0002' },
+      { action: 'accept', offerId: '00000000-0000-4000-8000-0000000f0001' },
+    ]);
   });
 
   test('a decision about the account: the reasons on the home, an appeal from there; a complaint about anything else (COMPLIANCE §3)', async ({ page }) => {

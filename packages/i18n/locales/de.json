@@ -130,8 +130,19 @@
         "AT_DROPOFF": "An der Lieferadresse",
         "COMPLETED": "Abgeschlossen",
         "CANCELLED": "Storniert",
-        "DISPUTED": "Im Streitfall"
-      }
+        "DISPUTED": "Im Streitfall",
+        "DECLINED": "Dein Umzugsunternehmen hat abgelehnt",
+        "EXPIRED": "Keine Antwort vom Umzugsunternehmen"
+      },
+      "offeredNote": "An {{name}} gesendet. Antwort bis {{date}}, {{time}} — lehnt es ab oder antwortet nicht, wählst du ein anderes Umzugsunternehmen. Bis dahin wird nichts belastet.",
+      "acceptedNote": "{{name}} hat deinen Umzug angenommen.",
+      "declinedNote": "{{name}} kann diesen Umzug nicht übernehmen. Wähle ein anderes Umzugsunternehmen — es wird nichts belastet.",
+      "expiredNote": "{{name}} hat nicht rechtzeitig geantwortet. Wähle ein anderes Umzugsunternehmen — es wird nichts belastet.",
+      "cancelledNote": "Dieser Umzug ist storniert. Es wurde nichts belastet.",
+      "cancel": "Diesen Umzug stornieren",
+      "cancelConfirm": "Diesen Umzug stornieren? Noch hat ihn kein Umzugsunternehmen angenommen, also wird nichts belastet.",
+      "cancelYes": "Ja, stornieren",
+      "cancelKeep": "Behalten"
     }
   },
   "booking": {
@@ -254,7 +265,10 @@
       "chooseAnother": "Anderes Unternehmen wählen",
       "invalidDate": "Der Umzugstag ist vorbei. Wähle einen anderen Tag.",
       "chooseDay": "Anderen Tag wählen",
-      "error": "Wir konnten den Preis gerade nicht prüfen."
+      "error": "Wir konnten den Preis gerade nicht prüfen.",
+      "bookTest": "Buchen (Test, ohne Karte)",
+      "testNote": "{{name}} ist ein Test-Umzugsunternehmen: Diese Buchung dient zum Ausprobieren von MoversHub. Es wird nichts belastet und kein echtes Umzugsunternehmen kommt.",
+      "tooLate": "Der Umzug beginnt zu bald, um ihn an ein Umzugsunternehmen zu senden. Wähle eine spätere Uhrzeit."
     }
   },
   "items": {
@@ -652,6 +666,22 @@
         "appeal_too_long": "Schreib höchstens 4000 Zeichen.",
         "not_appealable": "Diese Entscheidung gilt nicht mehr, du kannst also keinen Einspruch mehr dagegen einlegen.",
         "too_many_open": "Drei deiner Einsprüche und Beschwerden warten auf Antwort. Sende weitere, sobald einer beantwortet ist."
+      }
+    },
+    "jobs": {
+      "requestsTitle": "Auftragsanfragen",
+      "acceptedTitle": "Deine Aufträge",
+      "accepted": "Angenommen",
+      "levels": "Abholung: {{pickup}} · Lieferung: {{dropoff}}",
+      "answerBy": "Antworten bis {{date}}, {{time}}",
+      "declineNote": "Ablehnen ist kostenlos und stuft dich nie herab.",
+      "acceptedDone": "Angenommen. Die genauen Adressen werden angezeigt.",
+      "declinedDone": "Abgelehnt. Der Kunde wählt ein anderes Umzugsunternehmen.",
+      "directions": "Hinweise: {{text}}",
+      "errors": {
+        "offer_expired": "Diese Anfrage ist abgelaufen: Die Zeit zum Antworten ist vorbei.",
+        "already_answered": "Diese Anfrage wurde bereits beantwortet.",
+        "not_open": "Der Kunde hat diese Anfrage storniert."
       }
     }
   },

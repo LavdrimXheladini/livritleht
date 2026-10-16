@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { CURRENCIES, JOB_STATUSES, JOB_TYPES, VEHICLE_CLASSES } from '../constants';
 import { bookedMoverSchema, bookingDraftSchema, localDay, type BookingDraft, type BookingItems, type BookingStop } from './booking';
+import { OFFER_STATUSES } from './job-transition';
 import { jobItemSchema } from './pricing';
 
 // A customer's saved move as the app reads it (`jobs` with its latest quote — RLS: their own only),
@@ -23,6 +24,10 @@ const quoteRowSchema = z.object({
   mover: bookedMoverSchema.nullable().catch(null),
 });
 export type JobQuoteRow = z.infer<typeof quoteRowSchema>;
+
+/** A request to the mover for this move (design/DECISIONS.md #35): open, answered, ended or cancelled. */
+const offerRowSchema = z.object({ status: z.enum(OFFER_STATUSES), expires_at: z.string(), created_at: z.string() });
+export type JobOfferRow = z.infer<typeof offerRowSchema>;
 
 const stopColumns = (prefix: 'pickup' | 'dropoff') =>
   [
@@ -76,6 +81,8 @@ export const jobRowSchema = z.object({
   created_at: z.string(),
   /** The latest quote only (the select orders and limits it). */
   quotes: z.array(quoteRowSchema),
+  /** The requests to movers for this move, newest first (the select orders them). */
+  job_offers: z.array(offerRowSchema).default([]),
 });
 export type JobRow = z.infer<typeof jobRowSchema>;
 
@@ -97,7 +104,20 @@ export const JOB_COLUMNS = [
   'chosen_vehicle_id',
   'created_at',
   `quotes(${QUOTE_COLUMNS})`,
+  `job_offers(${Object.keys(offerRowSchema.shape).join(',')})`,
 ].join(',');
+
+/**
+ * Where a customer's move stands, for the words shown: a saved request comes back `declined` or
+ * `expired` when its mover said no or didn't answer in time (choose another mover); otherwise its status.
+ */
+export type MoveState = JobRow['status'] | 'DECLINED' | 'EXPIRED';
+export function moveState(job: Pick<JobRow, 'status' | 'job_offers'>): MoveState {
+  const last = job.job_offers[0];
+  if (job.status === 'QUOTED' && last?.status === 'declined') return 'DECLINED';
+  if (job.status === 'QUOTED' && last?.status === 'expired') return 'EXPIRED';
+  return job.status;
+}
 
 function stopFromRow(job: JobRow, prefix: 'pickup' | 'dropoff'): BookingStop {
   const district = job[`${prefix}_district`];
