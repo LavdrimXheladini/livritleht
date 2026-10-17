@@ -25,9 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # A fixed version (the one used locally): "latest" asks GitHub's API on every run, which fails
+      # when that API's rate limit is reached.
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.110.0
       - run: supabase db start
       - run: supabase test db
 
