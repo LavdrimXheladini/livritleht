@@ -7,7 +7,12 @@ import {
   bookRequestFromDraft,
   bookRequestSchema,
   bookingDraftSchema,
+  CANCELLATION_FEES_CHARGED,
+  MOVER_LATE_FREE_CANCEL_MINUTES,
+  cancellationNow,
   cancellationTerms,
+  freeCancellationUntil,
+  lateCancellationFee,
   jobType,
   fittingClass,
   jobItems,
@@ -179,5 +184,56 @@ describe('cancellation terms', () => {
     expect(cancellationTerms({ cancel_free_hours: 48, cancel_late_pct: 50 })).toEqual({ freeHours: 48, latePct: 50 });
     expect(cancellationTerms({ cancel_free_hours: null, cancel_late_pct: null })).toBeNull();
     expect(cancellationTerms({ cancel_free_hours: 12, cancel_late_pct: 50 })).toBeNull();
+  });
+});
+
+describe('cancelling after a mover accepted (the same examples as the database test)', () => {
+  // EUR 50.00, free until 48 hours before, then 50 %; arrival S.
+  const S = '2026-10-22T08:00:00.000Z';
+  const at = (ms: number) => new Date(Date.parse(S) + ms);
+  const H = 3_600_000;
+  const base = { status: 'ACCEPTED' as const, scheduledAt: S, moverPrice: 5000, currency: 'EUR' as const, terms: { freeHours: 48 as const, latePct: 50 as const }, firstPickupPhotoAt: null };
+
+  it('is free until the moment the free time ends, that moment included', () => {
+    expect(cancellationNow({ ...base, now: at(-48 * H - 1000) })).toMatchObject({ fee: 0, rule: 'free_period' });
+    expect(cancellationNow({ ...base, now: at(-48 * H) })).toMatchObject({ fee: 0, rule: 'free_period', freeUntil: at(-48 * H) });
+    expect(cancellationNow({ ...base, now: at(-48 * H + 1000) })).toMatchObject({ fee: 2500, rule: 'late' });
+  });
+
+  it('is free from 60 minutes after the arrival time unless a pickup photo was added before then (owner, 2026-10-17)', () => {
+    expect(MOVER_LATE_FREE_CANCEL_MINUTES).toBe(60);
+    expect(cancellationNow({ ...base, status: 'EN_ROUTE_TO_PICKUP', now: at(59 * 60_000 + 59_000) })).toMatchObject({ fee: 2500, rule: 'late' });
+    expect(cancellationNow({ ...base, status: 'EN_ROUTE_TO_PICKUP', now: at(H) })).toMatchObject({ fee: 0, rule: 'mover_late' });
+    expect(cancellationNow({ ...base, status: 'ACCEPTED', now: at(H) })).toMatchObject({ fee: 0, rule: 'mover_late' });
+    // "Arrived" alone is the mover's word: without a photo it's still the mover late.
+    expect(cancellationNow({ ...base, status: 'AT_PICKUP', now: at(2 * H) })).toMatchObject({ fee: 0, rule: 'mover_late' });
+    expect(cancellationNow({ ...base, status: 'AT_PICKUP', firstPickupPhotoAt: at(30 * 60_000).toISOString(), now: at(2 * H) })).toMatchObject({ fee: 2500, rule: 'late' });
+    expect(cancellationNow({ ...base, status: 'AT_PICKUP', firstPickupPhotoAt: at(61 * 60_000).toISOString(), now: at(2 * H) })).toMatchObject({ fee: 0, rule: 'mover_late' });
+  });
+
+  it("charges the mover's share, rounded down to the price step — never more", () => {
+    expect(cancellationNow({ ...base, terms: { freeHours: 48, latePct: 0 }, now: at(-H) })).toMatchObject({ fee: 0, rule: 'terms_free' });
+    expect(lateCancellationFee(5001, 50, 'EUR')).toBe(2500);
+    expect(lateCancellationFee(5001, 25, 'EUR')).toBe(1250);
+    expect(lateCancellationFee(4999, 25, 'EUR')).toBe(1249);
+    expect(lateCancellationFee(5001, 100, 'EUR')).toBe(5001);
+    expect(lateCancellationFee(153000, 25, 'ALL')).toBe(38200);
+    expect(lateCancellationFee(99900, 50, 'MKD')).toBe(49900);
+    expect(lateCancellationFee(100000, 100, 'RSD')).toBe(100000);
+  });
+
+  it('is not cancelled in the app once loaded, nor before a mover accepted', () => {
+    expect(cancellationNow({ ...base, status: 'IN_TRANSIT', now: at(-H) })).toBeNull();
+    expect(cancellationNow({ ...base, status: 'OFFERED', now: at(-H) })).toBeNull();
+  });
+
+  it('counts "7 days before" on the clock in Central Europe, so a clock change never takes an hour', () => {
+    expect(freeCancellationUntil('2026-10-30T08:00:00Z', 168).toISOString()).toBe('2026-10-23T08:00:00.000Z');
+    expect(freeCancellationUntil('2027-04-01T07:00:00Z', 168).toISOString()).toBe('2027-03-25T08:00:00.000Z');
+    expect(freeCancellationUntil('2026-10-30T08:00:00Z', 48).toISOString()).toBe('2026-10-28T08:00:00.000Z');
+  });
+
+  it('records the fee only: nothing is charged before card payments', () => {
+    expect(CANCELLATION_FEES_CHARGED).toBe(false);
   });
 });

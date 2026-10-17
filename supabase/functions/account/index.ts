@@ -1,7 +1,7 @@
 // `account` — the signed-in person's own data (design/DECISIONS.md #31; COMPLIANCE §9: people can
 // download and delete their data, except records the law keeps).
-//   POST { action: 'export' } → everything MoversHub keeps about them, as JSON (document files as
-//     links valid for an hour)
+//   POST { action: 'export' } → everything MoversHub keeps about them, as JSON (document files and the
+//     photos of their moves as links valid for an hour)
 //   POST { action: 'delete', password } → { status: 'deleted' } — the password is typed again, so a
 //     session left open on someone else's phone can't delete the account
 //   401 sign_in_required · 400 invalid_request | wrong_password · 403 admins_only_by_platform
@@ -13,6 +13,7 @@
 
 import {
   DELETABLE_JOB_STATUSES,
+  JOB_PHOTO_BUCKET,
   accountRequestSchema,
 } from '../_shared/movershub/shared/index.ts';
 import { caller, type Caller } from '../_shared/auth.ts';
@@ -22,7 +23,7 @@ import { serviceRows } from '../_shared/service.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const BUCKET = 'mover-documents';
+const DOCUMENTS = 'mover-documents';
 const service = { apikey: SERVICE_ROLE_KEY, Authorization: `Bearer ${SERVICE_ROLE_KEY}`, 'Content-Type': 'application/json' };
 
 type AuthUser = { id: string; email?: string; created_at?: string; last_sign_in_at?: string; email_confirmed_at?: string };
@@ -50,7 +51,7 @@ async function passwordMatches(email: string, password: string): Promise<boolean
 /** Every file in the company's folder of the private bucket (`<company>/<type>/<file>`). */
 async function companyFiles(companyId: string): Promise<string[]> {
   const list = async (prefix: string) => {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${DOCUMENTS}`, {
       method: 'POST',
       headers: service,
       body: JSON.stringify({ prefix, limit: 1000 }),
@@ -68,8 +69,8 @@ async function companyFiles(companyId: string): Promise<string[]> {
   return files;
 }
 
-async function signedUrl(path: string): Promise<string | null> {
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${BUCKET}/${path}`, {
+async function signedUrl(bucket: string, path: string): Promise<string | null> {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${bucket}/${path}`, {
     method: 'POST',
     headers: service,
     body: JSON.stringify({ expiresIn: 3600 }),
@@ -80,14 +81,34 @@ async function signedUrl(path: string): Promise<string | null> {
   return signedURL ? `${SUPABASE_URL}/storage/v1${signedURL}` : null;
 }
 
+/** Links valid for an hour to many files of a bucket, signed in one request (a move can have 40 photos). */
+async function signedUrls(bucket: string, paths: string[]): Promise<Map<string, string>> {
+  const links = new Map<string, string>();
+  if (!paths.length) return links;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${bucket}`, {
+    method: 'POST',
+    headers: service,
+    body: JSON.stringify({ expiresIn: 3600, paths }),
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (!res.ok) return links;
+  for (const one of (await res.json()) as { path?: string | null; signedURL?: string | null }[]) {
+    if (one.path && one.signedURL) links.set(one.path, `${SUPABASE_URL}/storage/v1${one.signedURL}`);
+  }
+  return links;
+}
+
+type Photo = { stage: string; path: string; taken_at: string };
+
 const eq = (id: string) => `eq.${id}`;
 
 async function exportData(user: AuthUser) {
   const [profile] = await serviceRows<Record<string, unknown>>('GET', `profiles?id=${eq(user.id)}&select=*`);
-  const moves = await serviceRows(
+  const moves = await serviceRows<{ job_photos: Photo[] } & Record<string, unknown>>(
     'GET',
-    `jobs?customer_id=${eq(user.id)}&select=*,pickup_lat,pickup_lon,dropoff_lat,dropoff_lon,quotes(*),job_offers(status,expires_at,created_at,answered_at),job_events(event,status,actor_role,created_at)&order=created_at.desc`,
+    `jobs?customer_id=${eq(user.id)}&select=*,pickup_lat,pickup_lon,dropoff_lat,dropoff_lon,quotes(*),job_offers(status,expires_at,created_at,answered_at),job_events(event,status,actor_role,created_at),job_photos(stage,path,taken_at),job_cancellations(cancelled_by,status_before,reason,scheduled_at,cancel_free_hours,cancel_late_pct,free_until,mover_price,currency,fee,fee_rule,created_at)&order=created_at.desc`,
   );
+  const photoLinks = await signedUrls(JOB_PHOTO_BUCKET, moves.flatMap((m) => m.job_photos.map((p) => p.path)));
   const [company] = await serviceRows<Company>('GET', `mover_companies?owner_id=${eq(user.id)}&select=*`);
   const byCompany = async <T>(table: string, select = '*') =>
     company ? await serviceRows<T>('GET', `${table}?company_id=${eq(company.id)}&select=${select}`) : [];
@@ -95,12 +116,13 @@ async function exportData(user: AuthUser) {
   const vehicles = await byCompany<{ id: string }>('vehicles', '*,rate_cards(*)');
   return {
     exportedAt: new Date().toISOString(),
-    about: 'Everything MoversHub keeps about your account (COMPLIANCE §9). Document links work for one hour.',
+    about: 'Everything MoversHub keeps about your account (COMPLIANCE §9). Document and photo links work for one hour.',
     account: { id: user.id, email: user.email, createdAt: user.created_at, emailConfirmedAt: user.email_confirmed_at, lastSignInAt: user.last_sign_in_at },
     profile: profile ?? null,
-    moves,
+    // Their moves with the log, the photos of the things (links) and a cancellation after acceptance.
+    moves: moves.map((m) => ({ ...m, job_photos: m.job_photos.map((p) => ({ ...p, downloadUrl: photoLinks.get(p.path) ?? null })) })),
     moverCompany: company ?? null,
-    documents: await Promise.all(documents.map(async (d) => ({ ...d, downloadUrl: await signedUrl(d.file_path) }))),
+    documents: await Promise.all(documents.map(async (d) => ({ ...d, downloadUrl: await signedUrl(DOCUMENTS, d.file_path) }))),
     vehicles,
     serviceAreas: await byCompany('service_areas'),
     reminders: await serviceRows('GET', `mover_reminders?user_id=${eq(user.id)}&select=*&order=created_at.desc`),
@@ -114,6 +136,17 @@ async function exportData(user: AuthUser) {
     // Job requests to the company and how they were answered (the moves' details stay the customers').
     jobRequests: company
       ? await serviceRows('GET', `job_offers?mover_company_id=${eq(company.id)}&select=job_id,status,expires_at,created_at,answered_at&order=created_at.desc`)
+      : [],
+    // The mover's own steps on move days, when they added photos (the photos themselves show the
+    // customers' homes and things: they stay with the customers' data — GDPR art. 15(4)), and moves
+    // cancelled after their acceptance, by either side.
+    jobSteps: await serviceRows('GET', `job_events?actor_id=${eq(user.id)}&actor_role=eq.mover&select=job_id,event,status,created_at&order=created_at.desc`),
+    photosAdded: await serviceRows('GET', `job_photos?uploaded_by=${eq(user.id)}&select=job_id,stage,taken_at&order=taken_at.desc`),
+    cancellations: company
+      ? await serviceRows(
+          'GET',
+          `job_cancellations?mover_company_id=${eq(company.id)}&select=job_id,cancelled_by,status_before,reason,fee,fee_rule,currency,created_at&order=created_at.desc`,
+        )
       : [],
     termsAccepted: await serviceRows('GET', `terms_acceptances?user_id=${eq(user.id)}&select=accepted_at,terms_versions(audience,version,effective_at)&order=accepted_at.desc`),
     termsNotices: await byCompany('terms_notices', 'channel,sent_at,terms_versions(audience,version,effective_at)&order=sent_at.desc'),
@@ -159,7 +192,7 @@ async function deleteAccount(user: AuthUser, companyId: string | null): Promise<
     // The files first: once the company is gone, nothing would point to them.
     const files = await companyFiles(companyId);
     if (files.length) {
-      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}`, {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${DOCUMENTS}`, {
         method: 'DELETE',
         headers: service,
         body: JSON.stringify({ prefixes: files }),

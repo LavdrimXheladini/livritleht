@@ -104,8 +104,8 @@ select pg_temp.as_user('00000000-0000-0000-0000-00000000d961');
 select is((select pickup_label || ' · ' || pickup_details || ' · ' || round(pickup_lat::numeric, 4) from public.my_mover_jobs() where job_id = '00000000-0000-0000-0000-0000000e0961'),
   'Rr. Agim Ramadani 12, Prishtina · Ring twice · 42.6629', 'accepted: the exact place and the customer''s directions');
 reset role;
-select throws_ok($$ select public.job_cancel('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961') $$,
-  '22023', 'not_cancellable', 'once accepted, the mover''s cancellation terms apply (next step)');
+select is(public.job_cancel('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961', 0), 0,
+  'once accepted, the mover''s terms apply: free until 48 hours before (20261017130000)');
 
 -- Declining: back to the customer, nobody else assigned.
 delete from offered;

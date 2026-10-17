@@ -42,13 +42,14 @@ export async function serviceRows<T>(method: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   return (await res.json()) as T[];
 }
 
-/** A Postgres function refused the call: its message (e.g. `quote_expired`) and SQLSTATE code. */
+/** A Postgres function refused the call: its message (e.g. `quote_expired`), SQLSTATE code and DETAIL. */
 export class RpcError extends Error {
   constructor(
     readonly fn: string,
     readonly status: number,
     readonly reason: string,
     readonly code: string,
+    readonly details = '',
   ) {
     super(`rpc ${fn}: ${status} ${code} ${reason}`);
   }
@@ -64,13 +65,13 @@ export async function serviceRpc<T>(fn: string, args: Record<string, unknown>): 
   });
   if (!res.ok) {
     const text = await res.text();
-    let body: { message?: string; code?: string } = {};
+    let body: { message?: string; code?: string; details?: string | null } = {};
     try {
       body = JSON.parse(text) as typeof body;
     } catch {
       // not JSON: keep the text
     }
-    throw new RpcError(fn, res.status, body.message ?? text, body.code ?? '');
+    throw new RpcError(fn, res.status, body.message ?? text, body.code ?? '', body.details ?? '');
   }
   // A function that returns nothing (void) answers 204 with no body.
   const text = await res.text();

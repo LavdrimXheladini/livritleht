@@ -1,7 +1,11 @@
 // Single source of truth for data retention (COMPLIANCE §9, §9.1). Read by the scheduled
 // cleanup function. Data linked to an open dispute or claim is never deleted.
 
-export type RetentionAnchor = 'job_completed' | 'expired' | 'account_closed' | 'created' | 'last_code_sent';
+/**
+ * `job_ended`: the move's `completed` or `cancelled` event — for a move that never got either (a mover
+ * who never marked "done"), its arrival time instead, plus the same period (design/DECISIONS.md #36).
+ */
+export type RetentionAnchor = 'job_completed' | 'job_ended' | 'expired' | 'account_closed' | 'created' | 'last_code_sent';
 
 export interface RetentionRule {
   /** Retention period in days after `from`. `null` = not decided yet; cleanup skips it. */
@@ -12,6 +16,9 @@ export interface RetentionRule {
 
 export const RETENTION_CATEGORIES = [
   'job_photos',
+  'job_photo_files_unused',
+  'job_events',
+  'job_cancellations',
   'location_breadcrumbs',
   'tracking_links',
   'price_adjustment_photos',
@@ -35,10 +42,23 @@ export type RetentionCategory = (typeof RETENTION_CATEGORIES)[number];
 
 // COMPLIANCE-TODO: §14 — every `keepDays` must be confirmed by the lawyer before launch.
 export const RETENTION: Record<RetentionCategory, RetentionRule> = {
-  job_photos: { keepDays: null, from: 'job_completed', holdIfDisputeOpen: true },
-  location_breadcrumbs: { keepDays: null, from: 'job_completed', holdIfDisputeOpen: true },
+  // Photos of the things at the pickup and the drop-off (public.job_photos + the private bucket
+  // `job-photos`; COMPLIANCE §7): evidence for damage claims. Proposed: about 13 months after the move
+  // ended — claims about carried goods generally run a year — unless a claim is open.
+  job_photos: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },
+  // Files in `job-photos` that no row points to (a photo whose row was never saved, then removed in the
+  // app): to be removed through the Storage API by a cleanup that doesn't exist yet (deleting
+  // storage.objects rows directly would leave the files behind). Proposed: a day after upload.
+  job_photo_files_unused: { keepDays: null, from: 'created', holdIfDisputeOpen: false },
+  // The move's log (public.job_events: booked, offered, answered, each step, cancelled, confirmed —
+  // with who and when): evidence of what happened, kept like the photos.
+  job_events: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },
+  // Cancellations after acceptance (public.job_cancellations) — the terms, the fee and the rule that
+  // set it. Once card payments charge a fee, it is an accounting record (kept like `payments`).
+  job_cancellations: { keepDays: null, from: 'created', holdIfDisputeOpen: true },
+  location_breadcrumbs: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },
   tracking_links: { keepDays: null, from: 'expired', holdIfDisputeOpen: false },
-  price_adjustment_photos: { keepDays: null, from: 'job_completed', holdIfDisputeOpen: true },
+  price_adjustment_photos: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },
   mover_documents: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
   audit_log: { keepDays: null, from: 'created', holdIfDisputeOpen: true },
   // Tax / accounting records: kept for the legal minimum even after erasure requests.
@@ -63,8 +83,9 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   // Answers of the official company registers (public.company_registry_checks): evidence for the
   // mover's verification (COMPLIANCE §5); kept like the mover's documents.
   company_registry_checks: { keepDays: null, from: 'account_closed', holdIfDisputeOpen: true },
-  // Booking requests never booked (public.jobs still QUOTED, with their quotes): the customer's
-  // addresses for a move that didn't happen — delete some time after the last quote expired.
+  // Booking requests never booked (public.jobs still QUOTED, with their quotes — never a move a mover
+  // accepted): the customer's addresses for a move that didn't happen — delete some time after the last
+  // quote expired.
   booking_requests: { keepDays: null, from: 'expired', holdIfDisputeOpen: false },
   // Reminders before a mover's documents end (public.mover_reminders): useful until read and sent;
   // they go with the document or the account (on delete cascade).

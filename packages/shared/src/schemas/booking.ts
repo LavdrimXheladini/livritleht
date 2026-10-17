@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-import { VEHICLE_CLASSES, type Currency, type JobType, type VehicleClass } from '../constants';
+import { VEHICLE_CLASSES, type Currency, type JobStatus, type JobType, type VehicleClass } from '../constants';
 import { ITEM_CATALOGUE, ITEM_KEYS, type ItemKey } from '../items';
+import { WHOLE_UNIT_CURRENCIES } from '../money';
 import { placeSchema, type Place } from './geo';
 import { jobItemSchema, type JobItem, type QuoteRequest } from './pricing';
 
@@ -189,6 +190,110 @@ export type CancellationTerms = z.infer<typeof cancellationTermsSchema>;
 export function cancellationTerms(row: { cancel_free_hours?: number | null; cancel_late_pct?: number | null }): CancellationTerms | null {
   const parsed = cancellationTermsSchema.safeParse({ freeHours: row.cancel_free_hours, latePct: row.cancel_late_pct });
   return parsed.success ? parsed.data : null;
+}
+
+/* ── Cancelling after a mover accepted (design/DECISIONS.md #36) ─────────────── */
+
+/**
+ * From this many minutes after the arrival time, the customer cancels for free unless the mover added a
+ * pickup photo before then — the photo shows they were there; "Arrived" alone is their own word (owner
+ * decision 2026-10-17). Mirrors public.cancellation_fee.
+ */
+// COMPLIANCE-TODO: §14 — the 60 minutes and how the terms word it.
+export const MOVER_LATE_FREE_CANCEL_MINUTES = 60;
+
+/** Late-cancellation fees are recorded only; the card payments step charges them once this is true. */
+// COMPLIANCE-TODO: §14 — whether late-cancellation charges hold against consumers, per country; and the
+// mover's free cancel next to the customer's late fee (unfair terms directive 93/13, Annex 1(d)/(f)), per
+// country, before anything is charged.
+export const CANCELLATION_FEES_CHARGED = false;
+
+/** Until the things are loaded, either side can cancel an accepted move (the same for both). */
+export const CANCELLABLE_AFTER_ACCEPTANCE = ['ACCEPTED', 'EN_ROUTE_TO_PICKUP', 'AT_PICKUP'] as const satisfies readonly JobStatus[];
+
+/**
+ * Why a cancellation after acceptance cost what it did (public.job_cancellations.fee_rule): in the free
+ * time; the mover late (no pickup photo by 60 minutes after the arrival time); the mover's terms charge
+ * nothing later either; late — the mover's share; or the mover cancelled (always free).
+ */
+export const CANCELLATION_FEE_RULES = ['free_period', 'mover_late', 'terms_free', 'late', 'mover_cancelled'] as const;
+export type CancellationFeeRule = (typeof CANCELLATION_FEE_RULES)[number];
+
+/** The time zone of every market (Central Europe), for the wall-clock "7 days before". */
+const MARKETS_TIME_ZONE = 'Europe/Belgrade';
+
+/** Minutes east of UTC that `zone` is at `at` (60 in winter, 120 in summer for Central Europe). */
+function zoneOffsetMinutes(at: number, zone: string): number {
+  const parts: Record<string, number> = {};
+  const format = new Intl.DateTimeFormat('en-US', {
+    timeZone: zone,
+    hourCycle: 'h23',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });
+  for (const p of format.formatToParts(new Date(at))) if (p.type !== 'literal') parts[p.type] = Number(p.value);
+  const wall = Date.UTC(parts.year!, parts.month! - 1, parts.day!, parts.hour!, parts.minute!, parts.second!);
+  return Math.round((wall - Math.floor(at / 1000) * 1000) / 60_000);
+}
+
+/**
+ * Until when cancelling is free, that moment included: the arrival time minus the mover's hours — for
+ * "7 days" the later of that and the same wall-clock time 7 days before in Central Europe, so a clock
+ * change never takes an hour from the customer. Mirrors public.cancellation_free_until.
+ */
+export function freeCancellationUntil(scheduledAt: string | Date, freeHours: CancelFreeHours): Date {
+  const at = new Date(scheduledAt).getTime();
+  const byHours = at - freeHours * 3_600_000;
+  if (freeHours !== 168) return new Date(byHours);
+  const wall = at + zoneOffsetMinutes(at, MARKETS_TIME_ZONE) * 60_000 - 7 * 86_400_000;
+  const guess = wall - zoneOffsetMinutes(at, MARKETS_TIME_ZONE) * 60_000;
+  const byDays = wall - zoneOffsetMinutes(guess, MARKETS_TIME_ZONE) * 60_000;
+  return new Date(Math.max(byHours, byDays));
+}
+
+/** The mover's share of their price for a late cancellation, rounded down to the price step (never above the share). */
+export function lateCancellationFee(moverPrice: number, latePct: number, currency: Currency): number {
+  const share = Math.floor((moverPrice * latePct) / 100);
+  return WHOLE_UNIT_CURRENCIES.includes(currency) ? Math.floor(share / 100) * 100 : share;
+}
+
+/**
+ * What cancelling an accepted move costs the customer at `now` under the terms of the quote they booked
+ * (shown before they confirm; the server decides with its own clock and never charges more than shown).
+ * Null when it can't be cancelled in the app (not accepted yet, or loaded). Mirrors public.cancellation_fee.
+ */
+export function cancellationNow({
+  status,
+  scheduledAt,
+  moverPrice,
+  currency,
+  terms,
+  firstPickupPhotoAt,
+  now,
+}: {
+  status: JobStatus;
+  scheduledAt: string;
+  moverPrice: number;
+  currency: Currency;
+  terms: CancellationTerms;
+  /** When the first pickup photo was added (the server's time), or null. */
+  firstPickupPhotoAt: string | null;
+  now: Date;
+}): { fee: number; freeUntil: Date; rule: Exclude<CancellationFeeRule, 'mover_cancelled'> } | null {
+  if (!(CANCELLABLE_AFTER_ACCEPTANCE as readonly JobStatus[]).includes(status)) return null;
+  const freeUntil = freeCancellationUntil(scheduledAt, terms.freeHours);
+  const t = now.getTime();
+  if (t <= freeUntil.getTime()) return { fee: 0, freeUntil, rule: 'free_period' };
+  const lateFrom = new Date(scheduledAt).getTime() + MOVER_LATE_FREE_CANCEL_MINUTES * 60_000;
+  if (t >= lateFrom && (firstPickupPhotoAt === null || new Date(firstPickupPhotoAt).getTime() >= lateFrom)) {
+    return { fee: 0, freeUntil, rule: 'mover_late' };
+  }
+  if (terms.latePct === 0) return { fee: 0, freeUntil, rule: 'terms_free' };
+  return { fee: lateCancellationFee(moverPrice, terms.latePct, currency), freeUntil, rule: 'late' };
 }
 
 /* ── Booking request (the `book` function) ───────────────────────────────────── */

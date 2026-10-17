@@ -1,8 +1,16 @@
 import { z } from 'zod';
 
 import { CURRENCIES, JOB_STATUSES, JOB_TYPES, VEHICLE_CLASSES } from '../constants';
-import { bookedMoverSchema, bookingDraftSchema, localDay, type BookingDraft, type BookingItems, type BookingStop } from './booking';
-import { OFFER_STATUSES } from './job-transition';
+import {
+  CANCELLATION_FEE_RULES,
+  bookedMoverSchema,
+  bookingDraftSchema,
+  localDay,
+  type BookingDraft,
+  type BookingItems,
+  type BookingStop,
+} from './booking';
+import { MOVER_CANCEL_REASONS, MOVER_STEPS, OFFER_STATUSES } from './job-transition';
 import { jobItemSchema } from './pricing';
 
 // A customer's saved move as the app reads it (`jobs` with its latest quote — RLS: their own only),
@@ -28,6 +36,33 @@ export type JobQuoteRow = z.infer<typeof quoteRowSchema>;
 /** A request to the mover for this move (design/DECISIONS.md #35): open, answered, ended or cancelled. */
 const offerRowSchema = z.object({ status: z.enum(OFFER_STATUSES), expires_at: z.string(), created_at: z.string() });
 export type JobOfferRow = z.infer<typeof offerRowSchema>;
+
+/** A line of the move's log (design/DECISIONS.md #35, #36): what happened, the status after it, which side, when. */
+const eventRowSchema = z.object({
+  event: z.string(),
+  status: z.enum(JOB_STATUSES),
+  actor_role: z.enum(['customer', 'mover', 'admin', 'system']),
+  created_at: z.string(),
+});
+export type JobEventRow = z.infer<typeof eventRowSchema>;
+
+/**
+ * A cancellation after a mover accepted (design/DECISIONS.md #36): who, at which step, the mover's
+ * reason if they gave one, and what it cost under the mover's terms — recorded; nothing is charged
+ * until card payments exist.
+ */
+const cancellationRowSchema = z.object({
+  cancelled_by: z.enum(['customer', 'mover']),
+  status_before: z.enum(JOB_STATUSES),
+  reason: z.enum(MOVER_CANCEL_REASONS).nullable(),
+  free_until: z.string(),
+  cancel_late_pct: z.number().int(),
+  currency: z.enum(CURRENCIES),
+  fee: z.number().int(),
+  fee_rule: z.enum(CANCELLATION_FEE_RULES),
+  created_at: z.string(),
+});
+export type JobCancellationRow = z.infer<typeof cancellationRowSchema>;
 
 const stopColumns = (prefix: 'pickup' | 'dropoff') =>
   [
@@ -83,6 +118,10 @@ export const jobRowSchema = z.object({
   quotes: z.array(quoteRowSchema),
   /** The requests to movers for this move, newest first (the select orders them). */
   job_offers: z.array(offerRowSchema).default([]),
+  /** The move's log (the select orders it oldest first). */
+  job_events: z.array(eventRowSchema).default([]),
+  /** A cancellation after acceptance: one per move, so PostgREST answers an object (or null). */
+  job_cancellations: z.preprocess((v) => (Array.isArray(v) ? (v[0] ?? null) : v), cancellationRowSchema.nullable()).default(null),
 });
 export type JobRow = z.infer<typeof jobRowSchema>;
 
@@ -105,18 +144,52 @@ export const JOB_COLUMNS = [
   'created_at',
   `quotes(${QUOTE_COLUMNS})`,
   `job_offers(${Object.keys(offerRowSchema.shape).join(',')})`,
+  `job_events(${Object.keys(eventRowSchema.shape).join(',')})`,
+  `job_cancellations(${Object.keys(cancellationRowSchema.shape).join(',')})`,
 ].join(',');
 
 /**
  * Where a customer's move stands, for the words shown: a saved request comes back `declined` or
- * `expired` when its mover said no or didn't answer in time (choose another mover); otherwise its status.
+ * `expired` when its mover said no or didn't answer in time (choose another mover); a move the mover
+ * cancelled after accepting is theirs to explain (book another mover); otherwise its status.
  */
-export type MoveState = JobRow['status'] | 'DECLINED' | 'EXPIRED';
-export function moveState(job: Pick<JobRow, 'status' | 'job_offers'>): MoveState {
+export type MoveState = JobRow['status'] | 'DECLINED' | 'EXPIRED' | 'CANCELLED_BY_MOVER';
+export function moveState(job: Pick<JobRow, 'status' | 'job_offers'> & Partial<Pick<JobRow, 'job_cancellations'>>): MoveState {
   const last = job.job_offers[0];
   if (job.status === 'QUOTED' && last?.status === 'declined') return 'DECLINED';
   if (job.status === 'QUOTED' && last?.status === 'expired') return 'EXPIRED';
+  if (job.status === 'CANCELLED' && job.job_cancellations?.cancelled_by === 'mover') return 'CANCELLED_BY_MOVER';
   return job.status;
+}
+
+/** The steps of the move day the customer follows, from the mover's acceptance to "done". */
+export const JOB_DAY_STEPS = ['ACCEPTED', ...MOVER_STEPS] as const;
+export type JobDayStep = (typeof JOB_DAY_STEPS)[number];
+
+export type JobDay = {
+  /** Each step, with the time it was reached (null: not yet). */
+  steps: { status: JobDayStep; at: string | null }[];
+  cancelled: { at: string; by: JobEventRow['actor_role'] } | null;
+  /** When the customer confirmed the move was done. */
+  confirmedAt: string | null;
+};
+
+/**
+ * The move day from its log (design/DECISIONS.md #36): null until a mover accepted; what happened
+ * before that acceptance (earlier movers' answers) doesn't count.
+ */
+export function jobDay(events: readonly JobEventRow[]): JobDay | null {
+  const sorted = [...events].sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
+  const from = sorted.findIndex((e) => e.event === 'accepted');
+  if (from < 0) return null;
+  const since = sorted.slice(from);
+  const at = (event: string) => since.find((e) => e.event === event)?.created_at ?? null;
+  const cancelled = since.find((e) => e.event === 'cancelled');
+  return {
+    steps: JOB_DAY_STEPS.map((status) => ({ status, at: at(status.toLowerCase()) })),
+    cancelled: cancelled ? { at: cancelled.created_at, by: cancelled.actor_role } : null,
+    confirmedAt: at('confirmed'),
+  };
 }
 
 function stopFromRow(job: JobRow, prefix: 'pickup' | 'dropoff'): BookingStop {
