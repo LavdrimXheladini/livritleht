@@ -60,6 +60,11 @@ export const terms: LegalText = {
       heading: 'Cancelling',
       blocks: [
         'Each mover sets their own cancellation terms, shown before you book and kept with your booking: free until a number of hours before the move, and after that a share of the mover\'s price.',
+        'Once a mover has accepted your move, you can cancel it in the app until your things are loaded. Under the mover\'s terms kept with your booking it is free until the time shown, that moment included; after that it costs the share of the mover\'s price their terms set, which you see before you confirm. You are never charged more than you were shown.',
+        'If your mover hasn\'t added a photo at the pickup an hour after the arrival time, cancelling is free.',
+        'Cancellation charges are made only once card payments start, from the card saved when you booked. [Whether and how they apply in your country — to be confirmed with the lawyer.]',
+        'Your mover may also cancel until your things are loaded. If they do, you pay nothing and can book another mover for the same move — on another day if it was today; no other mover is booked for you automatically. This does not affect any rights you have against the mover under the law.',
+        'Once your things are loaded, the move can\'t be cancelled in the app: contact your mover, or MoversHub if you can\'t agree.',
         'Right of withdrawal: a move booked for a specific date is generally not covered by the 14-day right of withdrawal for online purchases, because it is a service for a specific date. [Exact wording per country — to be confirmed with the lawyer.]',
       ],
     },
@@ -81,7 +86,8 @@ export const terms: LegalText = {
       heading: 'Damage and claims',
       blocks: [
         'The mover is responsible for your belongings during the move, as the carrier, and has liability insurance, which you see before you book. MoversHub does not cover damage itself.',
-        'The mover takes photos when loading and unloading, kept with your move. If something is damaged or lost, report it in the app [within the period to be set with the lawyer]. Your claim goes to the mover and their insurer; MoversHub helps both sides reach a solution and may hold the mover\'s payout while the claim is open.',
+        'The mover adds at least one photo of your things at the pickup and at the drop-off; you see them in the app, and they are kept with your move. If something is damaged or lost, tell the mover, and MoversHub through the contact page (in the app once available) [within the period to be set with the lawyer]. Your claim goes to the mover and their insurer; MoversHub helps both sides reach a solution and may hold the mover\'s payout while the claim is open.',
+        'When the mover marks the move done, you can confirm it in the app. Once card payments start, confirming releases the mover\'s payout. Confirming does not take away your right to report damage or loss later.',
         'MoversHub is responsible for running the platform with reasonable care. Nothing in these terms limits liability that cannot be limited by law, such as for intent, gross negligence or injury to life and health, or your rights as a consumer.',
       ],
     },

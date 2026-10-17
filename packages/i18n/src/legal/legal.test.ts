@@ -62,4 +62,20 @@ describe('legal texts', () => {
     expect(ranking).toContain('at least 15 days before it applies');
     expect(ranking).toContain('at least 30 days after you are told');
   });
+
+  it('say what the move day means for each side (design/DECISIONS.md #36; COMPLIANCE §2, §3, §7, §8)', () => {
+    const mover = strings('mover-terms').join('\n');
+    expect(mover).toContain('Cancelling costs you nothing with MoversHub');
+    expect(mover).toContain('never moves you down or reduces the jobs you are offered');
+    expect(mover).toContain('at least one photo');
+    expect(mover).toContain('your photos are never used');
+    expect(mover).toContain('MoversHub takes no commission on it');
+    const customer = strings('terms').join('\n');
+    expect(customer).toContain('Confirming does not take away your right to report damage or loss later');
+    expect(customer).toContain('You are never charged more than you were shown');
+    expect(customer).toContain('This does not affect any rights you have against the mover under the law');
+    const privacy = strings('privacy').join('\n');
+    expect(privacy).toContain('never used to rank, score or discipline movers');
+    expect(privacy).not.toContain('sees your name');
+  });
 });

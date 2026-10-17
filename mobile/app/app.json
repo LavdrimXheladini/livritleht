@@ -39,7 +39,7 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "MoversHub uses the camera only when you photograph a document for your mover account.",
+          "cameraPermission": "MoversHub uses the camera when you photograph a document for your mover account, or the things at a move's pickup and drop-off.",
           "photosPermission": "MoversHub opens your photos only when you choose a document for your mover account.",
           "microphonePermission": false
         }

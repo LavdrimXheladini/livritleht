@@ -10,7 +10,7 @@ import { useMyMoves } from '@/lib/moves';
 import { hourText } from '../booking/when-screen';
 
 /** States shown in a quiet pill: nothing is happening with the move. */
-export const QUIET_STATES: readonly MoveState[] = ['QUOTED', 'DECLINED', 'EXPIRED', 'CANCELLED'];
+export const QUIET_STATES: readonly MoveState[] = ['QUOTED', 'DECLINED', 'EXPIRED', 'CANCELLED', 'CANCELLED_BY_MOVER'];
 
 /**
  * "Your moves" on the customer home (design/DECISIONS.md #28): each saved or booked move — route, day

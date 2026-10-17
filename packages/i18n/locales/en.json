@@ -125,14 +125,15 @@
         "OFFERED": "Sent to your mover",
         "ACCEPTED": "Accepted by your mover",
         "EN_ROUTE_TO_PICKUP": "Your mover is on the way",
-        "AT_PICKUP": "At the pickup",
-        "IN_TRANSIT": "On the way to the drop-off",
-        "AT_DROPOFF": "At the drop-off",
+        "AT_PICKUP": "Your mover is at the pickup",
+        "IN_TRANSIT": "Loaded, on the way to the drop-off",
+        "AT_DROPOFF": "Your mover is at the drop-off",
         "COMPLETED": "Completed",
         "CANCELLED": "Cancelled",
         "DISPUTED": "In dispute",
         "DECLINED": "Your mover said no",
-        "EXPIRED": "No answer from your mover"
+        "EXPIRED": "No answer from your mover",
+        "CANCELLED_BY_MOVER": "Cancelled by your mover"
       },
       "offeredNote": "Sent to {{name}}. They answer by {{date}}, {{time}} — if they say no or don't answer, you choose another mover. Nothing is charged until then.",
       "acceptedNote": "{{name}} accepted your move.",
@@ -885,10 +886,10 @@
         "decline": "Decline",
         "accept": "Accept job",
         "acceptedTitle": "Job accepted",
-        "acceptedText": "Head to pickup in {{place}}. The exact address is now visible, and the customer can see you on the map.",
+        "acceptedText": "Head to pickup in {{place}}. The exact address is now visible.",
         "back": "Back to requests",
         "declinedTitle": "No problem.",
-        "declinedText": "The job is offered to other movers nearby. Saying no never affects your ranking.",
+        "declinedText": "The customer chooses another mover. Saying no never affects your ranking.",
         "showAgain": "Show request again",
         "caption": "Mirrors the quote you built above.",
         "crew1": "Mover only",
@@ -1001,7 +1002,8 @@
       "paid": "Payment: no mover can pay for a better place. If paid placement is ever offered, it will be clearly marked.",
       "declining": "Saying no: a mover who declines jobs is not moved down.",
       "location": "Location: where movers drive during jobs is never used to rank them.",
-      "commission": "MoversHub's commission: it is the same for every mover — 20% within one country, 15% across a border — so it favours no one."
+      "commission": "MoversHub's commission: it is the same for every mover — 20% within one country, 15% across a border — so it favours no one.",
+      "jobDay": "The move day: cancelling a job they accepted, the times they mark and the photos they take are never used to rank movers."
     }
   },
   "dashboard": {
@@ -1391,5 +1393,213 @@
     "acceptNow": "Accept now",
     "versionLine": "Version {{version}} · applies from {{date}}",
     "versionUnavailable": "This version can't be shown right now."
+  },
+  "job": {
+    "newTab": "(opens in a new tab)",
+    "mover": {
+      "home": {
+        "inProgressTitle": "In progress",
+        "recentTitle": "Recent jobs",
+        "recentNote": "Jobs done or cancelled in the last 7 days.",
+        "openJob": "Open job",
+        "openJobHint": "Opens the job with its addresses and next step",
+        "loadFailed": "Your jobs couldn't be loaded."
+      },
+      "state": {
+        "ACCEPTED": "Accepted",
+        "EN_ROUTE_TO_PICKUP": "On the way to the pickup",
+        "AT_PICKUP": "At the pickup",
+        "IN_TRANSIT": "On the way to the drop-off",
+        "AT_DROPOFF": "At the drop-off",
+        "COMPLETED": "Done",
+        "cancelledByCustomer": "Cancelled by the customer",
+        "cancelledByYou": "Cancelled by you"
+      },
+      "feeShort": "Cancellation charge {{amount}}",
+      "loadFailed": "This job couldn't be loaded.",
+      "notFound": "This job isn't in your list any more.",
+      "progress": "Job progress: {{step}}",
+      "since": "Since {{time}}",
+      "step": {
+        "EN_ROUTE_TO_PICKUP": "On my way",
+        "AT_PICKUP": "Arrived at pickup",
+        "IN_TRANSIT": "Loaded, leaving",
+        "AT_DROPOFF": "Arrived at drop-off",
+        "COMPLETED": "Move done"
+      },
+      "hint": {
+        "EN_ROUTE_TO_PICKUP": "Shows the customer you're on the way to the pickup.",
+        "AT_PICKUP": "Shows the customer you're at the pickup.",
+        "IN_TRANSIT": "Closes the pickup photos and shows the customer their things are on board.",
+        "AT_DROPOFF": "Shows the customer you're at the drop-off.",
+        "COMPLETED": "Closes the drop-off photos and shows the customer the move is done."
+      },
+      "confirm": {
+        "EN_ROUTE_TO_PICKUP": "On your way? The customer sees it in the app.",
+        "AT_PICKUP": "At the pickup? The customer sees that you're there.",
+        "IN_TRANSIT": "Loaded and leaving? The customer sees that their things are on board. You can't add pickup photos after this.",
+        "AT_DROPOFF": "At the drop-off? The customer sees that you're there.",
+        "COMPLETED": "Is the move done? The customer sees it and can confirm it. You can't add drop-off photos after this."
+      },
+      "confirmYes": {
+        "EN_ROUTE_TO_PICKUP": "Yes, on my way",
+        "AT_PICKUP": "Yes, I'm at the pickup",
+        "IN_TRANSIT": "Yes, loaded and leaving",
+        "AT_DROPOFF": "Yes, I'm at the drop-off",
+        "COMPLETED": "Yes, the move is done"
+      },
+      "confirmNo": "Not yet",
+      "done": {
+        "EN_ROUTE_TO_PICKUP": "Marked: on your way.",
+        "AT_PICKUP": "Marked: at the pickup. Add at least one photo of the things as you receive them.",
+        "IN_TRANSIT": "Marked: loaded and leaving.",
+        "AT_DROPOFF": "Marked: at the drop-off. Add at least one photo of the things as you hand them over.",
+        "COMPLETED": "Marked: move done."
+      },
+      "arrivalWaiting": "Marked as arrived on this phone, but there's no connection: the customer sees it once it gets through. You can take the photos now — they're sent after it.",
+      "startsFrom": "You can mark “On my way” from {{date}}, {{time}}.",
+      "startsNow": "You can mark “On my way” now.",
+      "nextPickup": "Next: the pickup",
+      "nextDropoff": "Next: the drop-off",
+      "openInMaps": "Open in maps",
+      "openInMapsHint": "Opens this stop in your maps app",
+      "townOnly": "The map knows only the town or neighbourhood here: follow the customer's directions.",
+      "photos": {
+        "pickupTitle": "Photos at the pickup",
+        "dropoffTitle": "Photos at the drop-off",
+        "pickupText": "Take at least one photo of the things as you receive them — what to photograph is up to you. The photos are kept with the job as evidence for you and the customer. Photograph the things, not people.",
+        "dropoffText": "Take at least one photo of the things as you hand them over. Photograph the things, not people.",
+        "take": "Take a photo",
+        "add": "Add a photo",
+        "count": "Photos: {{count}} of {{max}}",
+        "waiting": "Waits for “Arrived”",
+        "sending": "Sending…",
+        "sent": "Sent",
+        "notSent": "Not sent",
+        "retry": "Try again",
+        "remove": "Remove",
+        "label": "Photo {{n}} of {{total}}, added at {{time}}",
+        "labelQueued": "Photo {{n}} of {{total}}, {{state}}",
+        "needOne": "Add at least one photo first.",
+        "waitForUpload": "Wait until every photo is sent ({{count}} still to send).",
+        "fixFailed": "A photo wasn't sent: try again or remove it.",
+        "keepOpen": "Keep the app open until the photos are sent.",
+        "errors": {
+          "camera_denied": "MoversHub may not use the camera. Allow it in your phone's settings.",
+          "openSettings": "Open settings",
+          "file_type": "Choose a JPG, PNG or WebP photo.",
+          "file_too_large": "The photo is larger than 10 MB.",
+          "stage_closed": "Photos for this stop can't be added any more: the job has moved on.",
+          "limit": "That's the most photos for this stop ({{max}}).",
+          "upload_failed": "The photo couldn't be sent yet. It's sent again by itself when the connection is back.",
+          "refused": "The photo wasn't accepted. Remove it and take another."
+        },
+        "allSent": "All photos are sent: you can now tap “{{step}}”."
+      },
+      "cancel": "Cancel this job",
+      "cancelConfirm": "Cancel this job? The customer sees it in the app and can book another mover. Cancelling costs you nothing with MoversHub and never changes how customers see you or the jobs you are offered.",
+      "cancelReasonLabel": "Reason (optional — the customer sees it)",
+      "cancelReason": {
+        "none": "No reason",
+        "job_differs": "The job is different from the description",
+        "customer_absent": "Nobody is at the pickup",
+        "cannot_do": "I can't do this job after all"
+      },
+      "absentFrom": "“Nobody is at the pickup” can be chosen from {{time}}.",
+      "cancelYes": "Yes, cancel the job",
+      "cancelKeep": "Keep the job",
+      "cancelledDone": "Job cancelled. The customer can book another mover.",
+      "cancelledByYou": "You cancelled this job on {{date}} at {{time}}.",
+      "cancelledByCustomerFree": "The customer cancelled this job on {{date}} at {{time}}, within your free cancellation time.",
+      "cancelledByCustomerFee": "The customer cancelled this job on {{date}} at {{time}}. Cancellation charge under your terms: {{amount}}. MoversHub doesn't charge it: card payments haven't started.",
+      "cancelledByCustomerTermsFree": "The customer cancelled this job on {{date}} at {{time}}. Under your terms, a later cancellation is free too.",
+      "cancelledByCustomerMoverLate": "The customer cancelled this job on {{date}} at {{time}}: there was no photo at the pickup an hour after the arrival time, so it was free for them.",
+      "addressesHidden": "A cancelled job no longer shows the exact addresses.",
+      "onBoardNote": "The things are on board, so this job can't be cancelled in the app. If something comes up, talk to the customer; if you can't agree, contact MoversHub.",
+      "doneNote": "Done on {{date}} at {{time}}. The customer can now confirm the move.",
+      "confirmedNote": "The customer confirmed the move on {{date}} at {{time}}.",
+      "payoutLater": "No payout for this job: it was a test booking, without a card.",
+      "yourTerms": "Your cancellation terms for this job: {{terms}}",
+      "errors": {
+        "wrong_step": "This job has moved on in the meantime. Here's where it stands now.",
+        "too_early": "Too early: you can mark “On my way” from {{date}}, {{time}}.",
+        "photos_required": "Add at least one photo first.",
+        "job_cancelled": "This job has been cancelled.",
+        "not_cancellable": "This job can't be cancelled any more.",
+        "invalid_reason": "That reason only fits at the pickup.",
+        "reason_too_early": "“Nobody is at the pickup” can be chosen from {{time}}.",
+        "network": "No connection. Try again when you're back online."
+      },
+      "signOutPending": "Some photos aren't sent yet. If you sign out now, they're deleted from this phone without being sent.",
+      "signOutAnyway": "Sign out anyway"
+    },
+    "customer": {
+      "enRouteNote": "{{name}} is on the way to the pickup (since {{time}}).",
+      "atPickupNote": "{{name}} arrived at the pickup at {{time}}. They photograph your things as they receive them — the photos show here.",
+      "inTransitNote": "Your things are loaded. {{name}} left the pickup at {{time}} and is on the way to the drop-off.",
+      "atDropoffNote": "{{name}} arrived at the drop-off at {{time}}. They photograph your things as they hand them over — the photos show here.",
+      "completedNote": "{{name}} marked the move as done on {{date}} at {{time}}. Check your things now: if something is damaged or missing, tell {{name}} before they leave.",
+      "cancelledByYouFree": "You cancelled this move on {{date}} at {{time}}, free of charge.",
+      "cancelledByYouFee": "You cancelled this move on {{date}} at {{time}}. Under {{name}}'s cancellation terms it costs {{amount}}. MoversHub doesn't charge it: card payments haven't started.",
+      "cancelledByMoverNote": "{{name}} cancelled this move on {{date}} at {{time}}. You pay nothing, and you can book another mover for the same move.",
+      "cancelledByMoverToday": "{{name}} cancelled this move on {{date}} at {{time}}. You pay nothing. Booking for today isn't possible in the app: you can book another mover for the same move on another day.",
+      "moverReason": {
+        "job_differs": "Their reason: the job is different from the description.",
+        "customer_absent": "Their reason: nobody was at the pickup.",
+        "cannot_do": "Their reason: they can't do the move after all."
+      },
+      "bookAnother": "Book another mover",
+      "call": "Call {{name}}",
+      "stepsTitle": "Steps",
+      "steps": {
+        "ACCEPTED": "Accepted",
+        "EN_ROUTE_TO_PICKUP": "On the way to the pickup",
+        "AT_PICKUP": "At the pickup",
+        "IN_TRANSIT": "Loaded, on the way to the drop-off",
+        "AT_DROPOFF": "At the drop-off",
+        "COMPLETED": "Done"
+      },
+      "stepDone": "{{step}}, {{time}}",
+      "stepNotYet": "{{step}}, not yet",
+      "photos": {
+        "title": "Photos of your things",
+        "note": "{{name}} takes them at the pickup and the drop-off. They are kept with your move as evidence if something is damaged or missing.",
+        "pickup": "At the pickup",
+        "dropoff": "At the drop-off",
+        "none": "No photos yet.",
+        "label": "Photo {{n}} of {{total}}, {{stop}}, added at {{time}}",
+        "openHint": "Opens the photo",
+        "loadFailed": "This photo couldn't be loaded.",
+        "showAll": "Show all {{count}}",
+        "listFailed": "The photos couldn't be loaded."
+      },
+      "cancelFreeUntil": "Free cancellation until {{date}}, {{time}}.",
+      "cancelCostsNow": "Cancelling now costs {{amount}} under {{name}}'s terms.",
+      "cancelFreeMoverLate": "{{name}} hasn't added a photo at the pickup an hour after the arrival time, so cancelling is free.",
+      "cancelConfirmFree": "Cancel this move? Under {{name}}'s terms it's free until {{date}}, {{time}}. {{name}} sees it in the app — if they may already be on the way, call them too.",
+      "cancelConfirmFreeTerms": "Cancel this move? Under {{name}}'s terms it's free. {{name}} sees it in the app — if they may already be on the way, call them too.",
+      "cancelConfirmMoverLate": "Cancel this move? {{name}} hasn't added a photo at the pickup an hour after the arrival time, so it's free. {{name}} sees it only in the app — if they may already be on the way, call them.",
+      "cancelConfirmFee": "Cancel this move? Free cancellation ended on {{date}}, {{time}}. Under {{name}}'s terms, cancelling now costs {{amount}}, which goes to {{name}}. MoversHub doesn't charge it: card payments haven't started. {{name}} sees it only in the app — if they may already be on the way, call them.",
+      "cancelYesFree": "Yes, cancel for free",
+      "cancelYesFee": "Yes, cancel for {{amount}}",
+      "feeChanged": "The cost of cancelling has just changed: it is now {{amount}}. Check it, then cancel if you still want to.",
+      "onBoardNote": "Your things are on board, so this move can't be cancelled in the app. To change anything, call {{name}}.",
+      "confirmTitle": "Is everything done?",
+      "confirm": "Confirm the move is done",
+      "confirmNote": "Confirming doesn't take away your right to report damage or loss later.",
+      "confirmedNote": "You confirmed the move on {{date}} at {{time}}.",
+      "problemNote": "Something damaged or missing? Tell {{name}}, and MoversHub through “Contact MoversHub” below, as soon as you can.",
+      "contact": "Contact MoversHub",
+      "errors": {
+        "not_cancellable": "This move can't be cancelled any more. Here's where it stands now.",
+        "not_confirmable": "The move isn't marked as done yet.",
+        "network": "No connection. Try again when you're back online."
+      }
+    },
+    "review": {
+      "freeUntil": "Free cancellation until {{date}}, {{time}}.",
+      "lateAlready": "For this arrival time, free cancellation has already ended: once your mover accepts, cancelling costs {{amount}} under their terms.",
+      "moverMayCancel": "Your mover can cancel until your things are loaded — then you pay nothing. Once loaded, the move can't be cancelled in the app. If your mover hasn't added a photo at the pickup an hour after the arrival time, cancelling is free."
+    }
   }
 }

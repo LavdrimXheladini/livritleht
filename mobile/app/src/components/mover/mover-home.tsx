@@ -1,9 +1,12 @@
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { Button, DarkPanel, LanguageButton, Screen, Wordmark, useAnnouncement, useAuth } from '@movershub/mobile';
+import { Button, DarkPanel, LanguageButton, Screen, Wordmark, announce, useAnnouncement, useAuth } from '@movershub/mobile';
+
+import { clearJobPhotoQueue, hasPendingPhotos } from '@/lib/job-photos';
 
 import { SwitchSideButton } from '../switch-side';
 import { ExampleRequest } from './example-request';
@@ -16,8 +19,20 @@ import { SetupChecklist } from './setup-checklist';
  */
 export function MoverHome({ notice }: { notice: string | null }) {
   const { t } = useTranslation();
+  const { t: tj } = useTranslation('job');
   const { signOut, signingOut } = useAuth();
   useAnnouncement(notice);
+  // Photos of a move not sent yet are asked about first: signing out deletes them from the phone.
+  const [photosPending, setPhotosPending] = useState(false);
+  const leave = () => {
+    if (hasPendingPhotos() && !photosPending) {
+      setPhotosPending(true);
+      announce(tj('mover.signOutPending'));
+      return;
+    }
+    clearJobPhotoQueue();
+    void signOut();
+  };
 
   return (
     <Screen tone="dark">
@@ -33,10 +48,19 @@ export function MoverHome({ notice }: { notice: string | null }) {
             variant="link-dark"
             title={t('common.signOut')}
             loading={signingOut}
-            onPress={() => void signOut()}
+            onPress={leave}
           />
         </View>
       </View>
+
+      {photosPending ? (
+        <DarkPanel className="gap-3">
+          <Text role="alert" className="font-sans text-sm leading-5 text-night-50">
+            {tj('mover.signOutPending')}
+          </Text>
+          <Button testID="mover-sign-out-anyway" variant="outline-dark" className="self-start" title={tj('mover.signOutAnyway')} loading={signingOut} onPress={leave} />
+        </DarkPanel>
+      ) : null}
 
       {notice ? (
         <DarkPanel>

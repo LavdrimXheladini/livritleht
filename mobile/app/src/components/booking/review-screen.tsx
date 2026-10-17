@@ -3,8 +3,18 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-import { Button, Card, CheckIcon, Display, Pill, clearBookingDraft, currentLocale, formatClockTime, useAnnouncement } from '@movershub/mobile';
-import { formatExpiryDate, formatMoney, type BookResponse, type BookedMover, type BookingDraft } from '@movershub/shared';
+import { Button, Card, CheckIcon, Display, Pill, clearBookingDraft, currentLocale, formatClockTime, formatMoveDay, useAnnouncement } from '@movershub/mobile';
+import {
+  formatExpiryDate,
+  formatMoney,
+  freeCancellationUntil,
+  lateCancellationFee,
+  localDay,
+  scheduledAt,
+  type BookResponse,
+  type BookedMover,
+  type BookingDraft,
+} from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
 import { BookError, useBookRequest } from '@/lib/booking';
@@ -81,8 +91,52 @@ function Review({ draft, update }: { draft: BookingDraft; update: UpdateBooking 
       ) : error ? (
         <Problem testID="review-error" text={t('booking.review.error')} action={t('common.retry')} onPress={() => void book.refetch()} />
       ) : book.data ? (
-        <Booked answer={book.data} expired={expired} onPriceAgain={() => void book.refetch()} />
+        <Booked answer={book.data} draft={draft} expired={expired} onPriceAgain={() => void book.refetch()} />
       ) : null}
+    </>
+  );
+}
+
+const clock = () => Date.now();
+
+/** The time now, again at `at` (once), so a line about it changes when that moment passes. */
+function useNowUntil(at: number) {
+  const [now, setNow] = useState(clock);
+  useEffect(() => {
+    if (!at) return;
+    const timer = setTimeout(() => setNow(clock()), Math.min(Math.max(at - clock(), 0) + 250, 2 ** 31 - 1));
+    return () => clearTimeout(timer);
+  }, [at]);
+  return now;
+}
+
+/**
+ * For this arrival time: until when cancelling is free — or that the free time has already ended and
+ * what cancelling costs once the mover accepts (COMPLIANCE §8: shown before booking, never later); and
+ * what happens if the mover cancels or is late (design/DECISIONS.md #36).
+ */
+function CancelWhen({ draft, mover, quote }: { draft: BookingDraft; mover: BookedMover; quote: BookResponse['quote'] }) {
+  const { t: tj } = useTranslation('job');
+  const locale = currentLocale();
+  const freeUntil = draft.day !== null && draft.hour !== null ? freeCancellationUntil(scheduledAt(draft.day, draft.hour), mover.cancellation.freeHours) : null;
+  const now = useNowUntil(freeUntil ? freeUntil.getTime() + 1 : 0);
+  if (!freeUntil) return null;
+  const { latePct } = mover.cancellation;
+  const when = freeUntil.getTime() < now
+    ? latePct > 0
+      ? tj('review.lateAlready', { amount: formatMoney(lateCancellationFee(quote.moverPrice, latePct, quote.currency), quote.currency, locale) })
+      : null
+    : tj('review.freeUntil', { date: formatMoveDay(localDay(freeUntil), locale), time: formatClockTime(freeUntil.toISOString(), locale) });
+  return (
+    <>
+      {when ? (
+        <Text testID="review-cancel-when" className="font-sans-medium text-[13.5px] leading-5 text-ink-900">
+          {when}
+        </Text>
+      ) : null}
+      <Text testID="review-mover-may-cancel" className="font-sans text-[12.5px] leading-[18px] text-ink-600">
+        {tj('review.moverMayCancel')}
+      </Text>
     </>
   );
 }
@@ -99,7 +153,7 @@ function Problem({ text, action, onPress, testID }: { text: string; action: stri
   );
 }
 
-function Booked({ answer, expired, onPriceAgain }: { answer: BookResponse; expired: boolean; onPriceAgain: () => void }) {
+function Booked({ answer, draft, expired, onPriceAgain }: { answer: BookResponse; draft: BookingDraft; expired: boolean; onPriceAgain: () => void }) {
   const { t } = useTranslation();
   const locale = currentLocale();
   const describeCancellation = useCancellationText();
@@ -141,6 +195,7 @@ function Booked({ answer, expired, onPriceAgain }: { answer: BookResponse; expir
         <Text testID="review-cancellation" className="font-sans text-[13.5px] leading-5 text-ink-700">
           {describeCancellation(mover.cancellation)}
         </Text>
+        <CancelWhen draft={draft} mover={mover} quote={quote} />
         {/* COMPLIANCE-TODO: §14 — the withdrawal-right wording per country, to be confirmed by the lawyer (COMPLIANCE §8). */}
         <Text className="font-sans text-[12.5px] leading-[18px] text-ink-600">{t('booking.review.withdrawal')}</Text>
       </Card>

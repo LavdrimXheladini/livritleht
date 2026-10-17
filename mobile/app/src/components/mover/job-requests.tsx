@@ -1,29 +1,61 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { Button, DarkPanel, Display, Pill, announce, formatClockTime, formatMoveDay } from '@movershub/mobile';
-import { formatMoney, formatNumber, localDay, resolveLocale, stopArea, type Locale, type MoverJobRow } from '@movershub/shared';
+import { GPS_ACTIVE_STATUSES, formatMoney, localDay, resolveLocale, stopArea, type JobStatus, type MoverJobRow } from '@movershub/shared';
 
+import { useJobPhotoQueue } from '@/lib/job-photos';
 import { useJobStep, useMoverJobs } from '@/lib/jobs';
 
-import { hourText } from '../booking/when-screen';
+import { Payout, Work, when } from './job-parts';
+
+const UNDER_WAY: readonly JobStatus[] = GPS_ACTIVE_STATUSES;
+const openJob = (jobId: string) => router.push({ pathname: '/mover/jobs/[id]', params: { id: jobId } });
 
 /**
- * The mover's job requests and accepted moves, on the mover home (design/DECISIONS.md #35; COMPLIANCE
- * §2, §9.1): each request with the area of each stop, the day, the work and their own price and payout
- * — the exact places only once they accept. Accepting or declining is free; declining changes nothing
- * for them. Hidden while there is none.
+ * The mover's jobs on their home (design/DECISIONS.md #35, #36; COMPLIANCE §2, §9.1): a move under way
+ * first, then requests to answer — the area of each stop, the day, the work and their own price and
+ * payout, the exact places only once they accept — then accepted jobs (each opens its job screen), then
+ * the jobs that ended in the last 7 days (areas only). Accepting or declining is free; declining changes
+ * nothing for them. Hidden while there is none.
  */
 export function MoverJobs() {
   const { t } = useTranslation();
+  const { t: tj } = useTranslation('job');
   const jobs = useMoverJobs();
+  // Photos not sent yet go out from here too (e.g. after the app was closed at a stop).
+  useJobPhotoQueue();
   const rows = jobs.data ?? [];
-  const requests = rows.filter((r) => r.offer_status === 'offered');
   const accepted = rows.filter((r) => r.offer_status === 'accepted');
+  const inProgress = accepted.filter((r) => UNDER_WAY.includes(r.status));
+  const requests = rows.filter((r) => r.offer_status === 'offered');
+  const upcoming = accepted.filter((r) => r.status === 'ACCEPTED');
+  const recent = accepted.filter((r) => r.ended_at !== null).sort((a, b) => Date.parse(b.ended_at ?? '') - Date.parse(a.ended_at ?? ''));
+  if (jobs.isError && !jobs.data) {
+    return (
+      <View testID="jobs-load-failed" className="gap-2">
+        <Text role="alert" className="font-sans text-[14px] leading-5 text-danger-on-dark">
+          {tj('mover.home.loadFailed')}
+        </Text>
+        <Button variant="outline-dark" size="md" className="self-start" title={t('common.retry')} loading={jobs.isFetching} onPress={() => void jobs.refetch()} />
+      </View>
+    );
+  }
   if (rows.length === 0) return null;
   return (
     <View className="gap-5">
+      {inProgress.length ? (
+        <View testID="jobs-in-progress" className="gap-3">
+          <Text accessibilityRole="header" className="font-sans-medium text-base text-night-50">
+            {tj('mover.home.inProgressTitle')}
+          </Text>
+          {inProgress.map((row) => (
+            <InProgress key={row.offer_id} row={row} />
+          ))}
+        </View>
+      ) : null}
       {requests.length ? (
         <View testID="job-requests" className="gap-3">
           <Text accessibilityRole="header" className="font-sans-medium text-base text-night-50">
@@ -34,13 +66,24 @@ export function MoverJobs() {
           ))}
         </View>
       ) : null}
-      {accepted.length ? (
+      {upcoming.length ? (
         <View testID="my-jobs" className="gap-3">
           <Text accessibilityRole="header" className="font-sans-medium text-base text-night-50">
             {t('mover.jobs.acceptedTitle')}
           </Text>
-          {accepted.map((row) => (
+          {upcoming.map((row) => (
             <Accepted key={row.offer_id} row={row} />
+          ))}
+        </View>
+      ) : null}
+      {recent.length ? (
+        <View testID="recent-jobs" className="gap-2">
+          <Text accessibilityRole="header" className="font-sans-medium text-base text-night-50">
+            {tj('mover.home.recentTitle')}
+          </Text>
+          <Text className="font-sans text-[12.5px] text-sage-400">{tj('mover.home.recentNote')}</Text>
+          {recent.map((row) => (
+            <Recent key={row.offer_id} row={row} />
           ))}
         </View>
       ) : null}
@@ -48,57 +91,29 @@ export function MoverJobs() {
   );
 }
 
-/** "Tuesday 20 October, 10:00". */
-function when(row: MoverJobRow, locale: Locale) {
-  const at = new Date(row.scheduled_at);
-  return `${formatMoveDay(localDay(at), locale, { long: true })}, ${hourText(at.getHours())}`;
-}
-
-/** The work, in one place: van, crew, floors and lift at each end, the things to move. */
-function Work({ row }: { row: MoverJobRow }) {
-  const { t, i18n } = useTranslation();
-  const locale = resolveLocale(i18n.language);
-  const level = (floor: number, lift: boolean) =>
-    floor === 0 ? t('booking.stops.ground') : `${t('booking.stops.floorN', { n: floor })} · ${lift ? t('booking.stops.liftYes') : t('booking.stops.liftNo')}`;
-  return (
-    <View className="gap-2">
-      <View className="flex-row flex-wrap gap-1.5">
-        <Pill tone="dark" shape="tag">
-          {t(`vehicles.${row.vehicle_class}.name`)}
-        </Pill>
-        <Pill tone="dark" shape="tag">
-          {t(`landing.movers.phone.crew${row.helpers as 1 | 2 | 3}`)}
-        </Pill>
-        <Pill tone="dark" shape="tag">
-          {`${formatNumber(row.distance_km, locale)} km`}
-        </Pill>
-      </View>
-      <Text className="font-sans text-[13px] leading-[18px] text-sage-400">
-        {t('mover.jobs.levels', { pickup: level(row.pickup_floor, row.pickup_has_lift), dropoff: level(row.dropoff_floor, row.dropoff_has_lift) })}
-      </Text>
-      <Text className="font-sans text-[13px] leading-[18px] text-night-50">
-        {row.items.map((it) => `${t(`items.${it.key}`)} × ${formatNumber(it.qty, locale)}`).join(' · ')}
-      </Text>
-    </View>
-  );
-}
-
-/** Their payout, large; their own price and the commission beside it (COMPLIANCE §1, §12: "Payout"). */
-function Payout({ row }: { row: MoverJobRow }) {
-  const { t, i18n } = useTranslation();
+/** A move under way: where it stands and since when, the areas, and the way into the job. */
+function InProgress({ row }: { row: MoverJobRow }) {
+  const { t: tj, i18n } = useTranslation('job');
   const locale = resolveLocale(i18n.language);
   return (
-    <View className="flex-row items-end justify-between gap-3 border-t border-night-600 pt-3">
-      <View>
-        <Text className="font-sans text-[11.5px] text-sage-400">{t('landing.movers.phone.payout')}</Text>
-        <Display size={28} tone="dark" accent accessibilityRole="text">
-          {formatMoney(row.mover_payout, row.currency, locale)}
-        </Display>
+    <DarkPanel className="gap-3">
+      <View testID={`mover-now-${row.job_id}`} className="gap-2">
+        <Pill tone="accent" size="sm">
+          {tj(`mover.state.${row.status as 'AT_PICKUP'}`)}
+        </Pill>
+        {row.last_event_at ? <Text className="font-sans text-[12.5px] text-sage-400">{tj('mover.since', { time: formatClockTime(row.last_event_at, locale) })}</Text> : null}
+        <Text className="font-sans-semibold text-[15px] text-night-50">
+          {`${stopArea(row.pickup_area, row.pickup_district)} → ${stopArea(row.dropoff_area, row.dropoff_district)}`}
+        </Text>
       </View>
-      <Text className="text-right font-sans text-[11.5px] leading-[15px] text-sage-400">
-        {t('landing.movers.phone.breakdown', { price: formatMoney(row.mover_price, row.currency, locale), pct: row.take_rate_pct })}
-      </Text>
-    </View>
+      <Button
+        testID={`mover-now-${row.job_id}-open`}
+        variant="accent"
+        title={tj('mover.home.openJob')}
+        accessibilityHint={tj('mover.home.openJobHint')}
+        onPress={() => openJob(row.job_id)}
+      />
+    </DarkPanel>
   );
 }
 
@@ -169,35 +184,59 @@ function Request({ row }: { row: MoverJobRow }) {
   );
 }
 
-/** An accepted move: now with the exact places and the customer's directions. Its steps follow (build step 6). */
+/** An accepted job before the move day starts: the exact places now, and its job screen. */
 function Accepted({ row }: { row: MoverJobRow }) {
   const { t, i18n } = useTranslation();
+  const { t: tj } = useTranslation('job');
   const locale = resolveLocale(i18n.language);
   return (
-    <DarkPanel className="gap-3">
-      <View testID={`my-job-${row.job_id}`} className="gap-3">
-        <Pill tone="dark" size="sm">
-          {t('mover.jobs.accepted')}
-        </Pill>
-        <Display size={22} tone="dark">
-          {when(row, locale)}
-        </Display>
-        <Place label={t('landing.quote.pickup')} place={row.pickup_label} details={row.pickup_details} testID={`my-job-${row.job_id}-pickup`} />
-        <Place label={t('landing.quote.dropoff')} place={row.dropoff_label} details={row.dropoff_details} testID={`my-job-${row.job_id}-dropoff`} />
-        <Work row={row} />
-        <Payout row={row} />
+    <Pressable
+      testID={`my-job-${row.job_id}`}
+      accessibilityRole="button"
+      accessibilityHint={tj('mover.home.openJobHint')}
+      onPress={() => openJob(row.job_id)}
+      className="gap-2 rounded-panel bg-night-800 p-3.5 active:bg-night-700"
+    >
+      <Pill tone="dark" size="sm">
+        {t('mover.jobs.accepted')}
+      </Pill>
+      <Text className="font-sans-semibold text-[16px] text-night-50">{when(row, locale)}</Text>
+      <View testID={`my-job-${row.job_id}-pickup`} className="gap-0.5">
+        <Text className="font-sans text-[12px] text-sage-400">{t('landing.quote.pickup')}</Text>
+        <Text className="font-sans-medium text-[14px] text-night-50">{row.pickup_label ?? '—'}</Text>
       </View>
-    </DarkPanel>
+      <View className="gap-0.5">
+        <Text className="font-sans text-[12px] text-sage-400">{t('landing.quote.dropoff')}</Text>
+        <Text className="font-sans-medium text-[14px] text-night-50">{row.dropoff_label ?? '—'}</Text>
+      </View>
+      <Payout row={row} />
+    </Pressable>
   );
 }
 
-function Place({ label, place, details, testID }: { label: string; place: string | null; details: string | null; testID: string }) {
-  const { t } = useTranslation();
+/** A job that ended in the last 7 days: the areas only, how it ended, a cancellation charge if any. */
+function Recent({ row }: { row: MoverJobRow }) {
+  const { t: tj, i18n } = useTranslation('job');
+  const locale = resolveLocale(i18n.language);
+  const state = row.status === 'COMPLETED' ? tj('mover.state.COMPLETED') : row.cancelled_by === 'mover' ? tj('mover.state.cancelledByYou') : tj('mover.state.cancelledByCustomer');
   return (
-    <View testID={testID} className="gap-0.5">
-      <Text className="font-sans text-[12px] text-sage-400">{label}</Text>
-      <Text className="font-sans-semibold text-[15px] text-night-50">{place ?? '—'}</Text>
-      {details ? <Text className="font-sans text-[13px] text-night-50">{t('mover.jobs.directions', { text: details })}</Text> : null}
-    </View>
+    <Pressable
+      testID={`recent-job-${row.job_id}`}
+      accessibilityRole="button"
+      onPress={() => openJob(row.job_id)}
+      className="gap-1.5 rounded-panel border border-night-600 p-3 active:bg-night-800"
+    >
+      <View className="flex-row flex-wrap items-center gap-2">
+        <Pill tone="dark-muted" size="sm">
+          {state}
+        </Pill>
+        {row.cancellation_fee ? (
+          <Text className="font-sans text-[12px] text-accent-300">{tj('mover.feeShort', { amount: formatMoney(row.cancellation_fee, row.currency, locale) })}</Text>
+        ) : null}
+      </View>
+      <Text className="font-sans text-[13px] text-night-50">
+        {`${when(row, locale)} · ${stopArea(row.pickup_area, row.pickup_district)} → ${stopArea(row.dropoff_area, row.dropoff_district)}`}
+      </Text>
+    </Pressable>
   );
 }

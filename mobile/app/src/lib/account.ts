@@ -32,14 +32,15 @@ export function useAccount() {
   return {
     /** Everything MoversHub keeps about the account, saved or shared as a file. False when it failed. */
     downloadData: async (): Promise<boolean> => {
-      const answer = await callFunction<object>(supabase, 'account', { action: 'export' });
+      // Everything about the account, with links to its files: give it more time than a step.
+      const answer = await callFunction<object>(supabase, 'account', { action: 'export' }, 45_000);
       if (!answer.ok) return false;
       await handOver(JSON.stringify(answer.data, null, 2), exportFileName(new Date()));
       return true;
     },
     /** Deletes the account (password typed again): `deleted`, or why not. */
     deleteAccount: async (password: string) => {
-      const answer = await callFunction<{ status: 'deleted' }>(supabase, 'account', { action: 'delete', password });
+      const answer = await callFunction<{ status: 'deleted' }>(supabase, 'account', { action: 'delete', password }, 45_000);
       return answer.ok ? ('deleted' as const) : answer.error;
     },
   };

@@ -12,7 +12,7 @@ export * from './types';
  * When the legal texts last changed. Change it with every change of a text (each page shows it).
  * DRAFTS: none of them has been checked by a lawyer yet (design/DECISIONS.md #33).
  */
-export const LEGAL_UPDATED = '2026-10-16';
+export const LEGAL_UPDATED = '2026-10-17';
 
 /** The texts exist in English only until the lawyer has checked them; then they are translated once. */
 const TEXTS: Record<LegalDocId, Partial<Record<Locale, LegalText>> & { en: LegalText }> = {

@@ -29,8 +29,8 @@ const answer = (body: string, status = 200) => (route: Route) =>
 /**
  * `quote` answers with the saved Prishtina → Prizren quote (test movers, 83.2 km); `places` finds
  * nothing; the customer has no moves yet (`jobs`), the mover no reminders (`mover_reminders`), no
- * decisions about their account (`suspensions`), no complaints (`mover_appeals`), and no terms are
- * published (`terms_versions`, `terms_acceptances`).
+ * decisions about their account (`suspensions`), no complaints (`mover_appeals`), no jobs or photos of
+ * jobs, and no terms are published (`terms_versions`, `terms_acceptances`).
  */
 export async function serveFixtures(page: Page) {
   await page.route('**/functions/v1/quote', answer(quote));
@@ -39,8 +39,10 @@ export async function serveFixtures(page: Page) {
   await page.route('**/rest/v1/mover_reminders*', answer('[]'));
   await page.route('**/rest/v1/suspensions*', answer('[]'));
   await page.route('**/rest/v1/mover_appeals*', answer('[]'));
-  // No job requests or accepted moves for a mover (design/DECISIONS.md #35).
+  // No job requests or accepted moves for a mover (design/DECISIONS.md #35), and no photos of a move (#36).
   await page.route('**/rest/v1/rpc/my_mover_jobs*', answer('[]'));
+  await page.route('**/rest/v1/job_photos*', answer('[]'));
+  await page.route('**/storage/v1/object/sign/job-photos*', answer('[]'));
   // No terms published: nothing to accept (design/DECISIONS.md #34).
   await page.route('**/rest/v1/terms_versions*', answer('[]'));
   await page.route('**/rest/v1/terms_acceptances*', answer('[]'));

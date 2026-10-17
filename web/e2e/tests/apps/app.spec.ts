@@ -906,6 +906,11 @@ test.describe('booking a move', () => {
     await expect(app(page).getByText(r.feeTba)).toBeVisible();
     await expect(page.getByTestId('review-valid')).toHaveText(r.validUntil.replace('{{time}}', '10:15'));
     await expect(page.getByTestId('review-cancellation')).toHaveText(`${b.cancel.free24} ${b.cancel.late.replace('{{pct}}', '50')}`);
+    // At 10:00 the day before a 09:00 move, 24 hours' free cancellation is already over: said before booking (COMPLIANCE §8).
+    await expect(page.getByTestId('review-cancel-when')).toHaveText(
+      resources.en.job.review.lateAlready.replace('{{amount}}', euros(Math.floor((prizren.quote.moverPrice * 50) / 100))),
+    );
+    await expect(page.getByTestId('review-mover-may-cancel')).toHaveText(resources.en.job.review.moverMayCancel);
     // Paying (the card books the move) waits for Stripe.
     await expect(page.getByTestId('review-pay')).toBeDisabled();
     await expect(page.getByTestId('review-pay-note')).toHaveText(r.payNote);
@@ -1562,7 +1567,9 @@ test.describe('signed in as a mover', () => {
     await page.getByTestId('job-request-00000000-0000-4000-8000-0000000e0001-accept').click();
     const job = page.getByTestId('my-job-00000000-0000-4000-8000-0000000e0001');
     await expect(job.getByTestId('my-job-00000000-0000-4000-8000-0000000e0001-pickup')).toContainText('Rr. Agim Ramadani 12, Prishtina');
-    await expect(job).toContainText(j.directions.replace('{{text}}', 'Ring twice'));
+    // Its job screen: the customer's directions (design/DECISIONS.md #36).
+    await job.click();
+    await expect(page.getByTestId('mover-job-pickup')).toContainText(j.directions.replace('{{text}}', 'Ring twice'));
     expect(steps).toEqual([
       { action: 'decline', offerId: '00000000-0000-4000-8000-0000000f0002' },
       { action: 'accept', offerId: '00000000-0000-4000-8000-0000000f0001' },

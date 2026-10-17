@@ -31,6 +31,7 @@ export const privacy: LegalText = {
           list: [
             'Your moves: the pickup and drop-off addresses with floor, lift and directions, what you move, the day and time, the van size and crew, the mover you chose and the prices you were shown.',
             'Requests you saved but did not book.',
+            'The steps of your move with their times, the photos your mover adds of your things at pickup and drop-off, whether you confirmed the move, and any cancellation with its cost.',
           ],
         },
         'For movers (also required by EU law for traders on online platforms and for tax reporting):',
@@ -42,6 +43,7 @@ export const privacy: LegalText = {
             'Your vans, your prices, your work areas and your cancellation terms.',
             'Our checks of your setup, any decision about your account, your appeals and complaints, and our answers.',
             'Reminders about documents that are about to end.',
+            'The jobs offered to you and your answers; the steps you mark on a job and their times, the photos you add at pickup and drop-off (in private storage), and cancellations of jobs you accepted.',
           ],
         },
         'Payments (once card payments start): our payment provider Stripe handles your card and, for movers, your identity check and bank account. We never see or keep card numbers or bank details — only Stripe\'s reference numbers and whether a payment went through.',
@@ -62,6 +64,7 @@ export const privacy: LegalText = {
             'With your consent — the launch email, and analytics if we ever add them (only after you agree; you can withdraw at any time) (Art. 6(1)(a)).',
           ],
         },
+        'Steps, photos and cancellations inform the other side and are evidence if a move is disputed; they are never used to rank, score or discipline movers. The time the first photo at the pickup was added also decides whether a customer\'s cancellation after the arrival time is free (no photo an hour after the arrival time: free).',
         'We do not sell your data, and we do not use it for anything unrelated to the platform without asking you.',
       ],
     },
@@ -71,7 +74,8 @@ export const privacy: LegalText = {
       blocks: [
         {
           list: [
-            'The mover you book sees your name, the details of the move and the exact addresses. Before a mover accepts a job, they see only the area of the pickup, never the exact address.',
+            'The mover you book sees the details of the move and, once they accept it, the exact addresses and your directions — until 7 days after the move, or until it is cancelled. Before a mover accepts a job, they see only the area of each stop, never the exact address.',
+            'A move\'s steps and photos: you, the mover who accepted it and MoversHub — no one else.',
             'Customers see the mover\'s business details before booking: name, business or private person, registration number, address, phone, email, insurance and terms.',
             'Our service providers, who process data only on our instructions: Supabase (database, sign-in and file storage — in the EU, Ireland), the map services we use to find addresses and routes (based on OpenStreetMap: Photon by Komoot for address search, OSRM for routes, OpenFreeMap for map images — they receive the text you search for and the points of a route, not your account), and, once in use, Twilio (codes to confirm a phone number by SMS or WhatsApp), Vercel (website hosting, EU region), Expo (app updates and notifications) and Sentry (error reports).',
             'Stripe, for payments and movers\' payouts — partly as an independent controller for its own identity checks.',
@@ -126,14 +130,14 @@ export const privacy: LegalText = {
       heading: 'Cookies and storage on your device',
       blocks: [
         'The website uses only the cookies it needs to work: the ones that keep you signed in, and one that remembers for a day that you still have to choose a password. No advertising cookies, and no analytics cookies. If we ever add analytics, they stay off until you agree.',
-        'The app keeps on your phone: your sign-in, the side you last used, your language, a password you still have to choose, and a move you started booking.',
+        'The app keeps on your phone: your sign-in, the side you last used, your language, a password you still have to choose, and a move you started booking. For movers also, only until they are sent: photos of a move not sent yet (re-saved small, without location or camera data) and an "Arrived" that couldn\'t be sent for lack of a connection. Sent or removed photos are deleted from the phone.',
       ],
     },
     {
       id: 'security',
       heading: 'Security',
       blocks: [
-        'Data travels encrypted. Movers\' documents are kept in private, encrypted storage that only the mover and MoversHub\'s checks can open. Access inside MoversHub is limited by role. If a breach puts your data at risk, we follow a documented procedure and tell you and the authority as the law requires.',
+        'Data travels encrypted. Movers\' documents and the photos of a move are kept in private, encrypted storage that only the people concerned and MoversHub can open. Access inside MoversHub is limited by role. If a breach puts your data at risk, we follow a documented procedure and tell you and the authority as the law requires.',
       ],
     },
     {

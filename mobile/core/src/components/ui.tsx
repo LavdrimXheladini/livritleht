@@ -167,6 +167,7 @@ export function Button({
   className,
   testID,
   accessibilityLabel,
+  accessibilityHint,
 }: {
   title: string;
   onPress: () => void;
@@ -179,6 +180,8 @@ export function Button({
   className?: string;
   testID?: string;
   accessibilityLabel?: string;
+  /** What pressing it does — or, while disabled, why it can't be pressed yet. */
+  accessibilityHint?: string;
 }) {
   const v = BUTTON[variant];
   const s = BUTTON_SIZE[size];
@@ -191,6 +194,7 @@ export function Button({
       accessibilityRole="button"
       // The title stays the button's name while the spinner replaces it.
       accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: disabled || loading, busy: loading }}
       className={cx(
         'flex-row items-center justify-center gap-2',
