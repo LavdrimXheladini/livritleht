@@ -681,7 +681,8 @@
       "errors": {
         "offer_expired": "To zapytanie się skończyło: czas na odpowiedź minął.",
         "already_answered": "Na to zapytanie już odpowiedziano.",
-        "not_open": "Klient anulował to zapytanie."
+        "not_open": "Klient anulował to zapytanie.",
+        "not_eligible": "Nie możesz teraz przyjąć tego zlecenia: coś, czego wymaga w dniu przeprowadzki, nie jest w porządku — Twoje ubezpieczenie przewoźnika (za granicę także ubezpieczenie CMR i licencja), pojazd, wypłaty, obowiązujący regulamin, obszar działania albo ceny i warunki anulowania. Sprawdź swoje ustawienia."
       }
     }
   },

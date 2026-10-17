@@ -14,13 +14,20 @@ values
 update public.profiles set role = 'customer' where id in ('00000000-0000-0000-0000-00000000c961', '00000000-0000-0000-0000-00000000c962');
 update public.profiles set role = 'mover' where id in ('00000000-0000-0000-0000-00000000d961', '00000000-0000-0000-0000-00000000d962');
 
--- A test mover (bookable without a card until card payments exist) and a real one.
-insert into public.mover_companies (id, owner_id, legal_name, country, is_test)
-values ('00000000-0000-0000-0000-0000000aa961', '00000000-0000-0000-0000-00000000d961', 'Test Lëvizje', 'XK', true),
-       ('00000000-0000-0000-0000-0000000aa962', '00000000-0000-0000-0000-00000000d962', 'Real Lëvizje', 'XK', false);
-insert into public.vehicles (id, company_id, class, plate, max_weight_kg, volume_m3)
-values ('00000000-0000-0000-0000-0000000bb961', '00000000-0000-0000-0000-0000000aa961', 'VAN', 'TEST-XK-961', 2800, 6),
-       ('00000000-0000-0000-0000-0000000bb962', '00000000-0000-0000-0000-0000000aa962', 'VAN', 'TEST-XK-962', 2800, 6);
+-- A test mover (bookable without a card until card payments exist) and a real one. The test mover is
+-- fully quotable in Prishtina — accepting checks that again (20261017120000).
+insert into public.mover_companies (id, owner_id, legal_name, country, is_test, verification_status, stripe_onboarding_complete, cancel_free_hours, cancel_late_pct)
+values ('00000000-0000-0000-0000-0000000aa961', '00000000-0000-0000-0000-00000000d961', 'Test Lëvizje', 'XK', true, 'verified', true, 48, 50),
+       ('00000000-0000-0000-0000-0000000aa962', '00000000-0000-0000-0000-00000000d962', 'Real Lëvizje', 'XK', false, 'pending', false, null, null);
+insert into public.vehicles (id, company_id, class, plate, max_weight_kg, volume_m3, verified_at)
+values ('00000000-0000-0000-0000-0000000bb961', '00000000-0000-0000-0000-0000000aa961', 'VAN', 'TEST-XK-961', 2800, 6, now()),
+       ('00000000-0000-0000-0000-0000000bb962', '00000000-0000-0000-0000-0000000aa962', 'VAN', 'TEST-XK-962', 2800, 6, null);
+insert into public.rate_cards (vehicle_id, currency, base_fee, per_km, per_labor_minute_1_helper, confirmed_by_mover_at)
+values ('00000000-0000-0000-0000-0000000bb961', 'EUR', 2500, 60, 28, now());
+insert into public.service_areas (company_id, center, radius_km)
+values ('00000000-0000-0000-0000-0000000aa961', 'SRID=4326;POINT(21.1655 42.6629)', 90);
+insert into public.mover_documents (company_id, type, file_path, expires_at, verified_at)
+values ('00000000-0000-0000-0000-0000000aa961', 'insurance', 'aa961/insurance.pdf', now() + interval '1 year', now());
 
 -- Three saved requests: two with the test mover (one by another customer), one with the real mover.
 insert into public.jobs (id, customer_id, type, vehicle_class, helpers, scheduled_at,

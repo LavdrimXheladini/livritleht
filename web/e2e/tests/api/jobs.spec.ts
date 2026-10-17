@@ -35,11 +35,43 @@ async function insert<T>(request: APIRequestContext, table: string, data: object
   return ((await res.json()) as T[])[0]!;
 }
 
-/** A mover's company and van, written by the platform. */
+/**
+ * A mover's company and van, written by the platform. A test mover is fully quotable in Prishtina —
+ * checked company and van, payouts, own prices and terms, a work area, checked insurance — because
+ * accepting checks all of that again (20261017120000).
+ */
 async function moverWithVan(request: APIRequestContext, owner: Person, isTest: boolean) {
-  const company = await insert<{ id: string }>(request, 'mover_companies', { owner_id: owner.id, legal_name: `E2E ${isTest ? 'Test' : 'Real'} Movers`, country: 'XK', is_test: isTest });
-  const van = await insert<{ id: string }>(request, 'vehicles', { company_id: company.id, class: 'VAN', plate: `E2E-${Date.now() % 100000}${isTest ? 'T' : 'R'}`, max_weight_kg: 2800, volume_m3: 6 });
-  return { companyId: company.id, vanId: van.id };
+  const now = new Date().toISOString();
+  const company = await insert<{ id: string }>(request, 'mover_companies', {
+    owner_id: owner.id,
+    legal_name: `E2E ${isTest ? 'Test' : 'Real'} Movers`,
+    country: 'XK',
+    is_test: isTest,
+    ...(isTest ? { verification_status: 'verified', stripe_onboarding_complete: true, cancel_free_hours: 48, cancel_late_pct: 50 } : {}),
+  });
+  const van = await insert<{ id: string }>(request, 'vehicles', {
+    company_id: company.id,
+    class: 'VAN',
+    plate: `E2E-${Date.now() % 100000}${isTest ? 'T' : 'R'}`,
+    max_weight_kg: 2800,
+    volume_m3: 6,
+    ...(isTest ? { verified_at: now } : {}),
+  });
+  let insuranceId = '';
+  if (isTest) {
+    await insert(request, 'rate_cards', { vehicle_id: van.id, currency: 'EUR', base_fee: 2500, per_km: 60, per_labor_minute_1_helper: 28, confirmed_by_mover_at: now });
+    await insert(request, 'service_areas', { company_id: company.id, center: 'SRID=4326;POINT(21.1655 42.6629)', radius_km: 90 });
+    insuranceId = (
+      await insert<{ id: string }>(request, 'mover_documents', {
+        company_id: company.id,
+        type: 'insurance',
+        file_path: `${company.id}/insurance/e2e.pdf`,
+        expires_at: new Date(Date.now() + 365 * 86_400_000).toISOString(),
+        verified_at: now,
+      })
+    ).id;
+  }
+  return { companyId: company.id, vanId: van.id, insuranceId };
 }
 
 /** A saved request (QUOTED) with a fresh quote, as `book` writes it. */
@@ -134,6 +166,18 @@ test('book (test movers only), the mover sees the area, accepts and then sees th
     expect(mine).toMatchObject({ pickup_label: 'Rr. Agim Ramadani 12, Prishtina', pickup_details: 'Ring twice' });
     // Once accepted, cancelling follows the mover's terms (build step 6).
     expect((await (await step(customer, { action: 'cancel', jobId: withTest })).json()).error).toBe('not_cancellable');
+
+    // Accepting checks the mover again for the move day (COMPLIANCE §5): insurance nobody has
+    // checked any more → not accepted, and the request stays open.
+    const checked = await savedRequest(request, customer, testCo);
+    const third = (await (await step(customer, { action: 'book_test', jobId: checked })).json()) as { offerId: string };
+    const insurance = `${projectUrl}/rest/v1/mover_documents?id=eq.${testCo.insuranceId}`;
+    expect((await request.patch(insurance, { headers: service(), data: { verified_at: null } })).ok()).toBe(true);
+    const notEligible = await step(testMover, { action: 'accept', offerId: third.offerId });
+    expect(notEligible.status()).toBe(409);
+    expect((await notEligible.json()).error).toBe('not_eligible');
+    expect((await request.patch(insurance, { headers: service(), data: { verified_at: new Date().toISOString() } })).ok()).toBe(true);
+    expect(await (await step(testMover, { action: 'decline', offerId: third.offerId })).json()).toEqual({ status: 'QUOTED' });
 
     // Declined: back to the customer, who cancels it for free.
     const another = await savedRequest(request, customer, testCo);

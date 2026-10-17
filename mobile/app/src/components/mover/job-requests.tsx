@@ -115,7 +115,7 @@ function Request({ row }: { row: MoverJobRow }) {
       announce(action === 'accept' ? t('mover.jobs.acceptedDone') : t('mover.jobs.declinedDone'));
       return;
     }
-    const known = ['offer_expired', 'already_answered', 'not_open'];
+    const known = ['offer_expired', 'already_answered', 'not_open', 'not_eligible'];
     setProblem(known.includes(result.error) ? t(`mover.jobs.errors.${result.error as 'offer_expired'}`) : t('common.errorGeneric'));
   };
 

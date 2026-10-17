@@ -681,7 +681,8 @@
       "errors": {
         "offer_expired": "This request has ended: the time to answer is over.",
         "already_answered": "This request was already answered.",
-        "not_open": "The customer has cancelled this request."
+        "not_open": "The customer has cancelled this request.",
+        "not_eligible": "You can't accept this job right now: something it needs on the move day isn't in order — your carrier insurance (across a border also the CMR insurance and licence), your van, payouts, the current terms, your work area, or your prices and cancellation terms. Check your setup."
       }
     }
   },

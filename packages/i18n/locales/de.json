@@ -681,7 +681,8 @@
       "errors": {
         "offer_expired": "Diese Anfrage ist abgelaufen: Die Zeit zum Antworten ist vorbei.",
         "already_answered": "Diese Anfrage wurde bereits beantwortet.",
-        "not_open": "Der Kunde hat diese Anfrage storniert."
+        "not_open": "Der Kunde hat diese Anfrage storniert.",
+        "not_eligible": "Du kannst diesen Auftrag gerade nicht annehmen: Etwas, das er am Umzugstag braucht, ist nicht in Ordnung — deine Transporthaftpflicht (über eine Grenze auch die CMR-Versicherung und Lizenz), dein Fahrzeug, die Auszahlungen, die geltenden AGB, dein Arbeitsgebiet oder deine Preise und Stornobedingungen. Prüfe deine Angaben."
       }
     }
   },

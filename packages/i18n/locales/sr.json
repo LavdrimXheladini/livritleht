@@ -681,7 +681,8 @@
       "errors": {
         "offer_expired": "Ovaj zahtev je istekao: vreme za odgovor je prošlo.",
         "already_answered": "Na ovaj zahtev je već odgovoreno.",
-        "not_open": "Klijent je otkazao ovaj zahtev."
+        "not_open": "Klijent je otkazao ovaj zahtev.",
+        "not_eligible": "Ovaj posao sada ne možete da prihvatite: nešto što mu je potrebno na dan selidbe nije u redu — vaše osiguranje prevoznika (preko granice i CMR osiguranje i licenca), vozilo, isplate, uslovi koji važe, vaša oblast rada ili cene i uslovi otkazivanja. Proverite svoja podešavanja."
       }
     }
   },

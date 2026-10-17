@@ -681,7 +681,8 @@
       "errors": {
         "offer_expired": "Kjo kërkesë ka mbaruar: koha për t'u përgjigjur kaloi.",
         "already_answered": "Kësaj kërkese i është përgjigjur tashmë.",
-        "not_open": "Klienti e ka anuluar këtë kërkesë."
+        "not_open": "Klienti e ka anuluar këtë kërkesë.",
+        "not_eligible": "Nuk mund ta pranosh këtë punë tani: diçka që i duhet ditën e zhvendosjes nuk është në rregull — sigurimi yt i transportuesit (përtej kufirit edhe sigurimi CMR dhe licenca), furgoni, pagesat, kushtet në fuqi, zona jote e punës, ose çmimet dhe kushtet e anulimit. Kontrollo të dhënat e tua."
       }
     }
   },
