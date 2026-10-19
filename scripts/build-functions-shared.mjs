@@ -32,7 +32,10 @@ function sourceFiles(dir) {
 }
 
 function rewrite(code, srcFile, outFile, pkg) {
-  return code.replace(/(\bfrom\s*|\bimport\s*\(?\s*)(['"])([^'"]+)\2/g, (match, lead, quote, spec) => {
+  return code.replace(/(\bfrom\s*|\bimport\s*\(?\s*)(['"])([^'"]+)\2/g, (match, lead, quote, spec, offset) => {
+    // Only imports: the same words in a comment (`… a change from "On my way" on`) stay as they are.
+    const before = code.slice(code.lastIndexOf('\n', offset) + 1, offset);
+    if (before.includes('//') || /^\s*(\/\*|\*)/.test(before)) return match;
     let target;
     if (spec.startsWith('.')) {
       const base = join(dirname(srcFile), spec);
