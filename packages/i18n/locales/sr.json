@@ -1531,7 +1531,13 @@
         "network": "Nema internet veze. Pokušajte ponovo kada se veza vrati."
       },
       "signOutPending": "Neke fotografije još nisu poslate. Ako se sada odjavite, biće obrisane sa ovog telefona bez slanja.",
-      "signOutAnyway": "Ipak se odjavi"
+      "signOutAnyway": "Ipak se odjavi",
+      "customer": {
+        "title": "Klijent na dan selidbe",
+        "askFor": "Osoba na licu mesta: {{name}}",
+        "call": "Pozovi {{phone}}",
+        "note": "Koristite ovaj broj samo za ovaj posao. Nestaje kada se selidba završi."
+      }
     },
     "customer": {
       "enRouteNote": "Prevoznik {{name}} je na putu do mesta preuzimanja (od {{time}}).",
@@ -1593,13 +1599,37 @@
       "errors": {
         "not_cancellable": "Ova selidba više ne može da se otkaže. Evo kako sada stoji.",
         "not_confirmable": "Selidba još nije označena kao završena.",
-        "network": "Nema internet veze. Pokušajte ponovo kada se veza vrati."
+        "network": "Nema internet veze. Pokušajte ponovo kada se veza vrati.",
+        "contact_locked": "Broj više ne može da se promeni: vaš prevoznik je na putu."
+      },
+      "moveDay": {
+        "title": "Telefon za dan selidbe",
+        "askFor": "Koga da traže: {{name}}",
+        "none": "Telefon za dan selidbe još nije unet.",
+        "seenOnAccept": "Prevoznik {{name}} ga vidi kada prihvati vašu selidbu, do njenog završetka.",
+        "seenByMover": "Vidi ga samo prevoznik {{name}}, do završetka selidbe.",
+        "locked": "Prevoznik {{name}} je na putu, pa broj više ne može da se promeni.",
+        "change": "Promeni",
+        "add": "Dodaj telefon",
+        "save": "Sačuvaj",
+        "keep": "Ne menjaj",
+        "saved": "Telefon za dan selidbe je sačuvan."
       }
     },
     "review": {
       "freeUntil": "Besplatno otkazivanje do {{date}}, {{time}}.",
       "lateAlready": "Za ovo vreme dolaska rok za besplatno otkazivanje je već istekao: kada vaš prevoznik prihvati, otkazivanje košta {{amount}} po njegovim uslovima.",
-      "moverMayCancel": "Vaš prevoznik može da otkaže dok vaše stvari ne budu utovarene — u tom slučaju ne plaćate ništa. Posle utovara selidba ne može da se otkaže u aplikaciji. Ako vaš prevoznik ni sat posle vremena dolaska ne doda fotografiju sa mesta preuzimanja, otkazivanje je besplatno."
+      "moverMayCancel": "Vaš prevoznik može da otkaže dok vaše stvari ne budu utovarene — u tom slučaju ne plaćate ništa. Posle utovara selidba ne može da se otkaže u aplikaciji. Ako vaš prevoznik ni sat posle vremena dolaska ne doda fotografiju sa mesta preuzimanja, otkazivanje je besplatno.",
+      "phoneTitle": "Na dan selidbe",
+      "phone": "Telefon za dan selidbe",
+      "phoneHint": "Sa pozivnim brojem zemlje, npr. +381 64 123 4567. Vaš broj ili broj osobe koja će biti na mestu preuzimanja.",
+      "askFor": "Koga da traže (nije obavezno)",
+      "askForHint": "Ime, ako će tamo biti neko drugi — porodica ili komšija.",
+      "phoneNote": "Ove podatke vidi samo prevoznik koji prihvati vašu selidbu, do njenog završetka. Možete da ih promenite dok prevoznik ne krene na put.",
+      "phoneRequired": "Unesite broj telefona za dan selidbe.",
+      "phoneInvalid": "Unesite broj sa pozivnim brojem zemlje, npr. +381 64 123 4567.",
+      "nameTooLong": "Najviše {{max}} znakova.",
+      "nameInvalid": "Ovo ime sadrži znakove koji ne mogu da se koriste."
     }
   }
 }

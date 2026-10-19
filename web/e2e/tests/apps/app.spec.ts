@@ -1005,7 +1005,9 @@ test.describe('booking a move', () => {
     await fakeBook(page, { body: bookAnswer({ testMover: true }) });
     let booked = false;
     const offer = { status: 'offered', expires_at: new Date(2026, 9, 15, 11).toISOString(), created_at: new Date(2026, 9, 15, 10).toISOString() };
-    const steps = await fakeMoves(page, () => (booked ? [savedJob({ status: 'OFFERED', job_offers: [offer] })] : []));
+    const steps = await fakeMoves(page, () =>
+      booked ? [savedJob({ status: 'OFFERED', job_offers: [offer], contact_phone: '+38344000111', contact_name: 'Arben' })] : [],
+    );
     await plannedMove(page, { choice: { vehicleId: prizren.vehicleId, companyId: prizren.companyId } });
     await page.goto(`${url}book/review`);
     const m = en.customer.moves;
@@ -1013,17 +1015,76 @@ test.describe('booking a move', () => {
     // No card for a test mover — and never for a real one (the review test above).
     await expect(page.getByTestId('review-test-note')).toHaveText(b.review.testNote.replace('{{name}}', prizren.companyName));
     await expect(page.getByTestId('review-pay')).toHaveCount(0);
+    // Never without a phone for the move day, with its country code (design/DECISIONS.md #37).
+    const jr = resources.en.job.review;
+    await page.getByTestId('review-book-test').click();
+    await expect(app(page).getByText(jr.phoneRequired)).toBeVisible();
+    await page.getByTestId('review-contact-phone').fill('044 000 111');
+    await page.getByTestId('review-book-test').click();
+    await expect(app(page).getByText(jr.phoneInvalid)).toBeVisible();
+    expect(steps).toEqual([]);
+    await page.getByTestId('review-contact-phone').fill('+383 44 000 111');
+    await page.getByTestId('review-contact-name').fill(' Arben ');
+    // As typed, it stays with the move being put together.
+    await expect
+      .poll(async () => JSON.parse((await stored(page, 'movershub.booking')) ?? 'null') as unknown)
+      .toMatchObject({ draft: { contactPhone: '+383 44 000 111', contactName: ' Arben ' } });
     booked = true;
     await page.getByTestId('review-book-test').click();
     await expect(page.getByTestId('move-state-note')).toHaveText(
       m.offeredNote.replace('{{name}}', prizren.companyName).replace('{{date}}', 'Thu 15 Oct').replace('{{time}}', '11:00'),
     );
-    expect(steps).toEqual([{ action: 'book_test', jobId: savedJob().id }]);
+    expect(steps).toEqual([{ action: 'book_test', jobId: savedJob().id, contactPhone: '+38344000111', contactName: 'Arben' }]);
+    // The move shows the phone, who sees it and from when.
+    const md = resources.en.job.customer.moveDay;
+    await expect(page.getByTestId('move-contact')).toHaveText(`+38344000111${md.askFor.replace('{{name}}', 'Arben')}`);
+    await expect(page.getByTestId('move-contact-seen')).toHaveText(md.seenOnAccept.replace('{{name}}', prizren.companyName));
     // The move being put together is done.
     expect(await stored(page, 'movershub.booking')).toBeNull();
     await expect(page.getByTestId('move-continue')).toHaveCount(0);
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('customer-move-offered.png');
+  });
+
+  test("the phone for the move day: the last move's is offered when booking; changed until the mover is on the way", async ({ page }) => {
+    const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
+    const md = resources.en.job.customer.moveDay;
+    const jr = resources.en.job.review;
+    await fakeBook(page, { body: bookAnswer({ testMover: true }) });
+    const accepted = { status: 'accepted', expires_at: new Date(2026, 9, 15, 11).toISOString(), created_at: new Date(2026, 9, 15, 10).toISOString() };
+    let status = 'ACCEPTED';
+    let contact: Record<string, string | null> = { contact_phone: '+38344000111', contact_name: 'Arben' };
+    const steps = await fakeMoves(page, () => [savedJob({ status, job_offers: [accepted], ...contact })]);
+
+    // Booking the next move: the last one's phone and name are offered (design/DECISIONS.md #37).
+    await plannedMove(page, { choice: { vehicleId: prizren.vehicleId, companyId: prizren.companyId } });
+    await page.goto(`${url}book/review`);
+    await expect(page.getByTestId('review-contact-phone')).toHaveValue('+38344000111');
+    await expect(page.getByTestId('review-contact-name')).toHaveValue('Arben');
+    await expect(page.getByTestId('review-contact-note')).toHaveText(jr.phoneNote);
+
+    // On the accepted move: changed, checked first.
+    await page.goto(url);
+    await page.getByTestId(`move-${savedJob().id}`).click();
+    await expect(page.getByTestId('move-contact-seen')).toHaveText(md.seenByMover.replace('{{name}}', prizren.companyName));
+    await page.getByTestId('move-contact-change').click();
+    await expect(page.getByTestId('move-contact-phone')).toHaveValue('+38344000111');
+    await page.getByTestId('move-contact-phone').fill('049 555 666');
+    await page.getByTestId('move-contact-save').click();
+    await expect(app(page).getByText(jr.phoneInvalid)).toBeVisible();
+    expect(steps).toEqual([]);
+    await page.getByTestId('move-contact-phone').fill('+383 49 555 666');
+    await page.getByTestId('move-contact-name').fill('');
+    contact = { contact_phone: '+38349555666', contact_name: null };
+    await page.getByTestId('move-contact-save').click();
+    await expect(page.getByTestId('move-contact')).toHaveText('+38349555666');
+    expect(steps).toEqual([{ action: 'contact', jobId: savedJob().id, contactPhone: '+38349555666' }]);
+
+    // The mover is on the way: kept as it is.
+    status = 'EN_ROUTE_TO_PICKUP';
+    await page.reload();
+    await expect(page.getByTestId('move-contact-seen')).toHaveText(md.locked.replace('{{name}}', prizren.companyName));
+    await expect(page.getByTestId('move-contact-change')).toHaveCount(0);
   });
 
   test('the mover said no: the same move, another mover — or cancel it, for free', async ({ page }) => {

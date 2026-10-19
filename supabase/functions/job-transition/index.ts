@@ -1,8 +1,11 @@
 // `job-transition` — every step of a job goes through here (CLAUDE.md §5; design/DECISIONS.md #35, #36;
 // COMPLIANCE §2, §7, §9.1). It checks who is asking; Postgres checks the step itself, atomically, and logs
 // it (public.job_book, job_answer_offer, job_cancel, job_step, job_mover_cancel, job_confirm → job_events).
-//   POST { action: 'book_test', jobId } → { status: 'OFFERED', offerId } — a customer books their saved
-//     request with a test mover, without a card; real movers need the card (Stripe, next)
+//   POST { action: 'book_test', jobId, contactPhone, contactName? } → { status: 'OFFERED', offerId } — a
+//     customer books their saved request with a test mover, without a card, with the phone for the move
+//     day (design/DECISIONS.md #37); real movers need the card (Stripe, next)
+//   POST { action: 'contact', jobId, contactPhone, contactName? } → { contactPhone, contactName } — the
+//     customer changes the phone for the move day until the mover is on the way (409 contact_locked)
 //   POST { action: 'accept' | 'decline', offerId } → { status: 'ACCEPTED' | 'QUOTED' } — the mover answers
 //   POST { action: 'cancel', jobId, maxFee? } → { status: 'CANCELLED', fee } — the customer: free before a
 //     mover accepted; after, until loaded, under the mover's terms, never above maxFee (the amount they
@@ -79,8 +82,19 @@ Deno.serve(async (req) => {
 
     switch (step.action) {
       case 'book_test': {
-        const offerId = await serviceRpc<string>('job_book', { p_job_id: step.jobId, p_customer_id: who.userId, p_without_card: true });
+        const offerId = await serviceRpc<string>('job_book', {
+          p_job_id: step.jobId,
+          p_customer_id: who.userId,
+          p_without_card: true,
+          p_contact_phone: step.contactPhone,
+          p_contact_name: step.contactName || null,
+        });
         return json(req, { status: 'OFFERED', offerId });
+      }
+      case 'contact': {
+        const contactName = step.contactName || null;
+        await serviceRpc<null>('job_set_contact', { p_job_id: step.jobId, p_customer_id: who.userId, p_phone: step.contactPhone, p_name: contactName });
+        return json(req, { contactPhone: step.contactPhone, contactName });
       }
       case 'accept':
       case 'decline': {

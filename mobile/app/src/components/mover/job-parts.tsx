@@ -82,6 +82,28 @@ export function Place({ label, place, details, testID }: { label: string; place:
   );
 }
 
+/**
+ * The customer's phone for the move day and who to ask for (design/DECISIONS.md #37; COMPLIANCE §9):
+ * on an accepted move only, until it is done or cancelled — the server leaves it out otherwise.
+ */
+export function CustomerContact({ row }: { row: MoverJobRow }) {
+  const { t: tj } = useTranslation('job');
+  const phone = row.contact_phone;
+  if (!phone) return null;
+  return (
+    <View testID="mover-job-contact" className="gap-1.5 rounded-panel border border-night-600 bg-night-800 p-3.5">
+      <Text className="font-sans text-[12px] text-sage-400">{tj('mover.customer.title')}</Text>
+      {row.contact_name ? (
+        <Text selectable className="font-sans-semibold text-[15px] text-night-50">
+          {tj('mover.customer.askFor', { name: row.contact_name })}
+        </Text>
+      ) : null}
+      <ExternalLink testID="mover-job-contact-call" href={`tel:${phone.replace(/[^\d+]/g, '')}`} title={tj('mover.customer.call', { phone })} />
+      <Text className="font-sans text-[12px] leading-[17px] text-sage-400">{tj('mover.customer.note')}</Text>
+    </View>
+  );
+}
+
 const OS = Platform.OS === 'android' ? 'android' : Platform.OS === 'ios' ? 'ios' : 'web';
 
 /**

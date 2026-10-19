@@ -1531,7 +1531,13 @@
         "network": "No connection. Try again when you're back online."
       },
       "signOutPending": "Some photos aren't sent yet. If you sign out now, they're deleted from this phone without being sent.",
-      "signOutAnyway": "Sign out anyway"
+      "signOutAnyway": "Sign out anyway",
+      "customer": {
+        "title": "The customer on the move day",
+        "askFor": "Ask for {{name}}",
+        "call": "Call {{phone}}",
+        "note": "Use this number only for this move. It disappears once the move is done."
+      }
     },
     "customer": {
       "enRouteNote": "{{name}} is on the way to the pickup (since {{time}}).",
@@ -1593,13 +1599,37 @@
       "errors": {
         "not_cancellable": "This move can't be cancelled any more. Here's where it stands now.",
         "not_confirmable": "The move isn't marked as done yet.",
-        "network": "No connection. Try again when you're back online."
+        "network": "No connection. Try again when you're back online.",
+        "contact_locked": "It can't be changed any more: your mover is on the way."
+      },
+      "moveDay": {
+        "title": "Phone for the move day",
+        "askFor": "Who to ask for: {{name}}",
+        "none": "No phone for the move day given yet.",
+        "seenOnAccept": "{{name}} sees it once they accept your move, until the move is done.",
+        "seenByMover": "Only {{name}} sees it, until the move is done.",
+        "locked": "{{name}} is on the way, so it can't be changed any more.",
+        "change": "Change",
+        "add": "Add a phone",
+        "save": "Save",
+        "keep": "Don't change",
+        "saved": "Phone for the move day saved."
       }
     },
     "review": {
       "freeUntil": "Free cancellation until {{date}}, {{time}}.",
       "lateAlready": "For this arrival time, free cancellation has already ended: once your mover accepts, cancelling costs {{amount}} under their terms.",
-      "moverMayCancel": "Your mover can cancel until your things are loaded — then you pay nothing. Once loaded, the move can't be cancelled in the app. If your mover hasn't added a photo at the pickup an hour after the arrival time, cancelling is free."
+      "moverMayCancel": "Your mover can cancel until your things are loaded — then you pay nothing. Once loaded, the move can't be cancelled in the app. If your mover hasn't added a photo at the pickup an hour after the arrival time, cancelling is free.",
+      "phoneTitle": "On the move day",
+      "phone": "Phone for the move day",
+      "phoneHint": "With the country code, e.g. +383 44 123 456. Yours, or the number of whoever will be at the pickup.",
+      "askFor": "Who to ask for (optional)",
+      "askForHint": "A name, if someone else will be there — family or a neighbour.",
+      "phoneNote": "Only the mover who accepts your move sees these, until the move is done. You can change them until the mover is on the way.",
+      "phoneRequired": "Enter a phone number for the move day.",
+      "phoneInvalid": "Enter the number with its country code, e.g. +383 44 123 456.",
+      "nameTooLong": "At most {{max}} characters.",
+      "nameInvalid": "This name has characters that can't be used."
     }
   }
 }

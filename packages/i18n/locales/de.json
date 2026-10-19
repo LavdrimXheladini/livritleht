@@ -1531,7 +1531,13 @@
         "network": "Keine Verbindung. Versuche es erneut, wenn du wieder online bist."
       },
       "signOutPending": "Einige Fotos sind noch nicht gesendet. Wenn du dich jetzt abmeldest, werden sie von diesem Telefon gelöscht, ohne gesendet zu werden.",
-      "signOutAnyway": "Trotzdem abmelden"
+      "signOutAnyway": "Trotzdem abmelden",
+      "customer": {
+        "title": "Kontakt am Umzugstag",
+        "askFor": "Ansprechperson: {{name}}",
+        "call": "{{phone}} anrufen",
+        "note": "Nutze diese Nummer nur für diesen Auftrag. Sie verschwindet, sobald der Umzug erledigt ist."
+      }
     },
     "customer": {
       "enRouteNote": "{{name}} ist unterwegs zur Abholadresse (seit {{time}}).",
@@ -1593,13 +1599,37 @@
       "errors": {
         "not_cancellable": "Dieser Umzug kann nicht mehr storniert werden. Hier ist der aktuelle Stand.",
         "not_confirmable": "Der Umzug ist noch nicht als erledigt markiert.",
-        "network": "Keine Verbindung. Versuche es erneut, wenn du wieder online bist."
+        "network": "Keine Verbindung. Versuche es erneut, wenn du wieder online bist.",
+        "contact_locked": "Die Nummer kann nicht mehr geändert werden: dein Umzugsunternehmen ist unterwegs."
+      },
+      "moveDay": {
+        "title": "Telefon für den Umzugstag",
+        "askFor": "Nach wem fragen: {{name}}",
+        "none": "Noch keine Telefonnummer für den Umzugstag angegeben.",
+        "seenOnAccept": "{{name}} sieht sie, sobald dein Umzug angenommen ist — bis er erledigt ist.",
+        "seenByMover": "Nur {{name}} sieht sie, bis der Umzug erledigt ist.",
+        "locked": "{{name}} ist unterwegs, daher kann die Nummer nicht mehr geändert werden.",
+        "change": "Ändern",
+        "add": "Telefon hinzufügen",
+        "save": "Speichern",
+        "keep": "Nicht ändern",
+        "saved": "Telefon für den Umzugstag gespeichert."
       }
     },
     "review": {
       "freeUntil": "Kostenlos stornierbar bis {{date}}, {{time}}.",
       "lateAlready": "Für diese Ankunftszeit ist die Frist für kostenloses Stornieren schon abgelaufen: Sobald dein Umzugsunternehmen annimmt, kostet Stornieren {{amount}} nach seinen Bedingungen.",
-      "moverMayCancel": "Dein Umzugsunternehmen kann stornieren, bis deine Sachen eingeladen sind — dann zahlst du nichts. Sobald sie eingeladen sind, kann der Umzug nicht mehr in der App storniert werden. Hat dein Umzugsunternehmen eine Stunde nach der Ankunftszeit noch kein Foto an der Abholadresse hinzugefügt, ist Stornieren kostenlos."
+      "moverMayCancel": "Dein Umzugsunternehmen kann stornieren, bis deine Sachen eingeladen sind — dann zahlst du nichts. Sobald sie eingeladen sind, kann der Umzug nicht mehr in der App storniert werden. Hat dein Umzugsunternehmen eine Stunde nach der Ankunftszeit noch kein Foto an der Abholadresse hinzugefügt, ist Stornieren kostenlos.",
+      "phoneTitle": "Am Umzugstag",
+      "phone": "Telefon für den Umzugstag",
+      "phoneHint": "Mit Ländervorwahl, z. B. +49 151 2345 6789. Deine Nummer oder die der Person, die an der Abholadresse ist.",
+      "askFor": "Nach wem fragen (optional)",
+      "askForHint": "Ein Name, falls jemand anderes vor Ort ist — Familie oder Nachbarn.",
+      "phoneNote": "Diese Angaben sieht nur das Umzugsunternehmen, das deinen Umzug annimmt — bis der Umzug erledigt ist. Ändern kannst du sie, bis das Unternehmen losfährt.",
+      "phoneRequired": "Gib eine Telefonnummer für den Umzugstag ein.",
+      "phoneInvalid": "Gib die Nummer mit Ländervorwahl ein, z. B. +49 151 2345 6789.",
+      "nameTooLong": "Höchstens {{max}} Zeichen.",
+      "nameInvalid": "Dieser Name enthält Zeichen, die nicht verwendet werden können."
     }
   }
 }

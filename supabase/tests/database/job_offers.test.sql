@@ -61,19 +61,19 @@ select is(public.offer_expiry('2026-11-01 10:00+00', '2026-11-02 18:00+00'), '20
 select is(public.offer_expiry('2026-11-01 10:00+00', '2026-11-01 20:00+00'), '2026-11-01 11:00+00'::timestamptz, 'a move later today: at least an hour');
 
 -- Booking.
-select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0962', '00000000-0000-0000-0000-00000000c961', true) $$,
+select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0962', '00000000-0000-0000-0000-00000000c961', true, '+38344123456') $$,
   '22023', 'card_required', 'a real mover is booked only with a card (Stripe), never as a test');
 select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961', false) $$,
   '22023', 'card_required', 'no card payments yet: no booking without the test path');
-select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c962', true) $$,
+select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c962', true, '+38344123456') $$,
   'P0002', 'not_found', 'nobody books someone else''s request');
-insert into offered select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961', true);
+insert into offered select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961', true, '+38344123456');
 select is((select status::text from public.jobs where id = '00000000-0000-0000-0000-0000000e0961'), 'OFFERED', 'booked: sent to the chosen mover');
 select is((select string_agg(event || '>' || status, ',' order by id) from public.job_events where job_id = '00000000-0000-0000-0000-0000000e0961'),
   'booked>BOOKED,offered>OFFERED', 'each step is in the move''s log');
 select is((select mover_company_id::text || ':' || status from public.job_offers where id = (select id from offered)),
   '00000000-0000-0000-0000-0000000aa961:offered', 'the offer goes to the mover the customer chose — nobody else');
-select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961', true) $$,
+select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0961', '00000000-0000-0000-0000-00000000c961', true, '+38344123456') $$,
   '22023', 'not_bookable', 'booked once');
 
 -- What the mover sees before accepting: the area, never the exact place (COMPLIANCE §9.1).
@@ -109,7 +109,7 @@ select is(public.job_cancel('00000000-0000-0000-0000-0000000e0961', '00000000-00
 
 -- Declining: back to the customer, nobody else assigned.
 delete from offered;
-insert into offered select public.job_book('00000000-0000-0000-0000-0000000e0963', '00000000-0000-0000-0000-00000000c962', true);
+insert into offered select public.job_book('00000000-0000-0000-0000-0000000e0963', '00000000-0000-0000-0000-00000000c962', true, '+38344123456');
 select is(public.job_answer_offer((select id from offered), '00000000-0000-0000-0000-00000000d961', false), 'QUOTED'::public.job_status,
   'declined: the move goes back to the customer to choose another mover');
 select is((select count(*)::int from public.job_offers where job_id = '00000000-0000-0000-0000-0000000e0963' and status = 'offered'), 0,
@@ -118,7 +118,7 @@ select is((select count(*)::int from public.job_offers where job_id = '00000000-
 -- Expiring: rebooked, not answered in time.
 update public.quotes set expires_at = now() + interval '15 minutes' where job_id = '00000000-0000-0000-0000-0000000e0963';
 delete from offered;
-insert into offered select public.job_book('00000000-0000-0000-0000-0000000e0963', '00000000-0000-0000-0000-00000000c962', true);
+insert into offered select public.job_book('00000000-0000-0000-0000-0000000e0963', '00000000-0000-0000-0000-00000000c962', true, '+38344123456');
 select ok(public.expire_job_offers(now() + interval '13 hours') >= 1, 'an offer nobody answered in time ends');
 select is((select o.status::text || ':' || j.status from public.job_offers o join public.jobs j on j.id = o.job_id where o.id = (select id from offered)),
   'expired:QUOTED', '…and the move goes back to the customer');

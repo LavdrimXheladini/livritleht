@@ -19,6 +19,7 @@ export const RETENTION_CATEGORIES = [
   'job_photo_files_unused',
   'job_events',
   'job_cancellations',
+  'move_day_contacts',
   'location_breadcrumbs',
   'tracking_links',
   'price_adjustment_photos',
@@ -56,6 +57,11 @@ export const RETENTION: Record<RetentionCategory, RetentionRule> = {
   // Cancellations after acceptance (public.job_cancellations) — the terms, the fee and the rule that
   // set it. Once card payments charge a fee, it is an accounting record (kept like `payments`).
   job_cancellations: { keepDays: null, from: 'created', holdIfDisputeOpen: true },
+  // The phone for the move day and who to ask for (public.jobs.contact_phone, contact_name): the mover
+  // stops seeing them when the move ends; the customer keeps them with the move. Proposed: cleared a
+  // month after the move ended, unless a claim is open. The cleanup needs its own way past the frozen-move
+  // trigger (it refuses a change from "On my way" on), like erase_jobs.
+  move_day_contacts: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },
   location_breadcrumbs: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },
   tracking_links: { keepDays: null, from: 'expired', holdIfDisputeOpen: false },
   price_adjustment_photos: { keepDays: null, from: 'job_ended', holdIfDisputeOpen: true },

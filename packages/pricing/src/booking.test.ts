@@ -60,6 +60,8 @@ const draft: BookingDraft = {
   vehicleClass: 'VAN',
   choice: { vehicleId: VAN_A, companyId: `c-${VAN_A}` },
   jobId: null,
+  contactPhone: null,
+  contactName: null,
 };
 const body = {
   pickup: draft.pickup,

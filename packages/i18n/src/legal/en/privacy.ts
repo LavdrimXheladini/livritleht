@@ -30,6 +30,7 @@ export const privacy: LegalText = {
         {
           list: [
             'Your moves: the pickup and drop-off addresses with floor, lift and directions, what you move, the day and time, the van size and crew, the mover you chose and the prices you were shown.',
+            'The phone number for the move day you give when booking and, if you give one, the name of who to ask for — yours, or those of someone else who will be there.',
             'Requests you saved but did not book.',
             'The steps of your move with their times, the photos your mover adds of your things at pickup and drop-off, whether you confirmed the move, and any cancellation with its cost.',
           ],
@@ -75,6 +76,7 @@ export const privacy: LegalText = {
         {
           list: [
             'The mover you book sees the details of the move and, once they accept it, the exact addresses and your directions — until 7 days after the move, or until it is cancelled. Before a mover accepts a job, they see only the area of each stop, never the exact address.',
+            'The phone number for the move day and who to ask for: only the mover who accepted the move, from accepting it until it is done or cancelled.',
             'A move\'s steps and photos: you, the mover who accepted it and MoversHub — no one else.',
             'Customers see the mover\'s business details before booking: name, business or private person, registration number, address, phone, email, insurance and terms.',
             'Our service providers, who process data only on our instructions: Supabase (database, sign-in and file storage — in the EU, Ireland), the map services we use to find addresses and routes (based on OpenStreetMap: Photon by Komoot for address search, OSRM for routes, OpenFreeMap for map images — they receive the text you search for and the points of a route, not your account), and, once in use, Twilio (codes to confirm a phone number by SMS or WhatsApp), Vercel (website hosting, EU region), Expo (app updates and notifications) and Sentry (error reports).',

@@ -13,7 +13,7 @@ import { useMoverJob } from '@/lib/jobs';
 
 import { useCancellationText } from '../booking/cancellation';
 import { CancelJob } from './cancel-job';
-import { Payout, StopCard, Work, when } from './job-parts';
+import { CustomerContact, Payout, StopCard, Work, when } from './job-parts';
 import { NextStep } from './next-step';
 
 function goBack() {
@@ -33,9 +33,9 @@ export function useJobStateLabel() {
 const CANCELLABLE: readonly JobStatus[] = CANCELLABLE_AFTER_ACCEPTANCE;
 
 /**
- * One accepted job (design/DECISIONS.md #36): where it stands, the one next step, the stops with "Open in
- * maps" (the exact places only while the move needs them — COMPLIANCE §9.1), the work and payout, and
- * cancelling until the things are loaded. Asked again when the screen comes back; a change the customer
+ * One accepted job (design/DECISIONS.md #36): where it stands, the one next step, the customer's phone for
+ * the move day (#37), the stops with "Open in maps" (the exact places only while the move needs them —
+ * COMPLIANCE §9.1), the work and payout, and cancelling until the things are loaded. Asked again when the screen comes back; a change the customer
  * made (a cancellation) is read out while the screen is in front.
  */
 export function JobScreen({ id }: { id: string | undefined }) {
@@ -110,6 +110,7 @@ export function JobScreen({ id }: { id: string | undefined }) {
         </View>
 
         <NextStep row={row} photos={photos.data ?? []} />
+        <CustomerContact row={row} />
 
         {row.pickup_label !== null ? (
           <>

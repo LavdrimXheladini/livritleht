@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { VEHICLE_CLASSES, type Currency, type JobStatus, type JobType, type VehicleClass } from '../constants';
 import { ITEM_CATALOGUE, ITEM_KEYS, type ItemKey } from '../items';
 import { WHOLE_UNIT_CURRENCIES } from '../money';
+import { phoneSchema } from './auth';
 import { placeSchema, type Place } from './geo';
 import { jobItemSchema, type JobItem, type QuoteRequest } from './pricing';
 
@@ -150,8 +151,37 @@ export const bookingDraftSchema = z.object({
   choice: bookingChoiceSchema.nullable().default(null),
   /** The booking request saved on the server for this move (the `book` function), once the customer reviewed it. */
   jobId: z.string().min(1).max(64).nullable().default(null),
+  /** The phone for the move day and who to ask for, as typed (checked when booking); null = not typed yet (the last move's are offered). */
+  contactPhone: z.string().max(200).nullable().default(null),
+  contactName: z.string().max(200).nullable().default(null),
 });
 export type BookingDraft = z.infer<typeof bookingDraftSchema>;
+
+/* ── The phone for the move day ──────────────────────────────────────────────── */
+
+/** Who to ask for on the move day: at most this many characters (Postgres: public.move_day_contact_valid). */
+export const MOVE_DAY_CONTACT_NAME_MAX = 60;
+
+const hasControlChars = (v: string) => [...v].some((c) => c.charCodeAt(0) < 32 || c.charCodeAt(0) === 127);
+
+/** Who to ask for (optional: empty = none), trimmed. Messages are i18n keys (booking.contact.errors). */
+export const contactNameSchema = z
+  .string()
+  .trim()
+  .max(MOVE_DAY_CONTACT_NAME_MAX, 'name_too_long')
+  .refine((v) => !hasControlChars(v), 'name_invalid');
+
+/**
+ * The phone for the move day (owner decision 2026-10-19, design/DECISIONS.md #37; COMPLIANCE §9): required
+ * to book, with who to ask for if someone else will be there. Its form only (E.164, as the mover's
+ * phone) — no code: it may be someone else's phone. Only the mover who accepted the move sees it, until
+ * the move ends.
+ */
+export const moveDayContactSchema = z.object({ phone: phoneSchema, name: contactNameSchema });
+export type MoveDayContact = z.infer<typeof moveDayContactSchema>;
+
+/** While the customer may change the phone for the move day: booked, until the mover is on the way (public.job_set_contact). */
+export const CONTACT_CHANGEABLE = ['BOOKED', 'OFFERED', 'ACCEPTED'] as const satisfies readonly JobStatus[];
 
 /** The `quote` request for this move: the customer's own stops, items, crew and date. */
 export function moveQuoteRequest(draft: BookingDraft): QuoteRequest {

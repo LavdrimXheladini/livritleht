@@ -103,7 +103,7 @@ declare
   offer uuid;
 begin
   perform pg_temp.saved(p_job, p_customer, p_company, p_van, p_at);
-  offer := public.job_book(pg_temp.id(p_job), pg_temp.id(p_customer), true);
+  offer := public.job_book(pg_temp.id(p_job), pg_temp.id(p_customer), true, '+38344123456');
   perform public.job_answer_offer(offer, (select c.owner_id from public.mover_companies c where c.id = pg_temp.id(p_company)), true);
   return pg_temp.id(p_job);
 end;
@@ -712,7 +712,7 @@ select is((select count(*) || ' ' || min(actor_role) from public.job_events wher
 select is(pg_temp.mover_cancel('mover_cancel', 'M1', null), 'CANCELLED', 'cancelling again answers the same (a retry)…');
 select is((select count(*)::int from public.job_cancellations where job_id = pg_temp.id('mover_cancel')), 1, '…recorded once');
 select throws_ok($$ select pg_temp.cancel('mover_cancel', 'C1', 0) $$, '22023', 'not_cancellable', 'the customer doesn''t cancel what the mover cancelled');
-select throws_ok($$ select public.job_book(pg_temp.id('mover_cancel'), pg_temp.id('C1'), true) $$, '22023', 'not_bookable',
+select throws_ok($$ select public.job_book(pg_temp.id('mover_cancel'), pg_temp.id('C1'), true, '+38344123456') $$, '22023', 'not_bookable',
   'nobody is assigned instead: the move isn''t booked again (the customer books another mover as a new request)');
 select is(
   (select count(*) filter (where status = 'offered') || ' open, ' || count(*) || ' in all' from public.job_offers where job_id = pg_temp.id('mover_cancel')),
@@ -727,7 +727,7 @@ select set_eq(
 
 -- Declining, likewise.
 select pg_temp.saved('declined', 'C1', 'A1', 'V1', now() + interval '3 days');
-insert into notes select 'declined offer', public.job_book(pg_temp.id('declined'), pg_temp.id('C1'), true);
+insert into notes select 'declined offer', public.job_book(pg_temp.id('declined'), pg_temp.id('C1'), true, '+38344123456');
 set local role authenticated;
 select pg_temp.as_user('M1');
 select is(pg_temp.listed('declined', false), 'OFFERED, exact place hidden', 'an open request: the area only (COMPLIANCE §9.1)…');
@@ -827,7 +827,7 @@ select pg_temp.as_user(null);
 select pg_temp.saved('window', 'C1', 'A2', 'V2', now() + interval '5 hours');
 do $$
 declare
-  offer uuid := public.job_book(pg_temp.id('window'), pg_temp.id('C1'), true);
+  offer uuid := public.job_book(pg_temp.id('window'), pg_temp.id('C1'), true, '+38344123456');
 begin
   perform public.job_answer_offer(offer, pg_temp.id('M2'), false);
 end;
@@ -842,7 +842,7 @@ values (pg_temp.id('window'), pg_temp.id('V1'), pg_temp.id('A1'), 'EUR', '[{"kin
   20, 1000, 4000, 48, 50, now() + interval '15 minutes');
 do $$
 declare
-  offer uuid := public.job_book(pg_temp.id('window'), pg_temp.id('C1'), true);
+  offer uuid := public.job_book(pg_temp.id('window'), pg_temp.id('C1'), true, '+38344123456');
 begin
   perform public.job_answer_offer(offer, pg_temp.id('M1'), true);
   perform pg_temp.step('window', 'M1', 'EN_ROUTE_TO_PICKUP');

@@ -17,6 +17,7 @@ import {
   fittingClass,
   jobItems,
   loadTenthsM3,
+  moveDayContactSchema,
   moveDays,
   moveQuoteRequest,
   newStop,
@@ -40,6 +41,8 @@ const draft: BookingDraft = {
   vehicleClass: 'VAN',
   choice: null,
   jobId: null,
+  contactPhone: null,
+  contactName: null,
 };
 
 describe('item groups', () => {
@@ -141,6 +144,28 @@ describe('draft on the device', () => {
     expect(bookingDraftSchema.parse(JSON.parse(JSON.stringify(draft)))).toEqual(draft);
     expect(bookingDraftSchema.safeParse({ ...draft, items: { piano: { qty: 1, assembly: false } } }).success).toBe(false);
     expect(bookingDraftSchema.safeParse({ ...draft, items: { box: { qty: 0, assembly: false } } }).success).toBe(false);
+  });
+});
+
+describe('the phone for the move day', () => {
+  it('needs the country code; spaces, dashes and brackets are dropped', () => {
+    expect(moveDayContactSchema.parse({ phone: '+383 (44) 123-456', name: '' })).toEqual({ phone: '+38344123456', name: '' });
+    expect(moveDayContactSchema.safeParse({ phone: '044 123 456', name: '' }).success).toBe(false);
+    expect(moveDayContactSchema.safeParse({ phone: '', name: '' }).success).toBe(false);
+  });
+
+  it('takes who to ask for trimmed, up to 60 characters, without control characters', () => {
+    expect(moveDayContactSchema.parse({ phone: '+48501234567', name: '  Mama Drita ' }).name).toBe('Mama Drita');
+    expect(moveDayContactSchema.safeParse({ phone: '+48501234567', name: 'a'.repeat(60) }).success).toBe(true);
+    expect(moveDayContactSchema.safeParse({ phone: '+48501234567', name: 'a'.repeat(61) }).error?.issues[0]?.message).toBe('name_too_long');
+    expect(moveDayContactSchema.safeParse({ phone: '+48501234567', name: 'Arben' }).error?.issues[0]?.message).toBe('name_invalid');
+  });
+
+  it('is kept with a move being put together, as typed', () => {
+    const typed = { ...draft, contactPhone: '+383 44', contactName: 'Ar' };
+    expect(bookingDraftSchema.parse(JSON.parse(JSON.stringify(typed)))).toEqual(typed);
+    const { contactPhone: _p, contactName: _n, ...older } = draft;
+    expect(bookingDraftSchema.parse(older)).toMatchObject({ contactPhone: null, contactName: null });
   });
 });
 

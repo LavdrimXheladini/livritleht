@@ -1531,7 +1531,13 @@
         "network": "Brak połączenia. Spróbuj ponownie, gdy znów będziesz online."
       },
       "signOutPending": "Niektóre zdjęcia nie zostały jeszcze wysłane. Jeśli teraz się wylogujesz, zostaną usunięte z tego telefonu bez wysłania.",
-      "signOutAnyway": "Wyloguj się mimo to"
+      "signOutAnyway": "Wyloguj się mimo to",
+      "customer": {
+        "title": "Klient w dniu przeprowadzki",
+        "askFor": "Osoba na miejscu: {{name}}",
+        "call": "Zadzwoń: {{phone}}",
+        "note": "Używaj tego numeru tylko do tego zlecenia. Zniknie po zakończeniu przeprowadzki."
+      }
     },
     "customer": {
       "enRouteNote": "Przewoźnik {{name}} jest w drodze do miejsca odbioru (od {{time}}).",
@@ -1593,13 +1599,37 @@
       "errors": {
         "not_cancellable": "Tej przeprowadzki nie można już anulować. Oto jej aktualny stan.",
         "not_confirmable": "Przeprowadzka nie jest jeszcze oznaczona jako zakończona.",
-        "network": "Brak połączenia. Spróbuj ponownie, gdy znów będziesz online."
+        "network": "Brak połączenia. Spróbuj ponownie, gdy znów będziesz online.",
+        "contact_locked": "Numeru nie można już zmienić: przewoźnik jest w drodze."
+      },
+      "moveDay": {
+        "title": "Telefon na dzień przeprowadzki",
+        "askFor": "O kogo pytać: {{name}}",
+        "none": "Nie podano jeszcze telefonu na dzień przeprowadzki.",
+        "seenOnAccept": "Przewoźnik {{name}} zobaczy go po przyjęciu przeprowadzki, aż do jej zakończenia.",
+        "seenByMover": "Widzi go tylko przewoźnik {{name}}, do zakończenia przeprowadzki.",
+        "locked": "Przewoźnik {{name}} jest już w drodze, więc numeru nie można już zmienić.",
+        "change": "Zmień",
+        "add": "Dodaj telefon",
+        "save": "Zapisz",
+        "keep": "Nie zmieniaj",
+        "saved": "Telefon na dzień przeprowadzki zapisany."
       }
     },
     "review": {
       "freeUntil": "Bezpłatne anulowanie do {{date}}, {{time}}.",
       "lateAlready": "Przy tej godzinie przyjazdu bezpłatne anulowanie już się skończyło: gdy Twój przewoźnik przyjmie przeprowadzkę, anulowanie będzie kosztować {{amount}} według jego warunków.",
-      "moverMayCancel": "Twój przewoźnik może anulować przeprowadzkę, dopóki Twoje rzeczy nie zostaną załadowane — wtedy nic nie płacisz. Gdy rzeczy są już załadowane, przeprowadzki nie można anulować w aplikacji. Jeśli 60 minut po godzinie przyjazdu nie będzie zdjęcia z miejsca odbioru od przewoźnika, anulowanie będzie bezpłatne."
+      "moverMayCancel": "Twój przewoźnik może anulować przeprowadzkę, dopóki Twoje rzeczy nie zostaną załadowane — wtedy nic nie płacisz. Gdy rzeczy są już załadowane, przeprowadzki nie można anulować w aplikacji. Jeśli 60 minut po godzinie przyjazdu nie będzie zdjęcia z miejsca odbioru od przewoźnika, anulowanie będzie bezpłatne.",
+      "phoneTitle": "W dniu przeprowadzki",
+      "phone": "Telefon na dzień przeprowadzki",
+      "phoneHint": "Z numerem kierunkowym kraju, np. +48 501 234 567. Twój albo osoby, która będzie na miejscu odbioru.",
+      "askFor": "O kogo pytać (opcjonalnie)",
+      "askForHint": "Imię, jeśli na miejscu będzie ktoś inny — rodzina lub sąsiad.",
+      "phoneNote": "Widzi je tylko przewoźnik, który przyjmie Twoją przeprowadzkę, do jej zakończenia. Możesz je zmienić, dopóki przewoźnik nie wyruszy.",
+      "phoneRequired": "Podaj numer telefonu na dzień przeprowadzki.",
+      "phoneInvalid": "Podaj numer z kierunkowym kraju, np. +48 501 234 567.",
+      "nameTooLong": "Maksymalnie {{max}} znaków.",
+      "nameInvalid": "To imię zawiera znaki, których nie można użyć."
     }
   }
 }

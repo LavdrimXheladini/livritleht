@@ -74,6 +74,8 @@ export function QuoteCard() {
       vehicleClass: shownCls,
       choice: null,
       jobId: null,
+      contactPhone: null,
+      contactName: null,
     });
     router.push('/book/stops');
   };

@@ -104,6 +104,7 @@ export const moverTerms: LegalText = {
             'Offer only legal services and hold the licences your work needs.',
             'You are responsible for the customer\'s belongings during the move, as the carrier, and for your own taxes and social contributions.',
             'Add at least one photo of the things at the pickup and at the drop-off: they protect you and the customer if something is disputed.',
+            'Use the customer\'s phone number for the move day only for that move. You see it from accepting the job until it is done or cancelled.',
           ],
         },
       ],

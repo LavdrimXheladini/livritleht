@@ -40,9 +40,28 @@ describe('cancelling and confirming', () => {
     expect(jobTransitionSchema.safeParse({ action: 'mover_cancel', jobId, reason: 'cannot_do', text: 'why' }).success).toBe(false);
   });
 
-  it('customers book, cancel and confirm; movers answer and take the steps', () => {
-    expect(['book_test', 'cancel', 'confirm'].every((a) => isCustomerAction(a as never))).toBe(true);
+  it('customers book, change the phone for the move day, cancel and confirm; movers answer and take the steps', () => {
+    expect(['book_test', 'contact', 'cancel', 'confirm'].every((a) => isCustomerAction(a as never))).toBe(true);
     expect(['accept', 'decline', 'step', 'mover_cancel'].some((a) => isCustomerAction(a as never))).toBe(false);
+  });
+});
+
+describe('the phone for the move day', () => {
+  it('is needed to book, with its country code; who to ask for is optional', () => {
+    expect(jobTransitionSchema.safeParse({ action: 'book_test', jobId }).success).toBe(false);
+    expect(jobTransitionSchema.safeParse({ action: 'book_test', jobId, contactPhone: '044 123 456' }).success).toBe(false);
+    expect(jobTransitionSchema.parse({ action: 'book_test', jobId, contactPhone: '+383 44 123 456' })).toEqual({
+      action: 'book_test',
+      jobId,
+      contactPhone: '+38344123456',
+    });
+    expect(jobTransitionSchema.parse({ action: 'book_test', jobId, contactPhone: '+38344123456', contactName: '  Arben ' })).toMatchObject({ contactName: 'Arben' });
+  });
+
+  it('is changed with the same checks, never with anything else', () => {
+    expect(jobTransitionSchema.safeParse({ action: 'contact', jobId, contactPhone: '+48501234567', contactName: '' }).success).toBe(true);
+    expect(jobTransitionSchema.safeParse({ action: 'contact', jobId, contactPhone: '+48501234567', contactName: 'a'.repeat(61) }).success).toBe(false);
+    expect(jobTransitionSchema.safeParse({ action: 'contact', jobId, contactPhone: '+48501234567', scheduledAt: '2026-10-22T08:00:00Z' }).success).toBe(false);
   });
 });
 
@@ -109,6 +128,10 @@ describe("a move as the mover's app reads it", () => {
   });
 
   it('still reads a server without them (before the job day is deployed)', () => {
-    expect(moverJobRowSchema.parse(row)).toMatchObject({ on_my_way_from: null, ended_at: null, cancelled_by: null, fee_rule: null });
+    expect(moverJobRowSchema.parse(row)).toMatchObject({ on_my_way_from: null, ended_at: null, cancelled_by: null, fee_rule: null, contact_phone: null });
+  });
+
+  it('reads the phone for the move day on an accepted move', () => {
+    expect(moverJobRowSchema.parse({ ...row, contact_phone: '+38344123456', contact_name: 'Arben' })).toMatchObject({ contact_phone: '+38344123456', contact_name: 'Arben' });
   });
 });

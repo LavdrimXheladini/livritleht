@@ -1531,7 +1531,13 @@
         "network": "Nuk ka lidhje. Provo përsëri kur të kthehet lidhja."
       },
       "signOutPending": "Disa foto ende nuk janë dërguar. Nëse del nga llogaria tani, ato fshihen nga ky telefon pa u dërguar.",
-      "signOutAnyway": "Dil gjithsesi"
+      "signOutAnyway": "Dil gjithsesi",
+      "customer": {
+        "title": "Klienti në ditën e zhvendosjes",
+        "askFor": "Pyet për {{name}}",
+        "call": "Telefono {{phone}}",
+        "note": "Përdore këtë numër vetëm për këtë punë. Zhduket pasi të përfundojë zhvendosja."
+      }
     },
     "customer": {
       "enRouteNote": "{{name}} është në rrugë drejt vendit të marrjes (që nga {{time}}).",
@@ -1593,13 +1599,37 @@
       "errors": {
         "not_cancellable": "Kjo zhvendosje nuk mund të anulohet më. Ja gjendja e saj tani.",
         "not_confirmable": "Zhvendosja ende nuk është shënuar si e kryer.",
-        "network": "Nuk ka lidhje. Provo përsëri kur të kthehet lidhja."
+        "network": "Nuk ka lidhje. Provo përsëri kur të kthehet lidhja.",
+        "contact_locked": "Nuk mund të ndryshohet më: transportuesi yt është nisur."
+      },
+      "moveDay": {
+        "title": "Telefoni për ditën e zhvendosjes",
+        "askFor": "Për kë të pyesin: {{name}}",
+        "none": "Ende nuk ke dhënë telefon për ditën e zhvendosjes.",
+        "seenOnAccept": "{{name}} e sheh pasi ta pranojë zhvendosjen tënde, derisa të përfundojë.",
+        "seenByMover": "Vetëm {{name}} e sheh, derisa zhvendosja të përfundojë.",
+        "locked": "{{name}} është nisur, prandaj nuk mund të ndryshohet më.",
+        "change": "Ndrysho",
+        "add": "Shto një telefon",
+        "save": "Ruaj",
+        "keep": "Mos e ndrysho",
+        "saved": "Telefoni për ditën e zhvendosjes u ruajt."
       }
     },
     "review": {
       "freeUntil": "Anulim falas deri më {{date}}, {{time}}.",
       "lateAlready": "Për këtë orë të mbërritjes, anulimi falas ka mbaruar tashmë: pasi transportuesi yt ta pranojë, anulimi kushton {{amount}} sipas kushteve të tij.",
-      "moverMayCancel": "Transportuesi yt mund ta anulojë derisa sendet e tua të ngarkohen — në atë rast nuk paguan asgjë. Pasi të ngarkohen, zhvendosja nuk mund të anulohet në aplikacion. Nëse transportuesi yt nuk ka shtuar asnjë foto te vendi i marrjes një orë pas orës së mbërritjes, anulimi është falas."
+      "moverMayCancel": "Transportuesi yt mund ta anulojë derisa sendet e tua të ngarkohen — në atë rast nuk paguan asgjë. Pasi të ngarkohen, zhvendosja nuk mund të anulohet në aplikacion. Nëse transportuesi yt nuk ka shtuar asnjë foto te vendi i marrjes një orë pas orës së mbërritjes, anulimi është falas.",
+      "phoneTitle": "Në ditën e zhvendosjes",
+      "phone": "Telefoni për ditën e zhvendosjes",
+      "phoneHint": "Me prefiksin e shtetit, p.sh. +383 44 123 456. Numri yt, ose i atij që do të jetë te vendi i marrjes.",
+      "askFor": "Për kë të pyesin (opsionale)",
+      "askForHint": "Një emër, nëse do të jetë dikush tjetër atje — familja ose një fqinj.",
+      "phoneNote": "Këto i sheh vetëm transportuesi që e pranon zhvendosjen tënde, derisa të përfundojë. Mund t'i ndryshosh derisa transportuesi të niset.",
+      "phoneRequired": "Shkruaj një numër telefoni për ditën e zhvendosjes.",
+      "phoneInvalid": "Shkruaj numrin me prefiksin e shtetit, p.sh. +383 44 123 456.",
+      "nameTooLong": "Jo më shumë se {{max}} karaktere.",
+      "nameInvalid": "Ky emër ka shenja që nuk mund të përdoren."
     }
   }
 }

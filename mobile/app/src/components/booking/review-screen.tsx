@@ -14,12 +14,15 @@ import {
   type BookResponse,
   type BookedMover,
   type BookingDraft,
+  type MoveDayContact,
 } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
 import { BookError, useBookRequest } from '@/lib/booking';
 import { useJobStep } from '@/lib/jobs';
+import { useLastMoveDayContact } from '@/lib/moves';
 
+import { ContactFields, contactFields, useContactCheck, type ContactErrors } from '../customer/move-day-contact';
 import { BookingFrame, type UpdateBooking } from './booking-frame';
 import { useCancellationText } from './cancellation';
 import { PriceLines } from './movers-screen';
@@ -29,8 +32,9 @@ import { MoveSummary } from './size-screen';
  * Step 6: the booking request, checked on the server (design/DECISIONS.md #26). The `book` function
  * prices the chosen van again from the mover's own card and saves the request; this screen shows that
  * price (valid 15 minutes), who the contract is with and their full details (COMPLIANCE §4), their
- * cancellation terms and the note on the right of withdrawal (§8). Paying — saving the card, which
- * books the move — waits for Stripe; until then the request stays saved and nothing goes to the mover.
+ * cancellation terms and the note on the right of withdrawal (§8), and asks for the phone for the move
+ * day (#37). Paying — saving the card, which books the move — waits for Stripe; until then the request
+ * stays saved and nothing goes to the mover.
  */
 export function ReviewScreen() {
   const { t } = useTranslation();
@@ -91,7 +95,7 @@ function Review({ draft, update }: { draft: BookingDraft; update: UpdateBooking 
       ) : error ? (
         <Problem testID="review-error" text={t('booking.review.error')} action={t('common.retry')} onPress={() => void book.refetch()} />
       ) : book.data ? (
-        <Booked answer={book.data} draft={draft} expired={expired} onPriceAgain={() => void book.refetch()} />
+        <Booked answer={book.data} draft={draft} update={update} expired={expired} onPriceAgain={() => void book.refetch()} />
       ) : null}
     </>
   );
@@ -153,12 +157,40 @@ function Problem({ text, action, onPress, testID }: { text: string; action: stri
   );
 }
 
-function Booked({ answer, draft, expired, onPriceAgain }: { answer: BookResponse; draft: BookingDraft; expired: boolean; onPriceAgain: () => void }) {
+function Booked({
+  answer,
+  draft,
+  update,
+  expired,
+  onPriceAgain,
+}: {
+  answer: BookResponse;
+  draft: BookingDraft;
+  update: UpdateBooking;
+  expired: boolean;
+  onPriceAgain: () => void;
+}) {
   const { t } = useTranslation();
+  const { t: tj } = useTranslation('job');
   const locale = currentLocale();
   const describeCancellation = useCancellationText();
   const { mover, quote } = answer;
   const money = (cents: number) => formatMoney(cents, quote.currency, locale);
+
+  // The phone for the move day (design/DECISIONS.md #37): as typed, or until then the last move's.
+  const last = useLastMoveDayContact();
+  const phone = draft.contactPhone ?? last?.phone ?? '';
+  const name = draft.contactPhone === null ? (last?.name ?? '') : (draft.contactName ?? '');
+  const [contactErrors, setContactErrors] = useState<ContactErrors>({});
+  const check = useContactCheck();
+  const checkContact = () => {
+    const checked = check(phone, name);
+    if ('errors' in checked) {
+      setContactErrors(checked.errors);
+      return null;
+    }
+    return checked.contact;
+  };
   return (
     <>
       {/* COMPLIANCE §4: before payment, who the contract is with. */}
@@ -200,8 +232,27 @@ function Booked({ answer, draft, expired, onPriceAgain }: { answer: BookResponse
         <Text className="font-sans text-[12.5px] leading-[18px] text-ink-600">{t('booking.review.withdrawal')}</Text>
       </Card>
 
+      <Card variant="widget" className="gap-3">
+        <Text accessibilityRole="header" className="font-sans-semibold text-base text-ink-900">
+          {tj('review.phoneTitle')}
+        </Text>
+        <ContactFields
+          phone={phone}
+          name={name}
+          errors={contactErrors}
+          testIDPrefix="review-contact"
+          onChange={(p, n) => {
+            update((d) => ({ ...d, contactPhone: p, contactName: n }));
+            setContactErrors({});
+          }}
+        />
+        <Text testID="review-contact-note" className="font-sans text-[12.5px] leading-[18px] text-ink-600">
+          {tj('review.phoneNote')}
+        </Text>
+      </Card>
+
       {answer.testMover ? (
-        <TestBooking answer={answer} expired={expired} />
+        <TestBooking answer={answer} expired={expired} checkContact={checkContact} onContactRefused={() => setContactErrors({ phone: tj('review.phoneInvalid') })} />
       ) : (
         <>
           {/* Saving the card books the move (COMPLIANCE §6) — Stripe isn't set up yet. */}
@@ -220,7 +271,18 @@ function Booked({ answer, draft, expired, onPriceAgain }: { answer: BookResponse
  * payments exist (design/DECISIONS.md #35). The move goes to the mover as a request; the booking being
  * put together is done, and the move's own screen shows where it stands.
  */
-function TestBooking({ answer, expired }: { answer: BookResponse; expired: boolean }) {
+function TestBooking({
+  answer,
+  expired,
+  checkContact,
+  onContactRefused,
+}: {
+  answer: BookResponse;
+  expired: boolean;
+  /** The phone for the move day, checked (null: the fields say what is wrong). */
+  checkContact: () => MoveDayContact | null;
+  onContactRefused: () => void;
+}) {
   const { t } = useTranslation();
   const step = useJobStep();
   const [problem, setProblem] = useState<string | null>(null);
@@ -228,10 +290,16 @@ function TestBooking({ answer, expired }: { answer: BookResponse; expired: boole
 
   const bookTest = async () => {
     setProblem(null);
-    const result = await step.mutateAsync({ action: 'book_test', jobId: answer.jobId });
+    const contact = checkContact();
+    if (!contact) return;
+    const result = await step.mutateAsync({ action: 'book_test', jobId: answer.jobId, ...contactFields(contact) });
     if (result.ok) {
       clearBookingDraft();
       router.replace({ pathname: '/moves/[id]', params: { id: answer.jobId } });
+      return;
+    }
+    if (result.error === 'invalid_contact' || result.error === 'contact_required' || result.error === 'invalid_request') {
+      onContactRefused();
       return;
     }
     setProblem(

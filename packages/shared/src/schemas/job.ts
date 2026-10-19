@@ -114,6 +114,9 @@ export const jobRowSchema = z.object({
   chosen_mover_company_id: z.uuid(),
   chosen_vehicle_id: z.uuid(),
   created_at: z.string(),
+  /** The phone for the move day and who to ask for (design/DECISIONS.md #37); none before booking. */
+  contact_phone: z.string().nullable().default(null),
+  contact_name: z.string().nullable().default(null),
   /** The latest quote only (the select orders and limits it). */
   quotes: z.array(quoteRowSchema),
   /** The requests to movers for this move, newest first (the select orders them). */
@@ -142,6 +145,8 @@ export const JOB_COLUMNS = [
   'chosen_mover_company_id',
   'chosen_vehicle_id',
   'created_at',
+  'contact_phone',
+  'contact_name',
   `quotes(${QUOTE_COLUMNS})`,
   `job_offers(${Object.keys(offerRowSchema.shape).join(',')})`,
   `job_events(${Object.keys(eventRowSchema.shape).join(',')})`,
@@ -214,8 +219,9 @@ function stopFromRow(job: JobRow, prefix: 'pickup' | 'dropoff'): BookingStop {
 
 /**
  * A saved move, to put together again on the device ("Continue booking"): the same stops, items, day,
- * people, size and mover, tied to the saved request so reviewing it updates that request. A day that
- * has passed is simply not chosen any more (the booking screens ask for a new one).
+ * people, size and mover, and the phone for the move day if one was given — tied to the saved request so
+ * reviewing it updates that request. A day that has passed is simply not chosen any more (the booking
+ * screens ask for a new one).
  */
 export function draftFromJob(job: JobRow): BookingDraft {
   const at = new Date(job.scheduled_at);
@@ -231,6 +237,8 @@ export function draftFromJob(job: JobRow): BookingDraft {
     vehicleClass: job.vehicle_class,
     choice: { vehicleId: job.chosen_vehicle_id, companyId: job.chosen_mover_company_id },
     jobId: job.id,
+    contactPhone: job.contact_phone,
+    contactName: job.contact_name,
   });
 }
 

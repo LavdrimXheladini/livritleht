@@ -76,6 +76,7 @@ export const terms: LegalText = {
           list: [
             'Describe the move truthfully: what you move, the floors, lifts and access.',
             'Be there, or have someone there, at pickup and drop-off.',
+            'Give a phone number where you, or whoever is at the pickup, can be reached on the move day. If it is someone else\'s number, tell them first. You can change it until the mover is on the way.',
             'Do not hand over anything dangerous or illegal. The mover may refuse items their terms exclude.',
           ],
         },

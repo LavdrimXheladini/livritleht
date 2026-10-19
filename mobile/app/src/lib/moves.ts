@@ -54,3 +54,13 @@ export function useMyMoves() {
     },
   });
 }
+
+/**
+ * The phone for the move day (and who to ask for) given with the customer's latest move that has one —
+ * offered again when they book the next move (design/DECISIONS.md #37). Null while unknown or never given.
+ */
+export function useLastMoveDayContact(): { phone: string; name: string } | null {
+  const moves = useMyMoves();
+  const last = moves.data?.find((j) => j.contact_phone !== null);
+  return last?.contact_phone ? { phone: last.contact_phone, name: last.contact_name ?? '' } : null;
+}

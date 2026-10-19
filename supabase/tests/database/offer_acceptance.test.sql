@@ -55,7 +55,7 @@ $$;
 create temporary table offered (n int, id uuid) on commit drop;
 
 insert into offered select 0, pg_temp.saved('00000000-0000-0000-0000-0000000e0971', '00000000-0000-0000-0000-0000000aa971', '00000000-0000-0000-0000-0000000bb971', 'XK');
-insert into offered select 1, public.job_book('00000000-0000-0000-0000-0000000e0971', '00000000-0000-0000-0000-00000000c971', true);
+insert into offered select 1, public.job_book('00000000-0000-0000-0000-0000000e0971', '00000000-0000-0000-0000-00000000c971', true, '+38344123456');
 create function pg_temp.accept(n int) returns public.job_status language sql as $$
   select public.job_answer_offer((select id from offered where offered.n = accept.n), '00000000-0000-0000-0000-00000000d971', true)
 $$;
@@ -90,7 +90,7 @@ select is(pg_temp.accept(1), 'ACCEPTED'::public.job_status, 'everything in order
 
 -- Across a border: CMR insurance valid on the move day (COMPLIANCE §11).
 insert into offered select 0, pg_temp.saved('00000000-0000-0000-0000-0000000e0972', '00000000-0000-0000-0000-0000000aa971', '00000000-0000-0000-0000-0000000bb972', 'AL');
-insert into offered select 2, public.job_book('00000000-0000-0000-0000-0000000e0972', '00000000-0000-0000-0000-00000000c971', true);
+insert into offered select 2, public.job_book('00000000-0000-0000-0000-0000000e0972', '00000000-0000-0000-0000-00000000c971', true, '+38344123456');
 select throws_ok($$ select pg_temp.accept(2) $$, '22023', 'not_eligible', 'across a border without CMR insurance: not accepted');
 insert into public.mover_documents (id, company_id, type, file_path, expires_at, verified_at)
 values ('00000000-0000-0000-0000-0000000dd972', '00000000-0000-0000-0000-0000000aa971', 'cmr', 'aa971/cmr.pdf', now() + interval '1 day', now());
@@ -121,7 +121,7 @@ select is(public.job_answer_offer((select id from offered where n = 3), '0000000
 
 -- Declining never checks anything (COMPLIANCE §2).
 insert into offered select 0, pg_temp.saved('00000000-0000-0000-0000-0000000e0974', '00000000-0000-0000-0000-0000000aa971', '00000000-0000-0000-0000-0000000bb971', 'XK');
-insert into offered select 4, public.job_book('00000000-0000-0000-0000-0000000e0974', '00000000-0000-0000-0000-00000000c971', true);
+insert into offered select 4, public.job_book('00000000-0000-0000-0000-0000000e0974', '00000000-0000-0000-0000-00000000c971', true, '+38344123456');
 update public.mover_documents set verified_at = null where id = '00000000-0000-0000-0000-0000000dd971';
 select is(public.job_answer_offer((select id from offered where n = 4), '00000000-0000-0000-0000-00000000d971', false), 'QUOTED'::public.job_status,
   'declining is free: no check');
@@ -129,11 +129,11 @@ update public.mover_documents set verified_at = now() where id = '00000000-0000-
 
 -- Clearer refusals: cancelled by the customer, or expired.
 update public.quotes set expires_at = now() + interval '15 minutes' where job_id = '00000000-0000-0000-0000-0000000e0974';
-insert into offered select 5, public.job_book('00000000-0000-0000-0000-0000000e0974', '00000000-0000-0000-0000-00000000c971', true);
+insert into offered select 5, public.job_book('00000000-0000-0000-0000-0000000e0974', '00000000-0000-0000-0000-00000000c971', true, '+38344123456');
 do $$ begin perform public.job_cancel('00000000-0000-0000-0000-0000000e0974', '00000000-0000-0000-0000-00000000c971'); end $$;
 select throws_ok($$ select pg_temp.accept(5) $$, '22023', 'not_open', 'a request the customer cancelled: not_open');
 insert into offered select 0, pg_temp.saved('00000000-0000-0000-0000-0000000e0975', '00000000-0000-0000-0000-0000000aa971', '00000000-0000-0000-0000-0000000bb971', 'XK');
-insert into offered select 6, public.job_book('00000000-0000-0000-0000-0000000e0975', '00000000-0000-0000-0000-00000000c971', true);
+insert into offered select 6, public.job_book('00000000-0000-0000-0000-0000000e0975', '00000000-0000-0000-0000-00000000c971', true, '+38344123456');
 do $$ begin perform public.expire_job_offers(now() + interval '13 hours'); end $$;
 select throws_ok($$ select pg_temp.accept(6) $$, '22023', 'offer_expired', 'a request that ended: offer_expired');
 
@@ -152,7 +152,7 @@ select throws_ok(
 -- Booking needs the price of the move as it is now: a quote older than the request's last change is refused.
 insert into offered select 0, pg_temp.saved('00000000-0000-0000-0000-0000000e0976', '00000000-0000-0000-0000-0000000aa971', '00000000-0000-0000-0000-0000000bb971', 'XK');
 update public.quotes set created_at = now() - interval '1 minute' where job_id = '00000000-0000-0000-0000-0000000e0976';
-select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0976', '00000000-0000-0000-0000-00000000c971', true) $$,
+select throws_ok($$ select public.job_book('00000000-0000-0000-0000-0000000e0976', '00000000-0000-0000-0000-00000000c971', true, '+38344123456') $$,
   '22023', 'quote_required', 'a request changed after its price: priced again before booking');
 select lives_ok($$ update public.jobs set items = '[{"key":"box","qty":6,"assembly":false}]' where id = '00000000-0000-0000-0000-0000000e0976' $$,
   'a saved request still changes freely');

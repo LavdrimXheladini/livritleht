@@ -526,6 +526,24 @@ test.describe('the move day, mover side', () => {
     await expect(page.getByTestId('mover-job-pickup')).not.toContainText(jm.townOnly);
   });
 
+  test("the customer's phone for the move day: who to ask for and a call link — only what the server sends (design/DECISIONS.md #37)", async ({ page }) => {
+    await page.clock.setFixedTime(new Date(2026, 9, 22, 7, 30));
+    await fakeMoverDay(page, new Date(2026, 9, 22, 7, 30), [moverRow('EN_ROUTE_TO_PICKUP', { contact_phone: '+38344000111', contact_name: 'Arben' })]);
+    await page.goto(`${url}mover/jobs/${JOB}`);
+    await expect(page.getByTestId('mover-job-contact')).toContainText(jm.customer.askFor.replace('{{name}}', 'Arben'));
+    await expect(page.getByTestId('mover-job-contact')).toContainText(jm.customer.note);
+    await expect(page.getByTestId('mover-job-contact-call')).toHaveAttribute('href', 'tel:+38344000111');
+    await expect(page.getByTestId('mover-job-contact-call')).toContainText(jm.customer.call.replace('{{phone}}', '+38344000111'));
+  });
+
+  test('no phone from the server (an older booking, or the move is over): no contact shown', async ({ page }) => {
+    await page.clock.setFixedTime(new Date(2026, 9, 22, 7, 30));
+    await fakeMoverDay(page, new Date(2026, 9, 22, 7, 30), [moverRow('EN_ROUTE_TO_PICKUP')]);
+    await page.goto(`${url}mover/jobs/${JOB}`);
+    await expect(page.getByTestId('mover-job-pickup')).toBeVisible();
+    await expect(page.getByTestId('mover-job-contact')).toHaveCount(0);
+  });
+
   test.describe('in Albanian', () => {
     test.use({ locale: 'sq-XK' });
 

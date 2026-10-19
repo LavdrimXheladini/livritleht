@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 import { CURRENCIES, JOB_STATUSES, JOB_TYPES, VEHICLE_CLASSES, type JobStatus } from '../constants';
-import { CANCELLATION_FEE_RULES } from './booking';
+import { phoneSchema } from './auth';
+import { CANCELLATION_FEE_RULES, contactNameSchema } from './booking';
 import { jobItemSchema } from './pricing';
 
 /**
@@ -38,7 +39,10 @@ const MAX_FEE = 100_000_000;
 
 // Moving a job along (design/DECISIONS.md #35, #36; COMPLIANCE §2, §7, §9.1): the `job-transition` function.
 //   book_test — the customer books a saved request with a test mover, without a card (until card
-//               payments exist; real movers need the card): it goes to the mover as an offer
+//               payments exist; real movers need the card), with the phone for the move day (and who
+//               to ask for): it goes to the mover as an offer
+//   contact   — the customer changes the phone for the move day (and who to ask for: none when not
+//               given) until the mover is on the way
 //   accept / decline — the mover answers an offer, freely
 //   cancel    — the customer cancels: free before a mover accepted; after, until loaded, under the
 //               mover's terms, never above `maxFee` (the amount they were shown; missing = 0)
@@ -46,7 +50,8 @@ const MAX_FEE = 100_000_000;
 //   mover_cancel — the accepted mover cancels before loading, for free (an optional reason)
 //   confirm   — the customer confirms the move is done
 export const jobTransitionSchema = z.discriminatedUnion('action', [
-  z.object({ action: z.literal('book_test'), jobId: z.uuid() }).strict(),
+  z.object({ action: z.literal('book_test'), jobId: z.uuid(), contactPhone: phoneSchema, contactName: contactNameSchema.optional() }).strict(),
+  z.object({ action: z.literal('contact'), jobId: z.uuid(), contactPhone: phoneSchema, contactName: contactNameSchema.optional() }).strict(),
   z.object({ action: z.literal('accept'), offerId: z.uuid() }).strict(),
   z.object({ action: z.literal('decline'), offerId: z.uuid() }).strict(),
   z.object({ action: z.literal('cancel'), jobId: z.uuid(), maxFee: z.number().int().min(0).max(MAX_FEE).optional() }).strict(),
@@ -56,8 +61,9 @@ export const jobTransitionSchema = z.discriminatedUnion('action', [
 ]);
 export type JobTransition = z.infer<typeof jobTransitionSchema>;
 
-/** The customer's side: they book, cancel and confirm; every other action is the mover's. */
-export const isCustomerAction = (action: JobTransition['action']) => action === 'book_test' || action === 'cancel' || action === 'confirm';
+/** The customer's side: they book, change the phone for the move day, cancel and confirm; every other action is the mover's. */
+export const isCustomerAction = (action: JobTransition['action']) =>
+  action === 'book_test' || action === 'contact' || action === 'cancel' || action === 'confirm';
 
 /** Why a transition was refused (Postgres's reasons; anything else is `unavailable`). */
 export const JOB_TRANSITION_ERRORS = [
@@ -81,6 +87,9 @@ export const JOB_TRANSITION_ERRORS = [
   'invalid_reason',
   'reason_too_early',
   'not_confirmable',
+  'contact_required',
+  'invalid_contact',
+  'contact_locked',
 ] as const;
 export type JobTransitionError = (typeof JOB_TRANSITION_ERRORS)[number];
 
@@ -153,6 +162,10 @@ export const moverJobRowSchema = z.object({
   confirmed_at: z.string().nullable().default(null),
   /** At the pickup: from when the mover may say nobody was there. */
   absent_reason_from: z.string().nullable().default(null),
+  // The phone for the move day (20261019090000): on an accepted move only, until it is done or cancelled.
+  contact_phone: z.string().nullable().default(null),
+  /** Who to ask for (null: not given). */
+  contact_name: z.string().nullable().default(null),
 });
 export type MoverJobRow = z.infer<typeof moverJobRowSchema>;
 

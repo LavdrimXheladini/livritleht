@@ -33,6 +33,7 @@ import { MoveSummary } from '../booking/size-screen';
 import { ExternalLink } from '../external-link';
 import { CancelLine, CancelMove } from './cancel-move';
 import { ConfirmMove } from './confirm-move';
+import { MoveDayContactCard } from './move-day-contact';
 import { MovePhotos } from './move-photos';
 import { MoveSteps, stepTime } from './move-steps';
 import { QUIET_STATES } from './my-moves';
@@ -166,6 +167,8 @@ function Move({ job }: { job: JobRow }) {
         <Stop label={t('landing.quote.pickup')} place={job.pickup_label} details={job.pickup_details} floor={job.pickup_floor} lift={job.pickup_has_lift} testID="move-pickup" />
         <Stop label={t('landing.quote.dropoff')} place={job.dropoff_label} details={job.dropoff_details} floor={job.dropoff_floor} lift={job.dropoff_has_lift} testID="move-dropoff" />
       </Card>
+
+      <MoveDayContactCard job={job} moverName={moverName} />
 
       <Card variant="widget" className="gap-2">
         <Text accessibilityRole="header" className="font-sans-semibold text-base text-ink-900">
