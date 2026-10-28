@@ -46,6 +46,10 @@ scripts/       dev-prep.mjs (runs before every dev/build), test-db-cloud.mjs (da
 design/        design handoff and decisions
 ```
 
+## Intake pipeline (AI)
+
+Incoming requests are parsed by [movershub-intake](https://github.com/LorikShabanii/movershub-intake): multilingual LLM extraction with a confidence score per field, rule checks before and after the model, clarification questions in the customer's language, and an evaluation gate in CI. Every result goes to a person for approval.
+
 ## Run it locally
 
 Works on Windows, macOS and Linux. There is no `npm run all`: `pnpm dev` starts everything (step 4).
