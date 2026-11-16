@@ -98,6 +98,12 @@
     "deleted": "Llogaria jote u fshi. Faleminderit që përdore MoversHub."
   },
   "customer": {
+    "greeting": { "morning": "Mirëmëngjes,", "afternoon": "Mirëdita,", "evening": "Mirëmbrëma," },
+    "tabs": { "label": "Seksionet", "home": "Kryefaqja", "moves": "Zhvendosjet", "account": "Llogaria" },
+    "currentMove": "Zhvendosja jote",
+    "openMove": "Hap këtë zhvendosje",
+    "movesNone": "Ende pa zhvendosje. Gjej një çmim te Kryefaqja për të rezervuar.",
+    "viewAll": "Shiko të gjitha",
     "homeTitle": "Rezervo me një transportues",
     "homeSubtitle": "Transportuesit në MoversHub vendosin vetë çmimet e tyre. E shihni transportuesin dhe çmimin e tij para se të rezervoni.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",

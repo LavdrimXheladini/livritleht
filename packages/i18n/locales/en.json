@@ -98,6 +98,12 @@
     "deleted": "Your account is deleted. Thank you for using MoversHub."
   },
   "customer": {
+    "greeting": { "morning": "Good morning,", "afternoon": "Good afternoon,", "evening": "Good evening," },
+    "tabs": { "label": "Sections", "home": "Home", "moves": "Moves", "account": "Account" },
+    "currentMove": "Your move",
+    "openMove": "Open this move",
+    "movesNone": "No moves yet. Find a price on Home to book one.",
+    "viewAll": "View all",
     "homeTitle": "Book with a mover",
     "homeSubtitle": "Movers on MoversHub set their own prices. You see your mover and their price before you book.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",

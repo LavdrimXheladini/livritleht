@@ -21,6 +21,7 @@ describe('rate limits', () => {
     expect(RATE_LIMITS).toEqual({
       quote: { limit: 30, windowSeconds: 600 },
       addressSearch: { limit: 60, windowSeconds: 60 },
+      route: { limit: 60, windowSeconds: 600 },
       phoneCodeSend: { limit: 5, windowSeconds: 3600 },
       phoneCodeCheck: { limit: 10, windowSeconds: 600 },
       companyRegistry: { limit: 20, windowSeconds: 600 },

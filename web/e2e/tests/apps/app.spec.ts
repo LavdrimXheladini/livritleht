@@ -391,6 +391,7 @@ test.describe('signed out', () => {
     expect(calls.updates).toEqual([{ password: STAND_IN_PASSWORD }]);
     // Never switched without being asked.
     expect(calls.chosen).toEqual([]);
+    await page.getByTestId('tab-account').click();
     await page.getByTestId('switch-to-mover').click();
     await expect(page.getByText(en.mover.checklistTitle)).toBeVisible();
     await expect(page.getByTestId('home-notice')).toHaveCount(0);
@@ -1297,6 +1298,7 @@ test.describe('your account (COMPLIANCE §9)', () => {
   test('download my data: everything kept about the account, as a file', async ({ page }) => {
     const sent = await fakeAccountFunction(page, { body: { account: { email: 'customer@example.com' }, moves: [] } });
     await page.goto(url);
+    await page.getByTestId('tab-account').click();
     await page.getByTestId('open-account').click();
     await expect(page.getByTestId('account-email')).toHaveText(a.signedInAs.replace('{{email}}', 'customer@example.com'));
     const download = page.waitForEvent('download');
@@ -1346,6 +1348,7 @@ test.describe('switching sides', () => {
     const { chosen } = await signInAs(page, 'customer');
     await page.goto(url);
     // The way to the mover side says what a mover fills in first.
+    await page.getByTestId('tab-account').click();
     await expect(page.getByText(en.customer.switchText)).toBeVisible();
     await page.getByTestId('switch-to-mover').click();
     await expect(page.getByText(en.mover.checklistTitle)).toBeVisible();
@@ -1353,6 +1356,7 @@ test.describe('switching sides', () => {
     await expect(page.locator('#a11y-announcer')).toHaveText(en.mover.nowHere);
 
     await page.getByTestId('switch-to-customer').click();
+    await page.getByTestId('tab-account').click();
     await expect(page.getByTestId('switch-to-mover')).toBeVisible();
     await expect(page.locator('#a11y-announcer')).toHaveText(en.customer.nowHere);
     expect(chosen).toEqual(['mover', 'customer']);
@@ -1361,6 +1365,7 @@ test.describe('switching sides', () => {
   test('switching without network fails at once with the error, also when the browser knows it is offline', async ({ page }) => {
     await signInAs(page, 'customer');
     await page.goto(url);
+    await page.getByTestId('tab-account').click();
     await expect(page.getByTestId('switch-to-mover')).toBeVisible();
     // The browser reports offline (TanStack Query would otherwise hold the request until it's back),
     // and the stand-in server stops answering too.
@@ -1375,6 +1380,7 @@ test.describe('switching sides', () => {
   test('if switching fails, the person stays where they are and can try again', async ({ page }) => {
     const { chosen } = await signInAs(page, 'customer', { failChooseRole: 1 });
     await page.goto(url);
+    await page.getByTestId('tab-account').click();
     await page.getByTestId('switch-to-mover').click();
     await expect(app(page).getByText(en.common.errorGeneric)).toBeVisible();
     await expect(page.getByTestId('home-sign-out')).toBeVisible();
@@ -1406,6 +1412,7 @@ test.describe('without network', () => {
     await offlineWithSavedSide(page, 'customer');
     await page.goto(url);
     await page.waitForTimeout(SETTLED_MS);
+    await page.getByTestId('tab-account').click();
     await expect(page.getByTestId('switch-to-mover')).toBeVisible();
     await expect(page.getByTestId('profile-retry')).toHaveCount(0);
   });

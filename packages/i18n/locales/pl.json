@@ -98,6 +98,12 @@
     "deleted": "Twoje konto zostało usunięte. Dziękujemy za korzystanie z MoversHub."
   },
   "customer": {
+    "greeting": { "morning": "Dzień dobry,", "afternoon": "Dzień dobry,", "evening": "Dobry wieczór," },
+    "tabs": { "label": "Sekcje", "home": "Start", "moves": "Przeprowadzki", "account": "Konto" },
+    "currentMove": "Twoja przeprowadzka",
+    "openMove": "Otwórz tę przeprowadzkę",
+    "movesNone": "Nie masz jeszcze przeprowadzek. Sprawdź cenę na ekranie Start, aby zarezerwować.",
+    "viewAll": "Zobacz wszystkie",
     "homeTitle": "Zarezerwuj przewoźnika",
     "homeSubtitle": "Przewoźnicy w MoversHub sami ustalają swoje ceny. Przed rezerwacją widzisz przewoźnika i jego cenę.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",

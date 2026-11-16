@@ -414,6 +414,10 @@ verify_jwt = false
 [functions.places]
 verify_jwt = false
 
+# The road between a move's two places, for the app's map. Signed-in users only, checked in the function.
+[functions.route]
+verify_jwt = false
+
 # A mover's phone code (Twilio Verify, or the PHONE_TEST_NUMBERS) and the official register look-up for
 # their tax number. Signed-in users only, checked in the functions (like `places`).
 [functions.phone-verification]

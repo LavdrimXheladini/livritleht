@@ -5,6 +5,7 @@ export { setSignedOutNotice, takeSignedOutNotice } from './signed-out-notice';
 export { clearBookingDraft, restoreBookingDraft, startBooking, updateBooking, useBookingDraft } from './booking-draft';
 export { cx } from './components/cx';
 export * from './components/icons';
+export { MovingVanScene } from './components/illustrations';
 export {
   Button,
   Card,

@@ -127,3 +127,39 @@ export const LogoMark = ({ size = 22, ...p }: IconProps) => (
     <Path d="M7 20 H17" />
   </Icon>
 );
+
+/** Tab bar: home. */
+export const HomeIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <Path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1Z" />
+  </Icon>
+);
+
+/** Tab bar: the list of moves. */
+export const ListIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <Rect x="5" y="3" width="14" height="18" rx="2" />
+    <Path d="M9 8h6M9 12h6M9 16h3" />
+  </Icon>
+);
+
+/** Tab bar: the account. */
+export const UserIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <Circle cx="12" cy="8" r="4" />
+    <Path d="M4 21a8 8 0 0 1 16 0" />
+  </Icon>
+);
+
+export const SignOutIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <Path d="M10 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M15 8l4 4-4 4M19 12H9" />
+  </Icon>
+);
+
+/** "Open": arrow up and to the right. */
+export const ArrowUpRightIcon = (p: IconProps) => (
+  <Icon strokeWidth={2} {...p}>
+    <Path d="M7 17 17 7M8 7h9v9" />
+  </Icon>
+);

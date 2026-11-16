@@ -35,6 +35,10 @@ const answer = (body: string, status = 200) => (route: Route) =>
 export async function serveFixtures(page: Page) {
   await page.route('**/functions/v1/quote', answer(quote));
   await page.route('**/functions/v1/places', answer('{"suggestions":[]}'));
+  // A move's map: no road from the server (the straight line is drawn) and no map files, so the picture stays the same.
+  await page.route('**/functions/v1/route', answer('{"error":"route_unavailable"}', 502));
+  await page.route('https://unpkg.com/**', (route) => route.abort());
+  await page.route('https://tiles.openfreemap.org/**', (route) => route.abort());
   await page.route('**/rest/v1/jobs*', answer('[]'));
   await page.route('**/rest/v1/mover_reminders*', answer('[]'));
   await page.route('**/rest/v1/suspensions*', answer('[]'));

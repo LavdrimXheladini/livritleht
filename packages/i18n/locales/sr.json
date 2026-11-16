@@ -98,6 +98,12 @@
     "deleted": "Vaš nalog je obrisan. Hvala što ste koristili MoversHub."
   },
   "customer": {
+    "greeting": { "morning": "Dobro jutro,", "afternoon": "Dobar dan,", "evening": "Dobro veče," },
+    "tabs": { "label": "Odeljci", "home": "Početna", "moves": "Selidbe", "account": "Nalog" },
+    "currentMove": "Vaša selidba",
+    "openMove": "Otvorite ovu selidbu",
+    "movesNone": "Još nemate selidbi. Pronađite cenu na Početnoj da rezervišete.",
+    "viewAll": "Prikaži sve",
     "homeTitle": "Rezerviši selidbu kod prevoznika",
     "homeSubtitle": "Prevoznici na MoversHubu sami određuju svoje cene. Pre rezervacije vidite prevoznika i njegovu cenu.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",

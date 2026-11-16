@@ -2,9 +2,23 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, useIsFocused } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, Card, Display, Pill, Screen, announce, currentLocale, formatClockTime, formatMoveDay, startBooking, useAuth } from '@movershub/mobile';
+import {
+  Button,
+  Card,
+  ChevronRightIcon,
+  Display,
+  Pill,
+  announce,
+  currentLocale,
+  cx,
+  formatClockTime,
+  formatMoveDay,
+  startBooking,
+  useAuth,
+} from '@movershub/mobile';
 import {
   CANCELLABLE_AFTER_ACCEPTANCE,
   ITEM_CATALOGUE,
@@ -24,6 +38,7 @@ import { colors } from '@movershub/ui';
 
 import { jobPhotosKey, useJobPhotos } from '@/lib/job-photos';
 import { useMyMoves } from '@/lib/moves';
+import { useRouteLine } from '@/lib/route';
 
 import { BOOKING_STEPS, firstOpenStep } from '../booking/booking-frame';
 import { useCancellationText } from '../booking/cancellation';
@@ -31,6 +46,7 @@ import { PriceLines } from '../booking/movers-screen';
 import { MoverCard, Row } from '../booking/review-screen';
 import { MoveSummary } from '../booking/size-screen';
 import { ExternalLink } from '../external-link';
+import { RouteMap } from '../route-map';
 import { CancelLine, CancelMove } from './cancel-move';
 import { ConfirmMove } from './confirm-move';
 import { MoveDayContactCard } from './move-day-contact';
@@ -55,28 +71,75 @@ function goBack() {
  */
 export function MoveScreen({ id }: { id: string | undefined }) {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   const moves = useMyMoves();
   const job = moves.data?.find((j) => j.id === id);
+  // The map fills the top of the screen; the sheet starts over its lower edge and scrolls up over it.
+  const mapHeight = job ? Math.min(Math.round(height * 0.42), 380) : 0;
+  const overlap = 28;
 
   return (
-    <Screen>
-      <Button testID="move-back" variant="link" className="-ml-2 self-start" title={`‹ ${t('common.back')}`} accessibilityLabel={t('common.back')} onPress={goBack} />
-      <Display>{t('customer.moves.detailTitle')}</Display>
+    <View className="flex-1 bg-stone-100">
       {job ? (
-        <Move job={job} />
-      ) : moves.isError ? (
-        <View className="items-start gap-3">
-          <Text className="font-sans text-sm text-ink-700">{t('common.errorGeneric')}</Text>
-          <Button variant="outline" size="md" title={t('common.retry')} loading={moves.isFetching} onPress={() => void moves.refetch()} />
+        <View className="absolute inset-x-0 top-0" style={{ height: mapHeight }}>
+          <MoveMap job={job} bottomPadding={overlap + 36} />
         </View>
-      ) : moves.isPending ? (
-        <ActivityIndicator color={colors.brand[500]} accessibilityLabel={t('common.loading')} />
-      ) : (
-        <Text testID="move-not-found" className="font-sans text-sm text-ink-700">
-          {t('customer.moves.notFound')}
-        </Text>
-      )}
-    </Screen>
+      ) : null}
+      <ScrollView keyboardShouldPersistTaps="handled" automaticallyAdjustKeyboardInsets contentContainerClassName="flex-grow">
+        <View
+          className={cx('flex-1 gap-5 bg-stone-100 px-4 pb-10', job ? 'rounded-t-[28px] pt-3' : 'pt-3')}
+          style={{ marginTop: job ? mapHeight - overlap : insets.top + 56 }}
+        >
+          {job ? <View aria-hidden className="h-1 w-10 self-center rounded-full bg-stone-400" /> : null}
+          <Display size={28}>{t('customer.moves.detailTitle')}</Display>
+          {job ? (
+            <Move job={job} />
+          ) : moves.isError ? (
+            <View className="items-start gap-3">
+              <Text className="font-sans text-sm text-ink-700">{t('common.errorGeneric')}</Text>
+              <Button variant="outline" size="md" title={t('common.retry')} loading={moves.isFetching} onPress={() => void moves.refetch()} />
+            </View>
+          ) : moves.isPending ? (
+            <ActivityIndicator color={colors.brand[500]} accessibilityLabel={t('common.loading')} />
+          ) : (
+            <Text testID="move-not-found" className="font-sans text-sm text-ink-700">
+              {t('customer.moves.notFound')}
+            </Text>
+          )}
+        </View>
+      </ScrollView>
+      {/* Floats over the map, like the round buttons of a map screen. */}
+      <Pressable
+        testID="move-back"
+        accessibilityRole="button"
+        accessibilityLabel={t('common.back')}
+        onPress={goBack}
+        className="absolute left-4 size-11 items-center justify-center rounded-full bg-stone-50 shadow-lift active:opacity-80"
+        style={{ top: insets.top + 8 }}
+      >
+        <View className="rotate-180">
+          <ChevronRightIcon size={22} color={colors.ink[900]} />
+        </View>
+      </Pressable>
+    </View>
+  );
+}
+
+/** The move's map: the road from the pickup to the drop-off (never a live position — that comes with tracking). */
+function MoveMap({ job, bottomPadding }: { job: JobRow; bottomPadding: number }) {
+  const line = useRouteLine({ lat: job.pickup_lat, lon: job.pickup_lon }, { lat: job.dropoff_lat, lon: job.dropoff_lon });
+  return <RouteMap line={line} bottomPadding={bottomPadding} />;
+}
+
+/** How far the move day is, as a bar of segments — the steps and their times are in the list below. */
+function DayProgress({ day }: { day: JobDay }) {
+  return (
+    <View aria-hidden testID="move-progress" className="flex-row gap-1.5">
+      {day.steps.map((s) => (
+        <View key={s.status} className={cx('h-1.5 flex-1 rounded-full', s.at !== null && !day.cancelled ? 'bg-brand-500' : 'bg-stone-300')} />
+      ))}
+    </View>
   );
 }
 
@@ -153,6 +216,7 @@ function Move({ job }: { job: JobRow }) {
         {phone && callable ? <ExternalLink testID="move-call" tone="light" href={telHref(phone)} title={tj('customer.call', { name: moverName })} /> : null}
       </View>
 
+      {day ? <DayProgress day={day} /> : null}
       {day ? <MoveSteps day={day} /> : null}
       {day && ((photos.data ?? []).length > 0 || PHOTO_STATES.includes(job.status) || photos.isError) ? (
         <MovePhotos rows={photos.data ?? []} moverName={moverName} failed={photos.isError && !photos.data} onRetry={() => void photos.refetch()} />

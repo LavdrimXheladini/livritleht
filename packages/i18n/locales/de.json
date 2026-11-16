@@ -98,6 +98,12 @@
     "deleted": "Dein Konto wurde gelöscht. Danke, dass du MoversHub genutzt hast."
   },
   "customer": {
+    "greeting": { "morning": "Guten Morgen,", "afternoon": "Guten Tag,", "evening": "Guten Abend," },
+    "tabs": { "label": "Bereiche", "home": "Start", "moves": "Umzüge", "account": "Konto" },
+    "currentMove": "Dein Umzug",
+    "openMove": "Diesen Umzug öffnen",
+    "movesNone": "Noch keine Umzüge. Finde auf Start einen Preis, um zu buchen.",
+    "viewAll": "Alle ansehen",
     "homeTitle": "Mit einem Umzugsunternehmen buchen",
     "homeSubtitle": "Umzugsunternehmen auf MoversHub legen ihre Preise selbst fest. Vor der Buchung siehst du das Unternehmen und seinen Preis.",
     "quoteSummary": "{{kind}} · ≈{{km}} km",

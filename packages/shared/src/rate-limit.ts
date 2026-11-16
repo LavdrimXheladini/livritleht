@@ -12,6 +12,8 @@ export const RATE_LIMITS = {
   quote: { limit: 30, windowSeconds: 600 },
   /** An address search costs one Photon request. */
   addressSearch: { limit: 60, windowSeconds: 60 },
+  /** The road for a move's map costs one OSRM route (the app keeps it, so one per move opened). */
+  route: { limit: 60, windowSeconds: 600 },
   /** A phone code costs an SMS or WhatsApp message (Twilio Verify): per account, and per phone number. */
   phoneCodeSend: { limit: 5, windowSeconds: 3600 },
   /** Trying a phone code. */

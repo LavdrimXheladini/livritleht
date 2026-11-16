@@ -178,7 +178,7 @@ export function CancelMove({
   };
 
   if (!asking) {
-    return <Button testID="move-cancel" variant="link" className="-ml-2 self-start" title={t('customer.moves.cancel')} onPress={open} />;
+    return <Button testID="move-cancel" variant="outline" title={t('customer.moves.cancel')} onPress={open} />;
   }
   const fee = current?.fee ?? 0;
   const pct = quote?.cancel_late_pct ?? 0;

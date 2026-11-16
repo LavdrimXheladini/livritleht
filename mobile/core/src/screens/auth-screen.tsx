@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Controller, useForm, type Control, type FieldPath, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View, useWindowDimensions } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
 
@@ -11,6 +11,7 @@ import { emailSchema, signInPasswordSchema, type SelfSignupRole, type SignupMeta
 
 import { useAnnouncement } from '../a11y';
 import { useAuth } from '../auth-provider';
+import { MovingVanScene } from '../components/illustrations';
 import { LanguageButton } from '../components/language-button';
 import { Button, Display, SegmentedControl, TextField, Wordmark } from '../components/ui';
 import { currentLocale } from '../i18n';
@@ -86,44 +87,51 @@ export function AuthScreen({
 }
 
 /**
- * Shared frame of the sign-in screens: wordmark and language on top, content centred. It scrolls, so the form
+ * Shared frame of the sign-in screens: a deep-green band with the wordmark, the language and a
+ * picture, and the content on a rounded sheet below it. It scrolls, so the form
  * stays reachable on small phones, with large text, and with the keyboard open. On iOS the scroll
  * view itself makes room for the keyboard and keeps the focused field above it (padding from the
  * keyboard-avoiding view as well would count the keyboard twice); on Android the padding does it.
  */
 export function AuthFrame({ children }: { children: ReactNode }) {
+  const { width } = useWindowDimensions();
   return (
-    <SafeAreaView className="flex-1 bg-stone-100">
+    <View className="flex-1 bg-brand-500">
+      <StatusBar barStyle="light-content" />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? undefined : 'padding'} className="flex-1">
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          automaticallyAdjustKeyboardInsets
-          contentContainerClassName="flex-grow px-4 pb-10"
-        >
-          <View className="min-h-14 flex-row items-center">
-            <Wordmark />
-            <View className="ml-auto">
-              <LanguageButton />
+        <ScrollView keyboardShouldPersistTaps="handled" automaticallyAdjustKeyboardInsets contentContainerClassName="flex-grow">
+          {/* Deep-green band: wordmark, language and the picture; the form sits on a sheet below it. */}
+          <SafeAreaView edges={['top', 'left', 'right']} className="px-4">
+            <View className="min-h-14 flex-row items-center">
+              <Wordmark tone="dark" />
+              <View className="ml-auto">
+                <LanguageButton tone="dark" />
+              </View>
             </View>
+            <View className="items-center pt-1">
+              <MovingVanScene width={Math.min(width - 32, 360)} />
+            </View>
+          </SafeAreaView>
+          <View className="-mt-3 flex-1 gap-6 rounded-t-[28px] bg-stone-50 px-5 pb-12 pt-7">
+            {isSupabaseConfigured() ? null : (
+              // For developers only (a released app always has its settings), so not translated.
+              <Text testID="not-configured" className="rounded-lg bg-stone-150 p-3 font-sans text-[13px] leading-5 text-ink-700">
+                {'Not connected: this copy of the app has no Supabase settings yet. Add mobile/app/.env (README, ' +
+                  '"Run it locally", step 3) and start the app again.'}
+              </Text>
+            )}
+            {children}
           </View>
-          {isSupabaseConfigured() ? null : (
-            // For developers only (a released app always has its settings), so not translated.
-            <Text testID="not-configured" className="rounded-lg bg-stone-150 p-3 font-sans text-[13px] leading-5 text-ink-700">
-              {'Not connected: this copy of the app has no Supabase settings yet. Add mobile/app/.env (README, ' +
-                '"Run it locally", step 3) and start the app again.'}
-            </Text>
-          )}
-          <View className="flex-1 justify-center gap-6">{children}</View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 /** The sign-in screens' title: 38 pt, a little smaller on narrow phones. */
 export function AuthTitle({ children }: { children: ReactNode }) {
   const { width } = useWindowDimensions();
-  return <Display size={Math.min(38, Math.floor((width - 32) / 8.6))}>{children}</Display>;
+  return <Display size={Math.min(32, Math.floor((width - 40) / 8.6))}>{children}</Display>;
 }
 
 /** Every error of an attempt in one announcement: on iOS a second one would cut off the first. */
