@@ -15,6 +15,7 @@ import {
 } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
+import { PayoutLine } from './job-parts';
 import { RouteSketch } from './route-sketch';
 
 // The website's default quote: a large van, mover + 1 helper, Prishtina → Prizren.
@@ -89,17 +90,7 @@ export function ExampleRequest() {
             ) : null}
           </View>
 
-          <View className="flex-row items-end justify-between gap-3 border-t border-night-600 pt-3">
-            <View>
-              <Text className="font-sans text-[11.5px] text-sage-400">{t('landing.movers.phone.payout')}</Text>
-              <Display size={30} tone="dark" accent accessibilityRole="text">
-                {money('payout')}
-              </Display>
-            </View>
-            <Text className="text-right font-sans text-[11.5px] leading-[15px] text-sage-400">
-              {t('landing.movers.phone.breakdown', { price: money('moverPrice'), pct })}
-            </Text>
-          </View>
+          <PayoutLine payout={money('payout')} breakdown={t('landing.movers.phone.breakdown', { price: money('moverPrice'), pct })} size={30} />
 
           {/* Large (52 pt), like the job buttons in the design. */}
           <View className="flex-row gap-2.5">

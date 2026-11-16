@@ -1647,7 +1647,9 @@ test.describe('signed in as a mover', () => {
     await expect(first).toContainText(en.landing.movers.phone.district);
     await expect(first).toContainText(j.levels.replace('{{pickup}}', `${st.floorN.replace('{{n}}', '3')} · ${st.liftNo}`).replace('{{dropoff}}', st.ground));
     await expect(first).toContainText('€40');
-    await expect(first).toContainText(en.landing.movers.phone.breakdown.replace('{{price}}', '€50').replace('{{pct}}', '20'));
+    await expect(first.getByTestId('payout-breakdown')).toHaveCount(0);
+    await first.getByTestId('payout-details').click();
+    await expect(first.getByTestId('payout-breakdown')).toHaveText(en.landing.movers.phone.breakdown.replace('{{price}}', '€50').replace('{{pct}}', '20').replace('\n', ' · '));
     await expect(app(page).getByText('Rr. Agim Ramadani', { exact: false })).toHaveCount(0);
     await expect(page.getByTestId('job-requests')).toContainText(j.declineNote);
     await fitScreenToPage(page);

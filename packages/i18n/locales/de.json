@@ -306,6 +306,8 @@
     "lamp": "Lampe"
   },
   "mover": {
+    "payoutDetails": "Details",
+    "payoutHide": "Details ausblenden",
     "sample": { "open": "Dashboard mit Beispieldaten ansehen", "note": "Beispieldaten: Das sieht ein Umzugsunternehmen, sobald Firma, Dokumente, Fahrzeuge und Tarife geprüft sind. Hier lässt sich nichts antippen.", "back": "Zurück zur Einrichtung" },
     "homeTitle": "Willkommen, Partner",
     "homeSubtitle": "Als Nächstes: Firma, Dokumente, Fahrzeuge und deine eigenen Preise hinzufügen.",

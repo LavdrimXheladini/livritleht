@@ -216,7 +216,7 @@ function Accepted({ row }: { row: MoverJobRow }) {
         <Text className="font-sans text-[12px] text-sage-400">{t('landing.quote.dropoff')}</Text>
         <Text className="font-sans-medium text-[14px] text-night-50">{row.dropoff_label ?? '—'}</Text>
       </View>
-      <Payout row={row} />
+      <Payout row={row} toggle={false} />
     </Pressable>
   );
 }

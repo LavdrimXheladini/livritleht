@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, Text, View } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 
 import { Display, Pill, formatClockTime, formatMoveDay } from '@movershub/mobile';
 import { directionsUrl, formatMoney, formatNumber, localDay, resolveLocale, type Locale, type MoverJobRow } from '@movershub/shared';
@@ -49,22 +50,65 @@ export function Work({ row }: { row: MoverJobRow }) {
   );
 }
 
-/** Their payout, large; their own price and the commission beside it (COMPLIANCE §1, §12: "Payout"). */
-export function Payout({ row }: { row: MoverJobRow }) {
+/**
+ * The payout, large — what the mover receives, like the trip requests of ride apps. Their own price
+ * and the commission it comes from are one tap away ("Details"), so both are known before accepting
+ * (COMPLIANCE §1.1; §12: "Payout").
+ */
+export function PayoutLine({
+  payout,
+  breakdown,
+  size = 28,
+  toggle = true,
+}: {
+  payout: string;
+  breakdown: string;
+  size?: number;
+  /** False inside a card that is itself a button: the details then show without a tap. */
+  toggle?: boolean;
+}) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  return (
+    <View className="gap-1 border-t border-night-600 pt-3">
+      <View className="flex-row items-end justify-between gap-3">
+        <View>
+          <Text className="font-sans text-[11.5px] text-sage-400">{t('landing.movers.phone.payout')}</Text>
+          <Display size={size} tone="dark" accent accessibilityRole="text">
+            {payout}
+          </Display>
+        </View>
+        {toggle ? (
+          <Pressable
+            testID="payout-details"
+            accessibilityRole="button"
+            accessibilityState={{ expanded: open }}
+            onPress={() => setOpen(!open)}
+            className="min-h-11 justify-center px-1 active:opacity-60"
+          >
+            <Text className="font-sans-medium text-[13px] text-accent-300 underline">{open ? t('mover.payoutHide') : t('mover.payoutDetails')}</Text>
+          </Pressable>
+        ) : null}
+      </View>
+      {open || !toggle ? (
+        <Text testID="payout-breakdown" className="font-sans text-[12.5px] leading-[18px] text-sage-400">
+          {breakdown.replace('\n', ' · ')}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+/** A job's payout with its details (see PayoutLine). */
+export function Payout({ row, toggle = true }: { row: MoverJobRow; toggle?: boolean }) {
   const { t, i18n } = useTranslation();
   const locale = resolveLocale(i18n.language);
   return (
-    <View className="flex-row items-end justify-between gap-3 border-t border-night-600 pt-3">
-      <View>
-        <Text className="font-sans text-[11.5px] text-sage-400">{t('landing.movers.phone.payout')}</Text>
-        <Display size={28} tone="dark" accent accessibilityRole="text">
-          {formatMoney(row.mover_payout, row.currency, locale)}
-        </Display>
-      </View>
-      <Text className="text-right font-sans text-[11.5px] leading-[15px] text-sage-400">
-        {t('landing.movers.phone.breakdown', { price: formatMoney(row.mover_price, row.currency, locale), pct: row.take_rate_pct })}
-      </Text>
-    </View>
+    <PayoutLine
+      toggle={toggle}
+      payout={formatMoney(row.mover_payout, row.currency, locale)}
+      breakdown={t('landing.movers.phone.breakdown', { price: formatMoney(row.mover_price, row.currency, locale), pct: row.take_rate_pct })}
+    />
   );
 }
 

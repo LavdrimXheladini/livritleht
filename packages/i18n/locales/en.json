@@ -306,6 +306,8 @@
     "lamp": "Lamp"
   },
   "mover": {
+    "payoutDetails": "Details",
+    "payoutHide": "Hide details",
     "sample": { "open": "See the dashboard with sample data", "note": "Sample data: what a mover sees once their company, documents, vans and rates are checked. Nothing here can be tapped.", "back": "Back to the setup" },
     "homeTitle": "Welcome, partner",
     "homeSubtitle": "Next: add your company, documents, vehicles and your own rates.",

@@ -306,6 +306,8 @@
     "lamp": "Lampa"
   },
   "mover": {
+    "payoutDetails": "Detalji",
+    "payoutHide": "Sakrij detalje",
     "sample": { "open": "Pogledajte tablu sa primerom podataka", "note": "Primer podataka: ovo vidi prevoznik kada su firma, dokumenti, vozila i tarife provereni. Ovde ništa ne može da se pritisne.", "back": "Nazad na podešavanje" },
     "homeTitle": "Dobro došli, partneru",
     "homeSubtitle": "Sledeće: dodajte firmu, dokumente, vozila i svoje cene.",

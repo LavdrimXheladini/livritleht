@@ -306,6 +306,8 @@
     "lamp": "Lampa"
   },
   "mover": {
+    "payoutDetails": "Szczegóły",
+    "payoutHide": "Ukryj szczegóły",
     "sample": { "open": "Zobacz panel z przykładowymi danymi", "note": "Przykładowe dane: to widzi przewoźnik po sprawdzeniu firmy, dokumentów, pojazdów i stawek. Niczego tutaj nie można nacisnąć.", "back": "Wróć do konfiguracji" },
     "homeTitle": "Witaj, partnerze",
     "homeSubtitle": "Dalej: dodaj firmę, dokumenty, pojazdy i własne stawki.",

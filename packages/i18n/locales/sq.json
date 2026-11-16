@@ -306,6 +306,8 @@
     "lamp": "Llambë"
   },
   "mover": {
+    "payoutDetails": "Detajet",
+    "payoutHide": "Fshih detajet",
     "sample": { "open": "Shiko panelin me të dhëna shembull", "note": "Të dhëna shembull: çfarë sheh një transportues pasi kompania, dokumentet, furgonët dhe tarifat të jenë kontrolluar. Këtu asgjë nuk mund të shtypet.", "back": "Kthehu te konfigurimi" },
     "homeTitle": "Mirë se vjen, partner",
     "homeSubtitle": "Hapi tjetër: shto kompaninë, dokumentet, automjetet dhe tarifat e tua.",
