@@ -2,6 +2,7 @@ import { useState, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, type TextInputInstance } from 'react-native';
 
+import { LockIcon } from '../components/icons';
 import { Button, TextField } from '../components/ui';
 
 /**
@@ -43,6 +44,7 @@ export function PasswordField({
         ref={fieldRef}
         testID={testID}
         label={label}
+        icon={LockIcon}
         secureTextEntry={!visible}
         autoCapitalize="none"
         autoCorrect={false}

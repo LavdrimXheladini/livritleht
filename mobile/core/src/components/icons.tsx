@@ -163,3 +163,19 @@ export const ArrowUpRightIcon = (p: IconProps) => (
     <Path d="M7 17 17 7M8 7h9v9" />
   </Icon>
 );
+
+/** An email field. */
+export const MailIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <Rect x="3" y="5" width="18" height="14" rx="2" />
+    <Path d="m4 7 8 6 8-6" />
+  </Icon>
+);
+
+/** A password field. */
+export const LockIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <Rect x="5" y="11" width="14" height="10" rx="2" />
+    <Path d="M8 11V8a4 4 0 0 1 8 0v3" />
+  </Icon>
+);

@@ -17,7 +17,7 @@ import { colors, tokens } from '@movershub/ui';
 
 import { useAnnouncement } from '../a11y';
 import { cx } from './cx';
-import { CheckIcon, LogoMark } from './icons';
+import { CheckIcon, LogoMark, type IconProps } from './icons';
 
 // Mobile versions of the web primitives in packages/ui/src/web (same names, variants and tokens),
 // styled with NativeWind classes from packages/ui/tailwind-preset.js — never raw colour values.
@@ -485,7 +485,8 @@ export function SegmentedControl<T extends string>({
 /* ── Text field ───────────────────────────────────────────────────────── */
 
 /**
- * Labelled input. An error turns the border red, shows under the field and is read out when it
+ * Labelled input, pill-shaped (a rounded box when it takes several lines), with an optional icon
+ * at its start. An error turns the border red, shows under the field and is read out when it
  * appears; the input's spoken name carries the label and the error. `ref` lets a form focus it.
  */
 export function TextField({
@@ -494,10 +495,13 @@ export function TextField({
   hint,
   tone = 'light',
   announceError = true,
+  icon: FieldIcon,
   ref,
   ...props
 }: TextInputProps & {
   label: string;
+  /** Shown at the start of the input (e.g. an envelope for an email). */
+  icon?: (p: IconProps) => ReactNode;
   error?: string | undefined;
   /** Help under the input (e.g. password rules), read with its name — on the web too. */
   hint?: string | undefined;
@@ -514,17 +518,26 @@ export function TextField({
       <Text aria-hidden className={cx('font-sans text-[13px]', dark ? 'text-sage-400' : 'text-ink-600')}>
         {label}
       </Text>
-      <TextInput
-        ref={ref}
-        accessibilityLabel={[label, error, hint].filter(Boolean).join(', ')}
-        placeholderTextColor={dark ? colors.sage[500] : colors.ink[500]}
-        className={cx(
-          'min-h-[52px] rounded-input border px-4 font-sans text-base',
-          dark ? 'bg-night-800 text-night-50' : 'bg-stone-150 text-ink-900',
-          error ? (dark ? 'border-danger-on-dark' : 'border-danger') : dark ? 'border-night-600' : 'border-stone-150',
-        )}
-        {...props}
-      />
+      <View className="justify-center">
+        <TextInput
+          ref={ref}
+          accessibilityLabel={[label, error, hint].filter(Boolean).join(', ')}
+          placeholderTextColor={dark ? colors.sage[500] : colors.ink[500]}
+          className={cx(
+            'min-h-[52px] border font-sans text-base',
+            props.multiline ? 'rounded-[22px] py-3' : 'rounded-full',
+            FieldIcon ? 'pl-12 pr-5' : 'px-5',
+            dark ? 'bg-night-800 text-night-50' : 'bg-stone-150 text-ink-900',
+            error ? (dark ? 'border-danger-on-dark' : 'border-danger') : dark ? 'border-night-600' : 'border-stone-150',
+          )}
+          {...props}
+        />
+        {FieldIcon ? (
+          <View pointerEvents="none" className="absolute left-[18px]">
+            <FieldIcon size={19} color={dark ? colors.sage[400] : colors.ink[500]} />
+          </View>
+        ) : null}
+      </View>
       {error ? (
         <Text aria-hidden className={cx('font-sans text-[13px]', dark ? 'text-danger-on-dark' : 'text-danger')}>
           {error}

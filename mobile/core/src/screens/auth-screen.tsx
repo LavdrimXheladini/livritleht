@@ -11,6 +11,7 @@ import { emailSchema, signInPasswordSchema, type SelfSignupRole, type SignupMeta
 
 import { useAnnouncement } from '../a11y';
 import { useAuth } from '../auth-provider';
+import { MailIcon } from '../components/icons';
 import { MovingVanScene } from '../components/illustrations';
 import { LanguageButton } from '../components/language-button';
 import { Button, Display, SegmentedControl, TextField, Wordmark } from '../components/ui';
@@ -168,6 +169,7 @@ export function EmailInput<T extends FieldValues>({
           ref={field.ref}
           testID={testID}
           label={t('auth.emailLabel')}
+          icon={MailIcon}
           placeholder={t('auth.emailPlaceholder')}
           keyboardType="email-address"
           autoComplete="email"
