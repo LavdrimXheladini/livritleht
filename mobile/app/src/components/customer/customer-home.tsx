@@ -42,10 +42,10 @@ type Tab = 'home' | 'moves' | 'account';
  * The customer's home: a deep-green header (greeting, the move under way or the headline), live prices
  * for any route from movers' own rate cards on a card over its edge, their moves, and a floating tab
  * bar — Home, Moves, Account (the way to the mover side, the account's data). `notice`: a one-time
- * message after signing in (e.g. this email already had a customer account). `canSwitch`: false for
- * admins (their role is set by the platform).
+ * message after signing in (e.g. this email already had a customer account). `admin`: no terms to
+ * accept (an admin can look at either side; their role is set by the platform).
  */
-export function CustomerHome({ notice, canSwitch }: { notice: string | null; canSwitch: boolean }) {
+export function CustomerHome({ notice, admin }: { notice: string | null; admin: boolean }) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<Tab>('home');
@@ -81,7 +81,7 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
               ) : null}
               <QuoteCard />
               {/* New terms coming (design/DECISIONS.md #34) — admins have none. */}
-              {canSwitch ? <UpcomingTerms audience="customer" /> : null}
+              {admin ? null : <UpcomingTerms audience="customer" />}
               <DraftMove />
               <MyMoves strip onViewAll={() => setTab('moves')} />
             </>
@@ -91,7 +91,7 @@ export function CustomerHome({ notice, canSwitch }: { notice: string | null; can
               <MyMoves emptyText={t('customer.movesNone')} />
             </>
           ) : (
-            <Account canSwitch={canSwitch} />
+            <Account />
           )}
         </View>
       </ScrollView>
@@ -253,7 +253,7 @@ function DraftMove() {
 }
 
 /** The Account tab: who is signed in, the way to the mover side, and the account's data. */
-function Account({ canSwitch }: { canSwitch: boolean }) {
+function Account() {
   const { t } = useTranslation();
   const { session } = useAuth();
   return (
@@ -263,15 +263,13 @@ function Account({ canSwitch }: { canSwitch: boolean }) {
           {session?.user.email}
         </Text>
       </Card>
-      {canSwitch ? (
-        <Card variant="paper" className="gap-3">
-          <Text accessibilityRole="header" className="font-sans-semibold text-base text-ink-900">
-            {t('customer.switchTitle')}
-          </Text>
-          <Text className="font-sans text-sm leading-5 text-ink-700">{t('customer.switchText')}</Text>
-          <SwitchSideButton to="mover" testID="switch-to-mover" />
-        </Card>
-      ) : null}
+      <Card variant="paper" className="gap-3">
+        <Text accessibilityRole="header" className="font-sans-semibold text-base text-ink-900">
+          {t('customer.switchTitle')}
+        </Text>
+        <Text className="font-sans text-sm leading-5 text-ink-700">{t('customer.switchText')}</Text>
+        <SwitchSideButton to="mover" testID="switch-to-mover" />
+      </Card>
       {/* Download the account's data, or delete it (COMPLIANCE §9). */}
       <Button testID="open-account" variant="outline" title={t('account.open')} onPress={() => router.push('/account')} />
     </>

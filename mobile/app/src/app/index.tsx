@@ -16,6 +16,7 @@ import {
   useAnnouncement,
   useAuth,
   useProfile,
+  useSide,
 } from '@movershub/mobile';
 import { colors } from '@movershub/ui';
 
@@ -100,10 +101,12 @@ function SignedInHome({ role, email, confirmed }: { role: UserRole; email: strin
   });
   useEffect(() => setPendingSignIn(null), []);
   // After a switch the sign-in notice is done, and the side the person is on now is read out.
-  const [firstRole] = useState(role);
+  // The side shown: the role — or, for an admin, the side they chose on this device.
+  const side = useSide().side ?? 'customer';
+  const [firstSide] = useState(side);
   const [switched, setSwitched] = useState(false);
-  if (!switched && role !== firstRole) setSwitched(true);
-  useAnnouncement(switched ? (role === 'mover' ? t('mover.nowHere') : t('customer.nowHere')) : null);
+  if (!switched && side !== firstSide) setSwitched(true);
+  useAnnouncement(switched ? (side === 'mover' ? t('mover.nowHere') : t('customer.nowHere')) : null);
 
   // The terms for this side, once some apply: accepted before anything else (design/DECISIONS.md #34).
   // While the side shown is the device's copy (the server not asked yet, or offline) the home shows
@@ -123,5 +126,5 @@ function SignedInHome({ role, email, confirmed }: { role: UserRole; email: strin
   }
 
   const shown = switched ? null : notice;
-  return role === 'mover' ? <MoverHome notice={shown} /> : <CustomerHome notice={shown} canSwitch={role !== 'admin'} />;
+  return side === 'mover' ? <MoverHome notice={shown} /> : <CustomerHome notice={shown} admin={role === 'admin'} />;
 }

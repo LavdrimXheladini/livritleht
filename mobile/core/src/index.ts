@@ -1,4 +1,5 @@
 export { announce, useAnnouncement } from './a11y';
+export { restoreAdminSide, setAdminSide, useSide } from './admin-side';
 export { classFrom, fetchMoveQuote, fetchQuote, searchPlaces, useMoveQuote, useQuote, type ClassFrom } from './api';
 export { AuthProvider, useAuth } from './auth-provider';
 export { setSignedOutNotice, takeSignedOutNotice } from './signed-out-notice';

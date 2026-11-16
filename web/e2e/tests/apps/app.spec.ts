@@ -1344,6 +1344,29 @@ test("a customer who opens the mover's company form is sent home", async ({ page
 });
 
 test.describe('switching sides', () => {
+  test('an admin looks at either side: the switch is kept on the device and never changes their role', async ({ page }) => {
+    const { chosen } = await signInAs(page, 'admin');
+    await page.goto(url);
+    await page.getByTestId('tab-account').click();
+    await page.getByTestId('switch-to-mover').click();
+    await expect(page.getByText(en.mover.checklistTitle)).toBeVisible();
+    // The mover side stays after a reload, and its screens open.
+    await page.reload();
+    await expect(page.getByText(en.mover.checklistTitle)).toBeVisible();
+    // No company of their own: the dashboard of a set-up mover, with sample data, to look at.
+    await page.getByTestId('sample-dashboard-toggle').click();
+    await expect(page.getByTestId('sample-note')).toHaveText(en.mover.sample.note);
+    await expect(page.getByTestId('sample-dashboard').getByTestId('job-requests')).toBeVisible();
+    await expect(page.getByTestId('step-company')).toHaveCount(0);
+    await page.getByTestId('sample-dashboard-toggle').click();
+    await expect(page.getByTestId('step-company')).toBeVisible();
+    await page.getByTestId('tab-account').click();
+    await page.getByTestId('switch-to-customer').click();
+    await expect(page.getByTestId('home-sign-out')).toBeVisible();
+    // The server was never asked to change the role.
+    expect(chosen).toEqual([]);
+  });
+
   test('a customer switches to the mover side, which starts with the setup, and back', async ({ page }) => {
     const { chosen } = await signInAs(page, 'customer');
     await page.goto(url);
@@ -1355,6 +1378,7 @@ test.describe('switching sides', () => {
     await expect(page.getByText(en.mover.exampleLabel)).toBeVisible();
     await expect(page.locator('#a11y-announcer')).toHaveText(en.mover.nowHere);
 
+    await page.getByTestId('tab-account').click();
     await page.getByTestId('switch-to-customer').click();
     await page.getByTestId('tab-account').click();
     await expect(page.getByTestId('switch-to-mover')).toBeVisible();

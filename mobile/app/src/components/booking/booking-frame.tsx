@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
-import { Button, Display, ProgressBar, Screen, updateBooking, useAuth, useBookingDraft, useProfile } from '@movershub/mobile';
+import { Button, Display, ProgressBar, Screen, updateBooking, useAuth, useBookingDraft, useSide } from '@movershub/mobile';
 import { jobItems, moveDays, stopProblems, type BookingDraft } from '@movershub/shared';
 
 // The customer's booking, one screen per step: where (stops), what (items), when (day, time, crew),
@@ -64,9 +64,9 @@ export function BookingFrame({
   children: (draft: BookingDraft, update: UpdateBooking) => ReactNode;
 }) {
   const { t } = useTranslation();
-  const profile = useProfile();
+  const { side } = useSide();
   const { draft, update } = useBooking();
-  if (profile.data?.role === 'mover' || !draft) return <Redirect href="/" />;
+  if (side === 'mover' || !draft) return <Redirect href="/" />;
   const open = firstOpenStep(draft);
   if (open < step) return <Redirect href={BOOKING_STEPS[open]!} />;
 

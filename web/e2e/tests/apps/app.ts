@@ -59,7 +59,7 @@ export const SAVED_ROLE_KEY = 'movershub.role';
 export const PASSWORD_OWED_KEY = 'movershub.passwordOwed';
 export const STAND_IN_ID = '00000000-0000-4000-8000-0000000e2e01';
 
-type Role = 'customer' | 'mover';
+type Role = 'customer' | 'mover' | 'admin';
 
 /** The password the stand-in account accepts on "Sign in" (once it has one). */
 export const STAND_IN_PASSWORD = 'movers2026';

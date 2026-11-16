@@ -10,6 +10,7 @@ import { AppState, Platform, View } from 'react-native';
 import {
   AuthProvider,
   initI18n,
+  restoreAdminSide,
   restoreBookingDraft,
   restoreLocale,
   restorePasswordOwed,
@@ -52,7 +53,7 @@ function RootStack() {
   // booked — before the first screen shows (no flash of another language, no home before the password).
   const [localeReady, setLocaleReady] = useState(false);
   useEffect(() => {
-    void Promise.all([restoreLocale(), restorePasswordOwed(), restoreBookingDraft()]).finally(() => setLocaleReady(true));
+    void Promise.all([restoreLocale(), restorePasswordOwed(), restoreBookingDraft(), restoreAdminSide()]).finally(() => setLocaleReady(true));
     const timer = setTimeout(() => setWaitedEnough(true), 2000);
     return () => clearTimeout(timer);
   }, []);

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
 import type { SelfSignupRole } from '@movershub/shared';
-import { Button, useAnnouncement, useChooseRole } from '@movershub/mobile';
+import { Button, setAdminSide, useAnnouncement, useChooseRole, useSide } from '@movershub/mobile';
 
 /**
  * Switches the signed-in person to the other side of the app (`public.choose_role`). Nothing is
@@ -13,6 +13,8 @@ import { Button, useAnnouncement, useChooseRole } from '@movershub/mobile';
 export function SwitchSideButton({ to, testID, dark = false }: { to: SelfSignupRole; testID: string; dark?: boolean }) {
   const { t } = useTranslation();
   const choose = useChooseRole();
+  // An admin's role never changes: only the side this device shows does.
+  const { admin } = useSide();
   const failed = choose.isError ? t('common.errorGeneric') : null;
   useAnnouncement(failed, choose.submittedAt);
 
@@ -23,7 +25,7 @@ export function SwitchSideButton({ to, testID, dark = false }: { to: SelfSignupR
         variant={dark ? 'outline-dark' : 'outline'}
         title={to === 'mover' ? t('customer.switchToMover') : t('mover.switchToCustomer')}
         loading={choose.isPending}
-        onPress={() => choose.mutate(to)}
+        onPress={() => (admin ? setAdminSide(to) : choose.mutate(to))}
       />
       {failed ? <Text className={dark ? 'font-sans text-[13px] text-danger-on-dark' : 'font-sans text-[13px] text-danger'}>{failed}</Text> : null}
     </View>

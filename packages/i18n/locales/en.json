@@ -306,6 +306,7 @@
     "lamp": "Lamp"
   },
   "mover": {
+    "sample": { "open": "See the dashboard with sample data", "note": "Sample data: what a mover sees once their company, documents, vans and rates are checked. Nothing here can be tapped.", "back": "Back to the setup" },
     "homeTitle": "Welcome, partner",
     "homeSubtitle": "Next: add your company, documents, vehicles and your own rates.",
     "trackingNotice": "We share your location with the customer only during an active job.",

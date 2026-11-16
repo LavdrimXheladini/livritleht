@@ -28,11 +28,6 @@ export function MoverJobs() {
   // Photos not sent yet go out from here too (e.g. after the app was closed at a stop).
   useJobPhotoQueue();
   const rows = jobs.data ?? [];
-  const accepted = rows.filter((r) => r.offer_status === 'accepted');
-  const inProgress = accepted.filter((r) => UNDER_WAY.includes(r.status));
-  const requests = rows.filter((r) => r.offer_status === 'offered');
-  const upcoming = accepted.filter((r) => r.status === 'ACCEPTED');
-  const recent = accepted.filter((r) => r.ended_at !== null).sort((a, b) => Date.parse(b.ended_at ?? '') - Date.parse(a.ended_at ?? ''));
   if (jobs.isError && !jobs.data) {
     return (
       <View testID="jobs-load-failed" className="gap-2">
@@ -43,6 +38,18 @@ export function MoverJobs() {
       </View>
     );
   }
+  return <MoverJobsList rows={rows} />;
+}
+
+/** The cards themselves: moves under way, requests to answer, accepted moves, recent ones. */
+export function MoverJobsList({ rows }: { rows: readonly MoverJobRow[] }) {
+  const { t } = useTranslation();
+  const { t: tj } = useTranslation('job');
+  const accepted = rows.filter((r) => r.offer_status === 'accepted');
+  const inProgress = accepted.filter((r) => UNDER_WAY.includes(r.status));
+  const requests = rows.filter((r) => r.offer_status === 'offered');
+  const upcoming = accepted.filter((r) => r.status === 'ACCEPTED');
+  const recent = accepted.filter((r) => r.ended_at !== null).sort((a, b) => Date.parse(b.ended_at ?? '') - Date.parse(a.ended_at ?? ''));
   if (rows.length === 0) return null;
   return (
     <View className="gap-5">
