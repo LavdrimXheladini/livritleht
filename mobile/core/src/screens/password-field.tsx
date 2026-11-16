@@ -1,6 +1,6 @@
 import { useState, type Ref } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View, type TextInput } from 'react-native';
+import { View, type TextInputInstance } from 'react-native';
 
 import { Button, TextField } from '../components/ui';
 
@@ -33,7 +33,7 @@ export function PasswordField({
   onSubmitEditing: () => void;
   error: string | undefined;
   announceError?: boolean;
-  fieldRef?: Ref<TextInput>;
+  fieldRef?: Ref<TextInputInstance>;
 }) {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);

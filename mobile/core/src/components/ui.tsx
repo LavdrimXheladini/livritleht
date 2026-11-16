@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   type StyleProp,
+  type TextInputInstance,
   type TextInputProps,
   type TextStyle,
 } from 'react-native';
@@ -503,7 +504,7 @@ export function TextField({
   tone?: Tone;
   /** Off when the form reads all its errors out at once (two announcements cut each other off on iOS). */
   announceError?: boolean;
-  ref?: Ref<TextInput>;
+  ref?: Ref<TextInputInstance>;
 }) {
   const dark = tone === 'dark';
   useAnnouncement(announceError ? error : null);

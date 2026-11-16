@@ -40,10 +40,14 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.104.1",
-    "@types/react": "~19.2.2",
-    "expo": "~57.0.27",
-    "react-native-safe-area-context": "~5.7.0",
-    "react-native-svg": "15.15.4",
+    "@types/react": "~19.3.0",
+    "expo": "~58.0.24",
+    "expo-font": "~58.0.12",
+    "expo-localization": "~58.0.5",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-safe-area-context": "~5.11.1",
+    "react-native-svg": "15.16.0",
     "typescript": "~6.0.3"
   }
 }

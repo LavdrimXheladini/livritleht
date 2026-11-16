@@ -68,7 +68,7 @@ export function VerifyScreen({ sent, onBack }: { sent: PendingSignIn; onBack: ()
             textContentType="oneTimeCode"
             maxLength={6}
             returnKeyType="done"
-            onSubmitEditing={submit}
+            onSubmitEditing={() => void submit()}
             value={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}

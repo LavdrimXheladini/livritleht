@@ -23,7 +23,7 @@ async function handOver(json: string, name: string): Promise<void> {
   }
   const file = new File(Paths.cache, name);
   file.create({ overwrite: true });
-  file.write(json);
+  await file.write(json); // async since SDK 58: share only once the file is written
   await Sharing.shareAsync(file.uri, { mimeType: 'application/json', UTI: 'public.json', dialogTitle: name });
 }
 
