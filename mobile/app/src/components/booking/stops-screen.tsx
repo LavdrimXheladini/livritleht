@@ -6,14 +6,17 @@ import { Text, View } from 'react-native';
 import { Button, Card, ChipGroup, Stepper, TextField, announce } from '@movershub/mobile';
 import { STOP_DETAILS_MAX, stopProblems, type BookingDraft, type BookingStop } from '@movershub/shared';
 
+import type { MapPoint } from '@/lib/pin-map-html';
+
 import { AddressField } from '../customer/address-field';
 import { BookingFrame, type UpdateBooking } from './booking-frame';
+import { PinPlace } from './pin-place';
 
 type Which = 'pickup' | 'dropoff';
 
 /**
- * Step 1: the exact pickup and drop-off — the place on the map (or, where the map knows only the
- * town, how to find it), the floor, and above the ground floor whether there is a lift. Movers see
+ * Step 1: the exact pickup and drop-off — a street from the search or a pin on a map that can be moved
+ * (a stop needs one of the two; the pin also fills in the address the map knows there), the floor, and above the ground floor whether there is a lift. Movers see
  * only the town or neighbourhood until one accepts (COMPLIANCE §9.1); the screen says so.
  */
 export function StopsScreen() {
@@ -81,6 +84,11 @@ function StopCard({
   const { t } = useTranslation();
   const label = stopLabel(t, which);
   const liftError = problems.includes('lift') ? t('booking.stops.liftRequired') : null;
+  // The pin: where the search put this address (the pin stays near it), and whether the map is open.
+  const [searched, setSearched] = useState<MapPoint>({ lat: stop.place.lat, lon: stop.place.lon });
+  const [pinning, setPinning] = useState(false);
+  const pinned = stop.pinned;
+  const placeError = problems.includes('place') ? t('booking.stops.detailsRequired') : null;
   return (
     <Card variant="widget" className="gap-4">
       <AddressField
@@ -89,11 +97,55 @@ function StopCard({
         placeholder={t('landing.quote.addressPlaceholder')}
         value={stop.place}
         near={other.place}
-        onSelect={(place, parts) =>
-          onChange((s) => ({ ...s, place, street: parts.street ?? null, houseNumber: parts.houseNumber ?? null }))
-        }
+        onSelect={(place, parts) => {
+          setSearched({ lat: place.lat, lon: place.lon });
+          onChange((s) => ({ ...s, place, street: parts.street ?? null, houseNumber: parts.houseNumber ?? null, pinned: false }));
+        }}
       />
-      {stop.street === null ? (
+      <View className="gap-1.5">
+        <Button
+          testID={`stop-${which}-pin`}
+          variant="outline"
+          size="md"
+          className="self-start"
+          accessibilityLabel={`${label}: ${t('booking.stops.pinOpen')}`}
+          title={pinned ? t('booking.stops.pinChange') : t('booking.stops.pinOpen')}
+          onPress={() => setPinning(true)}
+        />
+        {placeError ? (
+          <Text testID={`stop-${which}-place-error`} aria-hidden className="font-sans text-[13px] text-danger">
+            {placeError}
+          </Text>
+        ) : null}
+        {pinned ? (
+          <Text testID={`stop-${which}-pinned`} accessibilityLiveRegion="polite" className="font-sans text-[13px] text-ink-700">
+            {t('booking.stops.pinDone')}
+          </Text>
+        ) : null}
+      </View>
+      {pinning ? (
+        <PinPlace
+          place={stop.place}
+          from={searched}
+          onClose={() => setPinning(false)}
+          onUse={({ point, found }) => {
+            setPinning(false);
+            // The address the map knows at the pin replaces the searched one; the point is the pin's.
+            onChange((s) =>
+              found
+                ? {
+                    ...s,
+                    pinned: true,
+                    place: { label: found.label, area: found.area, ...(found.district ? { district: found.district } : {}), lat: point.lat, lon: point.lon, countryCode: found.countryCode },
+                    street: found.street ?? null,
+                    houseNumber: found.houseNumber ?? null,
+                  }
+                : { ...s, pinned: true, place: { ...s.place, lat: point.lat, lon: point.lon } },
+            );
+          }}
+        />
+      ) : null}
+      {stop.street === null && !pinned ? (
         <Text testID={`stop-${which}-only-area`} className="font-sans text-[13px] leading-[19px] text-ink-700">
           {t('booking.stops.onlyArea', { area: stop.place.district ?? stop.place.area })}
         </Text>
@@ -105,8 +157,6 @@ function StopCard({
         value={stop.details}
         onChangeText={(details) => onChange((s) => ({ ...s, details }))}
         maxLength={STOP_DETAILS_MAX}
-        error={problems.includes('place') ? t('booking.stops.detailsRequired') : undefined}
-        announceError={false}
       />
       <View className="flex-row flex-wrap items-center justify-between gap-2">
         <Text className="font-sans text-[13px] text-ink-600">{t('booking.stops.floor')}</Text>

@@ -60,7 +60,7 @@ function MoveRow({ job, locale, card }: { job: JobRow; locale: Locale; card: boo
   const at = new Date(job.scheduled_at);
   const quote = job.quotes[0];
   const route = routeLabel(pickup, dropoff, (city) => t('landing.quote.withinCity', { city }));
-  const when = `${formatMoveDay(localDay(at), locale)}, ${hourText(at.getHours())} · ${t(`vehicles.${job.vehicle_class}.name`)}`;
+  const when = `${formatMoveDay(localDay(at), locale)}, ${hourText(at.getHours(), at.getMinutes())} · ${t(`vehicles.${job.vehicle_class}.name`)}`;
   const mover = [quote?.mover?.name, quote ? formatMoney(quote.mover_price, quote.currency, locale) : null].filter(Boolean).join(' · ');
   const state = moveState(job);
   const status = t(`customer.moves.status.${state}`);

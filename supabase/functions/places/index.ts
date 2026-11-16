@@ -2,23 +2,29 @@
 // /api/geo/search: visitors' IP addresses never reach the geocoder (GDPR) and the provider can
 // change (Google Places later) without an app update.
 //   POST { q, locale, near? } → { suggestions: [{ id, label, area, district?, lat, lon, countryCode }] }
+//   POST { at: { lat, lon }, locale } → { suggestions: [the address at that point] } (the pin on the map; none = [])
 // For the signed-in app only (the website has its own /api/geo/search): no signed-in user → 401.
 // Limited per account (RATE_LIMITS.addressSearch → 429) — Photon is fair-use only. Shared code: run
 // `pnpm functions:build` before serving or deploying.
 
 import { z } from 'zod';
 
-import { LOCALES, photonSearchUrl, photonSuggestions, type PhotonFeature } from '../_shared/movershub/shared/index.ts';
+import { LOCALES, photonReverseUrl, photonReverseSuggestions, photonSearchUrl, photonSuggestions, type PhotonFeature } from '../_shared/movershub/shared/index.ts';
 import { caller, type Caller } from '../_shared/auth.ts';
 import { failure, json, preflight } from '../_shared/http.ts';
 import { rateLimited } from '../_shared/rate-limit.ts';
+
+const pointSchema = z.object({ lat: z.number().min(-90).max(90), lon: z.number().min(-180).max(180) });
+
+/** The address at a point: where the customer put the pin. */
+const reverseSchema = z.object({ at: pointSchema, locale: z.enum(LOCALES) }).strict();
 
 const requestSchema = z
   .object({
     q: z.string().trim().min(3).max(120),
     locale: z.enum(LOCALES),
     /** Bias results towards the other address (pickup ↔ drop-off). */
-    near: z.object({ lat: z.number().min(-90).max(90), lon: z.number().min(-180).max(180) }).optional(),
+    near: pointSchema.optional(),
   })
   .strict();
 
@@ -42,6 +48,17 @@ Deno.serve(async (req) => {
     body = await req.json();
   } catch {
     return json(req, { error: 'invalid_json' }, 400);
+  }
+  const reverse = reverseSchema.safeParse(body);
+  if (reverse.success) {
+    try {
+      const res = await fetch(photonReverseUrl(reverse.data.at, reverse.data.locale), { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(5000) });
+      if (!res.ok) return json(req, { error: 'search_unavailable' }, 502);
+      return json(req, { suggestions: photonReverseSuggestions((await res.json()) as { features?: PhotonFeature[] }) });
+    } catch (e) {
+      console.error('places (reverse) failed', failure(e));
+      return json(req, { error: 'search_unavailable' }, 502);
+    }
   }
   const parsed = requestSchema.safeParse(body);
   if (!parsed.success) return json(req, { error: 'invalid_request' }, 400);

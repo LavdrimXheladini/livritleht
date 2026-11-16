@@ -3,39 +3,24 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
-import {
-  Button,
-  Card,
-  CrewPills,
-  Display,
-  SwapIcon,
-  currentLocale,
-  cx,
-  startBooking,
-  useAnnouncement,
-  useAuth,
-  useQuote,
-  type ClassFrom,
-} from '@movershub/mobile';
-import { VEHICLE_CLASSES, demoPlace, formatNumber, newStop, type CrewSize, type Locale, type Place, type VehicleClass } from '@movershub/shared';
+import { Button, Card, SwapIcon, startBooking, useAnnouncement, useAuth } from '@movershub/mobile';
+import { demoPlace, newStop, type Place, type VehicleClass } from '@movershub/shared';
 import { colors } from '@movershub/ui';
 
 import { AddressField } from './address-field';
-import { offersFor, priceText, type LiveQuote } from './offers';
 import { PopularRoutes } from './popular-routes';
-import { VehicleClasses } from './vehicle-classes';
+import { VehiclePicker } from './vehicle-picker';
 
 /**
- * Phone version of the website's quote widget: pickup + drop-off → per vehicle class the lowest
- * mover's price ("from") and the number of offers, live from movers' own rate cards for a typical
- * load (the `quote` function, design/DECISIONS.md #11). Nothing is priced in the app (COMPLIANCE
- * §1.1). "Book with a mover" starts the booking with these addresses, size and crew.
+ * The home's "where from, where to": pickup, drop-off, the van size by name and one button. No prices
+ * here — a price for a typical load on a guessed route says nothing about the customer's own move;
+ * movers' prices come in the booking, for their things, floors and day ("Choose the van size").
+ * "Book with a mover" starts the booking with these addresses and this size.
  */
 type Parts = { street?: string | undefined; houseNumber?: string | undefined };
 
 export function QuoteCard() {
   const { t } = useTranslation();
-  const locale = currentLocale();
   // Starts on Prishtina → Prizren, like the website.
   const [[pickup, dropoff], setPair] = useState<[Place, Place]>(() => [
     demoPlace('prishtina', t('places.prishtina')),
@@ -43,35 +28,30 @@ export function QuoteCard() {
   ]);
   // The street and house number of each address found by search (the booking needs the exact place).
   const [[pickupParts, dropoffParts], setParts] = useState<[Parts, Parts]>([{}, {}]);
-  const [cls, setCls] = useState<VehicleClass>('LARGE_VAN');
-  const [crew, setCrew] = useState<CrewSize>(2);
+  const [cls, setCls] = useState<VehicleClass>('VAN');
   const { session } = useAuth();
 
-  // One place twice: nothing to quote (the server refuses it too).
+  // One place twice: no move (the server refuses it too).
   const samePlace = pickup.lat === dropoff.lat && pickup.lon === dropoff.lon;
-  const quote = useQuote(samePlace ? null : pickup, samePlace ? null : dropoff);
   useAnnouncement(samePlace ? t('landing.quote.samePlace') : null);
-  const data = quote.data;
-  // The last route's prices stay, dimmed and marked busy, while the new route is priced (like the website).
-  const updating = quote.isPlaceholderData;
-  const offers = data ? offersFor(data, crew, pickup) : null;
-  // The chosen class — or, when no mover offers it on this route for this crew, the first class one does.
-  const shownCls = offers && !offers[cls] ? (VEHICLE_CLASSES.find((k) => offers[k]) ?? cls) : cls;
 
   const setPlaces = (nextPickup: Place, nextDropoff: Place, parts: [Parts, Parts] = [{}, {}]) => {
     setPair([nextPickup, nextDropoff]);
     setParts(parts);
   };
   const book = () => {
-    if (!session) return;
+    if (!session || samePlace) return;
     startBooking(session.user.id, {
       pickup: newStop(pickup, pickupParts),
       dropoff: newStop(dropoff, dropoffParts),
       items: {},
+      otherItems: '',
       day: null,
       hour: null,
-      crew,
-      vehicleClass: shownCls,
+      minute: 0,
+      crew: 2,
+      crewAsked: null,
+      vehicleClass: cls,
       choice: null,
       jobId: null,
       contactPhone: null,
@@ -103,32 +83,8 @@ export function QuoteCard() {
       </View>
       {samePlace ? <Text className="font-sans text-[13px] text-danger">{t('landing.quote.samePlace')}</Text> : null}
       <PopularRoutes pickup={pickup} dropoff={dropoff} onPick={setPlaces} />
-
-      {samePlace ? null : (
-        <View className={cx('gap-4 border-t border-stone-300 pt-4', updating && 'opacity-60')}>
-          {data && offers ? (
-            <>
-              <VehicleClasses offers={offers} selected={shownCls} onSelect={setCls} locale={locale} updating={updating} />
-              <CrewPills
-                value={crew}
-                onChange={setCrew}
-                groupLabel={t('landing.quote.crew')}
-                labels={{ 1: t('landing.quote.crew1'), 2: t('landing.quote.crew2'), 3: t('landing.quote.crew3') }}
-              />
-              <PriceSummary quote={data} offer={offers[shownCls]} locale={locale} updating={updating} />
-              <Button testID="see-movers" title={t('booking.start')} onPress={book} />
-              <Text className="font-sans text-xs leading-[18px] text-ink-500">
-                {t('landing.quote.liveNote')}
-                {data.testMovers ? ` ${t('landing.quote.testNote')}` : null}
-              </Text>
-            </>
-          ) : quote.isError ? (
-            <PricesError retrying={quote.isFetching} onRetry={() => void quote.refetch()} />
-          ) : (
-            <PricesLoading />
-          )}
-        </View>
-      )}
+      <VehiclePicker selected={cls} onSelect={setCls} />
+      <Button testID="see-movers" title={t('booking.start')} disabled={samePlace} onPress={book} />
     </Card>
   );
 }
@@ -146,47 +102,6 @@ function SwapButton({ label, onPress }: { label: string; onPress: () => void }) 
         <SwapIcon size={18} />
       </View>
     </Pressable>
-  );
-}
-
-/** "Local · ≈12 km" and the big "from" price of the selected class and crew. */
-function PriceSummary({
-  quote,
-  offer,
-  locale,
-  updating,
-}: {
-  quote: LiveQuote;
-  offer: ClassFrom | null;
-  locale: Locale;
-  /** The price is still the last route's (a screen reader says "busy"). */
-  updating: boolean;
-}) {
-  const { t } = useTranslation();
-  const price = offer ? priceText(offer, locale) : null;
-  return (
-    <View accessibilityLiveRegion="polite" className="gap-0.5">
-      <Text className="font-sans text-[12.5px] text-ink-600">
-        {t('customer.quoteSummary', {
-          kind: t(`landing.quote.${quote.scope}`),
-          // At least 1 km, like the website (a move inside one street is not "≈0 km").
-          km: formatNumber(Math.max(1, Math.round(quote.distanceKm)), locale),
-        })}
-      </Text>
-      {price ? (
-        <View
-          accessible
-          accessibilityLabel={`${t('landing.quote.from')} ${price}`}
-          accessibilityState={{ busy: updating }}
-          className="flex-row items-baseline gap-1.5"
-        >
-          <Text className="font-sans text-[13px] text-ink-600">{t('landing.quote.from')}</Text>
-          <Display accessibilityRole="text">{price}</Display>
-        </View>
-      ) : (
-        <Text className="font-sans text-[13.5px] leading-5 text-ink-700">{t('customer.noMoversHere')}</Text>
-      )}
-    </View>
   );
 }
 

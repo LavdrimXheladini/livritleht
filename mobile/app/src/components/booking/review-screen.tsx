@@ -88,7 +88,7 @@ function Review({ draft, update }: { draft: BookingDraft; update: UpdateBooking 
           text={t('booking.review.invalidDate')}
           action={t('booking.review.chooseDay')}
           onPress={() => {
-            update((d) => ({ ...d, day: null, hour: null }));
+            update((d) => ({ ...d, day: null, hour: null, minute: 0 }));
             router.replace('/book/when');
           }}
         />
@@ -122,7 +122,7 @@ function useNowUntil(at: number) {
 function CancelWhen({ draft, mover, quote }: { draft: BookingDraft; mover: BookedMover; quote: BookResponse['quote'] }) {
   const { t: tj } = useTranslation('job');
   const locale = currentLocale();
-  const freeUntil = draft.day !== null && draft.hour !== null ? freeCancellationUntil(scheduledAt(draft.day, draft.hour), mover.cancellation.freeHours) : null;
+  const freeUntil = draft.day !== null && draft.hour !== null ? freeCancellationUntil(scheduledAt(draft.day, draft.hour, draft.minute), mover.cancellation.freeHours) : null;
   const now = useNowUntil(freeUntil ? freeUntil.getTime() + 1 : 0);
   if (!freeUntil) return null;
   const { latePct } = mover.cancellation;

@@ -26,7 +26,7 @@ const scheduledAt = (() => {
   return d.toISOString();
 })();
 const move = {
-  pickup: { place: prishtina, street: null, houseNumber: null, floor: 2, hasLift: false, details: 'Block B, entrance 2' },
+  pickup: { place: prishtina, street: null, houseNumber: null, pinned: true, floor: 2, hasLift: false, details: 'Block B, entrance 2' },
   dropoff: { place: prizren, street: 'Rruga Remzi Ademaj', houseNumber: '5', floor: 0, hasLift: null, details: '' },
   items,
   helpers: 2,

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import { ChipGroup } from '@movershub/mobile';
+import { cx } from '@movershub/mobile';
 import { DEMO_DISTRICTS, demoPlaceById, isDemoDistrict, type DemoPlaceId, type Place } from '@movershub/shared';
 
 type Route = { from: DemoPlaceId; to: DemoPlaceId };
@@ -18,8 +19,8 @@ const keyOf = (r: Route) => `${r.from}>${r.to}`;
 const samePoint = (a: Place, b: Place) => a.lat === b.lat && a.lon === b.lon;
 
 /**
- * "Popular routes" (the website's corridor pills): one tap loads both places into the quote. The
- * route currently in the address fields shows as selected.
+ * "Popular routes": one tap loads both places into the quote. Cards of one size in a row that scrolls
+ * sideways; the route currently in the address fields shows as selected.
  */
 export function PopularRoutes({
   pickup,
@@ -45,17 +46,32 @@ export function PopularRoutes({
   });
 
   return (
-    <ChipGroup
-      variant="tile"
-      wrap={false}
-      label={t('landing.pricing.corridors')}
-      accessibilityLabel={t('landing.pricing.corridors')}
-      value={current ? keyOf(current) : ''}
-      onChange={(key) => {
-        const route = ROUTES.find((r) => keyOf(r) === key);
-        if (route) onPick(...places(route));
-      }}
-      options={ROUTES.map((r) => ({ value: keyOf(r), label: label(r) }))}
-    />
+    <View accessibilityRole="radiogroup" accessibilityLabel={t('landing.pricing.corridors')} className="gap-2">
+      <Text className="font-sans text-[13px] text-ink-600">{t('landing.pricing.corridors')}</Text>
+      {/* Cards of one size, the two places one above the other: an even row, whatever the names' lengths. */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerClassName="gap-2">
+        {ROUTES.map((r) => {
+          const on = current !== undefined && keyOf(current) === keyOf(r);
+          return (
+            <Pressable
+              key={keyOf(r)}
+              accessibilityRole="radio"
+              accessibilityLabel={label(r)}
+              accessibilityState={{ selected: on, checked: on }}
+              aria-checked={on}
+              onPress={() => onPick(...places(r))}
+              className={cx('h-[68px] w-[132px] justify-center gap-1 rounded-[18px] border px-3.5', on ? 'border-brand-500 bg-brand-500' : 'border-stone-300 bg-stone-50 active:bg-stone-150')}
+            >
+              <Text numberOfLines={1} className={cx('font-sans-semibold text-[14px]', on ? 'text-stone-50' : 'text-ink-900')}>
+                {t(`places.${r.from}`)}
+              </Text>
+              <Text numberOfLines={1} className={cx('font-sans text-[13px]', on ? 'text-accent-300' : 'text-ink-600')}>
+                {`→ ${t(`places.${r.to}`)}`}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
   );
 }

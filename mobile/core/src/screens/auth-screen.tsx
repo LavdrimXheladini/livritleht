@@ -97,16 +97,16 @@ export function AuthScreen({
 export function AuthFrame({ children }: { children: ReactNode }) {
   const { width } = useWindowDimensions();
   return (
-    <View className="flex-1 bg-brand-500">
-      <StatusBar barStyle="light-content" />
+    <View className="flex-1 bg-sage-550">
+      <StatusBar barStyle="dark-content" />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? undefined : 'padding'} className="flex-1">
         <ScrollView keyboardShouldPersistTaps="handled" automaticallyAdjustKeyboardInsets contentContainerClassName="flex-grow">
-          {/* Deep-green band: wordmark, language and the picture; the form sits on a sheet below it. */}
+          {/* Sage band: wordmark, language and the picture; the form sits on a sheet below it. */}
           <SafeAreaView edges={['top', 'left', 'right']} className="px-4">
             <View className="min-h-14 flex-row items-center">
-              <Wordmark tone="dark" />
+              <Wordmark />
               <View className="ml-auto">
-                <LanguageButton tone="dark" />
+                <LanguageButton />
               </View>
             </View>
             <View className="items-center pt-1">

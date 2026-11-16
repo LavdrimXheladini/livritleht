@@ -153,3 +153,30 @@ export function photonSuggestions(body: { features?: PhotonFeature[] }): GeoSugg
   }
   return [...unique.values()];
 }
+
+/** Photon URL for the address at a point (the pin on the map): the nearest thing the map knows there. */
+export function photonReverseUrl(at: { lat: number; lon: number }, locale: string): string {
+  const params: [string, string][] = [
+    ['lat', at.lat.toFixed(6)],
+    ['lon', at.lon.toFixed(6)],
+    ['limit', '1'],
+  ];
+  if (PHOTON_LANGS.has(locale)) params.push(['lang', locale]);
+  return `https://photon.komoot.io/reverse?${params.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`;
+}
+
+/**
+ * Photon's answer for a point → the address there (none = the map knows nothing near it): street,
+ * number, neighbourhood, town. A street itself (no building at the pin) counts as the street: Photon
+ * then gives its name as `name`.
+ */
+export function photonReverseSuggestions(body: { features?: PhotonFeature[] }): GeoSuggestion[] {
+  const feature = body.features?.[0];
+  if (!feature) return [];
+  const p = feature.properties;
+  // The nearest thing is often a shop or a café: the address is its street, not its name.
+  const { name, ...unnamed } = p;
+  const found = formatPhotonFeature(p.street ? { ...feature, properties: unnamed } : feature);
+  if (!found) return [];
+  return [!found.street && p.type === 'street' && name ? { ...found, street: name } : found];
+}

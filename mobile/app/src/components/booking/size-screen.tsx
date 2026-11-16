@@ -112,7 +112,7 @@ export function MoveSummary({ draft, testIDPrefix = 'size-summary' }: { draft: B
   const things = items.reduce((n, it) => n + it.qty, 0);
   const lines = [
     routeLabel(draft.pickup.place, draft.dropoff.place, (city) => t('landing.quote.withinCity', { city })),
-    draft.day !== null && draft.hour !== null ? `${formatMoveDay(draft.day, locale, { long: true })}, ${hourText(draft.hour)}` : null,
+    draft.day !== null && draft.hour !== null ? `${formatMoveDay(draft.day, locale, { long: true })}, ${hourText(draft.hour, draft.minute)}` : null,
     t(`landing.quote.crew${draft.crew}`),
     t('booking.size.things', { n: formatNumber(things, locale), m3: formatTenths(loadTenthsM3(items), locale) }),
   ].filter((line): line is string => line !== null);

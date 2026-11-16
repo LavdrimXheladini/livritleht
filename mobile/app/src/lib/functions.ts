@@ -24,9 +24,14 @@ export async function callFunction<T>(supabase: SupabaseClient, name: string, bo
   if (!error && data) return { ok: true, data };
   // supabase-js puts the function's own answer in `context` (a Response) when it isn't 2xx.
   const context = (error as { context?: unknown } | null)?.context;
-  if (context instanceof Response) {
+  // By its shape, not `instanceof Response`: on a phone the answer can come from another fetch than the global one.
+  if (isAnswer(context)) {
     const answer = (await context.json().catch(() => ({}))) as Record<string, unknown>;
     return { ok: false, error: typeof answer.error === 'string' ? answer.error : 'unavailable', status: context.status, body: answer };
   }
   return { ok: false, error: 'network', status: 0, body: {} };
+}
+
+function isAnswer(value: unknown): value is { status: number; json: () => Promise<unknown> } {
+  return typeof value === 'object' && value !== null && typeof (value as { status?: unknown }).status === 'number' && typeof (value as { json?: unknown }).json === 'function';
 }

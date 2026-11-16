@@ -61,7 +61,7 @@ export function CustomerHome({ notice, admin }: { notice: string | null; admin: 
 
   return (
     <View className="flex-1 bg-stone-100">
-      {focused ? <StatusBar barStyle="light-content" /> : null}
+      {focused ? <StatusBar barStyle="dark-content" /> : null}
       <ScrollView
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
@@ -102,8 +102,8 @@ export function CustomerHome({ notice, admin }: { notice: string | null; admin: 
 
 const greetingKey = (hour: number) => (hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening');
 
-/** Round button on the green header. */
-const HEADER_BUTTON = 'size-11 items-center justify-center rounded-full bg-brand-400 active:bg-brand-300';
+/** Round button on the sage header. */
+const HEADER_BUTTON = 'size-11 items-center justify-center rounded-full bg-sage-300 active:bg-stone-50';
 
 function Header({ tab }: { tab: Tab }) {
   const { t } = useTranslation();
@@ -118,18 +118,18 @@ function Header({ tab }: { tab: Tab }) {
   const heroSize = Math.min(34, Math.floor((width - 32) / 9.3));
 
   return (
-    <View className={cx('rounded-b-[28px] bg-brand-500 px-4', tab === 'home' ? 'pb-14' : 'pb-6')} style={{ paddingTop: insets.top + 8 }}>
+    <View className={cx('rounded-b-[28px] bg-sage-550 px-4', tab === 'home' ? 'pb-14' : 'pb-6')} style={{ paddingTop: insets.top + 8 }}>
       <View className="min-h-12 flex-row items-center gap-3">
-        <View aria-hidden className="size-11 items-center justify-center rounded-full bg-accent-500">
-          <Text className="font-sans-semibold text-lg text-ink-900">{name.charAt(0).toUpperCase()}</Text>
+        <View aria-hidden className="size-11 items-center justify-center rounded-full bg-brand-500">
+          <Text className="font-sans-semibold text-lg text-stone-50">{name.charAt(0).toUpperCase()}</Text>
         </View>
         <View className="flex-1">
-          <Text className="font-sans text-[13px] text-sage-400">{t(`customer.greeting.${greetingKey(new Date().getHours())}`)}</Text>
-          <Text className="font-sans-semibold text-base text-night-50" numberOfLines={1}>
+          <Text className="font-sans text-[13px] text-ink-700">{t(`customer.greeting.${greetingKey(new Date().getHours())}`)}</Text>
+          <Text className="font-sans-semibold text-base text-ink-900" numberOfLines={1}>
             {name}
           </Text>
         </View>
-        <LanguageButton tone="dark" />
+        <LanguageButton />
         <Pressable
           testID="home-sign-out"
           accessibilityRole="button"
@@ -139,22 +139,22 @@ function Header({ tab }: { tab: Tab }) {
           onPress={() => void signOut()}
           className={cx(HEADER_BUTTON, signingOut && 'opacity-60')}
         >
-          <SignOutIcon size={20} color={colors.night[50]} />
+          <SignOutIcon size={20} color={colors.ink[900]} />
         </Pressable>
       </View>
 
       {tab !== 'home' ? (
-        <Display size={28} tone="dark" className="mt-5">
+        <Display size={28} className="mt-5">
           {tab === 'moves' ? t('customer.moves.title') : t('account.open')}
         </Display>
       ) : current ? (
         <CurrentMove job={current} />
       ) : (
         <View className="mt-5 gap-2">
-          <Display size={heroSize} tone="dark">
+          <Display size={heroSize}>
             {t('landing.hero.title')}
           </Display>
-          <Text className="font-sans text-[15px] leading-[22px] text-sage-400">{t('landing.hero.subtitle')}</Text>
+          <Text className="font-sans text-[15px] leading-[22px] text-ink-700">{t('landing.hero.subtitle')}</Text>
         </View>
       )}
     </View>
@@ -179,30 +179,30 @@ function CurrentMove({ job }: { job: JobRow }) {
   const state = moveState(job);
   const stage = stageOf(state) ?? 0;
   const status = t(`customer.moves.status.${state}`);
-  const when = `${formatMoveDay(localDay(at), locale)}, ${hourText(at.getHours())}`;
+  const when = `${formatMoveDay(localDay(at), locale)}, ${hourText(at.getHours(), at.getMinutes())}`;
   return (
     <View testID="header-move" className="mt-5 gap-3">
       <View className="flex-row items-center gap-3">
         <View className="flex-1 gap-1.5">
           <View className="flex-row flex-wrap items-center gap-2">
-            <Text className="font-sans text-[13px] text-sage-400">{t('customer.currentMove')}</Text>
-            <Pill size="sm" tone="accent">
+            <Text className="font-sans text-[13px] text-ink-700">{t('customer.currentMove')}</Text>
+            <Pill size="sm" tone="brand">
               {status}
             </Pill>
           </View>
-          <Display size={26} tone="dark">
+          <Display size={26}>
             {route}
           </Display>
-          <Text className="font-sans text-[13px] text-sage-400">{when}</Text>
+          <Text className="font-sans text-[13px] text-ink-700">{when}</Text>
         </View>
         <Pressable
           testID="header-move-open"
           accessibilityRole="button"
           accessibilityLabel={`${t('customer.openMove')}: ${route}, ${status}`}
           onPress={() => router.push({ pathname: '/moves/[id]', params: { id: job.id } })}
-          className="size-12 items-center justify-center rounded-full bg-night-50 active:opacity-80"
+          className="size-12 items-center justify-center rounded-full bg-brand-500 active:opacity-80"
         >
-          <ArrowUpRightIcon size={22} color={colors.ink[900]} />
+          <ArrowUpRightIcon size={22} color={colors.stone[50]} />
         </Pressable>
       </View>
       {/* Decorative: the status pill above says the same in words. */}
@@ -212,13 +212,13 @@ function CurrentMove({ job }: { job: JobRow }) {
             <View
               className={cx(
                 'size-7 items-center justify-center rounded-full',
-                i < stage ? 'bg-night-50' : i === stage ? 'bg-accent-500' : 'border border-brand-300',
+                i < stage ? 'bg-brand-500' : i === stage ? 'bg-accent-500' : 'border border-brand-400',
               )}
             >
-              {i < stage ? <CheckIcon size={14} strokeWidth={2.5} color={colors.brand[500]} /> : null}
+              {i < stage ? <CheckIcon size={14} strokeWidth={2.5} color={colors.stone[50]} /> : null}
               {i === stage ? <VanIcon size={15} color={colors.ink[900]} /> : null}
             </View>
-            {i < 3 ? <View className={cx('mx-1.5 h-0.5 flex-1 rounded-full', i < stage ? 'bg-night-50' : 'bg-brand-300')} /> : null}
+            {i < 3 ? <View className={cx('mx-1.5 h-0.5 flex-1 rounded-full', i < stage ? 'bg-brand-500' : 'bg-brand-300')} /> : null}
           </View>
         ))}
       </View>
@@ -287,7 +287,7 @@ function TabBar({ tab, onChange }: { tab: Tab; onChange: (tab: Tab) => void }) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   return (
-    <View pointerEvents="box-none" className="absolute inset-x-0 items-center" style={{ bottom: insets.bottom + 16 }}>
+    <View pointerEvents="box-none" className="absolute inset-x-0 items-center" style={{ bottom: Math.max(insets.bottom - 14, 8) }}>
       <View
         accessibilityRole="tablist"
         accessibilityLabel={t('customer.tabs.label')}

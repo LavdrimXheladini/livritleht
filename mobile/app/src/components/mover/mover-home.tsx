@@ -180,7 +180,7 @@ function TabBar({ tab, onChange }: { tab: Tab; onChange: (tab: Tab) => void }) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   return (
-    <View pointerEvents="box-none" className="absolute inset-x-0 items-center" style={{ bottom: insets.bottom + 16 }}>
+    <View pointerEvents="box-none" className="absolute inset-x-0 items-center" style={{ bottom: Math.max(insets.bottom - 14, 8) }}>
       <View
         accessibilityRole="tablist"
         accessibilityLabel={t('customer.tabs.label')}

@@ -11,27 +11,16 @@ import { jobItemSchema, type JobItem, type QuoteRequest } from './pricing';
 // exact stops, what to move, when, how many people and the van size. It stays on the customer's
 // device until they choose a mover. Prices still come only from the server's quote (COMPLIANCE §1.1).
 
-/** The item picker's sections, in the order shown. Every catalogue item is in exactly one. */
+/** The item picker's categories, in the order shown. Every catalogue item is in exactly one. */
 export const ITEM_GROUPS = {
-  furniture: [
-    'sofa2',
-    'sofa3',
-    'cornerSofa',
-    'armchair',
-    'chair',
-    'bedSingle',
-    'bedDouble',
-    'mattressSingle',
-    'mattressDouble',
-    'wardrobe',
-    'chestOfDrawers',
-    'bookshelf',
-    'desk',
-    'diningTable',
-  ],
+  seating: ['sofa2', 'sofa3', 'cornerSofa', 'armchair', 'chair'],
+  beds: ['bedSingle', 'bedDouble', 'mattressSingle', 'mattressDouble'],
+  storage: ['wardrobe', 'chestOfDrawers', 'bookshelf', 'desk', 'diningTable'],
   appliances: ['fridge', 'washingMachine', 'dishwasher', 'cooker', 'tv'],
   other: ['box', 'suitcase', 'bicycle', 'mirror', 'plant', 'lamp'],
 } as const satisfies Record<string, readonly ItemKey[]>;
+/** Things that are in no category, in the customer's words: at most this many characters. */
+export const OTHER_ITEMS_MAX = 500;
 export type ItemGroup = keyof typeof ITEM_GROUPS;
 
 /** Most of one item a customer can list (the quote accepts more; nobody moves 100 fridges). */
@@ -56,8 +45,6 @@ export function fittingClass(tenths: number): VehicleClass {
 /** True when `cls` is a smaller class than `than`. */
 export const smallerClass = (cls: VehicleClass, than: VehicleClass) => VEHICLE_CLASSES.indexOf(cls) < VEHICLE_CLASSES.indexOf(than);
 
-/** How much the customer writes about a stop when the map found only a town or a neighbourhood. */
-export const STOP_DETAILS_MIN = 5;
 export const STOP_DETAILS_MAX = 300;
 
 export const bookingStopSchema = z.object({
@@ -65,6 +52,8 @@ export const bookingStopSchema = z.object({
   /** The street the map search found; null = it found only a town or a neighbourhood. */
   street: z.string().trim().min(1).max(200).nullable(),
   houseNumber: z.string().trim().min(1).max(20).nullable(),
+  /** The customer put the pin on the exact spot on the map (false in moves saved before the pin existed). */
+  pinned: z.boolean().default(false),
   /** 0 = ground floor. */
   floor: z.number().int().min(0).max(60),
   /** Asked above the ground floor only; null = not answered yet. */
@@ -76,16 +65,16 @@ export type BookingStop = z.infer<typeof bookingStopSchema>;
 
 /** A stop at a place from the map search, on the ground floor. */
 export function newStop(place: Place, parts: { street?: string | undefined; houseNumber?: string | undefined } = {}): BookingStop {
-  return { place, street: parts.street ?? null, houseNumber: parts.houseNumber ?? null, floor: 0, hasLift: null, details: '' };
+  return { place, street: parts.street ?? null, houseNumber: parts.houseNumber ?? null, pinned: false, floor: 0, hasLift: null, details: '' };
 }
 
 /**
- * What a stop still needs: `place` — the map found only a town or a neighbourhood and the details
- * don't say where; `lift` — above the ground floor, whether there is a lift.
+ * What a stop still needs: `place` — the search found only a town or a neighbourhood and the spot is
+ * not pinned on the map (words alone never say where: a street or a pin); `lift` — above the ground floor, whether there is a lift.
  */
 export function stopProblems(stop: BookingStop): ('place' | 'lift')[] {
   const problems: ('place' | 'lift')[] = [];
-  if (stop.street === null && stop.details.trim().length < STOP_DETAILS_MIN) problems.push('place');
+  if (stop.street === null && !stop.pinned) problems.push('place');
   if (stop.floor > 0 && stop.hasLift === null) problems.push('lift');
   return problems;
 }
@@ -111,6 +100,11 @@ export function jobItems(items: BookingItems): JobItem[] {
 export const BOOKING_DAYS_AHEAD = 60;
 /** Start times offered, in local hours. */
 export const MOVE_START_HOURS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18] as const;
+/** The minutes offered with them: quarter hours. */
+export const MOVE_START_MINUTES = [0, 15, 30, 45] as const;
+export type MoveStartMinute = (typeof MOVE_START_MINUTES)[number];
+/** The arrival time the picker opens on. */
+export const DEFAULT_START_HOUR = 9;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -123,12 +117,12 @@ export function moveDays(today: Date, count = BOOKING_DAYS_AHEAD): string[] {
 }
 
 /**
- * A day and start hour on the device's clock, as an ISO 8601 time for the server (UTC). Every
+ * A day and start time on the device's clock, as an ISO 8601 time for the server (UTC). Every
  * MoversHub market is on Central European Time, so the device's time is the move's.
  */
-export function scheduledAt(day: string, hour: number): string {
+export function scheduledAt(day: string, hour: number, minute = 0): string {
   const [y, m, d] = day.split('-').map(Number) as [number, number, number];
-  return new Date(y, m - 1, d, hour).toISOString();
+  return new Date(y, m - 1, d, hour, minute).toISOString();
 }
 
 /**
@@ -142,10 +136,16 @@ export const bookingDraftSchema = z.object({
   pickup: bookingStopSchema,
   dropoff: bookingStopSchema,
   items: bookingItemsSchema,
+  /** Things not in the catalogue, as typed (kept on the device for now: not priced, not sent yet). */
+  otherItems: z.string().max(OTHER_ITEMS_MAX).default(''),
   /** Local date (YYYY-MM-DD) and start hour; null = not chosen yet. */
   day: z.iso.date().nullable(),
   hour: z.number().int().min(0).max(23).nullable(),
+  /** Minutes past the hour (0 in moves saved before minutes existed). */
+  minute: z.union([z.literal(0), z.literal(15), z.literal(30), z.literal(45)]).default(0),
   crew: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  /** More people than movers can price yet (4+), as asked under "Custom"; kept on the device for now, prices are for `crew`. */
+  crewAsked: z.number().int().min(4).max(99).nullable().default(null),
   vehicleClass: z.enum(VEHICLE_CLASSES),
   /** Null until a mover is chosen (also in moves saved before choosing existed). */
   choice: bookingChoiceSchema.nullable().default(null),
@@ -193,7 +193,7 @@ export function moveQuoteRequest(draft: BookingDraft): QuoteRequest {
     dropoffStop: stop(draft.dropoff),
     helpers: draft.crew,
     items: jobItems(draft.items),
-    ...(draft.day !== null && draft.hour !== null ? { scheduledAt: scheduledAt(draft.day, draft.hour) } : {}),
+    ...(draft.day !== null && draft.hour !== null ? { scheduledAt: scheduledAt(draft.day, draft.hour, draft.minute) } : {}),
   };
 }
 
@@ -375,7 +375,7 @@ export function bookRequestFromDraft(draft: BookingDraft): BookRequest | null {
     dropoff: draft.dropoff,
     items: jobItems(draft.items),
     helpers: draft.crew,
-    scheduledAt: scheduledAt(draft.day, draft.hour),
+    scheduledAt: scheduledAt(draft.day, draft.hour, draft.minute),
     vehicleClass: draft.vehicleClass,
     vehicleId: draft.choice.vehicleId,
   };

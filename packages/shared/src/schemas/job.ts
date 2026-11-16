@@ -210,6 +210,8 @@ function stopFromRow(job: JobRow, prefix: 'pickup' | 'dropoff'): BookingStop {
       countryCode: job[`${prefix}_country`],
     },
     street: job[`${prefix}_street`],
+    // A saved request without a street was pinned (or, before the pin existed, described): it stays valid.
+    pinned: job[`${prefix}_street`] === null,
     houseNumber: job[`${prefix}_house_number`],
     floor,
     hasLift: floor > 0 ? job[`${prefix}_has_lift`] : null,

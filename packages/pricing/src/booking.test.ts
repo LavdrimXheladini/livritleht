@@ -51,12 +51,15 @@ function deps(over: Partial<BookingDeps> = {}): BookingDeps {
 }
 
 const draft: BookingDraft = {
-  pickup: { ...newStop(prishtina), details: 'Block B, entrance 2', floor: 3, hasLift: false },
+  pickup: { ...newStop(prishtina), pinned: true, details: 'Block B, entrance 2', floor: 3, hasLift: false },
   dropoff: newStop(prizren, { street: 'Rruga Remzi Ademaj', houseNumber: '5' }),
   items: { sofa3: { qty: 1, assembly: false }, wardrobe: { qty: 1, assembly: true } },
   day: '2026-10-16',
   hour: 9,
+  minute: 0,
+  otherItems: '',
   crew: 2,
+  crewAsked: null,
   vehicleClass: 'VAN',
   choice: { vehicleId: VAN_A, companyId: `c-${VAN_A}` },
   jobId: null,

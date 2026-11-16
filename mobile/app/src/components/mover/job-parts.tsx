@@ -13,7 +13,7 @@ import { ExternalLink } from '../external-link';
 /** "Tuesday 20 October, 10:00". */
 export function when(row: MoverJobRow, locale: Locale) {
   const at = new Date(row.scheduled_at);
-  return `${formatMoveDay(localDay(at), locale, { long: true })}, ${hourText(at.getHours())}`;
+  return `${formatMoveDay(localDay(at), locale, { long: true })}, ${hourText(at.getHours(), at.getMinutes())}`;
 }
 
 /** A moment as the texts' {{date}} and {{time}} ("Tue 20 Oct", "08:47"). */

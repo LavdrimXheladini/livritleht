@@ -128,8 +128,8 @@ export function Wordmark({ tone = 'light', partner }: { tone?: Tone; partner?: s
 export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'outline-dark' | 'link' | 'link-dark' | 'danger';
 
 const BUTTON: Record<ButtonVariant, { box: string; text: string; spinner: string }> = {
-  /** Deep-green pill — the main action. */
-  primary: { box: 'bg-brand-500 active:bg-brand-600', text: 'font-sans-medium text-stone-50', spinner: colors.stone[50] },
+  /** Copper pill with ink text — the main action. The bright colours lead; deep green is for what is selected. */
+  primary: { box: 'bg-accent-500 active:bg-accent-300', text: 'font-sans-semibold text-ink-900', spinner: colors.ink[900] },
   secondary: { box: 'bg-stone-300 active:bg-stone-400', text: 'font-sans-medium text-ink-900', spinner: colors.ink[900] },
   /** Copper — live actions ("Accept job", "Share live link"). */
   accent: { box: 'bg-accent-500 active:bg-accent-300', text: 'font-sans-semibold text-ink-900', spinner: colors.ink[900] },

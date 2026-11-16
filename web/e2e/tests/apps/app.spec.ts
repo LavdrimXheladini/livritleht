@@ -514,12 +514,13 @@ test.describe('signed in as a customer', () => {
   /** "€152.80", "€162" — like formatMoney in English. */
   const euros = (cents: number) => `€${cents % 100 ? (cents / 100).toFixed(2) : cents / 100}`;
 
-  test('home: quote card with the movers’ prices, to the cent', async ({ page }) => {
-    // Each class shows its cheapest mover's own price, exactly (COMPLIANCE §13).
-    for (const { vehicleClass, offers } of savedQuote.classes) {
-      const prices = offers.filter((o) => o.quote.currency === 'EUR').map((o) => o.quote.moverPrice);
-      if (prices.length) await expect(page.getByTestId(`class-${vehicleClass}`)).toContainText(euros(Math.min(...prices)));
+  test('home: where from, where to and the van sizes by name — no prices before the move is known', async ({ page }) => {
+    // Each size is a drawing and its name; movers' prices come in the booking, for the customer's own move.
+    for (const { vehicleClass } of savedQuote.classes) {
+      await expect(page.getByTestId(`class-${vehicleClass}`)).toHaveText(en.vehicles[vehicleClass as keyof typeof en.vehicles].name);
     }
+    await expect(page.getByTestId('see-movers')).toBeVisible();
+    await expect(page.locator('body')).not.toContainText('€');
     await expect(page.getByTestId('home-notice')).toHaveCount(0);
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('customer-home.png');
@@ -568,6 +569,7 @@ test.describe('booking a move', () => {
         place: { label: 'Prishtina', area: 'Prishtina', lat: 42.6629, lon: 21.1655, countryCode: 'XK' },
         street: null,
         houseNumber: null,
+        pinned: true,
         floor: 2,
         hasLift: true,
         details: 'Block B, entrance 2',
@@ -605,10 +607,15 @@ test.describe('booking a move', () => {
     await page.route('**/functions/v1/places', (route) =>
       route.request().method() === 'OPTIONS'
         ? route.fulfill({ status: 204, headers: cors })
-        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ suggestions: [street] }) }),
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ suggestions: found(route.request().postDataJSON() as { at?: { lat: number } }) }) }),
     );
     await page.goto(url);
   });
+
+  /** A street in Prishtina, as the map knows it at a pin there. */
+  const pinnedStreet = { id: 'osm:w7', label: 'Rruga Agim Ramadani 12, Prishtina', area: 'Prishtina', lat: 42.6631, lon: 21.1655, countryCode: 'XK', street: 'Rruga Agim Ramadani', houseNumber: '12' };
+  /** The `places` answer: a search finds the Prizren street; a pin (`at`) finds the address there — none far north. */
+  const found = (body: { at?: { lat: number } }) => (!body.at ? [street] : body.at.lat > 42.69 ? [] : body.at.lat > 42.5 ? [pinnedStreet] : [street]);
 
   /** The `book` function's answer for the saved quote's cheapest van mover (Test Transport Prizren), valid until 10:15. */
   const bookAnswer = (changes: Record<string, unknown> = {}) => {
@@ -734,7 +741,15 @@ test.describe('booking a move', () => {
     await expect(page.getByTestId('stop-pickup-only-area')).toBeVisible();
     await page.getByTestId('stops-next').click();
     await expect(app(page).getByText(b.stops.detailsRequired)).toHaveCount(2);
+    // Words alone are not a place: a street from the search, or the pin on the map.
     await page.getByTestId('stop-pickup-details').fill('Block B, entrance 2, flat 14');
+    await expect(app(page).getByText(b.stops.detailsRequired)).toHaveCount(2);
+    // The pin fills in the address the map knows there.
+    await page.getByTestId('stop-pickup-pin').click();
+    await page.getByTestId('pin-use').click();
+    await expect(page.getByTestId('stop-pickup-pinned')).toHaveText(b.stops.pinDone);
+    await expect(page.getByTestId('stop-pickup-only-area')).toHaveCount(0);
+    await expect(page.getByTestId('stop-pickup')).toHaveValue(pinnedStreet.label);
     await page.getByTestId('stop-dropoff').fill('Rruga Remzi');
     await page.getByRole('button', { name: street.label }).click();
     await expect(page.getByTestId('stop-dropoff-only-area')).toHaveCount(0);
@@ -745,6 +760,18 @@ test.describe('booking a move', () => {
     await page.getByTestId('stops-next').click();
     await expect(app(page).getByText(b.stops.liftRequired)).toBeVisible();
     await page.getByTestId('stop-pickup-lift-no').click();
+    // The exact place, pinned on a map that can be moved.
+    await page.getByTestId('stop-dropoff-pin').click();
+    const map = await (await page.getByTestId('pin-map').elementHandle())!.contentFrame();
+    const moveTo = (lat: number, lon: number) => map!.evaluate((message) => window.parent.postMessage(message, '*'), JSON.stringify({ lat, lon }));
+    // Far from the address, where the map knows none: not taken.
+    await moveTo(street.lat + 0.5, street.lon);
+    await page.getByTestId('pin-use').click();
+    await expect(page.getByTestId('pin-note')).toHaveText(b.stops.pinTooFar);
+    await moveTo(street.lat + 0.0005, street.lon);
+    await expect(page.getByTestId('pin-note')).toHaveText(b.stops.pinHint);
+    await page.getByTestId('pin-use').click();
+    await expect(page.getByTestId('stop-dropoff-pinned')).toHaveText(b.stops.pinDone);
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('booking-stops.png');
     await page.getByTestId('stops-next').click();
@@ -754,12 +781,18 @@ test.describe('booking a move', () => {
     await page.getByTestId('items-next').click();
     await expect(page.getByTestId('items-none')).toBeVisible();
     await page.getByTestId('item-sofa3-more').click();
+    // The categories open one at a time; each says how many things are chosen in it.
+    await page.getByTestId('items-group-storage').click();
+    await expect(page.getByTestId('item-sofa3-more')).toHaveCount(0);
+    await expect(page.getByTestId('items-group-seating-count')).toHaveText('1');
     await page.getByTestId('item-wardrobe-more').click();
     await page.getByTestId('item-wardrobe-assembly').click();
+    await page.getByTestId('items-group-other').click();
     for (let i = 0; i < 10; i++) await page.getByTestId('item-box-more').click();
     await expect(page.getByTestId('item-box-value')).toHaveText('10');
     await expect(page.getByTestId('items-load')).toHaveText(b.items.load.replace('{{m3}}', '4.3'));
     await expect(page.getByTestId('items-fits')).toHaveText(b.items.fits.replace('{{vehicle}}', en.vehicles.VAN.name));
+    await page.getByTestId('items-other').fill('A garden table');
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('booking-items.png');
     await page.getByTestId('items-next').click();
@@ -770,7 +803,21 @@ test.describe('booking a move', () => {
     // The first day offered is tomorrow.
     await expect(page.locator('[data-testid^="when-day-"]').first()).toHaveAttribute('data-testid', 'when-day-2026-10-16');
     await page.getByTestId('when-day-2026-10-16').click();
-    await page.getByTestId('when-hour-9').click();
+    // The time is set by hand: 09:00 to start with, here 10:30.
+    await expect(page.getByTestId('when-hour-value')).toHaveText('09');
+    await page.getByTestId('when-hour-up').click();
+    await page.getByTestId('when-minute-up').click();
+    await page.getByTestId('when-minute-up').click();
+    await expect(page.getByTestId('when-minute-value')).toHaveText('30');
+    await page.getByTestId('when-hour-down').click();
+    await page.getByTestId('when-minute-down').click();
+    await page.getByTestId('when-minute-down').click();
+    // A number typed by hand is for more people than the buttons offer; movers have no prices for those yet.
+    await page.getByTestId('when-crew-custom').click();
+    await page.getByTestId('when-crew-number').fill('2');
+    await expect(app(page).getByText(b.when.crewCustomError)).toBeVisible();
+    await page.getByTestId('when-crew-number').fill('5');
+    await expect(app(page).getByText(b.when.crewCustomSoon)).toBeVisible();
     await page.getByRole('radio', { name: en.landing.quote.crew3 }).click();
     await fitScreenToPage(page);
     await expect(page).toHaveScreenshot('booking-when.png');
@@ -782,7 +829,7 @@ test.describe('booking a move', () => {
     await expect(page.getByTestId('size-class-VAN')).toContainText(euros(fromPrice('VAN', 3)));
     expect(sent.at(-1)).toEqual({
       pickup: expect.objectContaining({ countryCode: 'XK' }),
-      dropoff: { label: street.label, area: 'Prizren', lat: street.lat, lon: street.lon, countryCode: 'XK' },
+      dropoff: { label: street.label, area: 'Prizren', lat: expect.closeTo(street.lat + 0.0005, 6), lon: street.lon, countryCode: 'XK' },
       pickupStop: { floor: 3, hasLift: false },
       dropoffStop: { floor: 0, hasLift: false },
       helpers: 3,
@@ -1116,9 +1163,16 @@ test.describe('booking a move', () => {
     await page.getByTestId('see-movers').click();
     await page.getByTestId('stop-pickup-details').fill('Block B, entrance 2');
     await page.getByTestId('stop-dropoff-details').fill('Behind the school');
+    for (const which of ['pickup', 'dropoff']) {
+      await page.getByTestId(`stop-${which}-pin`).click();
+      await page.getByTestId('pin-use').click();
+      await expect(page.getByTestId(`stop-${which}-pinned`)).toBeVisible();
+    }
     await page.getByTestId('stops-next').click();
+    await page.getByTestId('items-group-other').click();
     await page.getByTestId('item-box-more').click();
     await page.reload();
+    await page.getByTestId('items-group-other').click();
     await expect(page.getByTestId('item-box-value')).toHaveText('1');
     expect(await stored(page, 'movershub.booking')).toContain('Behind the school');
     // Back after a reload (no history): the step before.

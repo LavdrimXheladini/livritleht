@@ -77,7 +77,8 @@ Deno.serve(async (req) => {
     // The side the person is on: customers book, cancel and confirm; movers answer offers and take the steps.
     const [profile] = await serviceRows<{ role: string | null }>('GET', `profiles?id=eq.${who.userId}&select=role`);
     const asCustomer = isCustomerAction(step.action);
-    if (asCustomer && profile?.role !== 'customer') return json(req, { error: 'customers_only' }, 403);
+    // An admin looks at the customer side with their own account (as in `book`): their own moves only, like anyone's.
+    if (asCustomer && profile?.role !== 'customer' && profile?.role !== 'admin') return json(req, { error: 'customers_only' }, 403);
     if (!asCustomer && profile?.role !== 'mover') return json(req, { error: 'movers_only' }, 403);
 
     switch (step.action) {

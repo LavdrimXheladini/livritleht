@@ -33,10 +33,13 @@ const prizren = demoPlace('prizren', 'Prizren');
 
 const draft: BookingDraft = {
   pickup: { ...newStop(prishtina, { street: 'Rruga Agim Ramadani', houseNumber: '12' }), floor: 3, hasLift: false },
-  dropoff: { ...newStop(prizren), details: 'Behind the school, blue gate' },
+  dropoff: { ...newStop(prizren), pinned: true, details: 'Behind the school, blue gate' },
   items: { sofa3: { qty: 1, assembly: true }, box: { qty: 10, assembly: false }, wardrobe: { qty: 1, assembly: true } },
   day: '2026-10-20',
   hour: 9,
+  minute: 0,
+  otherItems: '',
+  crewAsked: null,
   crew: 2,
   vehicleClass: 'VAN',
   choice: null,
@@ -73,10 +76,10 @@ describe('fitting class', () => {
 });
 
 describe('stops', () => {
-  it('need the street from the map, or details that say where', () => {
+  it('need the street from the search, or the pin on the map — words alone are not a place', () => {
     expect(stopProblems(newStop(prishtina))).toEqual(['place']);
-    expect(stopProblems({ ...newStop(prishtina), details: 'Blue house next to the mosque' })).toEqual([]);
-    expect(stopProblems({ ...newStop(prishtina), details: '  ab ' })).toEqual(['place']);
+    expect(stopProblems({ ...newStop(prishtina), details: 'Blue house next to the mosque' })).toEqual(['place']);
+    expect(stopProblems({ ...newStop(prishtina), pinned: true })).toEqual([]);
     expect(stopProblems(newStop(prishtina, { street: 'Rruga B' }))).toEqual([]);
   });
 
@@ -189,7 +192,7 @@ describe('booking request', () => {
   it('refuses a stop that is not complete', () => {
     const request = bookRequestFromDraft(chosen)!;
     expect(bookRequestSchema.safeParse({ ...request, pickup: { ...request.pickup, hasLift: null } }).success).toBe(false);
-    expect(bookRequestSchema.safeParse({ ...request, dropoff: { ...request.dropoff, details: '' } }).success).toBe(false);
+    expect(bookRequestSchema.safeParse({ ...request, dropoff: { ...request.dropoff, pinned: false } }).success).toBe(false);
   });
 });
 
