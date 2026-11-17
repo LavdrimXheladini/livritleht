@@ -158,6 +158,8 @@
     "current": "Vaša selidba",
     "continueMove": "Nastavi rezervaciju",
     "stops": {
+      "pinHere": "Moja lokacija",
+      "pinNoLocation": "Vaša lokacija nije pronađena. Dozvolite je u podešavanjima telefona ili sami pomerite mapu.",
       "pinOpen": "Označite tačno mesto na mapi",
       "pinChange": "Pomerite oznaku",
       "pinDone": "Tačno mesto je označeno na mapi.",

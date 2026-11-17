@@ -158,6 +158,8 @@
     "current": "Dein Umzug",
     "continueMove": "Buchung fortsetzen",
     "stops": {
+      "pinHere": "Mein Standort",
+      "pinNoLocation": "Dein Standort wurde nicht gefunden. Erlaube ihn in den Einstellungen des Telefons oder verschiebe die Karte selbst.",
       "pinOpen": "Genauen Ort auf der Karte markieren",
       "pinChange": "Markierung verschieben",
       "pinDone": "Der genaue Ort ist auf der Karte markiert.",

@@ -158,6 +158,8 @@
     "current": "Twoja przeprowadzka",
     "continueMove": "Kontynuuj rezerwację",
     "stops": {
+      "pinHere": "Moja lokalizacja",
+      "pinNoLocation": "Nie znaleziono Twojej lokalizacji. Zezwól na nią w ustawieniach telefonu albo przesuń mapę samodzielnie.",
       "pinOpen": "Zaznacz dokładne miejsce na mapie",
       "pinChange": "Przesuń pinezkę",
       "pinDone": "Dokładne miejsce jest zaznaczone na mapie.",

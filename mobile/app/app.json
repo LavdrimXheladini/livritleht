@@ -27,6 +27,12 @@
     },
     "plugins": [
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "MoversHub uses your location to open the map where you are when you pin a pickup or drop-off place."
+        }
+      ],
+      [
         "expo-router",
         {
           "asyncRoutes": { "web": false }

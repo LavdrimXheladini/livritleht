@@ -158,6 +158,8 @@
     "current": "Shpërngulja jote",
     "continueMove": "Vazhdo rezervimin",
     "stops": {
+      "pinHere": "Vendndodhja ime",
+      "pinNoLocation": "Vendndodhja jote nuk u gjet. Lejoje te cilësimet e telefonit, ose lëvize hartën vetë.",
       "pinOpen": "Shëno vendin e saktë në hartë",
       "pinChange": "Lëviz shenjën",
       "pinDone": "Vendi i saktë është shënuar në hartë.",

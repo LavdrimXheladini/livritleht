@@ -18,7 +18,8 @@ export function parseMapCentre(data: unknown): MapPoint | null {
 /**
  * The page of the map a place is pinned on (a web view on the phone, a frame in the browser version):
  * a street map that can be moved and zoomed (MapLibre + OpenFreeMap), opened on `start`. The pin itself
- * is the app's, fixed over the middle; the page reports its centre whenever it stops moving.
+ * is the app's, fixed over the middle; the page reports its centre whenever it stops moving, and goes
+ * to a point the app sends it (the device's location).
  */
 export function pinMapHtml(start: MapPoint): string {
   const data = JSON.stringify(start);
@@ -39,6 +40,15 @@ export function pinMapHtml(start: MapPoint): string {
   });
   map.touchZoomRotate.disableRotation();
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+  // The app sends a point (the device's location): the map goes there.
+  function go(event) {
+    try {
+      var to = JSON.parse(event.data);
+      if (typeof to.lat === 'number' && typeof to.lon === 'number') map.jumpTo({ center: [to.lon, to.lat], zoom: 17 });
+    } catch (e) {}
+  }
+  window.addEventListener('message', go);
+  document.addEventListener('message', go);
   map.on('moveend', function () {
     var c = map.getCenter();
     var message = JSON.stringify({ lat: c.lat, lon: c.lng });

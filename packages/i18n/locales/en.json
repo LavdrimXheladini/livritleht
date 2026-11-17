@@ -158,6 +158,8 @@
     "current": "Your move",
     "continueMove": "Continue booking",
     "stops": {
+      "pinHere": "My location",
+      "pinNoLocation": "Your location wasn't found. Allow it in the phone's settings, or move the map yourself.",
       "pinOpen": "Pin the exact place on the map",
       "pinChange": "Move the pin",
       "pinDone": "The exact place is pinned on the map.",

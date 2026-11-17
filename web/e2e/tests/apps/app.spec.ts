@@ -607,7 +607,7 @@ test.describe('booking a move', () => {
     await page.route('**/functions/v1/places', (route) =>
       route.request().method() === 'OPTIONS'
         ? route.fulfill({ status: 204, headers: cors })
-        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ suggestions: found(route.request().postDataJSON() as { at?: { lat: number } }) }) }),
+        : route.fulfill({ contentType: 'application/json', headers: cors, body: JSON.stringify({ suggestions: found(route.request().postDataJSON() as { at?: { lat: number; lon: number } }) }) }),
     );
     await page.goto(url);
   });
@@ -615,7 +615,12 @@ test.describe('booking a move', () => {
   /** A street in Prishtina, as the map knows it at a pin there. */
   const pinnedStreet = { id: 'osm:w7', label: 'Rruga Agim Ramadani 12, Prishtina', area: 'Prishtina', lat: 42.6631, lon: 21.1655, countryCode: 'XK', street: 'Rruga Agim Ramadani', houseNumber: '12' };
   /** The `places` answer: a search finds the Prizren street; a pin (`at`) finds the address there — none far north. */
-  const found = (body: { at?: { lat: number } }) => (!body.at ? [street] : body.at.lat > 42.69 ? [] : body.at.lat > 42.5 ? [pinnedStreet] : [street]);
+  const pinsAsked: { lat: number; lon: number }[] = [];
+  const found = (body: { at?: { lat: number; lon: number } }) => {
+    if (!body.at) return [street];
+    pinsAsked.push(body.at);
+    return body.at.lat > 42.69 ? [] : body.at.lat > 42.5 ? [pinnedStreet] : [street];
+  };
 
   /** The `book` function's answer for the saved quote's cheapest van mover (Test Transport Prizren), valid until 10:15. */
   const bookAnswer = (changes: Record<string, unknown> = {}) => {
@@ -744,9 +749,15 @@ test.describe('booking a move', () => {
     // Words alone are not a place: a street from the search, or the pin on the map.
     await page.getByTestId('stop-pickup-details').fill('Block B, entrance 2, flat 14');
     await expect(app(page).getByText(b.stops.detailsRequired)).toHaveCount(2);
-    // The pin fills in the address the map knows there.
+    // The pin fills in the address the map knows there. The stop is only a town so far, so the map
+    // opens where the phone is (asked with the system's question; here: allowed).
+    await page.context().grantPermissions(['geolocation']);
+    await page.context().setGeolocation({ latitude: 42.6601, longitude: 21.1602 });
     await page.getByTestId('stop-pickup-pin').click();
+    await expect(page.getByTestId('pin-here')).toBeEnabled();
+    await expect(page.getByTestId('pin-no-location')).toHaveCount(0);
     await page.getByTestId('pin-use').click();
+    await expect.poll(() => pinsAsked.at(-1)).toEqual({ lat: 42.6601, lon: 21.1602 });
     await expect(page.getByTestId('stop-pickup-pinned')).toHaveText(b.stops.pinDone);
     await expect(page.getByTestId('stop-pickup-only-area')).toHaveCount(0);
     await expect(page.getByTestId('stop-pickup')).toHaveValue(pinnedStreet.label);

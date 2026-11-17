@@ -127,6 +127,7 @@ function StopCard({
         <PinPlace
           place={stop.place}
           from={searched}
+          here={stop.street === null && !stop.pinned}
           onClose={() => setPinning(false)}
           onUse={({ point, found }) => {
             setPinning(false);
