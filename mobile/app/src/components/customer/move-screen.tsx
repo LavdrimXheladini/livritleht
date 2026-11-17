@@ -245,6 +245,17 @@ function Move({ job }: { job: JobRow }) {
               {it.assembly && ITEM_CATALOGUE[it.key].assemblable ? ` · ${t('booking.items.assembly')}` : ''}
             </Text>
           ))}
+          {/* In the customer's own words, as the mover reads them. */}
+          {job.items_note ? (
+            <Text testID="move-items-note" className="font-sans text-[13.5px] leading-5 text-ink-700">
+              {`${t('mover.jobs.otherThings')}: ${job.items_note}`}
+            </Text>
+          ) : null}
+          {job.helpers_asked ? (
+            <Text testID="move-helpers-asked" className="font-sans text-[13.5px] leading-5 text-ink-700">
+              {t('customer.moves.helpersAsked', { n: job.helpers_asked })}
+            </Text>
+          ) : null}
         </View>
       </Card>
 

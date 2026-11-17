@@ -77,6 +77,7 @@
     "recoveryNoCode": "No email after a few minutes? Check your spam folder, or ask again later."
   },
   "account": {
+    "manage": "Download or delete your data",
     "title": "Your account",
     "signedInAs": "Signed in as {{email}}",
     "customer": "You're on the customer side: you book moves with movers on MoversHub.",
@@ -121,6 +122,7 @@
       "detailTitle": "Your move",
       "stopsTitle": "Addresses",
       "itemsTitle": "Things to move",
+      "helpersAsked": "You asked for {{n}} people. The price is for 3.",
       "priceChecked": "This price was checked on {{date}} at {{time}}. Continue booking to check it again.",
       "notFound": "This move isn't in your list any more.",
       "open": "Open",

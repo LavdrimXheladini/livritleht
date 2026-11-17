@@ -77,6 +77,7 @@
     "recoveryNoCode": "Nie ma e-maila po kilku minutach? Sprawdź folder spam albo spróbuj ponownie później."
   },
   "account": {
+    "manage": "Pobierz lub usuń swoje dane",
     "title": "Twoje konto",
     "signedInAs": "Zalogowano jako {{email}}",
     "customer": "Jesteś po stronie klienta: rezerwujesz przeprowadzki u przewoźników w MoversHub.",
@@ -121,6 +122,7 @@
       "detailTitle": "Twoja przeprowadzka",
       "stopsTitle": "Adresy",
       "itemsTitle": "Rzeczy do przewiezienia",
+      "helpersAsked": "Prosisz o {{n}} osób. Cena jest za 3.",
       "priceChecked": "Ta cena została sprawdzona {{date}} o {{time}}. Kontynuuj rezerwację, aby sprawdzić ją ponownie.",
       "notFound": "Tej przeprowadzki nie ma już na twojej liście.",
       "open": "Otwórz",

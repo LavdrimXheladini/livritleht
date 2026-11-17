@@ -32,16 +32,19 @@ export function MyMoves({ strip = false, emptyText, onViewAll }: { strip?: boole
   const rows = moves.data.map((job) => <MoveRow key={job.id} job={job} locale={locale} card={strip} />);
   return (
     <View testID="my-moves" className="gap-3">
-      <View className="flex-row items-center justify-between">
-        <Text accessibilityRole="header" className="font-sans-semibold text-[17px] text-ink-900">
-          {t('customer.moves.title')}
-        </Text>
-        {onViewAll ? (
-          <Pressable testID="my-moves-all" accessibilityRole="button" onPress={onViewAll} className="min-h-11 justify-center px-1 active:opacity-60">
-            <Text className="font-sans-medium text-[13px] text-accent-700">{t('customer.viewAll')} ›</Text>
-          </Pressable>
-        ) : null}
-      </View>
+      {/* On the Moves tab the screen's header already says "Your moves". */}
+      {strip ? (
+        <View className="flex-row items-center justify-between">
+          <Text accessibilityRole="header" className="font-sans-semibold text-[17px] text-ink-900">
+            {t('customer.moves.title')}
+          </Text>
+          {onViewAll ? (
+            <Pressable testID="my-moves-all" accessibilityRole="button" onPress={onViewAll} className="min-h-11 justify-center px-1 active:opacity-60">
+              <Text className="font-sans-medium text-[13px] text-accent-700">{t('customer.viewAll')} ›</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
       {strip ? (
         // Bleeds to the screen's edges, so the next card peeks in.
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4" contentContainerClassName="gap-3 px-4">

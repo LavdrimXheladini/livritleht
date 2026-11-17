@@ -1002,7 +1002,8 @@ test.describe('booking a move', () => {
   test('my moves: saved requests on the home; a move shows its addresses, mover and price, and can be continued', async ({ page }) => {
     const answer = bookAnswer();
     const prizren = savedQuoteCopy().classes.find((c) => c.vehicleClass === 'VAN')!.offers[0]!;
-    const job = savedJob();
+    // With things in no category and a bigger crew asked for, in the customer's words.
+    const job = { ...savedJob(), items_note: 'A piano', helpers_asked: 5 };
     await page.route('**/rest/v1/jobs*', (route) =>
       route.request().method() === 'OPTIONS'
         ? route.fulfill({ status: 204, headers: cors })
@@ -1011,6 +1012,17 @@ test.describe('booking a move', () => {
     const sent = await fakeBook(page, { body: answer });
     await page.goto(url);
     const m = en.customer.moves;
+
+    // The tabs: every move under "Moves"; the account under "Account".
+    await page.getByTestId('tab-moves').click();
+    await expect(page.getByTestId(`move-${job.id}`).locator('visible=true')).toContainText('Prishtina → Prizren');
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('customer-moves-tab.png');
+    await page.getByTestId('tab-account').click();
+    await expect(page.getByTestId('account-tab-email')).toBeVisible();
+    await fitScreenToPage(page);
+    await expect(page).toHaveScreenshot('customer-account-tab.png');
+    await page.getByTestId('tab-home').click();
 
     // On the home: route, day and time, size, mover and price, where it stands.
     const row = page.getByTestId(`move-${job.id}`);
@@ -1025,6 +1037,8 @@ test.describe('booking a move', () => {
     await expect(page.getByTestId('move-pickup')).toContainText('Block B, entrance 2');
     await expect(page.getByTestId('move-pickup')).toContainText(`${b.stops.floorN.replace('{{n}}', '2')} · ${b.stops.liftNo}`);
     await expect(page.getByTestId('move-items')).toContainText(`${en.items.sofa3} × 1`);
+    await expect(page.getByTestId('move-items-note')).toHaveText(`${en.mover.jobs.otherThings}: A piano`);
+    await expect(page.getByTestId('move-helpers-asked')).toHaveText(m.helpersAsked.replace('{{n}}', '5'));
     await expect(page.getByTestId('move-contract')).toHaveText(b.review.contract.replace('{{name}}', prizren.companyName));
     await expect(page.getByTestId('move-mover-details')).toContainText(b.review.phone.replace('{{phone}}', '+38344000902'));
     await expect(page.getByTestId('move-mover-price')).toContainText(euros(prizren.quote.moverPrice));

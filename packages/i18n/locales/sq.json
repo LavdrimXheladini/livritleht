@@ -77,6 +77,7 @@
     "recoveryNoCode": "Nuk ju erdhi email pas disa minutash? Kontrolloni dosjen e spamit ose provoni përsëri më vonë."
   },
   "account": {
+    "manage": "Shkarko ose fshi të dhënat e tua",
     "title": "Llogaria jote",
     "signedInAs": "I identifikuar si {{email}}",
     "customer": "Je në anën e klientit: rezervon shpërngulje me transportuesit në MoversHub.",
@@ -121,6 +122,7 @@
       "detailTitle": "Shpërngulja jote",
       "stopsTitle": "Adresat",
       "itemsTitle": "Sendet për të zhvendosur",
+      "helpersAsked": "Kërkove {{n}} njerëz. Çmimi është për 3.",
       "priceChecked": "Ky çmim u kontrollua më {{date}} në {{time}}. Vazhdo rezervimin për ta kontrolluar sërish.",
       "notFound": "Kjo shpërngulje nuk është më në listën tënde.",
       "open": "Hap",

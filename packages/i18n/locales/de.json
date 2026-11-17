@@ -77,6 +77,7 @@
     "recoveryNoCode": "Nach ein paar Minuten keine E-Mail? Sieh im Spam-Ordner nach oder versuche es später noch einmal."
   },
   "account": {
+    "manage": "Deine Daten herunterladen oder löschen",
     "title": "Dein Konto",
     "signedInAs": "Angemeldet als {{email}}",
     "customer": "Du bist auf der Kundenseite: Du buchst Umzüge bei Umzugsunternehmen auf MoversHub.",
@@ -121,6 +122,7 @@
       "detailTitle": "Dein Umzug",
       "stopsTitle": "Adressen",
       "itemsTitle": "Was mitkommt",
+      "helpersAsked": "Du hast {{n}} Personen angefragt. Der Preis gilt für 3.",
       "priceChecked": "Dieser Preis wurde am {{date}} um {{time}} geprüft. Setz die Buchung fort, um ihn erneut zu prüfen.",
       "notFound": "Dieser Umzug ist nicht mehr in deiner Liste.",
       "open": "Öffnen",

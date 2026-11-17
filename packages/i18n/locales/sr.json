@@ -77,6 +77,7 @@
     "recoveryNoCode": "Nema emaila posle nekoliko minuta? Proverite spam ili pokušajte ponovo kasnije."
   },
   "account": {
+    "manage": "Preuzmite ili obrišite svoje podatke",
     "title": "Vaš nalog",
     "signedInAs": "Prijavljeni ste kao {{email}}",
     "customer": "Na strani ste klijenta: rezervišete selidbe kod prevoznika na MoversHubu.",
@@ -121,6 +122,7 @@
       "detailTitle": "Vaša selidba",
       "stopsTitle": "Adrese",
       "itemsTitle": "Stvari za selidbu",
+      "helpersAsked": "Tražili ste {{n}} ljudi. Cena je za 3.",
       "priceChecked": "Ova cena je proverena {{date}} u {{time}}. Nastavite rezervaciju da je ponovo proverite.",
       "notFound": "Ova selidba više nije na vašoj listi.",
       "open": "Otvori",

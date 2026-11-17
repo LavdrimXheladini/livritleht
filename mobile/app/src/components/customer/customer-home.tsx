@@ -271,7 +271,7 @@ function Account() {
         <SwitchSideButton to="mover" testID="switch-to-mover" />
       </Card>
       {/* Download the account's data, or delete it (COMPLIANCE §9). */}
-      <Button testID="open-account" variant="outline" title={t('account.open')} onPress={() => router.push('/account')} />
+      <Button testID="open-account" variant="outline" title={t('account.manage')} onPress={() => router.push('/account')} />
     </>
   );
 }

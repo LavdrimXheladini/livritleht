@@ -160,7 +160,7 @@ export function MoverHome({ notice }: { notice: string | null }) {
               {/* Appeal a decision about the account, or complain about anything else (COMPLIANCE §3). */}
               <Button testID="open-appeals" variant="outline-dark" title={t('mover.appeals.title')} onPress={() => router.push('/mover/appeals')} />
               {/* Download the account's data, or delete it (COMPLIANCE §9). */}
-              <Button testID="open-account" variant="outline-dark" title={t('account.open')} onPress={() => router.push('/account')} />
+              <Button testID="open-account" variant="outline-dark" title={t('account.manage')} onPress={() => router.push('/account')} />
             </>
           )}
         </View>
