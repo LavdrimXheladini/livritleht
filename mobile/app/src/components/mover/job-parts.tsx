@@ -46,6 +46,17 @@ export function Work({ row }: { row: MoverJobRow }) {
       <Text className="font-sans text-[13px] leading-[18px] text-night-50">
         {row.items.map((it) => `${t(`items.${it.key}`)} × ${formatNumber(it.qty, locale)}`).join(' · ')}
       </Text>
+      {row.items_note ? (
+        <Text testID="job-items-note" className="font-sans text-[13px] leading-[18px] text-night-50">
+          <Text className="text-sage-400">{`${t('mover.jobs.otherThings')}: `}</Text>
+          {row.items_note}
+        </Text>
+      ) : null}
+      {row.helpers_asked ? (
+        <Text testID="job-helpers-asked" className="font-sans text-[13px] leading-[18px] text-accent-300">
+          {t('mover.jobs.helpersAsked', { n: row.helpers_asked })}
+        </Text>
+      ) : null}
     </View>
   );
 }

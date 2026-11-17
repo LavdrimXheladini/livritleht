@@ -194,7 +194,7 @@
       },
       "chosen": "wybrano {{count}}",
       "otherLabel": "Inne",
-      "otherHint": "Wszystko, czego nie ma na listach. Nie jest jeszcze częścią pokazanych cen.",
+      "otherHint": "Wszystko, czego nie ma na listach. Przewoźnik czyta to przed przyjęciem; nie jest częścią pokazanych cen. Nie wpisuj tu adresów ani numerów telefonów.",
       "otherPlaceholder": "Na przykład: pianino, stół ogrodowy…",
       "fewer": "Mniej",
       "more": "Więcej",
@@ -215,7 +215,7 @@
       "crewCustomLabel": "Ile osób?",
       "crewCustomHint": "4 lub więcej osób, razem z przewoźnikiem.",
       "crewCustomError": "Dla 1–3 osób użyj przycisków powyżej.",
-      "crewCustomSoon": "Przewoźnicy nie mogą jeszcze ustalać cen dla więcej niż 3 osób, więc ceny, które zobaczysz dalej, są dla 3 osób.",
+      "crewCustomSoon": "Przewoźnicy nie mogą jeszcze ustalać cen dla więcej niż 3 osób, więc ceny, które zobaczysz dalej, są dla 3 osób. Przewoźnik widzi, o ile osób prosisz.",
       "title": "Kiedy ma przyjechać przewoźnik?",
       "subtitle": "Wybierz dzień i godzinę przyjazdu przewoźnika na miejsce odbioru.",
       "day": "Dzień",
@@ -704,6 +704,8 @@
       }
     },
     "jobs": {
+      "otherThings": "Inne rzeczy",
+      "helpersAsked": "Klient poprosił o {{n}} osób. Twoja cena jest za 3.",
       "requestsTitle": "Zapytania o zlecenia",
       "acceptedTitle": "Twoje zlecenia",
       "accepted": "Przyjęte",

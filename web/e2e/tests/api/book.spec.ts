@@ -116,6 +116,18 @@ test.describe('signed in', () => {
     const quotes = await serviceGet(request, `quotes?job_id=eq.${answer.jobId}&select=mover_price`);
     expect(quotes).toEqual([{ mover_price: offer.quote.moverPrice }, { mover_price: offer.quote.moverPrice }]);
 
+    // In the customer's own words: things in no category, and more people than movers can price yet
+    // (the price is for three). Kept with the request for the mover to read; never a price from the app.
+    const extras = { ...move, vehicleId: offer.vehicleId, jobId: answer.jobId, helpers: 3, itemsNote: '  A piano  ', helpersAsked: 5 };
+    expect((await book(request, customer.token, extras)).status()).toBe(200);
+    expect(await serviceGet(request, `jobs?id=eq.${answer.jobId}&select=helpers,items_note,helpers_asked`)).toEqual([{ helpers: 3, items_note: 'A piano', helpers_asked: 5 }]);
+    // More people only on a move priced for three; an empty note is no note.
+    expect((await book(request, customer.token, { ...extras, helpers: 2 })).status()).toBe(400);
+    expect((await book(request, customer.token, { ...extras, itemsNote: '   ' })).status()).toBe(400);
+    // Asked again without them: they are gone, and the request is as it was.
+    expect((await book(request, customer.token, { ...move, vehicleId: offer.vehicleId, jobId: answer.jobId })).status()).toBe(200);
+    expect(await serviceGet(request, `jobs?id=eq.${answer.jobId}&select=items_note,helpers_asked`)).toEqual([{ items_note: null, helpers_asked: null }]);
+
     // The customer reads their own request (RLS) as "My moves" does: the coordinates and the latest
     // quote, with the mover as they saw them (COMPLIANCE §4) — the company record itself stays private.
     const own = await request.get(

@@ -1688,7 +1688,8 @@ test.describe('signed in as a mover', () => {
       dropoff_lat: accepted ? 42.2139 : null,
       dropoff_lon: accepted ? 20.7397 : null,
     });
-    let rows = [request(1), request(2)];
+    // The first request also has things in no category and a bigger crew asked for, in the customer's words.
+    let rows: Record<string, unknown>[] = [{ ...request(1), items_note: 'A piano', helpers_asked: 5 }, request(2)];
     const steps: Record<string, unknown>[] = [];
     await page.route('**/rest/v1/rpc/my_mover_jobs*', (route) =>
       route.request().method() === 'OPTIONS'
@@ -1710,6 +1711,9 @@ test.describe('signed in as a mover', () => {
     const first = page.getByTestId('job-request-00000000-0000-4000-8000-0000000e0001');
     await expect(first).toContainText('Dardania, Prishtina → Prizren');
     await expect(first).toContainText(en.landing.movers.phone.district);
+    await expect(first.getByTestId('job-items-note')).toHaveText(`${j.otherThings}: A piano`);
+    await expect(first.getByTestId('job-helpers-asked')).toHaveText(j.helpersAsked.replace('{{n}}', '5'));
+    await expect(page.getByTestId('job-items-note')).toHaveCount(1);
     await expect(first).toContainText(j.levels.replace('{{pickup}}', `${st.floorN.replace('{{n}}', '3')} · ${st.liftNo}`).replace('{{dropoff}}', st.ground));
     await expect(first).toContainText('€40');
     await expect(first.getByTestId('payout-breakdown')).toHaveCount(0);

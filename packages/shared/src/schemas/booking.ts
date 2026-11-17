@@ -136,7 +136,7 @@ export const bookingDraftSchema = z.object({
   pickup: bookingStopSchema,
   dropoff: bookingStopSchema,
   items: bookingItemsSchema,
-  /** Things not in the catalogue, as typed (kept on the device for now: not priced, not sent yet). */
+  /** Things not in the catalogue, as typed (not priced; sent with the booking for the mover to read). */
   otherItems: z.string().max(OTHER_ITEMS_MAX).default(''),
   /** Local date (YYYY-MM-DD) and start hour; null = not chosen yet. */
   day: z.iso.date().nullable(),
@@ -144,7 +144,7 @@ export const bookingDraftSchema = z.object({
   /** Minutes past the hour (0 in moves saved before minutes existed). */
   minute: z.union([z.literal(0), z.literal(15), z.literal(30), z.literal(45)]).default(0),
   crew: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-  /** More people than movers can price yet (4+), as asked under "Custom"; kept on the device for now, prices are for `crew`. */
+  /** More people than movers can price yet (4+), as asked under "Custom"; prices are for `crew`, the mover sees what was asked. */
   crewAsked: z.number().int().min(4).max(99).nullable().default(null),
   vehicleClass: z.enum(VEHICLE_CLASSES),
   /** Null until a mover is chosen (also in moves saved before choosing existed). */
@@ -358,11 +358,16 @@ export const bookRequestSchema = z
     dropoff: requestStopSchema,
     items: z.array(jobItemSchema).min(1).max(100),
     helpers: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+    /** Things in no category, in the customer's words (not priced; the mover reads it before accepting). */
+    itemsNote: z.string().trim().min(1).max(OTHER_ITEMS_MAX).optional(),
+    /** More people than movers can price yet (the price is for three); the mover sees what was asked. */
+    helpersAsked: z.number().int().min(4).max(99).optional(),
     scheduledAt: z.iso.datetime({ offset: true }),
     vehicleClass: z.enum(VEHICLE_CLASSES),
     vehicleId: z.uuid(),
   })
   .strict()
+  .refine((r) => r.helpersAsked === undefined || r.helpers === 3, { message: 'helpers_asked_needs_three' })
   .refine((r) => r.pickup.place.lat !== r.dropoff.place.lat || r.pickup.place.lon !== r.dropoff.place.lon, { message: 'same_place' });
 export type BookRequest = z.infer<typeof bookRequestSchema>;
 
@@ -375,6 +380,8 @@ export function bookRequestFromDraft(draft: BookingDraft): BookRequest | null {
     dropoff: draft.dropoff,
     items: jobItems(draft.items),
     helpers: draft.crew,
+    ...(draft.otherItems.trim() ? { itemsNote: draft.otherItems.trim() } : {}),
+    ...(draft.crewAsked !== null && draft.crew === 3 ? { helpersAsked: draft.crewAsked } : {}),
     scheduledAt: scheduledAt(draft.day, draft.hour, draft.minute),
     vehicleClass: draft.vehicleClass,
     vehicleId: draft.choice.vehicleId,

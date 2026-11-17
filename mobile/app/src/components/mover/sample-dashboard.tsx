@@ -74,6 +74,8 @@ function sampleRow(n: number, changes: Partial<MoverJobRow>): MoverJobRow {
     absent_reason_from: null,
     contact_phone: null,
     contact_name: null,
+    items_note: null,
+    helpers_asked: null,
     ...changes,
   };
 }

@@ -115,6 +115,9 @@ export const moverJobRowSchema = z.object({
   helpers: z.number().int(),
   scheduled_at: z.string(),
   items: z.array(jobItemSchema),
+  /** Things in no category, in the customer's words; and more people than the price covers (4+), as asked. */
+  items_note: z.string().nullable().default(null),
+  helpers_asked: z.number().int().nullable().default(null),
   distance_km: z.coerce.number(),
   est_labor_min: z.number().int(),
   pickup_area: z.string(),

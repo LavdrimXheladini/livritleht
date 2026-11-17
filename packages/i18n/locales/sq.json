@@ -194,7 +194,7 @@
       },
       "chosen": "{{count}} të zgjedhura",
       "otherLabel": "Tjetër",
-      "otherHint": "Çdo gjë që nuk është në lista. Ende nuk është pjesë e çmimeve të shfaqura.",
+      "otherHint": "Çdo gjë që nuk është në lista. Transportuesi e lexon para se të pranojë; nuk është pjesë e çmimeve të shfaqura. Të lutemi mos shkruaj adresa ose numra telefoni këtu.",
       "otherPlaceholder": "Për shembull: një piano, një tavolinë kopshti…",
       "fewer": "Më pak",
       "more": "Më shumë",
@@ -215,7 +215,7 @@
       "crewCustomLabel": "Sa njerëz?",
       "crewCustomHint": "4 ose më shumë njerëz, duke përfshirë transportuesin.",
       "crewCustomError": "Për 1 deri në 3 njerëz, përdor butonat më lart.",
-      "crewCustomSoon": "Transportuesit ende nuk mund të caktojnë çmime për më shumë se 3 njerëz, prandaj çmimet që sheh më pas janë për 3 njerëz.",
+      "crewCustomSoon": "Transportuesit ende nuk mund të caktojnë çmime për më shumë se 3 njerëz, prandaj çmimet që sheh më pas janë për 3 njerëz. Transportuesi e sheh sa njerëz kërkove.",
       "title": "Kur të vijë transportuesi?",
       "subtitle": "Zgjidh ditën dhe orën kur transportuesi arrin te vendi i marrjes.",
       "day": "Dita",
@@ -704,6 +704,8 @@
       }
     },
     "jobs": {
+      "otherThings": "Gjëra të tjera",
+      "helpersAsked": "Klienti kërkoi {{n}} njerëz. Çmimi yt është për 3.",
       "requestsTitle": "Kërkesa për punë",
       "acceptedTitle": "Punët e tua",
       "accepted": "E pranuar",

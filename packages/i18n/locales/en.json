@@ -194,7 +194,7 @@
       },
       "chosen": "{{count}} chosen",
       "otherLabel": "Other",
-      "otherHint": "Anything that is not in the lists. It is not part of the prices shown yet.",
+      "otherHint": "Anything that is not in the lists. Your mover reads it before accepting; it is not part of the prices shown. Please write no addresses or phone numbers here.",
       "otherPlaceholder": "For example: a piano, a garden table…",
       "fewer": "Fewer",
       "more": "More",
@@ -215,7 +215,7 @@
       "crewCustomLabel": "How many people?",
       "crewCustomHint": "4 or more people, the mover included.",
       "crewCustomError": "For 1 to 3 people, use the buttons above.",
-      "crewCustomSoon": "Movers can't set prices for more than 3 people yet, so the prices you see next are for 3 people.",
+      "crewCustomSoon": "Movers can't set prices for more than 3 people yet, so the prices you see next are for 3 people. Your mover sees how many you asked for.",
       "title": "When should your mover come?",
       "subtitle": "Pick the day and the time your mover arrives at the pickup.",
       "day": "Day",
@@ -704,6 +704,8 @@
       }
     },
     "jobs": {
+      "otherThings": "Other things",
+      "helpersAsked": "The customer asked for {{n}} people. Your price is for 3.",
       "requestsTitle": "Job requests",
       "acceptedTitle": "Your jobs",
       "accepted": "Accepted",

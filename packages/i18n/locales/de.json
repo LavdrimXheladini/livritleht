@@ -194,7 +194,7 @@
       },
       "chosen": "{{count}} ausgewählt",
       "otherLabel": "Sonstiges",
-      "otherHint": "Alles, was nicht in den Listen steht. Es ist noch nicht Teil der angezeigten Preise.",
+      "otherHint": "Alles, was nicht in den Listen steht. Dein Umzugsunternehmen liest es vor der Annahme; es ist nicht Teil der angezeigten Preise. Bitte keine Adressen oder Telefonnummern hier eintragen.",
       "otherPlaceholder": "Zum Beispiel: ein Klavier, ein Gartentisch…",
       "fewer": "Weniger",
       "more": "Mehr",
@@ -215,7 +215,7 @@
       "crewCustomLabel": "Wie viele Personen?",
       "crewCustomHint": "4 oder mehr Personen, einschließlich des Umzugsunternehmers.",
       "crewCustomError": "Für 1 bis 3 Personen nutze die Schaltflächen oben.",
-      "crewCustomSoon": "Umzugsunternehmer können noch keine Preise für mehr als 3 Personen festlegen, deshalb gelten die Preise, die du gleich siehst, für 3 Personen.",
+      "crewCustomSoon": "Umzugsunternehmer können noch keine Preise für mehr als 3 Personen festlegen, deshalb gelten die Preise, die du gleich siehst, für 3 Personen. Dein Umzugsunternehmen sieht, wie viele du angefragt hast.",
       "title": "Wann soll dein Umzugsunternehmen kommen?",
       "subtitle": "Wähle Tag und Uhrzeit, zu der das Unternehmen an der Abholadresse ankommt.",
       "day": "Tag",
@@ -704,6 +704,8 @@
       }
     },
     "jobs": {
+      "otherThings": "Sonstiges",
+      "helpersAsked": "Der Kunde hat {{n}} Personen angefragt. Dein Preis gilt für 3.",
       "requestsTitle": "Auftragsanfragen",
       "acceptedTitle": "Deine Aufträge",
       "accepted": "Angenommen",

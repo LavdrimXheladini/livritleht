@@ -194,7 +194,7 @@
       },
       "chosen": "izabrano {{count}}",
       "otherLabel": "Ostalo",
-      "otherHint": "Sve što nije na listama. Još nije deo prikazanih cena.",
+      "otherHint": "Sve što nije na listama. Prevoznik to čita pre prihvatanja; nije deo prikazanih cena. Molimo ne upisujte ovde adrese ni brojeve telefona.",
       "otherPlaceholder": "Na primer: klavir, baštenski sto…",
       "fewer": "Manje",
       "more": "Više",
@@ -215,7 +215,7 @@
       "crewCustomLabel": "Koliko ljudi?",
       "crewCustomHint": "4 ili više ljudi, uključujući prevoznika.",
       "crewCustomError": "Za 1 do 3 osobe koristite dugmad iznad.",
-      "crewCustomSoon": "Prevoznici još ne mogu da odrede cene za više od 3 osobe, pa su cene koje vidite dalje za 3 osobe.",
+      "crewCustomSoon": "Prevoznici još ne mogu da odrede cene za više od 3 osobe, pa su cene koje vidite dalje za 3 osobe. Prevoznik vidi koliko ste ljudi tražili.",
       "title": "Kada da prevoznik dođe?",
       "subtitle": "Izaberite dan i vreme kada prevoznik stiže na mesto preuzimanja.",
       "day": "Dan",
@@ -704,6 +704,8 @@
       }
     },
     "jobs": {
+      "otherThings": "Ostale stvari",
+      "helpersAsked": "Klijent je tražio {{n}} ljudi. Vaša cena je za 3.",
       "requestsTitle": "Zahtevi za poslove",
       "acceptedTitle": "Vaši poslovi",
       "accepted": "Prihvaćeno",

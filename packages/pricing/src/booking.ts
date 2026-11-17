@@ -111,6 +111,9 @@ export function jobColumns({ request, distanceKm, type, row, quote }: PricedBook
     ...stopColumns('pickup', request.pickup),
     ...stopColumns('dropoff', request.dropoff),
     items: request.items,
+    // Null clears what an earlier version of this request said.
+    items_note: request.itemsNote ?? null,
+    helpers_asked: request.helpersAsked ?? null,
     distance_km: distanceKm,
     est_labor_min: quote.estLaborMin,
     chosen_mover_company_id: row.company_id,
